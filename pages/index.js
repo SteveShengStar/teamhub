@@ -1,14 +1,17 @@
 import React from 'react';
 
 import styled from "styled-components";
+import {space, layout, color} from "styled-system";
 
 const Header = styled.h1`
-  font-weight: 900;
+  ${space}
+  ${layout}
+  ${color}
 `;
 
 const Home = () => (
-  <Header>
-    Hello 
+  <Header ml={5} p={2} bg="primary">
+    Example 
   </Header>
 )
 
