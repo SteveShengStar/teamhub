@@ -4,5 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node app.js"
+  },
+  "dependencies": {
+    "mongoose": "^5.7.3"
   }
 }
