@@ -1,5 +1,4 @@
 let express = require("express"),
-    mongoose = require("mongoose");
 
 let app = express();
 
