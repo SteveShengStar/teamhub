@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const config = require('./config.json');
-const Member = require('./schema/Member');
 
 const data = {};
 
@@ -12,15 +11,6 @@ data.init = async () => {
     console.log('Connected!');
 };
 
-data.init();
-
-Member.create({
-    first_name: 'Testfirst',
-    last_name: 'Testlast',
-    bio: 'This is a test bio.',
-    skills: ['Test Skill 1', 'Test Skill 2', 'Test Skill 3'],
-    roles: ['Test Role 1', 'Test Role 2'],
-    email: 'testemail@waterloop.ca',
-});
+data.members = require('./members');
 
 module.exports = data;
