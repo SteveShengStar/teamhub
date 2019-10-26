@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const data = require('./data/index')
+const data = require('./data/index');
 
 data.init();
 
