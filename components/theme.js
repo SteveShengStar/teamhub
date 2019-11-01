@@ -27,16 +27,15 @@ const infraOrange = "#CEAC36";
  * Fonts
  */
 
-const fontSizes = [12, 14, 16, 18, 36, 42];
+const fontSizes = [14, 16, 18, 36, 42];
 fontSizes.body = fontSizes[0];
-fontSizes.body2 = fontSizes[2];
-fontSizes.body3 = fontSizes[1];
+fontSizes.body2 = fontSizes[1];
 fontSizes.header1 = fontSizes[3];
 fontSizes.header2 = fontSizes[2];
 fontSizes.header3 = fontSizes[1];
 fontSizes.header4 = fontSizes[0];
-fontSizes.title = fontSizes[5];
-fontSizes.subtitle = fontSizes[4];
+fontSizes.title = fontSizes[4];
+fontSizes.subtitle = fontSizes[3];
 
 const fontWeights = [400, 700, 900];
 fontWeights.regular = fontWeights[0];
@@ -47,6 +46,12 @@ const space = [0, 2, 5, 10, 15, 20, 25, 40];
 space.cardSpacing = space[7];
 space.cardPadding = space[5];
 space.headerBottomMargin = space[4];
+
+const cornerRadius = [0, 3, 5, 200];
+cornerRadius.none = cornerRadius[0];
+cornerRadius.small = cornerRadius[1];
+cornerRadius.default = cornerRadius[2];
+cornerRadius.rounded = cornerRadius[3];
 
 const theme = {
     colors: {
@@ -71,8 +76,8 @@ const theme = {
     },
     fontSizes,
     fontWeights,
-    space
-
+    space,
+    radii: cornerRadius,
 }
 
 export default theme;
