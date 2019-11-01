@@ -19,6 +19,9 @@ const Input = styled(SystemInput)(
                 "&:focus": {
                     outline: "none",
                     borderColor: "action" 
+                },
+                "&::placeholder": {
+                    color: "greys.2"
                 }
             }
         }

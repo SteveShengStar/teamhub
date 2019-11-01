@@ -22,7 +22,7 @@ const Home = () => (
     <Image variant="background" src="/static/background.png" alt="background"/>
     <Card display="flex" flexDirection="column" alignItems="start" position="absolute" m="cardMargin">
       <Select options={options} width="100%"/>
-      <Input variant="text" />
+      <Input variant="text" placeholder="Search" />
       <Title>Header</Title>
       <Subtitle>Subtitle</Subtitle>
       <Header2>Header 2</Header2>
