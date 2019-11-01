@@ -2,7 +2,7 @@
  * Define colors
  */
 const white = "#FFFFFF";
-const grays = [
+const greys = [
   "#F5F5F5", // light
   "#D6D6D6", // light gray
   "#B4B4B4", // grayed text
@@ -43,7 +43,7 @@ fontWeights.bold = fontWeights[1];
 fontWeights.black = fontWeights[2];
 
 const space = [0, 2, 5, 10, 15, 20, 25, 40];
-space.cardSpacing = space[7];
+space.cardMargin = space[7];
 space.cardPadding = space[5];
 space.headerBottomMargin = space[4];
 
@@ -53,6 +53,9 @@ cornerRadius.small = cornerRadius[1];
 cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
+const shadows = ["0 2px 10px 0 rgba(0,0,0,0.1)"];
+shadows.default = shadows[0];
+
 const theme = {
     colors: {
       theme: themeYellow,
@@ -60,7 +63,7 @@ const theme = {
       alertAction: alertRed,
       foreground: black,
       background: white,
-      grays,
+      greys,
       messagesBackground: messagesBlue,
       clickUp: clickUpPurple,
       software: softwareMagenta,
@@ -78,6 +81,7 @@ const theme = {
     fontWeights,
     space,
     radii: cornerRadius,
+    shadows
 }
 
 export default theme;

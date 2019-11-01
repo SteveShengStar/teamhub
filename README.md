@@ -18,6 +18,11 @@ Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-
 Clone from GitHub with: 
 ```git clone https://www.github.com/waterloop/teamhub.git```
 
+Navigate to `/backend/data/config.template.json`.
+Make a copy and rename it to `config.json`.
+Ask Michael Pu for the database url.
+
+
 (Navigate to repository then)
 ```npm install```
 
