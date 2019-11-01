@@ -27,15 +27,16 @@ const infraOrange = "#CEAC36";
  * Fonts
  */
 
-const fontSizes = [14, 16, 18, 36, 42];
+const fontSizes = [14, 16, 18, 24, 36, 42];
 fontSizes.body = fontSizes[0];
 fontSizes.body2 = fontSizes[1];
-fontSizes.header1 = fontSizes[3];
+fontSizes.header1 = fontSizes[4];
 fontSizes.header2 = fontSizes[2];
 fontSizes.header3 = fontSizes[1];
 fontSizes.header4 = fontSizes[0];
-fontSizes.title = fontSizes[4];
-fontSizes.subtitle = fontSizes[3];
+fontSizes.title = fontSizes[5];
+fontSizes.subtitle = fontSizes[4];
+fontSizes.nav = fontSizes[3];
 
 const fontWeights = [400, 700, 900];
 fontWeights.regular = fontWeights[0];

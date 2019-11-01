@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { grid, color, space, layout, typography, flexbox, compose, shadow, border, position } from "styled-system";
+
 export const composition = compose(grid, color, space, flexbox, layout, typography, shadow, border, position);
 export const themeDefaultProps = {
     fontFamily: "body",
@@ -9,6 +10,7 @@ export const themeDefaultProps = {
 };
 
 export const SystemComponent = styled.div(composition);
+export const SystemSpan = styled.span(composition);
 export const SystemHeader = {
     H1: styled.h1(composition),
     H2: styled.h2(composition),
@@ -18,13 +20,17 @@ export const SystemHeader = {
     H6: styled.h6(composition)
 }
 export const SystemBody = styled.p(composition);
+export const SystemLink = styled.a(composition);
 export const SystemButton = styled.button(composition);
+
 export const SystemImage = styled.img(composition);
 export const SystemLabel = styled.label(composition);
 export const SystemInput = styled.input(composition);
-
+export const SystemNav = styled.nav(composition);
+export const SystemSvg = styled.svg(composition);
 
 SystemComponent.defaultProps = themeDefaultProps
+SystemSpan.defaultProps = themeDefaultProps;
 SystemHeader.H1.defaultProps = { ...themeDefaultProps, fontWeight: "black" }
 SystemHeader.H2.defaultProps = { ...themeDefaultProps, fontWeight: "black" }
 SystemHeader.H3.defaultProps = { ...themeDefaultProps, fontWeight: "bold" }
@@ -33,6 +39,8 @@ SystemHeader.H5.defaultProps = { ...themeDefaultProps, fontWeight: "bold" }
 SystemHeader.H6.defaultProps = { ...themeDefaultProps, fontWeight: "bold" }
 SystemBody.defaultProps = themeDefaultProps;
 
+SystemLink.defaultProps = { ...themeDefaultProps, color: "action" };
 SystemButton.defaultProps = themeDefaultProps;
 SystemLabel.defaultProps = themeDefaultProps;
-SystemInput.defaultProps = themeDefaultProps
+SystemInput.defaultProps = themeDefaultProps;
+SystemNav.defaultProps = themeDefaultProps;
