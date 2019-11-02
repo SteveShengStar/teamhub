@@ -2,57 +2,44 @@
 ```json
 {
     "name": {
-        type: Member_NameSchema,
-        required: true,
+        "first": "Michael",
+        "last": "Pu",
+        "display": "Michael Pu"
     },
-    bio: {
-        type: String
+    "bio": "This is my bio.",
+    "skills": [
+        "MongoDB"
+    ],
+    "joined": {
+        "year": 2019,
+        "season": "Fall"
     },
-    skills: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    joined: {
-        type: Member_TermSchema,
-        required: true
+    "coopExp": [],
+    "memberType": "Newbie",
+    "subteam": "Software",
+    "project": {
+        "name": "TeamHub",
+        "subteams": [
+            "Software"
+        ]
     },
-    coopExp: {
-        type: [Member_CoopExpSchema],
-        required: true
+    "email": "michael.pu@waterloop.ca",
+    "stream": {
+        "isCoop": true,
+        "onStream": true,
+        "coopStream": 1,
+        "currentSchoolTerm": "1A"
     },
-    memberType: {
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'MemberType'
+    "age": 18,
+    "birthday": {
+        "month": 4,
+        "day": 10
     },
-    subteam: {
-        type: Schema.Types.ObjectId,
-        ref: 'Subteam',
-        require: true
-    },
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project',
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    stream: {
-        type: Member_Stream
-    },
-    picture: {
-        type: String
-    },
-    age: {
-        type: Number,
-    },
-    birthday: {
-        type: Member_Birthday
-    },
-    links: {
-        type: [Member_Link]
-    }
+    "links": [
+        {
+            "type": "GitHub",
+            "link": "https://github.com/mchlp"
+        }
+    ]
 }
 ```

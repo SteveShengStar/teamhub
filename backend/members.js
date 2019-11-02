@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
 
 router.get('/:id/info', async (req, res, next) => {
     try {
-        res.send(await data.members.getMember(req.params.id));
+        res.send(await data.members.get(req.params.id));
     } catch (err) {
         next(err);
     }
@@ -19,7 +19,7 @@ router.get('/:id/info', async (req, res, next) => {
 
 router.post('/add', async (req, res, next) => {
     try {
-        res.send(await data.members.addMember(req.body.data));
+        res.send(await data.members.add(req.body.data));
     } catch (err) {
         next(err);
     }

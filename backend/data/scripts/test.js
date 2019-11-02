@@ -41,4 +41,5 @@ const testBody =
 };
 
 data.init();
-data.members.add(testBody);
+//data.members.add(testBody);
+console.log(JSON.stringify(testBody, '', 4));
