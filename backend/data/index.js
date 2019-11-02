@@ -11,6 +11,10 @@ data.init = async () => {
     console.log('Connected!');
 };
 
-data.members = require('./members');
+data.members = require('./handlers/members');
+data.skills = require('./handlers/skills');
+data.memberTypes = require('./handlers/memberTypes');
+data.subteams = require('./handlers/subteams');
+data.projects = require('./handlers/projects');
 
 module.exports = data;
