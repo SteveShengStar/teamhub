@@ -14,4 +14,16 @@ members.addMember = async (memberBody) => {
     return (await Member.create(memberBody));
 };
 
+members.deleteMember = async (memberId) => {
+    return (await Member.findByIdAndDelete(memberId))
+}
+
+members.updateMember = async (memberId, memberBody) => {
+    return (await Member.findByIdAndUpdate(memberId, memberBody));  
+};
+
+// members.findBy = async (memberId, memberBody) => {
+//     return (await Member.find({}));
+// }
+
 module.exports = members;
