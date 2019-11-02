@@ -109,6 +109,10 @@ const MemberSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Skill'
     }],
+    interests: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Interest'
+    }],
     joined: {
         type: Member_TermSchema,
         required: true

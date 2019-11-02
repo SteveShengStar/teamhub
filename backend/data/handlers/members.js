@@ -1,5 +1,6 @@
 const Member = require('../schema/Member');
 const skills = require('./skills');
+const interests = require('./interests');
 const memberTypes = require('./memberTypes');
 const projects = require('./projects');
 const subteams = require('./subteams');
@@ -10,6 +11,7 @@ const members = {};
 members.getAll = async () => {
     return (await Member.find({})
         .populate('skills')
+        .populate('interests')
         .populate('memberType')
         .populate('subteam')
         .populate('project')
@@ -26,6 +28,7 @@ members.search = async (body) => {
 };
 
 members.add = async (memberBody) => {
+    memberBody.interests = await util.replaceNamesWithIdsArray(memberBody.interests, interests);
     memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
     memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
     memberBody.subteam = await util.replaceNameWithId(memberBody.subteam, subteams);
