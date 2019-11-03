@@ -46,13 +46,13 @@ members.add = async (memberBody) => {
 
 members.delete = async (body) => {
     return util.handleWrapper(async () => {
-        return (await Member.findAndDelete(body).exec());
+        return (await Member.deleteMany(body).exec());
     });
 };
 
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
-        return (await Member.updateOne(filter, body).exec());
+        return (await Member.update(filter, body).exec());
     });
 };
 

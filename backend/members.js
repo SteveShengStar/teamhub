@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id/info', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.get(req.params.id);
+            return await data.members.search({ _id: req.params.id });
         }));
 
     } catch (err) {
@@ -39,7 +39,7 @@ router.post('/add', async (req, res, next) => {
 router.delete('/:id/remove', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.delete({ id: req.params.id });
+            return await data.members.delete({ _id: req.params.id });
         }));
     } catch (err) {
         next(err);
@@ -50,7 +50,7 @@ router.delete('/:id/remove', async (req, res, next) => {
 router.put('/:id/update', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.updateMember({ id: req.params.id }, req.body.data);
+            return await data.members.updateMember({ _id: req.params.id }, req.body.data);
         }));
     } catch (err) {
         next(err);
