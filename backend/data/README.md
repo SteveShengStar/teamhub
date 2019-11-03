@@ -10,6 +10,9 @@
     "skills": [
         "MongoDB"
     ],
+    "interests": [
+        "Database"
+    ],
     "joined": {
         "year": 2019,
         "season": "Fall"

@@ -4,7 +4,9 @@ const data = require('./data/index.js');
 //get list of all members
 router.get('/', async (req, res, next) => {
     try {
-        res.send(await data.members.getAll());
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.getAll();
+        }));
     } catch (err) {
         next(err);
     }
@@ -13,7 +15,10 @@ router.get('/', async (req, res, next) => {
 //get all info about a particular member
 router.get('/:id/info', async (req, res, next) => {
     try {
-        res.send(await data.members.get(req.params.id));
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.get(req.params.id);
+        }));
+
     } catch (err) {
         next(err);
     }
@@ -22,7 +27,9 @@ router.get('/:id/info', async (req, res, next) => {
 //add a member
 router.post('/add', async (req, res, next) => {
     try {
-        res.send(await data.members.add(req.body.data));
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.add(req.body.data);
+        }));
     } catch (err) {
         next(err);
     }
@@ -31,7 +38,9 @@ router.post('/add', async (req, res, next) => {
 //delete a member given id
 router.delete('/:id/remove', async (req, res, next) => {
     try {
-        res.send(await data.members.deleteMember(req.params.id));
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.delete({ id: req.params.id });
+        }));
     } catch (err) {
         next(err);
     }
@@ -40,7 +49,9 @@ router.delete('/:id/remove', async (req, res, next) => {
 //update member
 router.put('/:id/update', async (req, res, next) => {
     try {
-        res.send(await data.members.updateMember(req.params.id, req.body.data));
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.updateMember({ id: req.params.id }, req.body.data);
+        }));
     } catch (err) {
         next(err);
     }

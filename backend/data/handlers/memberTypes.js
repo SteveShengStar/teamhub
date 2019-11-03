@@ -1,17 +1,25 @@
 const MemberType = require('../schema/MemberType');
+const util = require('./util');
 
 const memberType = {};
 
 memberType.getAll = async () => {
-    return (await MemberType.find({}).exec());
+    return util.handleWrapper(async () => {
+        return (await MemberType.find({}).exec());
+    });
 };
 
+
 memberType.search = async (body) => {
-    return (await MemberType.find(body).exec());
+    return util.handleWrapper(async () => {
+        return (await MemberType.find(body).exec());
+    });
 };
 
 memberType.findOrCreate = async (body) => {
-    return (await MemberType.findOneAndUpdate(body, body, { upsert: true, useFindAndModify: false }));
+    return util.handleWrapper(async () => {
+        return (await util.findOrCreate(MemberType, body));
+    });
 };
 
 module.exports = memberType;
