@@ -15,11 +15,11 @@ class MyApp extends App {
     render() {
         const { Component, pageProps } = this.props;
         return (
-            <ThemeProvider theme={theme}>
-                <Provider store={store}>
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
                     <Component {...pageProps} />
-                </Provider>
-            </ThemeProvider>
+                </ThemeProvider>
+            </Provider>
         );
     }
 }
