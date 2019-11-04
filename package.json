@@ -15,9 +15,12 @@
     "mongoose": "^5.7.4",
     "mongoose-unique-validator": "^2.0.3",
     "next": "9.0.7",
+    "next-redux-wrapper": "^4.0.1",
     "nodemon": "^1.19.3",
     "react": "16.10.1",
     "react-dom": "16.10.1",
+    "react-redux": "^7.1.1",
+    "redux-starter-kit": "^1.0.1",
     "styled-components": "^4.4.0",
     "styled-system": "^5.1.2"
   },
