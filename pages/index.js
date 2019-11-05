@@ -1,11 +1,14 @@
 import React from 'react';
 
-import Image from '../components/atoms/Image';
+import PageTemplate from '../components/templates/PageTemplate';
+import { SystemComponent } from '../components/atoms/SystemComponents';
 
 const Home = () => (
-  <div>
-    <Image variant="background" src="/static/background.png" alt="background"/>
-  </div>
+  <PageTemplate title="Explore">
+    <SystemComponent>
+      
+    </SystemComponent>
+  </PageTemplate>
 );
 
 export default Home;

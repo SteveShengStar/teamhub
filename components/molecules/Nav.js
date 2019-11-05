@@ -17,7 +17,6 @@ const MyNav = styled(SystemNav)`
 
 const Line = styled(SystemSpan)`
   height: inherit;
-  width: 10px;
 `;
 
 const NavLink = styled(Link)`
@@ -29,22 +28,42 @@ const NavLink = styled(Link)`
   }
 `;
 
+const NavLogo = styled(Logo)`
+  width: 35%;
+  ${theme.mediaQueries.desktop} {
+    width: auto;
+  }
+`;
+
 const Nav = ({navItems, index}) => (
   <MyNav display="flex" flexDirection="column" alignItems="flex-end">
-    <SystemComponent display="flex">
-      <Title>Team Hub</Title>
-      <Line bg="foreground" mx={6}/>
-      <Logo alignSelf="center"/>
+    <SystemComponent display="flex" justifyContent="flex-end">
+      <Title 
+        fontSize={["smallTitle", "smallTitle", "smallTitle", "title"]} 
+        alignSelf="center"
+        transition="default"
+      >
+        Team Hub
+      </Title>
+      <Line width={["5px","5px","5px","10px"]} bg="foreground" mx={[4,4,4,6]}/>
+      <NavLogo alignSelf="center" />
     </SystemComponent>
-    <SystemComponent display="flex" mt={3}>
+    <SystemComponent 
+      display="flex" 
+      flexWrap="wrap" 
+      justifyContent="flex-end" 
+      mt={3} 
+      width={["80%", "80%", "80%", "auto"]}
+    >
       {
         navItems.map(({name, link}, i) => 
           <NextLink href={link} key={i}>
             <NavLink 
-              fontSize="nav" 
-              fontWeight="bold" 
-              ml={7} 
+              fontSize={["smallNav", "smallNav", "smallNav", "nav"]}
+              fontWeight="bold"
+              ml={7}
               color={i === index ? "theme" : "foreground"}
+              display={["none", "block"]}
             >
               {name}
             </NavLink>
