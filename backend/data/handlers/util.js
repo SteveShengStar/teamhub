@@ -1,0 +1,71 @@
+const util = {};
+
+/**
+ * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
+ */
+util.replaceNamesWithIdsArray = async (values, handler) => {
+    const ids = [];
+    for (const value of values) {
+        const id = (await handler.findOrCreate({ name: value })).id;
+        ids.push(id);
+    }
+    return ids;
+};
+
+/**
+ * For each element in the array, retrieves the ID of a document by the body of the document, or creates a new document and returns its ID if it does not exist
+ */
+util.replaceBodiesWithIdsArray = async (values, handler) => {
+    const ids = [];
+    for (const value of values) {
+        const id = (await handler.findOrCreate(value)).id;
+        ids.push(id);
+    }
+    return ids;
+};
+
+/**
+ * Retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist
+ */
+util.replaceNameWithId = async (value, handler) => {
+    return (await handler.findOrCreate({ name: value })).id;
+};
+
+
+/**
+ * Retrieves the ID of a document by the body of the document, or creates a new document and returns its ID if it does not exist
+ */
+util.replaceBodyWithId = async (value, handler) => {
+    return (await handler.findOrCreate(value)).id;
+};
+
+/**
+ * Finds a document by its body and returns it, if it does not exist, create it
+ */
+util.findOrCreate = async (Model, body) => {
+    return (await (Model.findOneAndUpdate(body, body, { new: true, upsert: true, useFindAndModify: false }).exec()));
+};
+
+util.handleWrapper = async (func) => {
+    return (await func());
+};
+
+/**
+ * Returns an object to be returned by an API endpoint with the success status and the data from a function call
+ */
+util.resWrapper = async (func) => {
+    try {
+        const body = (await func());
+        return ({
+            success: true,
+            body
+        });
+    } catch (error) {
+        return ({
+            success: false,
+            error
+        });
+    }
+};
+
+module.exports = util;

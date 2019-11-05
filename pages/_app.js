@@ -3,10 +3,16 @@
  * Wraps every page around a theme provider
  */
 
-import App from 'next/app'
-import React from 'react'
+import App from 'next/app';
+import React from 'react';
+import withRedux from 'next-redux-wrapper';
+
+import { Provider } from 'react-redux';
+import store from '../data/store';
+
 import { ThemeProvider } from 'styled-components';
 import theme from "../components/theme";
+
 import Nav from '../components/molecules/Nav';
 
 const navItems = [
@@ -27,7 +33,7 @@ const navItems = [
   }
 ];
 
-export default class MyApp extends App {
+class MyApp extends App {
   render () {
     const { Component, pageProps, router } = this.props;
 
@@ -38,10 +44,14 @@ export default class MyApp extends App {
       else index = navItems.findIndex(item => item.link === "/");
     }
     return (
-      <ThemeProvider theme={theme}>
-        <Nav navItems={navItems} index={index}/>
-        <Component {...pageProps} />
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <Nav navItems={navItems} index={index}/>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </Provider>
     )
   }
 }
+
+export default withRedux(() => store)(MyApp);
