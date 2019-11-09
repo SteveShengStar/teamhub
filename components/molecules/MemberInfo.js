@@ -13,13 +13,24 @@ import Subtitle from "../atoms/Subtitle";
 import Header3 from "../atoms/Header3";
 import Body from "../atoms/Body";
 import Header4 from "../atoms/Header4";
+import Image from "../atoms/Image";
+import Header5 from "../atoms/Header5";
 
-const Info = styled(SystemComponent)`
-  position: relative;
-  width: 50%;
-  z-index: 10;
+const InfoCard = styled(Card)`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between; 
+    
+    position: relative;
+    width: 50%;
+    z-index: 10;
 `;
 
+
+const Member = styled(Header3)`
+    margin-bottom: 10px;
+`
 
 const MemberSubtitle = styled(Header4)`
     fontSize: smallTitle;
@@ -56,9 +67,9 @@ const MemberInfo = ({navItems, index}) => {
             "last": "Bob",
             "display": "Rob Bob"
         },
-        "bio": "This is my bio.",
+        "bio": "This is my Bio. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis.",
         "skills": [
-            "MongoDB"
+            "MongoDB", "Python", "CSS"
         ],
         "interests": [
             "Database"
@@ -84,6 +95,7 @@ const MemberInfo = ({navItems, index}) => {
             "currentSchoolTerm": "1A"
         },
         "age": 15,
+        // TODO: Add a year field
         "birthday": {
             "month": 5,
             "day": 12
@@ -92,30 +104,46 @@ const MemberInfo = ({navItems, index}) => {
             {
                 "type": "GitHub",
                 "link": "https://github.com/robobob"
+            },
+            {
+                "type": "Resume",
+                "link": "www.example.com"
             }
         ]
     };
 
-    return (
-        <Info>
-            <Card display="flex" flexDirection="row">
+    let birthday = new Date(2019, memberData.birthday.month, memberData.birthday.day);
+    birthday = birthday.toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'});
 
-                <SystemComponent width={"50%"} ml={3}>
-                    <Header3>Member</Header3>
-                    <Header2 fontSize="smallTitle">{`${memberData.name.first} ${memberData.name.last}`} </Header2>
-                    <MemberSubtitle>{`Member of ${memberData.subteam} team Member of ${memberData.subteam} team Member of ${memberData.subteam} team`}</MemberSubtitle>
-                    <Body>{memberData.bio}</Body>
-                </SystemComponent>
+    const skills = memberData.skills.join(" • ");
+
+    return (
+        <InfoCard>
 
                 <SystemComponent width={"50%"}>
+                    <Member>Member</Member>
                     <Header2 fontSize="smallTitle">{`${memberData.name.first} ${memberData.name.last}`} </Header2>
-                    <MemberSubtitle>{`Member of ${memberData.subteam} team Member of ${memberData.subteam} team Member of ${memberData.subteam} team`}</MemberSubtitle>
+                    <MemberSubtitle>Member of <font color={theme.colors.software}>{memberData.subteam}</font> team</MemberSubtitle>
                     <Body>{memberData.bio}</Body>
                 </SystemComponent>
 
-            </Card>
+                <SystemComponent width={"40%"}>
+                    <Card mb={3}>
+                        <Link href={`mailto:${memberData.email}`}>Email</Link>
+                        {
+                            memberData.links.map(({type, link}, i) =>
+                                <Link href={link} key={i}><p>{type}</p></Link>
+                            )
+                        }
+                        <Body>{`🎂 ${birthday}`}</Body>
+                    </Card>
 
-        </Info>
+                    <Header5>Skills</Header5>
+                    <Body>{skills}</Body>
+
+                </SystemComponent>
+
+        </InfoCard>
     );
 }
 
