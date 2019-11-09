@@ -1,19 +1,14 @@
 import React from 'react'
 import styled from "styled-components";
-import Title from '../atoms/Title';
 import Link from "../atoms/Link";
 
-import {SystemNav, SystemSpan, SystemComponent} from '../atoms/SystemComponents';
+import {SystemComponent} from '../atoms/SystemComponents';
 import theme from '../theme';
-import Logo from '../atoms/Logo';
 import Card from "../atoms/Card";
-import Header1 from "../atoms/Header1";
 import Header2 from "../atoms/Header2";
-import Subtitle from "../atoms/Subtitle";
 import Header3 from "../atoms/Header3";
 import Body from "../atoms/Body";
 import Header4 from "../atoms/Header4";
-import Image from "../atoms/Image";
 import Header5 from "../atoms/Header5";
 
 const InfoCard = styled(Card)`
@@ -27,36 +22,12 @@ const InfoCard = styled(Card)`
     z-index: 10;
 `;
 
-
-const Member = styled(Header3)`
-    margin-bottom: 10px;
-`
-
 const MemberSubtitle = styled(Header4)`
     fontSize: smallTitle;
     margin-bottom: ${0.5 * theme.space.cardMargin}px;
     color: ${theme.colors.greys[3]};
 `
 
-const Line = styled(SystemSpan)`
-  height: inherit;
-`;
-
-const NavLink = styled(Link)`
-  &:hover {
-    color: ${theme.colors.theme};
-  }
-  &:active {
-    color: ${theme.colors.theme};
-  }
-`;
-
-const NavLogo = styled(Logo)`
-  width: 35%;
-  ${theme.mediaQueries.desktop} {
-    width: auto;
-  }
-`;
 
 const MemberInfo = ({navItems, index}) => {
 
@@ -119,15 +90,14 @@ const MemberInfo = ({navItems, index}) => {
 
     return (
         <InfoCard>
-
-                <SystemComponent width={"50%"}>
-                    <Member>Member</Member>
+                <SystemComponent width={["100%", "50%"]}>
+                    <Header3 mb={3}>Member</Header3>
                     <Header2 fontSize="smallTitle">{`${memberData.name.first} ${memberData.name.last}`} </Header2>
                     <MemberSubtitle>Member of <font color={theme.colors.software}>{memberData.subteam}</font> team</MemberSubtitle>
-                    <Body>{memberData.bio}</Body>
+                    <Body mb={3}>{memberData.bio}</Body>
                 </SystemComponent>
 
-                <SystemComponent width={"40%"}>
+                <SystemComponent width={["100%", "40%"]}>
                     <Card mb={3}>
                         <Link href={`mailto:${memberData.email}`}>Email</Link>
                         {
