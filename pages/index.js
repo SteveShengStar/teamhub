@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { space, layout, color, typography } from 'styled-system';
-import { addMember, removeMember } from '../data/reducers/membersSlice';
+
+import {
+  addMember,
+  removeMember,
+  loadAllMembers
+} from '../data/reducers/memberSlice';
 
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
@@ -34,6 +39,9 @@ const Home = ({ members, addMember, removeMember }) => {
   );
 };
 
+Home.getInitialProps = async ({ store }) => {
+  await store.dispatch(loadAllMembers());
+};
 
 const mapStateToProps = (state) => {
     return {
