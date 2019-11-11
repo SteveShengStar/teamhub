@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { port } from '../../config';
 
-export const BASE_API = 'http://localhost:3000/api';
+export const BASE_API = `http://localhost:${port}/api`;
 
 export const HttpVerb = {
   GET: 'GET',

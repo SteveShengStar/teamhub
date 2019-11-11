@@ -2,7 +2,7 @@ const express = require('express');
 const next = require('next');
 const bodyParser = require('body-parser');``
 
-const port = parseInt(process.env.PORT, 10) || 3000;
+const port = require("./config");
 const dev = process.env.NODE_ENV !== 'production';
 const nextapp = next({ dev });
 const api = require('./backend/index');
