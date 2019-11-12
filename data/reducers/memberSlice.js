@@ -6,7 +6,16 @@ import memberSchema from '../api/schema/memberSchema';
 
 const memberSlice = createSlice({
   name: 'members',
-  initialState: { exampleState: [] },
+  initialState: {
+    exampleState: [],
+    skills: {},
+    interests: {},
+    memberTypes: {},
+    subteams: {},
+    projects: {},
+    streams: {},
+    members: {}
+  },
   reducers: {
     setAllMembers(state, action) {
       const {
