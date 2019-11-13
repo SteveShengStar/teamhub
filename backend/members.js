@@ -57,6 +57,17 @@ router.put('/:id/update', async (req, res, next) => {
     }
 });
 
+//search by query object
+router.post('/search', async (req, res, next) => {
+    try {
+        res.send(await data.util.resWrapper(async () => {
+            return await data.members.search(req.body.query);
+        }));
+    } catch (err) {
+        next(err);
+    }
+});
+
 //get members by a particular field -- beta
 // router.put('/by/:field', async (req, res, next) => {
 //     try {
