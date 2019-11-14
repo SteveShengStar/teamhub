@@ -7,8 +7,10 @@ import { addMember, removeMember } from '../data/reducers/membersSlice';
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
 import Button from '../components/atoms/Button';
+import GhostButton from "../components/atoms/GhostButton";
 import Card from '../components/atoms/Card';
 import Header4 from '../components/atoms/Header4';
+import MemberPreviewComponent from '../components/molecules/MemberPreviewComponent';
 
 const Home = ({ members, addMember, removeMember }) => {
   const [count, setCount] = useState(0);
@@ -25,9 +27,10 @@ const Home = ({ members, addMember, removeMember }) => {
           >
               Add State
           </Button>
-          <Button variant={"ghostNeutral"} onClick={() => removeMember(count - 1)}>
+          <GhostButton variant={"neutral"} onClick={() => removeMember(count - 1)}>
               Remove Latest State
-          </Button>
+          </GhostButton>
+          <MemberPreviewComponent name="Kevin Bai" subteam="Software" role="Member" project="Team Hub" />
         </Card>
       </SystemComponent>
     </PageTemplate>
