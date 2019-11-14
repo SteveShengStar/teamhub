@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { space, layout, color, typography } from 'styled-system';
 import { addMember, removeMember } from '../data/reducers/membersSlice';
 
 import PageTemplate from '../components/templates/PageTemplate';

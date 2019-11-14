@@ -4,13 +4,12 @@ import { SystemComponent } from "../atoms/SystemComponents";
 import Subtitle from "../atoms/Subtitle";
 import MyHub from "../organisms/MyHub";
 import styled from "styled-components";
-import theme from "../theme";
 
 export const PageTemplateGridLayout = styled(SystemComponent)`
     display: grid;
     grid-template-rows: 100px 1fr;
     grid-template-columns: inherit;
-    grid-gap: ${theme.space.titleBottomMargin}px;
+    grid-gap: ${props => props.theme.space.titleBottomMargin}px;
 `;
 
 const PageTemplate = ({className, title, children}) => (
