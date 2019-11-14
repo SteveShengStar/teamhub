@@ -4,14 +4,13 @@ import Title from '../atoms/Title';
 import Link from "../atoms/Link";
 import NextLink from "next/link";
 import { SystemNav, SystemSpan, SystemComponent } from '../atoms/SystemComponents';
-import theme from '../theme';
 import Logo from '../atoms/Logo';
 
 const MyNav = styled(SystemNav)`
   background-color: transparent;
   position: absolute;
-  right: ${theme.space.cardMargin}px;
-  top: ${theme.space.cardMargin}px;
+  right: ${props => props.theme.space.cardMargin}px;
+  top: ${props => props.theme.space.cardMargin}px;
   z-index: 10;
 `;
 
@@ -21,16 +20,16 @@ const Line = styled(SystemSpan)`
 
 const NavLink = styled(Link)`
   &:hover {
-    color: ${theme.colors.theme};
+    color: ${props => props.theme.colors.theme};
   }
   &:active {
-    color: ${theme.colors.theme};
+    color: ${props => props.theme.colors.theme};
   }
 `;
 
 const NavLogo = styled(Logo)`
   width: 35%;
-  ${theme.mediaQueries.desktop} {
+  ${props => props.theme.mediaQueries.desktop} {
     width: auto;
   }
 `;
