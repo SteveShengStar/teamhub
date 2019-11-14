@@ -39,4 +39,4 @@ Always create a branch when making changes, then create a PR (Pull Request) - fo
 ### Creating a Branch
 * Create a branch from master
     * `git checkout -b <branch_name>` (-b creates a new branch)
-    * To switch to existing branch: `git checktou <branch_name>`
+    * To switch to existing branch: `git checkout <branch_name>`
