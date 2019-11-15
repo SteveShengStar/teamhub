@@ -6,7 +6,7 @@ import MemberPreviewComponent from "./MemberPreviewComponent";
 
 const Container = styled(SystemComponent)`
     margin: 0 -${props => props.theme.space.cardPadding}px;
-    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 5%,rgba(0,0,0,1.0) 95%,transparent);
+    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 15px,rgba(0,0,0,1.0) calc(100% - 15px),transparent);
     padding: 10px ${props => props.theme.space.cardPadding}px 0;
     height: calc(100% - ${props => props.theme.space.cardPadding * 2}px - 10px);
     display: grid;
