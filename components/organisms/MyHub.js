@@ -8,7 +8,6 @@ import { PageTemplateGridLayout } from "../templates/PageTemplate";
 const MyHub = () => {
     return (
         <Card 
-            boxShadow="none" 
             width="280px" 
             height="inherit" 
             borderRadius="none"

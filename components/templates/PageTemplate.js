@@ -15,12 +15,15 @@ export const PageTemplateGridLayout = styled(SystemComponent)`
 const PageTemplate = ({className, title, children}) => (
     <>
         <Image variant="background" src="/static/background.png" alt="background"/>
-        <SystemComponent display="flex" position="absolute" top={0} left={0} right={0} bottom={0}>
-            <MyHub></MyHub>
+        <SystemComponent display="flex" position="absolute" top={0} left={0} right={0} bottom={0} overflow="hidden" alignItems={"stretch"}>
+            <MyHub />
             <PageTemplateGridLayout
                 className={className}
                 height="inherit"
-                p={"cardMargin"}
+                p="cardMargin"
+                width="inherit"
+                flex={1}
+                alignItems={"stretch"}
             >
                 <Subtitle as="h1" alignSelf="end" fontSize={["smallSubtitle","subtitle"]}>{title}</Subtitle>
                 {React.Children.only(children)}

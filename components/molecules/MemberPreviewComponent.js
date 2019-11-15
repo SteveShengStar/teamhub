@@ -32,22 +32,20 @@ const RowFlexLayout = styled(SystemComponent)`
 
 const MemberPreviewComponent = ({name, subteam, project, role}) => {
     return (
-        <GridLayout backgroundColor="greys.0" borderRadius="small" boxShadow="default">
+        <GridLayout backgroundColor="greys.0" borderRadius="small" boxShadow="default" height={36}>
             <Image 
                 height="36px" 
                 src="/static/default-headshot.png" 
                 gridRow="1/3"
                 borderRadius="18px"
+                overflow="visible"
             />
 
-            <RowFlexLayout>
-                <Header5>{name}</Header5>
-                <Body>{role}</Body>
-            </RowFlexLayout>
+            <Header5>{name}</Header5>
 
             <RowFlexLayout gridRow="2/3" gridColumn="2/3">
                 <BorderlessButton variant={"software"}>{subteam}</BorderlessButton>
-                <Body>{project}</Body>
+                <Body>{role}</Body>
             </RowFlexLayout>
         </GridLayout>
     )
