@@ -30,20 +30,32 @@ const Home = () => (
         transform: "translate(-50%, -50%)",
         padding: "auto",
         justifyContent: "space-around",
-        textAlign: "left"
+        textAlign: "left",
+        // marginLeft: "auto",
+        // marginRight: "auto"
+        marginBottom: "auto",
+        marginTop: "auto"
       }}
     >
-      <Header3>Log In</Header3>
-      <Header3>Login with your Waterloop Email</Header3>
-      <Header3>
-        <GoogleLogin
-          clientId="404915833701-5kvp9td9jonstfsola74atmkjct4h00d.apps.googleusercontent.com-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
-          buttonText="Login with Google"
-          onSuccess={responseGoogle}
-          onFailure={responseGoogle}
-          cookiePolicy={"single_host_origin"}
-        />
-      </Header3>
+      <div
+        style={{
+          textAlign: "center",
+          margin: "auto",
+          lineHeight: "50px" //here
+        }}
+      >
+        <Header3>Log In</Header3>
+        <Header3>Login with your Waterloop Email</Header3>
+        <Header3>
+          <GoogleLogin
+            clientId="404915833701-5kvp9td9jonstfsola74atmkjct4h00d.apps.googleusercontent.com-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+            buttonText="Login with Google"
+            onSuccess={responseGoogle}
+            onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+        </Header3>
+      </div>
     </Card>
   </div>
 );
