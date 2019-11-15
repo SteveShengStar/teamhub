@@ -1,17 +1,17 @@
 import React from "react";
 import GoogleLogin from "react-google-login";
 
-import Button from "../components/atoms/Button";
-import Title from "../components/atoms/Title";
-import Subtitle from "../components/atoms/Subtitle";
-import Header2 from "../components/atoms/Header2";
-import Header3 from "../components/atoms/Header3";
-import Header4 from "../components/atoms/Header4";
-import Body from "../components/atoms/Body";
-import Image from "../components/atoms/Image";
-import Card from "../components/atoms/Card";
-import Select from "../components/atoms/Select";
-import Input from "../components/atoms/Input";
+import Button from "../atoms/Button";
+import Title from "../atoms/Title";
+import Subtitle from "../atoms/Subtitle";
+import Header2 from "../atoms/Header2";
+import Header3 from "../atoms/Header3";
+import Header4 from "../atoms/Header4";
+import Body from "../atoms/Body";
+import Image from "../atoms/Image";
+import Card from "../atoms/Card";
+import Select from "../atoms/Select";
+import Input from "../atoms/Input";
 
 const responseGoogle = response => {
   console.log(response);
@@ -19,7 +19,6 @@ const responseGoogle = response => {
 
 const Login = () => (
   <div>
-    <Image variant="background" src="/static/background.png" alt="background" />
     <Card
       style={{
         height: "20%",
