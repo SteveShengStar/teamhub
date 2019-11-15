@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { SystemHeader } from "./SystemComponents";
 
-const Header2 = styled(SystemHeader.H2)``;
-Header2.defaultProps = {
+const Header5 = styled(SystemHeader.H5)``;
+Header5.defaultProps = {
     fontFamily: "body",
-    fontSize: "header2",
+    fontSize: "header5",
     my: 0
 }
 
-export default Header2;
+export default Header5;

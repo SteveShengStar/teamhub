@@ -32,21 +32,21 @@ const Button = styled(SystemButton)(
             },
             ghost: {
                 color: "action",
-                backgroundColor: "background",
+                backgroundColor: "transparent",
                 borderStyle: "solid",
                 borderWidth: 1,
                 borderColor: "action"
             },
             ghostAlert: {
                 color: "alertAction",
-                backgroundColor: "background",
+                backgroundColor: "transparent",
                 borderStyle: "solid",
                 borderWidth: 1,
                 borderColor: "alertAction"
             },
             ghostNeutral: {
                 color: "black",
-                backgroundColor: "background",
+                backgroundColor: "transparent",
                 borderStyle: "solid",
                 borderWidth: 1,
                 borderColor: "black"
