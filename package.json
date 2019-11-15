@@ -17,6 +17,7 @@
     "nodemon": "^1.19.3",
     "react": "16.10.1",
     "react-dom": "16.10.1",
+    "react-google-login": "^5.0.7",
     "react-select": "^3.0.8",
     "styled-components": "^4.4.0",
     "styled-system": "^5.1.2"
