@@ -17,7 +17,7 @@ const responseGoogle = response => {
   console.log(response);
 };
 
-const Home = () => (
+const Login = () => (
   <div>
     <Image variant="background" src="/static/background.png" alt="background" />
     <Card
@@ -57,4 +57,4 @@ const Home = () => (
   </div>
 );
 
-export default Home;
+export default Login;
