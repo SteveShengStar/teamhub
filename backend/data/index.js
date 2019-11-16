@@ -8,8 +8,6 @@ data.init = async () => {
         throw new Error('No URL found in config.');
     }
 
-    console.log("Connecting to Mongoose Test Suite")
-
     await mongoose.connect(config.url, {
         useCreateIndex: true,
         useUnifiedTopology: true,
