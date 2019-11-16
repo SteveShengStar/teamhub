@@ -14,12 +14,12 @@ data.init = async () => {
         useNewUrlParser: true
     });
 
-    console.log("Connected")
+    console.log('Connected');
 };
 
-data.close = async() => {
+data.close = async () => {
     await mongoose.disconnect();
-}
+};
 
 data.util = require('./handlers/util');
 data.members = require('./handlers/members');

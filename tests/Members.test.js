@@ -12,11 +12,13 @@ describe('Testing Members functions', () => {
         expect(7).toBe(7)
     });
 
+    /*
     it('Tests fetching all members', async () => {
         console.log(await data.util.resWrapper(async () => {
             return await data.members.getAll();
         }));
     })
+    */
 
 
 
