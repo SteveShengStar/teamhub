@@ -6,8 +6,12 @@ import {
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const server = require('../backend/index');
-const data = require('../backend/data/index');
+const api = require('../backend/index');
+
+const server = express();
+server.use(bodyParser.urlencoded({ extended: true }))
+server.use(bodyParser.json());
+server.use('/api', api);
 
 const request = require('supertest');
 
@@ -27,11 +31,11 @@ describe('API Integration Testing', () => {
 
     it('Gets a list of members', async (done) => {
         const response = await request(server).get('/api/members');
-
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
-
         done()
+
+        
     });
 
     // it('Gets a list of members', async () => {
@@ -49,5 +53,5 @@ describe('API Integration Testing', () => {
 });
 
 afterAll(() => {
-    data.close();
+    api.data.close();
 })

@@ -13,7 +13,6 @@ data.init = async () => {
         useUnifiedTopology: true,
         useNewUrlParser: true
     });
-    console.log('Connected!');
 };
 
 data.close = async() => {
