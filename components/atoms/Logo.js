@@ -1,4 +1,3 @@
-import Svg from "./Svg";
 import styled from "styled-components";
 import { composition } from "./SystemComponents";
 

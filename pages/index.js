@@ -10,6 +10,7 @@ import GhostButton from "../components/atoms/GhostButton";
 import Card from '../components/atoms/Card';
 import Header4 from '../components/atoms/Header4';
 import MemberListGrid from '../components/molecules/MemberListGrid';
+import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
 const MemberListCard = styled(Card)`
   height: calc(100% - ${props => props.theme.space.cardMargin}px);
@@ -17,23 +18,39 @@ const MemberListCard = styled(Card)`
 
 const Home = ({ addMember, removeMember }) => {
   const [ members, setMembers ] = useState([]);
+  const [ selectedMember, setSelectedMember ] = useState(undefined);
   /**
    * Refactor to use Redux later, for now, just fetch api directly here
    */
-
   useEffect(() => {
     fetch("/api/members").then((res) => res.json()).then(json => {
       if (json && json.success) setMembers(json.body);
     });
   }, []);
 
+  function onSelectMember(id) {
+    let member = members.find(member => member._id === id);
+    if (member) setSelectedMember(member);
+  }
+
   return (
     <PageTemplate title="Explore">
-      <SystemComponent overflow="hidden">
-        <MemberListCard width={"400px"}>
+      <SystemComponent 
+        overflow="hidden"
+        display="grid" 
+        gridTemplateRows="auto auto"
+        gridTemplateColumns="auto 1fr"
+        gridGap="cardMargin"
+      >
+        <MemberListCard width={"400px"} gridRow="1/3">
           <Header3>Members</Header3>
-          <MemberListGrid members={members}/>
+          <MemberListGrid members={members} onSelect={onSelectMember}/>
         </MemberListCard>
+        {
+          selectedMember && (
+            <MemberInfoCard memberData={selectedMember}/>
+          )
+        }
       </SystemComponent>
     </PageTemplate>
   );
