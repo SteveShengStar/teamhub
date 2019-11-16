@@ -16,8 +16,20 @@ import Input from "../atoms/Input";
 import theme from "../theme";
 
 const responseGoogle = response => {
-  console.log(response);
-};
+  console.log(response)
+  fetch('/api/auth/login', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(response)
+  }).then(function (response) {
+    return response.json();
+  }).then(function (data) {
+    console.log(data);
+  });
+}
 
 const Login = () => (
   <div>

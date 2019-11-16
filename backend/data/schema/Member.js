@@ -115,21 +115,17 @@ const MemberSchema = new Schema({
     }],
     joined: {
         type: Member_TermSchema,
-        required: true
     },
     coopExp: {
         type: [Member_CoopExpSchema],
-        required: true
     },
     memberType: {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: 'MemberType'
     },
     subteam: {
         type: Schema.Types.ObjectId,
         ref: 'Subteam',
-        require: true
     },
     project: {
         type: Schema.Types.ObjectId,
