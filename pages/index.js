@@ -17,6 +17,9 @@ import Body from '../components/atoms/Body';
 import Image from '../components/atoms/Image';
 import Select from "../components/atoms/Select";
 import Input from '../components/atoms/Input';
+import Card from '../components/atoms/Card';
+import MemberListGrid from '../components/molecules/MemberListGrid';
+import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
 
 const MemberListCard = styled(Card)`
@@ -30,11 +33,15 @@ const options = [
 ]
 
 const Home = ({ addMember, removeMember }) => {
+
   const [members, setMembers] = useState([]);
+
+  const [members, setMembers] = useState([]);
+  const [selectedMember, setSelectedMember] = useState(undefined);
+
   /**
    * Refactor to use Redux later, for now, just fetch api directly here
    */
-
   useEffect(() => {
     fetch("/api/members").then((res) => res.json()).then(json => {
       if (json && json.success) setMembers(json.body);
@@ -46,10 +53,20 @@ const Home = ({ addMember, removeMember }) => {
   function toggle() {
     setOnState(!onState)
   }
+  function onSelectMember(id) {
+    let member = members.find(member => member._id === id);
+    if (member) setSelectedMember(member);
+  }
 
   return (
     <PageTemplate title="Explore">
-      <SystemComponent overflow="hidden">
+      <SystemComponent
+        overflow="hidden"
+        display="grid"
+        gridTemplateRows="auto auto"
+        gridTemplateColumns="auto 1fr"
+        gridGap="cardMargin"
+      >
         <MemberListCard width={"auto"} position="relative">
           <Header3>Members</Header3>
           <Input variant="text" placeholder="Search" width="95%" />
@@ -90,14 +107,17 @@ const Home = ({ addMember, removeMember }) => {
               </SystemComponent>
             </SystemComponent>
           }
-
-          <MemberListGrid members={members} />
+          <MemberListGrid members={members} onSelect={onSelectMember} />
         </MemberListCard>
+        {
+          selectedMember && (
+            <MemberInfoCard memberData={selectedMember} />
+          )
+        }
       </SystemComponent>
     </PageTemplate>
   );
 };
-
 
 const mapStateToProps = (state) => {
   return {
