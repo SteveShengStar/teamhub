@@ -1,7 +1,4 @@
-import {
-    skills
-} from '../backend/data/index';
-
+jest.setTimeout(30000)
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -41,17 +38,17 @@ describe('API Integration Testing', () => {
         expect(response.body.success).toBe(true);
         done()
 
-        
     });
 
-    // it('Gets a list of members', async () => {
-    //     const testID = "5dbe69a2ae4a666a47273383";
-    //     const response = await request(server).get(`/apiTest/members/${testID}/info`);
-    //
-    //     expect(response.statusCode).toBe(200);
-    //     expect(response.body.success).toBe(true);
-    // });
+    it('Get info on a member', async (done) => {
+        const testID = "5dbe69a2ae4a666a47273383";
+        const response = await request(server).get(`/api/members/${testID}/info`);
 
+        expect(response.statusCode).toBe(200);
+        expect(response.body.success).toBe(true);
+
+        done()
+    });
 
     // https://zellwk.com/blog/jest-and-mongoose/
     // For testing the add / drop routes
