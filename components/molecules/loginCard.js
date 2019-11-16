@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import GoogleLogin from "react-google-login";
 
 import Button from "../atoms/Button";
@@ -12,6 +13,7 @@ import Image from "../atoms/Image";
 import Card from "../atoms/Card";
 import Select from "../atoms/Select";
 import Input from "../atoms/Input";
+import theme from "../theme";
 
 const responseGoogle = response => {
   console.log(response);
@@ -21,36 +23,47 @@ const Login = () => (
   <div>
     <Card
       style={{
-        height: "20%",
         position: "absolute",
         left: "50%",
         top: "50%",
-        transform: "translate(-50%, -50%)",
-        padding: "auto",
-        justifyContent: "space-around",
-        textAlign: "left",
-        marginBottom: "auto",
-        marginTop: "auto"
+        transform: "translate(-50%, -50%)"
       }}
     >
       <div
         style={{
-          textAlign: "center",
+          textAlign: "left",
           margin: "auto",
-          lineHeight: "50px" //here
+          padding: "30px"
         }}
       >
-        <Header2>Log In</Header2>
-        <Header4>Login with your Waterloop Email</Header4>
-        <Header4>
-          <GoogleLogin
-            clientId="404915833701-5kvp9td9jonstfsola74atmkjct4h00d.apps.googleusercontent.com"
-            buttonText="Login with Google"
-            onSuccess={responseGoogle}
-            onFailure={responseGoogle}
-            cookiePolicy={"single_host_origin"}
-          />
+        <Header2
+          style={{
+            textAlign: "left",
+            marginBottom: "25px"
+          }}
+        >
+          Log In
+        </Header2>
+        <Header4
+          style={{
+            textAlign: "left",
+            marginBottom: "10px"
+          }}
+        >
+          Login with your Waterloop Email
         </Header4>
+
+        <GoogleLogin
+          style={{
+            textAlign: "left",
+            fontFamily: "Nunito Sans"
+          }}
+          clientId="404915833701-5kvp9td9jonstfsola74atmkjct4h00d.apps.googleusercontent.com"
+          buttonText="Sign In"
+          onSuccess={responseGoogle}
+          onFailure={responseGoogle}
+          cookiePolicy={"single_host_origin"}
+        />
       </div>
     </Card>
   </div>
