@@ -6,9 +6,7 @@ import { addMember, removeMember } from '../data/reducers/membersSlice';
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
 import Header3 from '../components/atoms/Header3';
-import GhostButton from "../components/atoms/GhostButton";
 import Card from '../components/atoms/Card';
-import Header4 from '../components/atoms/Header4';
 import MemberListGrid from '../components/molecules/MemberListGrid';
 import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
@@ -44,6 +42,7 @@ const Home = ({ addMember, removeMember }) => {
       >
         <MemberListCard width={"400px"} gridRow="1/3">
           <Header3>Members</Header3>
+
           <MemberListGrid members={members} onSelect={onSelectMember}/>
         </MemberListCard>
         {
@@ -55,7 +54,6 @@ const Home = ({ addMember, removeMember }) => {
     </PageTemplate>
   );
 };
-
 
 const mapStateToProps = (state) => {
     return {

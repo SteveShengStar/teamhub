@@ -103,7 +103,7 @@ const theme = {
       infrastructure: infraOrange
     },
     fonts: {
-        title: "Futura",
+        title: "futura-pt",
         body: "Nunito Sans"
     },
     fontSizes,
