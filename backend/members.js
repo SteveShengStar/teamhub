@@ -2,10 +2,17 @@ const router = require('express').Router();
 const data = require('./data/index.js');
 
 //get list of all members
-router.get('/', async (req, res, next) => {
+router.post('/', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.getAll();
+            let fields = null;
+            if (req.body.fields) {
+                fields = {};
+                for (const field of req.body.fields) {
+                    fields[field] = 1;
+                }
+            }
+            return await data.members.getAll(fields);
         }));
     } catch (err) {
         next(err);
@@ -28,7 +35,7 @@ router.get('/:id/info', async (req, res, next) => {
 router.post('/add', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.add(req.body.data);
+            return await data.members.add(req.body);
         }));
     } catch (err) {
         next(err);
@@ -61,7 +68,14 @@ router.put('/:id/update', async (req, res, next) => {
 router.post('/search', async (req, res, next) => {
     try {
         res.send(await data.util.resWrapper(async () => {
-            return await data.members.search(req.body.query);
+            let fields = null;
+            if (req.body.fields) {
+                fields = {};
+                for (const field of req.body.fields) {
+                    fields[field] = 1;
+                }
+            }
+            return await data.members.search(req.body.query, fieldsnp);
         }));
     } catch (err) {
         next(err);
