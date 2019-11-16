@@ -17,8 +17,6 @@ import Body from '../components/atoms/Body';
 import Image from '../components/atoms/Image';
 import Select from "../components/atoms/Select";
 import Input from '../components/atoms/Input';
-import Card from '../components/atoms/Card';
-import MemberListGrid from '../components/molecules/MemberListGrid';
 import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
 
@@ -33,8 +31,6 @@ const options = [
 ]
 
 const Home = ({ addMember, removeMember }) => {
-
-  const [members, setMembers] = useState([]);
 
   const [members, setMembers] = useState([]);
   const [selectedMember, setSelectedMember] = useState(undefined);
