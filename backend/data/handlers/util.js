@@ -53,7 +53,7 @@ util.handleWrapper = async (func) => {
 /**
  * Returns an object to be returned by an API endpoint with the success status and the data from a function call
  */
-util.resWrapper = async (func) => {
+util.resWrapper =  async (func) => {
     try {
         const body = (await func());
         return ({

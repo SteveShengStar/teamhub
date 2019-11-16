@@ -16,6 +16,10 @@ data.init = async () => {
     console.log('Connected!');
 };
 
+data.close = async() => {
+    await mongoose.disconnect();
+}
+
 data.util = require('./handlers/util');
 data.members = require('./handlers/members');
 data.skills = require('./handlers/skills');
