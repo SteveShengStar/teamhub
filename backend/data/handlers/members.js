@@ -8,28 +8,68 @@ const util = require('./util');
 
 const members = {};
 
-members.getAll = async () => {
+members.getAll = async (fields) => {
     return util.handleWrapper(async () => {
-        return (await (Member.find({})
-            .populate('skills')
-            .populate('interests')
-            .populate('memberType')
-            .populate('subteam')
-            .populate('project')
-            .exec()));
+        if (fields) {
+            const query = Member.find({}).select(fields);
+            if (fields['skills']) {
+                query.populate('skills');
+            }
+            if (fields['interests']) {
+                query.populate('interests');
+            }
+            if (fields['memberType']) {
+                query.populate('memberType');
+            }
+            if (fields['subteam']) {
+                query.populate('subteam');
+            }
+            if (fields['project']) {
+                query.populate('project');
+            }
+            return (await query.exec());
+        } else {
+            return (await (Member.find({})
+                .populate('skills')
+                .populate('interests')
+                .populate('memberType')
+                .populate('subteam')
+                .populate('project')
+                .exec()));
+        }
     });
 };
 
 
-members.search = async (body) => {
+members.search = async (body, fields) => {
     return util.handleWrapper(async () => {
-        return (await (Member.find(body)
-            .populate('skills')
-            .populate('interests')
-            .populate('memberType')
-            .populate('subteam')
-            .populate('project')
-            .exec()));
+        if (fields) {
+            const query = Member.find(body).select(fields);
+            if (fields['skills']) {
+                query.populate('skills');
+            }
+            if (fields['interests']) {
+                query.populate('interests');
+            }
+            if (fields['memberType']) {
+                query.populate('memberType');
+            }
+            if (fields['subteam']) {
+                query.populate('subteam');
+            }
+            if (fields['project']) {
+                query.populate('project');
+            }
+            return (await query.exec());
+        } else {
+            return (await (Member.find(body)
+                .populate('skills')
+                .populate('interests')
+                .populate('memberType')
+                .populate('subteam')
+                .populate('project')
+                .exec()));
+        }
     });
 };
 
