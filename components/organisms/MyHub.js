@@ -12,6 +12,7 @@ const MyHub = () => {
             height="inherit" 
             borderRadius="none"
             py="cardMargin"
+            display={["none", "none", "none", "block"]}
         >
             <PageTemplateGridLayout>
                 <Subtitle alignSelf="end">My Hub</Subtitle>

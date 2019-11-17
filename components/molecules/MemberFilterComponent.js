@@ -52,7 +52,7 @@ const Search = styled(Input)`
 const InputPair = ({title}) => (
     <SystemComponent flex={1} ml={3} mt={3}>
         <Header5 mb={1}>{title}</Header5>
-        <Select options={options} minWidth={150} />
+        <Select options={options} minWidth={150} isMulti/>
     </SystemComponent>
 );
 
