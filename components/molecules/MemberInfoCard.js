@@ -24,11 +24,17 @@ const MemberInfoCard = ({memberData, index, className}) => {
             <SystemComponent>
                 <Header3 mb={3}>Member</Header3>
                 <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ""} </Header2>
-                <MemberSubtitle>
-                    Member of <BorderlessButton variant={memberData.subteam.name.toLowerCase()} fontSize="inherit" fontWeight="inherit">
-                        {memberData.subteam ? ` ${memberData.subteam.name} ` : ""}
-                    </BorderlessButton> team
-                </MemberSubtitle>
+                {
+                    memberData.subteam ? (
+                        <MemberSubtitle>
+                            Member of <BorderlessButton variant={memberData.subteam.name.toLowerCase()} fontSize="inherit" fontWeight="inherit">
+                                {memberData.subteam ? ` ${memberData.subteam.name} ` : ""}
+                            </BorderlessButton> team
+                        </MemberSubtitle>
+                    )
+                    : <MemberSubtitle>New Member</MemberSubtitle>
+
+                }
                 <Body mb={3}>{memberData.bio || ""}</Body>
             </SystemComponent>
 
@@ -41,7 +47,7 @@ const MemberInfoCard = ({memberData, index, className}) => {
                     <SystemComponent display="flex" flexDirection="column" padding={3}>
                         <InlineItemRow>
                             <MailIcon />
-                            <Link ml={2} href={`mailto:${memberData.email}`}>Email</Link>
+                            <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ""}>Email</Link>
                         </InlineItemRow>
                         {
                             memberData.links && memberData.links.map(({type, link}, i) =>
@@ -69,9 +75,9 @@ const InfoCard = styled(Card)`
     display: grid;
     max-width: 800px;
     grid-template-rows: 1fr;
-    grid-template-columns: minmax(100px, 1fr) minmax(auto, 250px);
+    grid-template-columns: minmax(100px, 1fr) minmax(auto, 200px);
     grid-gap: ${props => props.theme.space[3]}px;
-    justify-content: space-between; 
+    justify-content: space-between;
     position: relative;
     z-index: 10;
 `;
