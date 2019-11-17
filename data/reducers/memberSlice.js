@@ -14,7 +14,8 @@ const memberSlice = createSlice({
     subteams: {},
     projects: {},
     streams: {},
-    members: {}
+    members: {},
+    selectedMember: {}
   },
   reducers: {
     setAllMembers(state, action) {
@@ -36,6 +37,27 @@ const memberSlice = createSlice({
         projects,
         streams,
         members
+      };
+    },
+    setSelectedMember(state, action) {
+      const {
+        skills,
+        interests,
+        memberTypes,
+        subteams,
+        projects,
+        streams,
+        members
+      } = action.payload;
+      return {
+        ...state,
+        skills: { ...state.skills, ...skills },
+        interests: { ...state.interests, ...interests },
+        memberTypes: { ...state.memberTypes, ...memberTypes },
+        subteams: { ...state.subteams, ...subteams },
+        projects: { ...state.projects, ...projects },
+        streams: { ...state.streams, ...streams },
+        selectedMember: Object.values(members)[0]
       };
     },
     addMember(state, action) {
@@ -65,6 +87,24 @@ export const loadAllMembers = function() {
       }
     } catch (err) {
       console.log('Error: Failed to initialize members - ', err);
+    }
+  };
+};
+
+export const loadSelectedMember = function(id) {
+  console.log(id);
+  return async function(dispatch) {
+    try {
+      const res = await memberService.get(id);
+      if (res.success) {
+        const normalizedData = normalize(res, memberSchema);
+        console.log(normalizedData.entities.members);
+        dispatch(
+          memberSlice.actions.setSelectedMember(normalizedData.entities)
+        );
+      }
+    } catch (err) {
+      console.log(`Error: Failed to fetch member with id ${id} `, err);
     }
   };
 };

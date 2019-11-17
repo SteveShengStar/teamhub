@@ -6,7 +6,8 @@ import { space, layout, color, typography } from 'styled-system';
 import {
   addMember,
   removeMember,
-  loadAllMembers
+  loadAllMembers,
+  loadSelectedMember
 } from '../data/reducers/memberSlice';
 
 import PageTemplate from '../components/templates/PageTemplate';
@@ -15,9 +16,10 @@ import Button from '../components/atoms/Button';
 import Card from '../components/atoms/Card';
 import Header4 from '../components/atoms/Header4';
 
-const Home = ({ members, addMember, removeMember }) => {
+const Home = ({ members, addMember, removeMember, loadSelectedMember }) => {
   const [count, setCount] = useState(0);
   const membersList = members.members;
+  const selectedMember = members.selectedMember;
   const exampleState = members.exampleState;
   return (
     <PageTemplate title="Explore">
@@ -28,10 +30,13 @@ const Home = ({ members, addMember, removeMember }) => {
             mr={3}
             onClick={() => {
               setCount(count + 1);
+              if (count < Object.keys(membersList).length) {
+                loadSelectedMember(Object.keys(membersList)[count]);
+              }
               addMember({ id: count });
             }}
           >
-            Add State
+            Add State and select next member
           </Button>
           <Button
             variant={'ghostNeutral'}
@@ -47,6 +52,8 @@ const Home = ({ members, addMember, removeMember }) => {
               );
             })}
           </ul>
+          <Header4>SelectedMember:</Header4>
+          <p>{selectedMember._id}</p>
         </Card>
       </SystemComponent>
     </PageTemplate>
@@ -65,7 +72,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   addMember,
-  removeMember
+  removeMember,
+  loadSelectedMember
 };
 
 export default connect(

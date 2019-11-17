@@ -7,3 +7,11 @@ export function getAll() {
   };
   return executeRequest(request);
 }
+
+export function get(id) {
+  const request = {
+    method: HttpVerb.GET,
+    url: `${BASE_API}/members/${id}/info`
+  };
+  return executeRequest(request);
+}
