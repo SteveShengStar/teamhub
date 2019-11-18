@@ -1,4 +1,4 @@
-jest.setTimeout(30000)
+jest.setTimeout(60000)
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -20,16 +20,9 @@ beforeAll(async (done) => {
 
 describe('API Integration Testing', () => {
 
-    // afterAll(done => {
-    //     // Closing the DB connection allows Jest to exit successfully.
-    //     mongoose.connection.close()
-    //     done()
-    // })
-
     it('Testing to see if Jest works', () => {
         expect(7).toBe(7)
     });
-
 
     it('Gets a list of members', async (done) => {
         const response = await request(server).get('/api/members');
@@ -51,10 +44,10 @@ describe('API Integration Testing', () => {
     });
 
     // https://zellwk.com/blog/jest-and-mongoose/
-    // For testing the add / drop routes
+    // TODO: Set up Local MongoDB for testing the add / drop routes
 
 });
 
 afterAll(() => {
     api.data.close();
-})
+});

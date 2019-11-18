@@ -1,4 +1,4 @@
-jest.setTimeout(40000);
+jest.setTimeout(60000);
 
 
 const api = require('../backend/index');
@@ -12,7 +12,7 @@ beforeAll(async (done) => {
 
 describe('Testing Utility functions', () => {
 
-    it('Test Handle Wrapper ', async () => {
+    it('Test Handle Wrapper', async () => {
 
         const test = async () => {
             return new Promise((resolve => {
@@ -55,10 +55,7 @@ describe('Testing Utility functions', () => {
         expect(resp.length).toBe(1);
     })
 
-
-
     // TODO: Add Tests for find / delete
-
 
     // https://zellwk.com/blog/jest-and-mongoose/
     // For testing the add / drop routes
@@ -67,7 +64,7 @@ describe('Testing Utility functions', () => {
 
 afterAll(() => {
     api.data.close();
-})
+});
 
 
 
