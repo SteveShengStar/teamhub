@@ -8,7 +8,9 @@ import React from 'react';
 import withRedux from 'next-redux-wrapper';
 
 import { Provider } from 'react-redux';
-import store from '../data/store';
+import { configureStore } from 'redux-starter-kit';
+
+import rootReducer from '../data/rootReducer';
 
 import { ThemeProvider } from 'styled-components';
 import theme from "../components/theme";
@@ -33,9 +35,25 @@ const navItems = [
   }
 ];
 
+const makeStore = (initialState, options) => {
+  return configureStore({
+    reducer: rootReducer,
+    preloadedState: initialState
+  });
+};
+
 class MyApp extends App {
+
+  static async getInitialProps({ Component, ctx }) {
+    return {
+      pageProps: Component.getInitialProps
+        ? await Component.getInitialProps(ctx)
+        : {}
+    };
+  }
+
   render () {
-    const { Component, pageProps, router } = this.props;
+    const { Component, pageProps, router, store } = this.props;
 
     let index = -1;
     if (router && router.route) {
@@ -54,4 +72,4 @@ class MyApp extends App {
   }
 }
 
-export default withRedux(() => store)(MyApp);
+export default withRedux(makeStore)(MyApp);
