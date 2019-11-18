@@ -1,4 +1,4 @@
-jest.setTimeout(40000);
+jest.setTimeout(60000);
 
 const api = require('../backend/index');
 
@@ -7,41 +7,49 @@ beforeAll(async (done) => {
     done();
 });
 
+// Needs to Be valid JSON
 const testMemberData = {
-    name: {
-        first: 'Test',
-        last: 'User',
-        display: 'Test User'
+    "_id": "5dd1df5bc08e041f7d7b83f1",
+    "name": {
+        "first": "User1010",
+        "last": "User1010",
+        "display": "User1010"
     },
-    bio: 'This is my bio.',
-    skills: ['MongoDB'],
-    joined: {
-        year: 2019,
-        season: 'Fall'
+    "skills": [
+        "MongoDB"
+    ],
+    "interests": [
+        "Database"
+    ],
+    "joined": {
+        "year": 2019,
+        "season": "Fall"
     },
-    coopExp: [],
-    memberType: 'Newbie',
-    subteam: 'Software',
-    project: {
-        name: 'TeamHub',
-        subteams: ['Software']
+    "coopExp": [],
+    "memberType": "Newbie",
+    "subteam": "Software",
+    "project": {
+        "name": "TeamHub",
+        "subteams": [
+            "Software"
+        ]
     },
-    email: 'test@testing.test',
-    stream: {
-        isCoop: true,
-        onStream: true,
-        coopStream: 1,
-        currentSchoolTerm: '1A'
+    "email": "user1010@testing.ca",
+    "stream": {
+        "isCoop": true,
+        "onStream": true,
+        "coopStream": 1,
+        "currentSchoolTerm": "1A"
     },
-    age: 18,
-    birthday: {
-        month: 4,
-        day: 10
+    "age": 15,
+    "birthday": {
+        "month": 5,
+        "day": 12
     },
-    links: [
+    "links": [
         {
-            type: 'GitHub',
-            link: 'https://github.com/mchlp'
+            "type": "GitHub",
+            "link": "https://github.com/robobob"
         }
     ]
 };
@@ -55,17 +63,24 @@ describe('Testing Members functions', () => {
             return await api.data.members.add(testMemberData);
         });
 
-        console.log(resp)
+        expect(resp.success).toBe(true);
+    });
+
+    it('Tests updating a members data', async () => {
+
+        const resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.updateMember({ _id: '5dd1df5bc08e041f7d7b83f1' }, {"email": "user1011@testing.ca"});
+        });
 
         expect(resp.success).toBe(true);
     });
 
-    it('Searching a Member', async () => {
+    it('Tests searching a Member', async () => {
 
         const searchData = {
             "query": {
                 "name": {
-                    "first": "Michael"
+                    "first": "User1010"
                 }
             }
         };
@@ -77,6 +92,14 @@ describe('Testing Members functions', () => {
         expect(resp.success).toBe(true);
     });
 
+    it('Tests deleting a members data', async () => {
+
+        const resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.delete({ _id: '5dd1df5bc08e041f7d7b83f1'});
+        });
+
+        expect(resp.success).toBe(true);
+    });
 
 });
 
