@@ -8,12 +8,12 @@ const MemberListGrid = ({members, onSelect, className}) => {
     return (
         <Container gridGap={4} overflowY="scroll" className={className}>
             {
-                members && members.map((member, i) => 
+                members && Object.keys(members).map((key, i) => 
                     <MemberPreviewComponent key={i}
-                        name={`${member.name.first} ${member.name.last}`}
-                        subteam={member.subteam ? member.subteam.name : ""} 
-                        role={member.memberType ? member.memberType.name : ""}
-                        onClick={() => onSelect(member._id)}
+                        name={`${members[key].name.first} ${members[key].name.last}`}
+                        subteam={members[key].subteam ? members[key].subteam.name : ""} 
+                        role={members[key].memberType ? members[key].memberType.name : ""}
+                        onClick={() => onSelect(members[key]._id)}
                     />
                 )
             }

@@ -1,7 +1,7 @@
 # API Reference
-##`/members`
+## `/members`
 
-###`POST /members/`
+### `POST /members/`
 **Body Parameters**
 |Field              |Description                                                                                                              |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -10,7 +10,7 @@
 **Returns**
 A JSON object with all members with all specified fields
 
-###`GET /members/:id/info`
+### `GET /members/:id/info`
 **URL Parameters**
 |Field|Description |
 |-----|------------|
@@ -18,7 +18,7 @@ A JSON object with all members with all specified fields
 **Returns**
 A JSON object of the member with the specified ID.
 
-###`POST /members/add`
+### `POST /members/add`
 **Body Parameters**
 |Field|Description                                                 |
 |-----|------------------------------------------------------------|
@@ -74,7 +74,7 @@ For example,
 **Returns**
 A copy of the document inserted into the database.
 
-###`DELETE /members/:id/remove`
+### `DELETE /members/:id/remove`
 **URL Parameters**
 |Field|Description |
 |-----|------------|
@@ -82,7 +82,7 @@ A copy of the document inserted into the database.
 **Returns**
 A JSON object with the results
 
-###`PUT /members/:id/update`
+### `PUT /members/:id/update`
 **URL Parameters**
 |Field|Description           |
 |-----|----------------------|
@@ -94,7 +94,7 @@ A JSON object with the results
 **Returns**
 A JSON object with the results
 
-###`POST /members/search`
+### `POST /members/search`
 **Body Parameters**
 |Field              |Description                                                                                                              |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------|

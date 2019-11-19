@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import styled from "styled-components";
 import { connect } from 'react-redux';
-import { addMember, removeMember } from '../data/reducers/membersSlice';
+
+import {
+  addMember,
+  removeMember,
+  loadAllMembers,
+  loadSelectedMember
+} from '../data/reducers/memberSlice';
+
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
 import Header3 from '../components/atoms/Header3';
@@ -10,23 +16,13 @@ import MemberFilterComponent from "../components/molecules/MemberFilterComponent
 import MemberListGrid from '../components/molecules/MemberListGrid';
 import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
-const Home = ({ addMember, removeMember }) => {
-  const [members, setMembers] = useState([]);
-  const [selectedMember, setSelectedMember] = useState(undefined);
+const Home = ({ members, loadSelectedMember, selectedMember }) => {
 
-  /**
-   * Refactor to use Redux later, for now, just fetch api directly here
-   */
-  useEffect(() => {
-    fetch("/api/members").then((res) => res.json()).then(json => {
-      if (json && json.success) setMembers(json.body);
-    });
-  }, []);
   function onSelectMember(id) {
-    let member = members.find(member => member._id === id);
-    if (member) setSelectedMember(member);
+    loadSelectedMember(id);
   }
-  // end of methods to be replaced by redux
+
+  console.log(members);
 
   return (
     <PageTemplate title="Explore">
@@ -44,7 +40,7 @@ const Home = ({ addMember, removeMember }) => {
         >
           <Header3>Members</Header3>
           <MemberFilterComponent />
-          <MemberListGrid members={members} onSelect={onSelectMember} />
+          <MemberListGrid members={members.members} onSelect={onSelectMember} />
         </Card>
         {
           selectedMember && (
@@ -56,15 +52,21 @@ const Home = ({ addMember, removeMember }) => {
   );
 };
 
+Home.getInitialProps = async ({ store }) => {
+  await store.dispatch(loadAllMembers());
+};
+
 const mapStateToProps = (state) => {
   return {
-    members: state.members
+    members: state.members,
+    selectedMember: state.members.selectedMember
   };
 };
 
 const mapDispatchToProps = {
   addMember,
-  removeMember
+  removeMember,
+  loadSelectedMember
 };
 
 export default connect(
