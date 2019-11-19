@@ -4,6 +4,7 @@ const util = {};
  * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
  */
 util.replaceNamesWithIdsArray = async (values, handler) => {
+    if (!values) return values;
     const ids = [];
     for (const value of values) {
         const id = (await handler.findOrCreate({ name: value })).id;
@@ -16,6 +17,7 @@ util.replaceNamesWithIdsArray = async (values, handler) => {
  * For each element in the array, retrieves the ID of a document by the body of the document, or creates a new document and returns its ID if it does not exist
  */
 util.replaceBodiesWithIdsArray = async (values, handler) => {
+    if (!values) return values;
     const ids = [];
     for (const value of values) {
         const id = (await handler.findOrCreate(value)).id;
@@ -28,6 +30,7 @@ util.replaceBodiesWithIdsArray = async (values, handler) => {
  * Retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist
  */
 util.replaceNameWithId = async (value, handler) => {
+    if (!value) return value;
     return (await handler.findOrCreate({ name: value })).id;
 };
 
@@ -36,6 +39,7 @@ util.replaceNameWithId = async (value, handler) => {
  * Retrieves the ID of a document by the body of the document, or creates a new document and returns its ID if it does not exist
  */
 util.replaceBodyWithId = async (value, handler) => {
+    if (!value) return value;
     return (await handler.findOrCreate(value)).id;
 };
 
@@ -61,9 +65,10 @@ util.resWrapper =  async (func) => {
             body
         });
     } catch (error) {
+        console.error(error);
         return ({
             success: false,
-            error
+            error: error.toString()
         });
     }
 };

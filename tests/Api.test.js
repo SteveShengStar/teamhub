@@ -25,7 +25,7 @@ describe('API Integration Testing', () => {
     });
 
     it('Gets a list of members', async (done) => {
-        const response = await request(server).get('/api/members');
+        const response = await request(server).post('/api/members');
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);

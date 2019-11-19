@@ -27,5 +27,6 @@ data.skills = require('./handlers/skills');
 data.memberTypes = require('./handlers/memberTypes');
 data.subteams = require('./handlers/subteams');
 data.projects = require('./handlers/projects');
+data.auth = require('./handlers/auth');
 
 module.exports = data;

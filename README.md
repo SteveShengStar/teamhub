@@ -41,12 +41,3 @@ Build project
 
 Run server (development)
 ```npm run dev```
-
-## Source Control
-
-Always create a branch when making changes, then create a PR (Pull Request) - for code review - to merge into the master.
-
-### Creating a Branch
-* Create a branch from master
-    * `git checkout -b <branch_name>` (-b creates a new branch)
-    * To switch to existing branch: `git checkout <branch_name>`
