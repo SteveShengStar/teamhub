@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import { space, layout, color, typography } from 'styled-system';
 
 import {
   addMember,
@@ -12,49 +10,43 @@ import {
 
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
-import Button from '../components/atoms/Button';
+import Header3 from '../components/atoms/Header3';
 import Card from '../components/atoms/Card';
-import Header4 from '../components/atoms/Header4';
+import MemberFilterComponent from "../components/molecules/MemberFilterComponent";
+import MemberListGrid from '../components/molecules/MemberListGrid';
+import MemberInfoCard from '../components/molecules/MemberInfoCard';
 
-const Home = ({ members, addMember, removeMember, loadSelectedMember }) => {
-  const [count, setCount] = useState(0);
-  const membersList = members.members;
-  const selectedMember = members.selectedMember;
-  const exampleState = members.exampleState;
+const Home = ({ members, loadSelectedMember, selectedMember }) => {
+
+  function onSelectMember(id) {
+    loadSelectedMember(id);
+  }
+
+  console.log(members);
+
   return (
     <PageTemplate title="Explore">
-      <SystemComponent>
-        <Card width={'300px'}>
-          <Header4>Example State: {exampleState.map((i) => i.id)}</Header4>
-          <Button
-            mr={3}
-            onClick={() => {
-              setCount(count + 1);
-              if (count < Object.keys(membersList).length) {
-                loadSelectedMember(Object.keys(membersList)[count]);
-              }
-              addMember({ id: count });
-            }}
-          >
-            Add State and select next member
-          </Button>
-          <Button
-            variant={'ghostNeutral'}
-            onClick={() => removeMember(count - 1)}
-          >
-            Remove Latest State
-          </Button>
-          <Header4>Member List:</Header4>
-          <ul>
-            {Object.keys(membersList).map((i) => {
-              return (
-                <li key={membersList[i]._id}>{membersList[i].name.first}</li>
-              );
-            })}
-          </ul>
-          <Header4>SelectedMember:</Header4>
-          <p>{selectedMember._id}</p>
+      <SystemComponent
+        overflow="hidden"
+        display="grid"
+        gridTemplateRows="auto auto"
+        gridTemplateColumns="auto 1fr"
+        gridGap="cardMargin"
+      >
+        <Card 
+          width={"auto"} minWidth={[300, 300, 300, "35vw"]} maxWidth={400, 400, 400, "35vw"} gridRow="1/3" 
+          display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
+          overflow="scroll"
+        >
+          <Header3>Members</Header3>
+          <MemberFilterComponent />
+          <MemberListGrid members={members.members} onSelect={onSelectMember} />
         </Card>
+        {
+          selectedMember && (
+            <MemberInfoCard memberData={selectedMember} />
+          )
+        }
       </SystemComponent>
     </PageTemplate>
   );
@@ -66,7 +58,8 @@ Home.getInitialProps = async ({ store }) => {
 
 const mapStateToProps = (state) => {
   return {
-    members: state.members
+    members: state.members,
+    selectedMember: state.members.selectedMember
   };
 };
 

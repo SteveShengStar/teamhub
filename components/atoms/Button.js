@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { SystemButton } from "./SystemComponents";
-import { variant } from "styled-system";
+import { variant, color, space } from "styled-system";
 
 const Button = styled(SystemButton)(
     {
         border: "none",
+        color: props => props.theme.colors.background,
         outline: "none",
         "&:hover": {
             opacity: 0.5,
@@ -19,42 +20,31 @@ const Button = styled(SystemButton)(
     variant({
         variants: {
             primary: {
-                color: "background",
                 backgroundColor: "action",
             },
-            primaryAlert: {
-                color: "background",
+            alert: {
                 backgroundColor: "alertAction"
             },
-            primaryNeutral: {
-                color: "background",
+            neutral: {
                 backgroundColor: "black"
             },
-            ghost: {
-                color: "action",
-                backgroundColor: "transparent",
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderColor: "action"
+            software: {
+                backgroundColor: "software"
             },
-            ghostAlert: {
-                color: "alertAction",
-                backgroundColor: "transparent",
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderColor: "alertAction"
+            mechanical: {
+                backgroundColor: "mechanical",
             },
-            ghostNeutral: {
-                color: "black",
-                backgroundColor: "transparent",
-                borderStyle: "solid",
-                borderWidth: 1,
-                borderColor: "black"
+            electrical: {
+                backgroundColor: "electrical"
             },
-            borderless: {
-                backgroundColor: "transparent",
-                padding: 0,
-                color: "action"
+            admin: {
+                backgroundColor: "admin",
+            },
+            exec: {
+                backgroundColor: "exec"
+            },
+            infrastructure: {
+                backgroundColor: "infrastructure"
             }
         }
     }),

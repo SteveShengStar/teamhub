@@ -35,6 +35,7 @@ export default class MyDocument extends Document {
       <Html>
         <Head>
           <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,800,900&display=swap" rel="stylesheet" />
+          <link rel="stylesheet" href="https://use.typekit.net/xwr3ezi.css" />
         </Head>
         <body style={{margin: 0}}>
           <Main />

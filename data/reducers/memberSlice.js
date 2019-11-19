@@ -92,7 +92,6 @@ export const loadAllMembers = function() {
 };
 
 export const loadSelectedMember = function(id) {
-  console.log(id);
   return async function(dispatch) {
     try {
       const res = await memberService.get(id);
