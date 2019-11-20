@@ -30,6 +30,9 @@ const navItems = [
   },
   {
     name: "Account", link: "/account"
+  },
+  {
+    name: "Team Structure", link: "/team-structure"
   }
 ];
 
