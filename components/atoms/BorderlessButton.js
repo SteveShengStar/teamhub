@@ -1,41 +1,41 @@
-import styled from "styled-components";
-import { variant } from "styled-system";
+import styled from 'styled-components';
+import { variant } from 'styled-system';
 
-import Button from "./Button";
+import Button from './Button';
 
 const BorderlessButton = styled(Button)(
     {
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
         padding: 0,
     },
     variant({
         variants: {
             primary: {
-                color: "action"
+                color: 'action'
             },
             alert: {
-                color: "alertAction"
+                color: 'alertAction'
             },
             neutral: {
-                color: "black"
+                color: 'black'
             },
             software: {
-                color: "software"
+                color: 'software'
             },
             mechanical: {
-                color: "mechanical",
+                color: 'mechanical',
             },
             electrical: {
-                color: "electrical"
+                color: 'electrical'
             },
             admin: {
-                color: "admin",
+                color: 'admin',
             },
             exec: {
-                color: "exec"
+                color: 'exec'
             },
             infrastructure: {
-                color: "infrastructure"
+                color: 'infrastructure'
             }
         }
     })

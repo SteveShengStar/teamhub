@@ -13,7 +13,7 @@ Repository for the TeamHub Project. Technologies used:
 
 Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
 
-## Running Locally
+## Setting up Development Environment
 Here are the steps to run locally.
 
 ## Contributing
