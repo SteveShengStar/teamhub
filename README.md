@@ -13,6 +13,9 @@ Repository for the TeamHub Project. Technologies used:
 
 Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
 
+## Running Locally
+Here are the steps to run locally.
+
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
 2. Assign yourself to the issue to let others know you are working on it.
