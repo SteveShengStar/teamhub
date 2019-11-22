@@ -1,13 +1,47 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
+import Header3 from '../components/atoms/Header3';
+import MemberListGrid from '../components/molecules/MemberListGrid';
 import theme from "../components/theme";
 
 import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
 
 import $ from "jquery";
+
+const members_json = 
+    [{
+        _id: 3,
+        name: {
+            first: "Steven",
+            last: "Xiong"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Newbie"
+        }
+    },
+    {
+        _id: 2,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
+    }
+];
+
+const HierSubSection = styled(SystemComponent)`
+`;
 
 const teamHierCustomTheme = {
     ...theme,
@@ -105,7 +139,36 @@ const selectionTiers = [
     },
 ];
 
+
+
+
 class TeamHierarchy extends React.Component {
+
+    constructor(props){
+        super(props)
+        this.state = {
+            members: [],
+            selectedMember: undefined
+        };
+    }
+
+    /**
+     * Refactor to use Redux later, for now, just fetch api directly here
+     */
+    componentDidMount() {
+        fetch("/api/members").then((res) => res.json()).then(json => {
+            if (json && json.success) {
+                this.setState({members: json.body});
+            }
+        });
+    }
+
+    function onSelectMember(id) {
+        let member = members.find(member => member._id === id);
+        if (member){
+            this.setState({selectedMember: member});
+        } 
+    }
 
     onClick = (e) => {
         //console.log($(e.target).parent().find("input"));
@@ -155,6 +218,31 @@ class TeamHierarchy extends React.Component {
                                     </form>
                                 </SearchFormContainer>
                             </FormWrapper>
+
+                            <SystemComponent display="flex" flexDirection="column">
+                                
+                                <HierSubSection>
+                                    <Header3>Directors</Header3>
+                                    <MemberListGrid members={members} onSelect={onSelectMember}></MemberListGrid>
+                                </HierSubSection>
+
+                                <HierSubSection>
+                                    <Header3>Team Leads</Header3>
+                                </HierSubSection>
+
+                                <HierSubSection>
+                                    <Header3>Subteam Leads</Header3>
+                                </HierSubSection>
+
+                                <HierSubSection>
+                                    <Header3>Project Head</Header3>
+                                </HierSubSection>
+
+                                <HierSubSection>
+                                    <Header3>Subordinates - Tier 1</Header3>
+                                </HierSubSection>
+                            </SystemComponent>
+
                         </TeamHierParentContainer>
                     </div>
                     <style jsx>{`
