@@ -1,12 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {ThemeProvider} from 'styled-components';
 import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
+import theme from "../components/theme";
 
-import { SystemComponent } from '../components/atoms/SystemComponents';
+import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
 
 import $ from "jquery";
+
+const teamHierCustomTheme = {
+    ...theme,
+    breakpoints: ["810px","1090px"]
+};
 
 const TeamHierParentContainer = styled(Card)`
     border-radius: 0;
@@ -15,13 +21,13 @@ const TeamHierParentContainer = styled(Card)`
 
 const SearchFormContainer = styled(SystemComponent)`
     width: 100%;
-    margin-top: ${props => props.theme.space[4]}px;
+    margin-top: ${theme.space[4]}px;
 
-    @media screen and (min-width: 810px) {
+    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
         width: 66.66%;
         margin-top: 0;
     }
-    @media screen and (min-width: 1090px) {
+    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
         width: auto;
     }
 `;
@@ -29,11 +35,11 @@ const SearchFormContainer = styled(SystemComponent)`
 const RadioFormContainer = styled(SystemComponent)`
     width: 100%;
 
-    @media screen and (min-width: 810px) {
+    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
         width: 33.33%;
     }
-    @media screen and (min-width: 1090px) {
-        width: 312px;
+    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
+        width: 195px;
     }
 `;
 
@@ -42,17 +48,38 @@ const RadioFormContainer = styled(SystemComponent)`
 // previous and current selections ie) SW team, team hub
 const TeamStructSideNav = styled(SystemComponent)`
     background-color: #FFFFFF;
-    margin: ${props => props.theme.space[4]}px;
+    margin: ${theme.space[4]}px;
 `;
 
 const FormWrapper = styled(SystemComponent)`
     display: flex;
     flex-direction: column;
 
-    @media screen and (min-width: 810px) {
+    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
         flex-direction: row;
     }
 `;
+
+const CustomRadio = styled(SystemSpan)`
+    height: 14px;
+    width: 14px;
+    background-color: #ffffff;
+    border-radius: 50%;
+
+    display: inline-block;
+    margin-right: ${theme.space[4]};
+    cursor: pointer;
+}
+`
+
+const TeamHierSearchBar = styled(Input)`
+    box-sizing: border-box;
+    width: 100%;
+    
+    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
+        width: 465px;
+    }
+`
 
 // static data
 const selectionTiers = [
@@ -81,13 +108,18 @@ const selectionTiers = [
 class TeamHierarchy extends React.Component {
 
     onClick = (e) => {
+        //console.log($(e.target).parent().find("input"));
         $(e.target).parent().find("input").checked = true;
+        $("radio-container .radio-mock").css("background-color", "#ffffff");
+        $(e.target).css("background-color", "#2196F3");
     }
 
     render() {
         return (
             <PageTemplate title="Team Structure">
                 <React.Fragment>
+                <ThemeProvider theme={teamHierCustomTheme}>
+                
                     <div id="ts-container">
                         <SystemComponent 
                         width="337px"
@@ -104,22 +136,22 @@ class TeamHierarchy extends React.Component {
                                         <div className="radio-container">
                                             <label>
                                                 <input type="radio" name="filter-by" value="name" defaultChecked/>
-                                                <span className="radio-mock" onClick={this.onClick}></span>
-                                                Filter By Name
+                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="8px" height="8px" position="relative" top="3px" left="3px"></SystemSpan></CustomRadio>
+                                                <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
                                             </label>
                                         </div>
                                         <div className="radio-container">
                                             <label>
                                                 <input type="radio" name="filter-by" value="role"/>
-                                                <span className="radio-mock" onClick={this.onClick}></span>
-                                                Filter By Role
+                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="8px" height="8px" position="relative" top="3px" left="3px"></SystemSpan></CustomRadio>
+                                                <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Role</SystemSpan>
                                             </label>
                                         </div>
                                     </form>
                                 </RadioFormContainer>
                                 <SearchFormContainer>
                                     <form>
-                                        <Input variant="text" placeholder="Search" />
+                                        <TeamHierSearchBar variant="text" placeholder="Search"/>
                                     </form>
                                 </SearchFormContainer>
                             </FormWrapper>
@@ -144,22 +176,8 @@ class TeamHierarchy extends React.Component {
                             height: 0;
                             width: 0;
                         }
-
-                        .radio-mock {
-                            height: 12px;
-                            width: 12px;
-                            background-color: #ffffff;
-                            border-radius: 50%;
-
-                            display: inline-block;
-                            margin-right: ${props => props.theme.space[4]};
-                            cursor: pointer;
-                        }
-
-                        .radio-container input:checked ~ .radio-mock {
-                            background-color: #2196F3;
-                        }
                     `}</style>
+                </ThemeProvider>
                 </React.Fragment>
             </PageTemplate>
         )
