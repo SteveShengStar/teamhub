@@ -7,12 +7,18 @@ data.init = async () => {
     if (!config.url) {
         throw new Error('No URL found in config.');
     }
+
     await mongoose.connect(config.url, {
         useCreateIndex: true,
         useUnifiedTopology: true,
         useNewUrlParser: true
     });
-    console.log('Connected!');
+
+    console.log('Connected');
+};
+
+data.close = async () => {
+    await mongoose.disconnect();
 };
 
 data.util = require('./handlers/util');

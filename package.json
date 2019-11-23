@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "nodemon server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -32,6 +36,8 @@
     "@types/node": "^12.7.11",
     "@types/react": "^16.9.5",
     "babel-plugin-styled-components": "^1.10.6",
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2",
     "typescript": "^3.6.3"
   }
 }
