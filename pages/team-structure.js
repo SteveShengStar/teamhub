@@ -356,15 +356,11 @@ class TeamHierarchy extends React.Component {
                                 </HierSubSection>
 
                                 <HierSubSection>
-                                    <Header3>Subteam Leads</Header3>
+                                    <Header3>Project Heads</Header3>
                                 </HierSubSection>
 
                                 <HierSubSection>
-                                    <Header3>Project Head</Header3>
-                                </HierSubSection>
-
-                                <HierSubSection>
-                                    <Header3>Subordinates - Tier 1</Header3>
+                                    <Header3>Subordinates</Header3>
                                 </HierSubSection>
                             </SystemComponent>
 
