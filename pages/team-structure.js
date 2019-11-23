@@ -179,6 +179,7 @@ const teamHierCustomTheme = {
     breakpoints: ["810px","1090px"]
 };
 
+// TODO: this component should own the "Selected Member state field"
 const TeamHierParentContainer = styled(Card)`
     border-radius: 0;
     overflow-x: hidden;
@@ -284,22 +285,24 @@ class TeamHierarchy extends React.Component {
 
     constructor(props){
         super(props)
+        // NOTE: selectedMemberId -- each tier's card has a unique id
+        // selectedTier -- each tier has a unique ID
         this.state = {
-            members: [],
-            selectedMember: undefined
+            memberSelected: false,
+            selectedMemberId: undefined,
+            selectedTierId: 1
         };
     }
     
-    // TODO: incorporate redux later
-    componentDidMount() {
-        const request = {
-            method: HttpVerb.POST,
-            url: `${BASE_API}/members`
-        };
-        this.setState({members:  executeRequest(request)});
-    }
     onClick = (e) => {
         //TODO: fill this in once React is incorporated
+    }
+
+    onSelectMember = (cardId, tierId) => {
+        // TODO: put a condition ??
+        console.log("Selected Tier: ", tierId)
+        console.log("Selected Member: ", cardId)
+        this.setState({selectedTierId: tierId, selectedMemberId: cardId, memberSelected: true})
     }
 
     render() {
@@ -348,7 +351,7 @@ class TeamHierarchy extends React.Component {
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <MemberListGridTS roleCards={director_json} onSelect={this.onSelectMember}></MemberListGridTS>
+                                    <MemberListGridTS tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></MemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>

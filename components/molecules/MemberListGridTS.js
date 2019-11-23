@@ -17,21 +17,28 @@ const Container = styled(SystemComponent)`
 `;
 
 
-const MemberListGridTS = ({roleCards, onSelect, className}) => {
-    
-    return (
-        <Container gridGap={4} overflowX="scroll" className={className} childCount={roleCards.length}>
-            {
-                roleCards && roleCards.map(roleCard => 
-                    <MemberPreviewComponentTS key={roleCard._id}
-                        name={`${roleCard.leader.name.first} ${roleCard.leader.name.last}`}
-                        roleTitle={roleCard.name ? roleCard.name : ""} 
-                        onClick={() => onSelect(roleCard._id)}
-                    />
-                )
-            }
-            <SystemComponent height="10px" />
-        </Container>
-    );
+class MemberListGridTS extends React.Component {
+    onSelect = (cardId) => {
+        this.props.onSelect(cardId, this.props.tierId)
+    }
+
+    render(){
+        const {roleCards, className} = this.props;
+        return (
+            <Container gridGap={4} overflowX="scroll" className={className} childCount={roleCards.length}>
+                {
+                    roleCards && roleCards.map(roleCard => 
+                        <MemberPreviewComponentTS key={roleCard._id}
+                            cardId={roleCard._id}
+                            name={`${roleCard.leader.name.first} ${roleCard.leader.name.last}`}
+                            roleTitle={roleCard.name ? roleCard.name : ""} 
+                            onClick={this.onSelect}
+                        />
+                    )
+                }
+                <SystemComponent height="10px" />
+            </Container>
+        )
+    }
 }
 export default MemberListGridTS;
