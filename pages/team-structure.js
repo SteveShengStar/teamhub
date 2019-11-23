@@ -4,13 +4,23 @@ import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
 import Header3 from '../components/atoms/Header3';
-import MemberListGrid from '../components/molecules/MemberListGrid';
+import MemberListGridTS from '../components/molecules/MemberListGridTS';
+
 import theme from "../components/theme";
 
 import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
+import { HttpVerb, executeRequest, BASE_API } from '../data/api/baseApi';
+
+import {
+    addMember,
+    removeMember,
+    loadAllMembers,
+    loadSelectedMember
+} from '../data/reducers/memberSlice';
 
 import $ from "jquery";
 
+// static data
 const members_json = 
     [{
         _id: 3,
@@ -37,10 +47,88 @@ const members_json =
         memberType: {
             name: "Classic"
         }
+    },{
+        _id: 1,
+        name: {
+            first: "Steven",
+            last: "Xiong"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Newbie"
+        }
+    },
+    {
+        _id: 8,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
+    },
+    {
+        _id: 4,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
+    },
+    {
+        _id: 5,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
+    },
+    {
+        _id: 6,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
+    },
+    {
+        _id: 7,
+        name: {
+            first: "Kevin",
+            last: "Bai"
+        },
+        subteam: {
+            name: "Electrical"
+        },
+        memberType: {
+            name: "Classic"
+        }
     }
 ];
 
 const HierSubSection = styled(SystemComponent)`
+    overflow-x: hidden;
 `;
 
 const teamHierCustomTheme = {
@@ -50,7 +138,7 @@ const teamHierCustomTheme = {
 
 const TeamHierParentContainer = styled(Card)`
     border-radius: 0;
-    width: 100%;
+    overflow-x: hidden;
 `;
 
 const SearchFormContainer = styled(SystemComponent)`
@@ -115,7 +203,7 @@ const TeamHierSearchBar = styled(Input)`
     }
 `
 
-// static data
+// TODO: use this 
 const selectionTiers = [
     {
         id: 1,
@@ -140,8 +228,6 @@ const selectionTiers = [
 ];
 
 
-
-
 class TeamHierarchy extends React.Component {
 
     constructor(props){
@@ -151,24 +237,22 @@ class TeamHierarchy extends React.Component {
             selectedMember: undefined
         };
     }
-
-    /**
-     * Refactor to use Redux later, for now, just fetch api directly here
-     */
+    
+    // TODO: incorporate redux later
     componentDidMount() {
-        fetch("/api/members").then((res) => res.json()).then(json => {
-            if (json && json.success) {
-                this.setState({members: json.body.slice(0, Math.min(6, json.body.length))});
-            }
-        });
+        const request = {
+            method: HttpVerb.POST,
+            url: `${BASE_API}/members`
+        };
+        this.setState({members:  executeRequest(request)});
     }
 
-    onSelectMember = (id) => {
-        let member = members.find(member => member._id === id);
+    /*onSelectMember = (id) => {
+        let member = members_json.find(member => member._id === id);
         if (member){
             this.setState({selectedMember: member});
         } 
-    }
+    }*/
 
     onClick = (e) => {
         //console.log($(e.target).parent().find("input"));
@@ -219,11 +303,11 @@ class TeamHierarchy extends React.Component {
                                 </SearchFormContainer>
                             </FormWrapper>
 
-                            <SystemComponent display="flex" flexDirection="column">
+                            <SystemComponent display="flex" flexDirection="column" overflowX="hidden">
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <MemberListGrid members={this.state.members} onSelect={this.onSelectMember}></MemberListGrid>
+                                    <MemberListGridTS members={members_json} onSelect={this.onSelectMember}></MemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>
@@ -255,7 +339,7 @@ class TeamHierarchy extends React.Component {
                             border: 5px solid black;
 
                             display: flex;
-                            flex-grow: 1;
+                            overflow: hidden;
                         }
 
                         .radio-container input {
