@@ -158,12 +158,12 @@ class TeamHierarchy extends React.Component {
     componentDidMount() {
         fetch("/api/members").then((res) => res.json()).then(json => {
             if (json && json.success) {
-                this.setState({members: json.body});
+                this.setState({members: json.body.slice(0, Math.min(6, json.body.length))});
             }
         });
     }
 
-    function onSelectMember(id) {
+    onSelectMember = (id) => {
         let member = members.find(member => member._id === id);
         if (member){
             this.setState({selectedMember: member});
@@ -223,7 +223,7 @@ class TeamHierarchy extends React.Component {
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <MemberListGrid members={members} onSelect={onSelectMember}></MemberListGrid>
+                                    <MemberListGrid members={this.state.members} onSelect={this.onSelectMember}></MemberListGrid>
                                 </HierSubSection>
 
                                 <HierSubSection>
