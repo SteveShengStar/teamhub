@@ -14,7 +14,7 @@ import Header3 from '../components/atoms/Header3';
 import Card from '../components/atoms/Card';
 import MemberFilterComponent from "../components/molecules/MemberFilterComponent";
 import MemberListGrid from '../components/molecules/MemberListGrid';
-import MemberInfoCard from '../components/molecules/MemberInfoCard';
+import MemberInfoCard from '../components/organisms/MemberInfoCard';
 
 const Home = ({ members, loadSelectedMember, selectedMember }) => {
 
@@ -34,7 +34,7 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
         gridGap="cardMargin"
       >
         <Card 
-          width={"auto"} minWidth={[300, 300, 300, "35vw"]} maxWidth={400, 400, 400, "35vw"} gridRow="1/3" 
+          width={"auto"} minWidth={[300, 300, 300, "30vw"]} maxWidth={400, 400, 400, "30vw"} gridRow="1/3" 
           display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
           overflow="scroll"
         >
