@@ -10,7 +10,7 @@ import Image from "../atoms/Image";
 const GridLayout = styled(SystemComponent)`
     display: grid;
     grid-template-rows: 18px 18px;
-    width: 210px;
+    width: 205px;
 
     grid-column-gap: ${props => props.theme.space[4]}px;
     padding: ${props => props.theme.space[3]}px;
@@ -26,7 +26,7 @@ const GridLayout = styled(SystemComponent)`
     }
 `
 
-const MemberPreviewComponentTS = ({name, subteam, role, onClick}) => {
+const MemberPreviewComponentTS = ({name, roleTitle, role, onClick}) => {
     return (
         <GridLayout 
             backgroundColor="greys.0" 
@@ -46,7 +46,7 @@ const MemberPreviewComponentTS = ({name, subteam, role, onClick}) => {
                 textAlign="right"
             >
                 <Header5>{name}</Header5>
-                <Body>Responsibility</Body>
+                <Body>{roleTitle}</Body>
             </SystemComponent>
         </GridLayout>
     )

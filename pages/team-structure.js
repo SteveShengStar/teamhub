@@ -13,112 +13,162 @@ import { HttpVerb, executeRequest, BASE_API } from '../data/api/baseApi';
 
 import $ from "jquery";
 
+
+
 // static data
-const members_json = 
-    [{
-        _id: 3,
-        name: {
-            first: "Steven",
-            last: "Xiong"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Newbie"
-        }
-    },
+const director_json = [
     {
-        _id: 2,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
-        }
-    },{
         _id: 1,
-        name: {
-            first: "Steven",
-            last: "Xiong"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Newbie"
-        }
-    },
-    {
-        _id: 8,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
-        }
-    },
-    {
-        _id: 4,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
-        }
-    },
-    {
-        _id: 5,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
-        }
-    },
-    {
-        _id: 6,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
-        }
-    },
-    {
-        _id: 7,
-        name: {
-            first: "Kevin",
-            last: "Bai"
-        },
-        subteam: {
-            name: "Electrical"
-        },
-        memberType: {
-            name: "Classic"
+        name: "Technical Director",
+        leader: {
+            _id: 1,
+            name: {
+                first: "Clive",
+                last: "Chan"
+            },
         }
     }
 ];
+
+const subteam_json = [
+    {
+        _id: 1,
+        name: "Electrical Lead", 
+        leader: {
+            _id: 2,
+            name: {
+                first: "Steven",
+                last: "Xiong"
+            }
+        }
+    },{
+        _id: 2,
+        name: "Software Lead", 
+        leader: {
+            _id: 3,
+            name: {
+                first: "Ken",
+                last: "Livington"
+            }
+        }
+    }
+];
+
+const subteam_project_relationships = [
+    {
+        _id: 1, // Electrical 
+        projects: [
+            {
+                _id: 1,
+                name: "Motor Control",
+                leader: {
+                    _id: 4,
+                    name: {
+                        first: "Jeff",
+                        last: "Motor"
+                    }
+                }
+            },{
+                _id: 2,
+                name: "Embedded Software",
+                leader: {
+                    _id: 5,
+                    name: {
+                        first: "Jenny",
+                        last: "Ma"
+                    }
+                }
+            },{
+                _id: 3,
+                name: "Batteries",
+                leader: {
+                    _id: 6,
+                    name: {
+                        first: "Jenny",
+                        last: "Ma"
+                    }
+                }
+            },{
+                _id: 4,
+                name: "Batteries",
+                leader: {
+                    _id: 7,
+                    name: {
+                        first: "Jenny",
+                        last: "Ma"
+                    }
+                }
+            }
+        ]
+    },{ // Software
+        _id: 2,
+        projects: [
+            {
+                _id: 1,
+                name: "Team Hub",
+                leader: {
+                    _id: 8,
+                    name: {
+                        first: "Kevin",
+                        last: "Bai"
+                    }
+                }
+            },{
+                _id: 2,
+                name: "Embedded Software",
+                leader: {
+                    _id: 3,
+                    name: {
+                        first: "Ken",
+                        last: "Livington"
+                    }
+                }
+            },{
+                _id: 3,
+                name: "Website",
+                leader: {
+                    _id: 10,
+                    name: {
+                        first: "Jenny",
+                        last: "Ma"
+                    }
+                }
+            },{
+                _id: 4,
+                name: "POD Systems",
+                leader: {
+                    _id: 11,
+                    name: {
+                        first: "Jenny",
+                        last: "Ma"
+                    }
+                }
+            }
+        ]
+    }
+]
+
+const project_json = [
+    {
+        name: "Electrical Lead", 
+        leader: {
+            _id: 2,
+            name: {
+                first: "Steven",
+                last: "Xiong"
+            }
+        }
+    },{
+        name: "Mechanical Lead", 
+        leader: {
+            _id: 3,
+            name: {
+                first: "Ken",
+                last: "Livington"
+            }
+        }
+    }
+]
 
 const HierSubSection = styled(SystemComponent)`
     overflow-x: hidden;
@@ -221,14 +271,10 @@ const selectionTiers = [
     },
     {
         id: 3,
-        label: "Subteam Leads"
-    },
-    {
-        id: 4,
         label: "Project Head"
     },
     {
-        id: 5,
+        id: 4,
         label: "Subordinates"
     },
 ];
@@ -302,7 +348,7 @@ class TeamHierarchy extends React.Component {
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <MemberListGridTS members={members_json} onSelect={this.onSelectMember}></MemberListGridTS>
+                                    <MemberListGridTS roleCards={director_json} onSelect={this.onSelectMember}></MemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>
