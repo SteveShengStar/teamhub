@@ -294,7 +294,7 @@ class TeamHierarchy extends React.Component {
         };
     }
     
-    onClick = (e) => {
+    onRadioClick = (e) => {
         //TODO: fill this in once React is incorporated
     }
 
@@ -327,14 +327,14 @@ class TeamHierarchy extends React.Component {
                                         <RadioContainer>
                                             <label>
                                                 <input type="radio" name="filter-by" value="name" defaultChecked/>
-                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
+                                                <CustomRadio className="radio-mock" onClick={this.onRadioClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
                                                 <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
                                             </label>
                                         </RadioContainer>
                                         <RadioContainer>
                                             <label>
                                                 <input type="radio" name="filter-by" value="role"/>
-                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
+                                                <CustomRadio className="radio-mock" onClick={this.onRadioClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
                                                 <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Role</SystemSpan>
                                             </label>
                                         </RadioContainer>
@@ -356,6 +356,7 @@ class TeamHierarchy extends React.Component {
 
                                 <HierSubSection>
                                     <Header3>Team Leads</Header3>
+                                    <MemberListGridTS tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></MemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>
