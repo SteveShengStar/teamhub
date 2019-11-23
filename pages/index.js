@@ -22,8 +22,6 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
     loadSelectedMember(id);
   }
 
-  console.log(members);
-
   return (
     <PageTemplate title="Explore">
       <SystemComponent
@@ -53,7 +51,7 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
 };
 
 Home.getInitialProps = async ({ store }) => {
-  await store.dispatch(loadAllMembers());
+  await store.dispatch(loadAllMembers(true));
 };
 
 const mapStateToProps = (state) => {

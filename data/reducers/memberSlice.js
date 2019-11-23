@@ -77,10 +77,10 @@ export const { addMember, removeMember } = memberSlice.actions;
 
 export default memberSlice.reducer;
 
-export const loadAllMembers = function() {
+export const loadAllMembers = function(isSSR = false) {
   return async function(dispatch) {
     try {
-      const res = await memberService.getAll();
+      const res = await memberService.getAll(isSSR);
       if (res.success) {
         const normalizedData = normalize(res, memberSchema);
         dispatch(memberSlice.actions.setAllMembers(normalizedData.entities));
