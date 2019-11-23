@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from "styled-components";
-import Link from "../atoms/Link";
+import { connect } from 'react-redux';
 
-import {SystemComponent, SystemSpan} from '../atoms/SystemComponents';
+import Link from "../atoms/Link";
+import { SystemComponent } from '../atoms/SystemComponents';
 import Card from "../atoms/Card";
 import Header2 from "../atoms/Header2";
 import Header3 from "../atoms/Header3";
@@ -13,22 +14,28 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 
-const MemberInfoCard = ({memberData, index, className}) => {
+const MemberInfoCard = ({memberData, index, className, subteams}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString("en-US", {year: 'numeric', month: 'long', day: 'numeric'});
 
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(" • ") : "";
+    const subteam = memberData.subteam ? subteams[memberData.subteam].name : "";
 
     return (
         <InfoCard className={className}>
             <SystemComponent>
                 <Header3 mb={3}>Member</Header3>
                 <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ""} </Header2>
-                <MemberSubtitle>
-                    Member of <BorderlessButton variant={memberData.subteam.name.toLowerCase()} fontSize="inherit" fontWeight="inherit">
-                        {memberData.subteam ? ` ${memberData.subteam.name} ` : ""}
-                    </BorderlessButton> team
-                </MemberSubtitle>
+                {
+                    memberData.subteam ? (
+                        <MemberSubtitle>
+                            Member of <BorderlessButton variant={subteam.toLowerCase()} fontSize="inherit" fontWeight="inherit">
+                                {subteam}
+                            </BorderlessButton> team
+                        </MemberSubtitle>
+                    )
+                    : <MemberSubtitle>New Member</MemberSubtitle>
+                }
                 <Body mb={3}>{memberData.bio || ""}</Body>
             </SystemComponent>
 
@@ -41,7 +48,7 @@ const MemberInfoCard = ({memberData, index, className}) => {
                     <SystemComponent display="flex" flexDirection="column" padding={3}>
                         <InlineItemRow>
                             <MailIcon />
-                            <Link ml={2} href={`mailto:${memberData.email}`}>Email</Link>
+                            <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ""}>Email</Link>
                         </InlineItemRow>
                         {
                             memberData.links && memberData.links.map(({type, link}, i) =>
@@ -60,7 +67,13 @@ const MemberInfoCard = ({memberData, index, className}) => {
     );
 }
 
-export default MemberInfoCard;
+const mapStateToProps = (state) => {
+    return {
+        subteams: state.members.subteams,
+    }
+}
+
+export default connect(mapStateToProps)(MemberInfoCard);
 
 /**
  * Styled component definitions
@@ -69,9 +82,9 @@ const InfoCard = styled(Card)`
     display: grid;
     max-width: 800px;
     grid-template-rows: 1fr;
-    grid-template-columns: minmax(100px, 1fr) minmax(auto, 250px);
+    grid-template-columns: minmax(100px, 1fr) minmax(auto, 200px);
     grid-gap: ${props => props.theme.space[3]}px;
-    justify-content: space-between; 
+    justify-content: space-between;
     position: relative;
     z-index: 10;
 `;
@@ -92,8 +105,4 @@ const MemberSubtitle = styled(Header4)`
 const InlineItemRow = styled(SystemComponent)`
     display: flex;
     align-items: center;
-`
-
-const Span = styled.span`
-    color: ${props => props.theme.colors.software};
 `;
