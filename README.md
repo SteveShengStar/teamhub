@@ -7,15 +7,18 @@ Repository for the TeamHub Project. Technologies used:
     * [React](https://reactjs.org)
     * Design System uses [styled-components](https://www.styled-components.com) and [styled-system](https://styled-system.com)
     * State management will use [Redux](https://redux.js.org) (and possibly [redux-thunk](https://github.com/reduxjs/redux-thunk) for asynchronous redux).
-* Back-end
+* Back-endhttps://docs.docker.com/install/
     * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
     * MongoDB for database
 
 Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
 
 ## Setting up Development Environment
-Here are the steps to run locally.
-
+Here are the steps to run locally:
+1. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
+2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
+3. Go to the root directory and run `docker build ./docker -t teamhub`
+4. To start the server, simply go to the root directory and run `docker-compose up`
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
 2. Assign yourself to the issue to let others know you are working on it.
