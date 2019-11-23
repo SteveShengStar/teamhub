@@ -24,7 +24,7 @@ auth.login = async (tokenObj) => {
                     display: payload['name']
                 },
                 email: payload['email'],
-                picture: payload['picture']
+                imageUrl: payload['picture']
             });
             return res;
         }

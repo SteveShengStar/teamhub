@@ -139,7 +139,7 @@ const MemberSchema = new Schema({
     stream: {
         type: Member_Stream
     },
-    picture: {
+    imageUrl: {
         type: String
     },
     age: {
