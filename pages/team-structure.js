@@ -290,7 +290,8 @@ class TeamHierarchy extends React.Component {
         this.state = {
             memberSelected: false,
             selectedMemberId: undefined,
-            selectedTierId: 1
+            selectedTierId: 1,
+            selectedTeam: undefined,
         };
     }
     
@@ -300,12 +301,29 @@ class TeamHierarchy extends React.Component {
 
     onSelectMember = (cardId, tierId) => {
         // TODO: put a condition ??
-        console.log("Selected Tier: ", tierId)
-        console.log("Selected Member: ", cardId)
-        this.setState({selectedTierId: tierId, selectedMemberId: cardId, memberSelected: true})
+        if (tierId === 2) {
+            const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
+            console.log(selectedSubTeamCard); 
+            this.setState({
+                selectedTierId: tierId, 
+                selectedMemberId: selectedSubTeamCard._id, 
+                memberSelected: true, 
+                selectedTeam: selectedSubTeamCard._id
+            })
+        } else {
+            this.setState({
+                selectedTierId: tierId, 
+                selectedMemberId: cardId, 
+                memberSelected: true, 
+                selectedTeam: undefined
+            })
+        }
     }
 
     render() {
+        console.log("Selected tier ", this.state.selectedTierId)
+        console.log("selectedMemberId ", this.state.selectedMemberId)
+        console.log("Selected Team ", this.state.selectedTeam)
         return (
             <PageTemplate title="Team Structure">
                 <React.Fragment>
@@ -361,6 +379,14 @@ class TeamHierarchy extends React.Component {
 
                                 <HierSubSection>
                                     <Header3>Project Heads</Header3>
+                                    {
+                                        (this.state.selectedTeam !== undefined) && 
+                                        <MemberListGridTS 
+                                            tierId={3}
+                                            roleCards={subteam_project_relationships[this.state.selectedTeam - 1].projects} 
+                                            onSelect={this.onSelectMember}>
+                                        </MemberListGridTS>
+                                    }
                                 </HierSubSection>
 
                                 <HierSubSection>
