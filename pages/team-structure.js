@@ -11,13 +11,6 @@ import theme from "../components/theme";
 import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
 import { HttpVerb, executeRequest, BASE_API } from '../data/api/baseApi';
 
-import {
-    addMember,
-    removeMember,
-    loadAllMembers,
-    loadSelectedMember
-} from '../data/reducers/memberSlice';
-
 import $ from "jquery";
 
 // static data
@@ -203,6 +196,19 @@ const TeamHierSearchBar = styled(Input)`
     }
 `
 
+const RadioContainer = styled(SystemComponent)`
+    input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+    }
+
+    input:checked ~ .radio-mock {
+        background-color: #2196F3;
+    }
+`
+
 // TODO: use this 
 const selectionTiers = [
     {
@@ -246,19 +252,8 @@ class TeamHierarchy extends React.Component {
         };
         this.setState({members:  executeRequest(request)});
     }
-
-    /*onSelectMember = (id) => {
-        let member = members_json.find(member => member._id === id);
-        if (member){
-            this.setState({selectedMember: member});
-        } 
-    }*/
-
     onClick = (e) => {
-        //console.log($(e.target).parent().find("input"));
-        $(e.target).parent().find("input").checked = true;
-        $("radio-container .radio-mock").css("background-color", "#ffffff");
-        $(e.target).css("background-color", "#2196F3");
+        //TODO: fill this in once React is incorporated
     }
 
     render() {
@@ -280,20 +275,20 @@ class TeamHierarchy extends React.Component {
                             <FormWrapper display="flex">
                                 <RadioFormContainer>
                                     <form>
-                                        <div className="radio-container">
+                                        <RadioContainer>
                                             <label>
                                                 <input type="radio" name="filter-by" value="name" defaultChecked/>
-                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="8px" height="8px" position="relative" top="3px" left="3px"></SystemSpan></CustomRadio>
+                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
                                                 <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
                                             </label>
-                                        </div>
-                                        <div className="radio-container">
+                                        </RadioContainer>
+                                        <RadioContainer>
                                             <label>
                                                 <input type="radio" name="filter-by" value="role"/>
-                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="8px" height="8px" position="relative" top="3px" left="3px"></SystemSpan></CustomRadio>
+                                                <CustomRadio className="radio-mock" onClick={this.onClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
                                                 <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Role</SystemSpan>
                                             </label>
-                                        </div>
+                                        </RadioContainer>
                                     </form>
                                 </RadioFormContainer>
                                 <SearchFormContainer>
@@ -335,18 +330,11 @@ class TeamHierarchy extends React.Component {
                         }
 
                         #ts-container {
-                            height: 700px;
+                            height: 100%;
                             border: 5px solid black;
 
                             display: flex;
                             overflow: hidden;
-                        }
-
-                        .radio-container input {
-                            position: absolute;
-                            opacity: 0;
-                            height: 0;
-                            width: 0;
                         }
                     `}</style>
                 </ThemeProvider>
