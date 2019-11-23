@@ -23,7 +23,8 @@ auth.login = async (tokenObj) => {
                     last: payload['family_name'],
                     display: payload['name']
                 },
-                email: payload['email']
+                email: payload['email'],
+                picture: payload['picture']
             });
             return res;
         }
