@@ -7,13 +7,14 @@ const dev = process.env.NODE_ENV !== 'production';
 const nextapp = next({ dev });
 const api = require('./backend/index');
 
-nextapp.prepare().then(() => {
-  const server = express();
+nextapp.prepare().then(async () => {
+    const server = express();
 
   server.use(bodyParser.urlencoded({ extended: true }));
   server.use(bodyParser.json());
 
-  server.use('/api', api);
+    await api.data.init();
+    server.use('/api', api);
 
   server.all('*', nextapp.getRequestHandler());
 
