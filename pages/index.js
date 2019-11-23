@@ -33,14 +33,14 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
         gridTemplateColumns="auto 1fr"
         gridGap="cardMargin"
       >
-        <Card 
-          width={"auto"} minWidth={[300, 300, 300, "35vw"]} maxWidth={400, 400, 400, "35vw"} gridRow="1/3" 
+        <Card
+          width={"auto"} minWidth={[300, 300, 300, "35vw"]} maxWidth={400, 400, 400, "35vw"} gridRow="1/3"
           display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
           overflow="scroll"
         >
           <Header3>Members</Header3>
           <MemberFilterComponent />
-          <MemberListGrid members={members.members} onSelect={onSelectMember} />
+          <MemberListGrid members={members.members} streams={members.streams} onSelect={onSelectMember} />
         </Card>
         {
           selectedMember && (

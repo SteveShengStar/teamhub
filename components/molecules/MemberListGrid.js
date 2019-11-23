@@ -4,18 +4,20 @@ import styled from "styled-components";
 import { SystemComponent } from "../atoms/SystemComponents";
 import MemberPreviewComponent from "./MemberPreviewComponent";
 
-const MemberListGrid = ({members, onSelect, className}) => {
+const MemberListGrid = ({ members, streams, onSelect, className }) => {
     return (
         <Container gridGap={4} overflowY="scroll" className={className}>
             {
-                members && Object.keys(members).map((key, i) => 
-                    <MemberPreviewComponent key={i}
+                members && Object.keys(members).map((key, i) => {
+                    let streamID = members[key].streams;
+                    return <MemberPreviewComponent key={i}
                         name={`${members[key].name.first} ${members[key].name.last}`}
-                        subteam={members[key].subteam ? members[key].subteam.name : ""} 
+                        subteam={members[key].subteam ? members[key].subteam.name : ""}
                         role={members[key].memberType ? members[key].memberType.name : ""}
                         onClick={() => onSelect(members[key]._id)}
+                        onStream={streams[streamID] ? streams[streamID].onStream : ""}
                     />
-                )
+                })
             }
             <SystemComponent height="10px" />
         </Container>
@@ -34,7 +36,7 @@ const Container = styled(SystemComponent)`
     mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
     padding: 10px ${props => props.theme.space.cardPadding}px 0;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-auto-rows: min-content;
     align-items: start;
 `;
