@@ -19,10 +19,6 @@ services:
     image: mongo
     container_name: teamhub_mongodb
     volumes:
-      - ./docker/mongodb-persist:/data/db
+      - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 27017:27017
-    environment:
-    - MONGO_INITDB_ROOT_USERNAME="teamhub" 
-    - MONGO_INITDB_ROOT_PASSWORD="password"
-    - MONGO_INITDB_DATABASE="teamhub"
