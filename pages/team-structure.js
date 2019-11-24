@@ -2,17 +2,16 @@ import React, { useState, useEffect } from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
-import Input from "../components/atoms/Input";
-import Radio from "../components/atoms/Radio";
+import TeamHierFormWrapper from '../components/molecules/TeamHierFormWrapper';
 import Header3 from '../components/atoms/Header3';
 import TeamHierMemberListGrid from '../components/molecules/TeamHierMemberListGrid';
 import NextSetButton from '../components/atoms/NextSetButton';
 
 import theme from "../components/theme";
 
-import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
+import { SystemComponent } from '../components/atoms/SystemComponents';
 
-// static data
+// TODO: slowly move away from using static data
 const director_json = [
     {
         _id: 1,
@@ -207,94 +206,7 @@ const project_json = [
     }
 ]
 
-const HierSubSection = styled(SystemComponent)`
-    overflow-x: hidden;
-    margin-bottom: ${props => props.theme.space[5]}px;
-`;
-
-const teamHierCustomTheme = {
-    ...theme,
-    breakpoints: ["810px","1090px", "1200px"]
-};
-
-// TODO: this component should own the "Selected Member state field"
-const TeamHierParentContainer = styled(Card)`
-    border-radius: 0;
-    overflow-x: hidden;
-
-    flex-grow: 1;
-`;
-
-const SearchFormContainer = styled(SystemComponent)`
-    width: 100%;
-    margin-top: ${props => props.theme.space[4]}px;
-
-    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
-        width: 66.66%;
-        margin-top: 0;
-    }
-    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
-        width: auto;
-    }
-`;
-
-
-const RadioFormContainer = styled(SystemComponent)`
-    input {
-        position: absolute;
-        opacity: 0;
-        height: 0;
-        width: 0;
-    }
-
-    input:checked ~ .radio-mock {
-        background-color: #2196F3;
-    }
-`
-
-const RadioContainer = styled(SystemComponent)`
-    width: 100%;
-
-    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
-        width: 33.33%;
-    }
-    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
-        width: 195px;
-    }
-`;
-
-// This should be a molecule
-// state : not owned --> the particular level we are at 
-// previous and current selections ie) SW team, team hub
-const TeamStructSideNav = styled(SystemComponent)`
-    background-color: #FFFFFF;
-    margin: ${props => props.theme.space[4]}px;
-`;
-
-const FormWrapper = styled(SystemComponent)`
-    display: flex;
-    flex-direction: column;
-    margin: ${props => props.theme.space[2]}px 0 ${props => props.theme.space[5]}px;
-
-    @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
-        flex-direction: row;
-    }
-`;
-
-
-const TeamHierSearchBar = styled(Input)`
-    box-sizing: border-box;
-    width: 100%;
-    
-    @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
-        width: 465px;
-    }
-    @media screen and (min-width: ${props => props.theme.breakpoints[2]}) {
-        width: 375px;
-    }
-`
-
-// TODO: use this 
+// TODO: use this later
 const selectionTiers = [
     {
         id: 1,
@@ -313,6 +225,33 @@ const selectionTiers = [
         label: "Subordinates"
     },
 ];
+
+const teamHierCustomTheme = {
+    ...theme,
+    breakpoints: ["810px","1090px", "1200px"]
+};
+
+
+// TODO: this component should own the "Selected Member state field"
+const TeamHierParentContainer = styled(Card)`
+    border-radius: 0;
+    overflow-x: hidden;
+
+    flex-grow: 1;
+`;
+
+const HierSubSection = styled(SystemComponent)`
+    overflow-x: hidden;
+    margin-bottom: ${props => props.theme.space[5]}px;
+`;
+
+// This should be a molecule
+// state : not owned --> the particular level we are at 
+// previous and current selections ie) SW team, team hub
+const TeamStructSideNav = styled(SystemComponent)`
+    background-color: #FFFFFF;
+    margin: ${props => props.theme.space[4]}px;
+`;
 
 class GridListParentContainer extends React.Component {
     constructor(props){
@@ -386,31 +325,23 @@ class TeamHierarchy extends React.Component {
             <PageTemplate title="Team Structure">
                 <React.Fragment>
                 <ThemeProvider theme={teamHierCustomTheme}>
-                
-                    <div id="ts-container">
-                        <SystemComponent 
-                        width="240px"
+                    <SystemComponent 
+                        display="flex"
+                        overflow="hidden"
                         height="100%"
-                        bg="#D6D6D6"
+                        border="3px solid black"
+                    >
+                        <SystemComponent 
+                            width="240px"
+                            height="100%"
+                            bg="#D6D6D6"
                         >
                             <TeamStructSideNav></TeamStructSideNav>
                         </SystemComponent>
                         
                         <TeamHierParentContainer pl={28} pr={28}>
-                            <FormWrapper display="flex">
-                                <RadioFormContainer>
-                                    <form>
-                                        <Radio name="filter-by" value="name"></Radio>
-                                        <Radio name="filter-by" value="role"></Radio>
-                                    </form>
-                                </RadioFormContainer>
-                                <SearchFormContainer>
-                                    <form>
-                                        <TeamHierSearchBar variant="text" placeholder="Search"/>
-                                    </form>
-                                </SearchFormContainer>
-                            </FormWrapper>
-
+                            <TeamHierFormWrapper></TeamHierFormWrapper>
+                                
                             <SystemComponent display="flex" flexDirection="column" overflowX="hidden">
                                 
                                 <HierSubSection>
@@ -440,18 +371,10 @@ class TeamHierarchy extends React.Component {
                             </SystemComponent>
 
                         </TeamHierParentContainer>
-                    </div>
+                    </SystemComponent>
                     <style jsx>{`
                         * {
                             box-sizing: border-box;
-                        }
-
-                        #ts-container {
-                            height: 100%;
-                            border: 5px solid black;
-
-                            display: flex;
-                            overflow: hidden;
                         }
                     `}</style>
                 </ThemeProvider>

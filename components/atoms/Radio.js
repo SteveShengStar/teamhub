@@ -15,14 +15,29 @@ const CustomRadio = styled(SystemSpan)`
 }
 `
 
+const RadioWrapper = styled(SystemComponent)`
+    input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+    }
+
+    input:checked ~ .radio-mock {
+        background-color: #2196F3;
+    }
+`
+
 const Radio = ({name, value}) => {
 
     return (
-        <SystemComponent>
-            <input type="radio" name={name} value={value} defaultChecked/>
-            <CustomRadio className="radio-mock"><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
-            <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
-        </SystemComponent>
+        <RadioWrapper>
+            <label>
+                <input type="radio" name={name} value={value} defaultChecked/>
+                <CustomRadio className="radio-mock"><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
+                <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
+            </label>
+        </RadioWrapper>
     )
 }
 export default Radio;
