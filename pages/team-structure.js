@@ -5,15 +5,11 @@ import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
 import Header3 from '../components/atoms/Header3';
 import MemberListGridTS from '../components/molecules/MemberListGridTS';
+import NextButtonTS from '../components/atoms/NextButtonTS';
 
 import theme from "../components/theme";
 
 import { SystemComponent, SystemSpan } from '../components/atoms/SystemComponents';
-import { HttpVerb, executeRequest, BASE_API } from '../data/api/baseApi';
-
-import $ from "jquery";
-
-
 
 // static data
 const director_json = [
@@ -322,6 +318,34 @@ const selectionTiers = [
     },
 ];
 
+class GridListParentContainer extends React.Component {
+    constructor(props){
+        super(props)
+        this.state = {
+            page: 0
+        }
+    }
+
+    render() {
+        const {selectedTeam, tierId, roleCards, onSelect} = this.props;
+        if (selectedTeam !== undefined) {
+            return(
+                <React.Fragment>
+                    <MemberListGridTS 
+                        tierId={tierId}
+                        roleCards={roleCards} 
+                        currentPage={this.state.page}
+                        onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
+                    </MemberListGridTS>
+                    <NextButtonTS onClick={() => this.setState({page: this.state.page + 1})}></NextButtonTS>
+                </React.Fragment>
+            )
+        } else{
+            return(<React.Fragment></React.Fragment>)
+        }
+    }
+}
+
 
 class TeamHierarchy extends React.Component {
 
@@ -345,7 +369,7 @@ class TeamHierarchy extends React.Component {
         // TODO: put a condition ??
         if (tierId === 2) {
             const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
-            console.log(selectedSubTeamCard); 
+            //console.log(selectedSubTeamCard); 
             this.setState({
                 selectedTierId: tierId, 
                 selectedMemberId: selectedSubTeamCard._id, 
@@ -363,9 +387,9 @@ class TeamHierarchy extends React.Component {
     }
 
     render() {
-        console.log("Selected tier ", this.state.selectedTierId)
-        console.log("selectedMemberId ", this.state.selectedMemberId)
-        console.log("Selected Team ", this.state.selectedTeam)
+        //console.log("Selected tier ", this.state.selectedTierId)
+        //console.log("selectedMemberId ", this.state.selectedMemberId)
+        //console.log("Selected Team ", this.state.selectedTeam)
         return (
             <PageTemplate title="Team Structure">
                 <React.Fragment>
@@ -421,14 +445,13 @@ class TeamHierarchy extends React.Component {
 
                                 <HierSubSection>
                                     <Header3>Project Heads</Header3>
-                                    {
-                                        (this.state.selectedTeam !== undefined) && 
-                                        <MemberListGridTS 
-                                            tierId={3}
-                                            roleCards={subteam_project_relationships[this.state.selectedTeam - 1].projects} 
-                                            onSelect={this.onSelectMember}>
-                                        </MemberListGridTS>
-                                    }
+                                    <GridListParentContainer 
+                                        selectedTeam={this.state.selectedTeam}
+                                        tierId={3}
+                                        roleCards={this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects} 
+                                        onSelect={this.onSelectMember}
+                                    >
+                                    </GridListParentContainer>
                                 </HierSubSection>
 
                                 <HierSubSection>
