@@ -22,7 +22,7 @@ const Container = styled(SystemComponent)`
     right: ${props => props.currentPage * tempGridGap}px;
 `;
 
-class TeamHierMemberListGridTS extends React.Component {
+class TeamHierMemberListGrid extends React.Component {
     onSelect = (cardId) => {
         this.props.onSelect(cardId, this.props.tierId)
     }
@@ -46,4 +46,4 @@ class TeamHierMemberListGridTS extends React.Component {
         )
     }
 }
-export default TeamHierMemberListGridTS;
+export default TeamHierMemberListGrid;

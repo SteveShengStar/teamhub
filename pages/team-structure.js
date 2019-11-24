@@ -3,8 +3,9 @@ import styled, {ThemeProvider} from 'styled-components';
 import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
+import Radio from "../components/atoms/Radio";
 import Header3 from '../components/atoms/Header3';
-import TeamHierMemberListGridT../components/molecules/TeamHierMemberListGridMemberListGridTS';
+import TeamHierMemberListGrid from '../components/molecules/TeamHierMemberListGrid';
 import NextSetButton from '../components/atoms/NextSetButton';
 
 import theme from "../components/theme";
@@ -237,7 +238,21 @@ const SearchFormContainer = styled(SystemComponent)`
     }
 `;
 
+
 const RadioFormContainer = styled(SystemComponent)`
+    input {
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+    }
+
+    input:checked ~ .radio-mock {
+        background-color: #2196F3;
+    }
+`
+
+const RadioContainer = styled(SystemComponent)`
     width: 100%;
 
     @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
@@ -266,17 +281,6 @@ const FormWrapper = styled(SystemComponent)`
     }
 `;
 
-const CustomRadio = styled(SystemSpan)`
-    height: 14px;
-    width: 14px;
-    background-color: #ffffff;
-    border-radius: 50%;
-
-    display: inline-block;
-    margin-right: ${props => props.theme.space[4]};
-    cursor: pointer;
-}
-`
 
 const TeamHierSearchBar = styled(Input)`
     box-sizing: border-box;
@@ -287,19 +291,6 @@ const TeamHierSearchBar = styled(Input)`
     }
     @media screen and (min-width: ${props => props.theme.breakpoints[2]}) {
         width: 375px;
-    }
-`
-
-const RadioContainer = styled(SystemComponent)`
-    input {
-        position: absolute;
-        opacity: 0;
-        height: 0;
-        width: 0;
-    }
-
-    input:checked ~ .radio-mock {
-        background-color: #2196F3;
     }
 `
 
@@ -336,12 +327,12 @@ class GridListParentContainer extends React.Component {
         if (selectedTeam !== undefined) {
             return(
                 <React.Fragment>
-                    <TeamHierMemberListGridTS 
+                    <TeamHierMemberListGrid 
                         tierId={tierId}
                         roleCards={roleCards} 
                         currentPage={this.state.page}
                         onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
-                    </TeamHierMemberListGridTS>
+                    </TeamHierMemberListGrid>
                     <NextSetButton onClick={() => this.setState({page: this.state.page + 1})}></NextSetButton>
                 </React.Fragment>
             )
@@ -364,10 +355,6 @@ class TeamHierarchy extends React.Component {
             selectedTierId: 1,
             selectedTeam: undefined,
         };
-    }
-    
-    onRadioClick = (e) => {
-        //TODO: fill this in once React is incorporated
     }
 
     onSelectMember = (cardId, tierId) => {
@@ -413,20 +400,8 @@ class TeamHierarchy extends React.Component {
                             <FormWrapper display="flex">
                                 <RadioFormContainer>
                                     <form>
-                                        <RadioContainer>
-                                            <label>
-                                                <input type="radio" name="filter-by" value="name" defaultChecked/>
-                                                <CustomRadio className="radio-mock" onClick={this.onRadioClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
-                                                <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Name</SystemSpan>
-                                            </label>
-                                        </RadioContainer>
-                                        <RadioContainer>
-                                            <label>
-                                                <input type="radio" name="filter-by" value="role"/>
-                                                <CustomRadio className="radio-mock" onClick={this.onRadioClick}><SystemSpan width="6px" height="6px" position="relative" bottom="4px" left="4px" display="inline-block" backgroundColor="#ffffff" borderRadius="4px"></SystemSpan></CustomRadio>
-                                                <SystemSpan display="inline-block" ml={theme.space[4]}>Filter By Role</SystemSpan>
-                                            </label>
-                                        </RadioContainer>
+                                        <Radio name="filter-by" value="name"></Radio>
+                                        <Radio name="filter-by" value="role"></Radio>
                                     </form>
                                 </RadioFormContainer>
                                 <SearchFormContainer>
@@ -440,12 +415,12 @@ class TeamHierarchy extends React.Component {
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <TeamHierMemberListGridTS tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></TeamHierMemberListGridTS>
+                                    <TeamHierMemberListGrid tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></TeamHierMemberListGrid>
                                 </HierSubSection>
 
                                 <HierSubSection>
                                     <Header3>Team Leads</Header3>
-                                    <TeamHierMemberListGridTS tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></TeamHierMemberListGridTS>
+                                    <TeamHierMemberListGrid tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></TeamHierMemberListGrid>
                                 </HierSubSection>
 
                                 <HierSubSection>
