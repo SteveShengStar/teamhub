@@ -3,7 +3,7 @@ import styled from "styled-components";
 import theme from "../theme";
 
 import { SystemComponent } from "../atoms/SystemComponents";
-import MemberPreviewComponentTS from './MemberPreviewComponentTS';
+import TeamHierMemberPreviewComponent from './TeamHierMemberPreviewComponent';
 
 
 const tempGridGap = (theme.space[4] + theme.space[3]*2 + 205)*2;
@@ -22,7 +22,7 @@ const Container = styled(SystemComponent)`
     right: ${props => props.currentPage * tempGridGap}px;
 `;
 
-class MemberListGridTS extends React.Component {
+class TeamHierMemberListGridTS extends React.Component {
     onSelect = (cardId) => {
         this.props.onSelect(cardId, this.props.tierId)
     }
@@ -33,7 +33,7 @@ class MemberListGridTS extends React.Component {
             <Container gridGap={4} overflow="hidden" className={className} childCount={roleCards.length} currentPage={currentPage}>
                 {
                     roleCards && roleCards.map(roleCard => 
-                        <MemberPreviewComponentTS key={roleCard._id}
+                        <TeamHierMemberPreviewComponent key={roleCard._id}
                             cardId={roleCard._id}
                             name={`${roleCard.leader.name.first} ${roleCard.leader.name.last}`}
                             roleTitle={roleCard.name ? roleCard.name : ""} 
@@ -46,4 +46,4 @@ class MemberListGridTS extends React.Component {
         )
     }
 }
-export default MemberListGridTS;
+export default TeamHierMemberListGridTS;

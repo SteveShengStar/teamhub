@@ -26,7 +26,7 @@ const GridLayout = styled(SystemComponent)`
     }
 `
 
-class MemberPreviewComponentTS extends React.Component{
+class TeamHierMemberPreviewComponent extends React.Component{
     render(){
         const {cardId, name, roleTitle, onClick} = this.props;
         return(
@@ -56,4 +56,4 @@ class MemberPreviewComponentTS extends React.Component{
         )
     }
 }
-export default MemberPreviewComponentTS;
+export default TeamHierMemberPreviewComponent;

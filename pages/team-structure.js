@@ -4,8 +4,8 @@ import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
 import Input from "../components/atoms/Input";
 import Header3 from '../components/atoms/Header3';
-import MemberListGridTS from '../components/molecules/MemberListGridTS';
-import NextButtonTS from '../components/atoms/NextButtonTS';
+import TeamHierMemberListGridT../components/molecules/TeamHierMemberListGridMemberListGridTS';
+import NextSetButton from '../components/atoms/NextSetButton';
 
 import theme from "../components/theme";
 
@@ -336,13 +336,13 @@ class GridListParentContainer extends React.Component {
         if (selectedTeam !== undefined) {
             return(
                 <React.Fragment>
-                    <MemberListGridTS 
+                    <TeamHierMemberListGridTS 
                         tierId={tierId}
                         roleCards={roleCards} 
                         currentPage={this.state.page}
                         onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
-                    </MemberListGridTS>
-                    <NextButtonTS onClick={() => this.setState({page: this.state.page + 1})}></NextButtonTS>
+                    </TeamHierMemberListGridTS>
+                    <NextSetButton onClick={() => this.setState({page: this.state.page + 1})}></NextSetButton>
                 </React.Fragment>
             )
         } else{
@@ -440,12 +440,12 @@ class TeamHierarchy extends React.Component {
                                 
                                 <HierSubSection>
                                     <Header3>Directors</Header3>
-                                    <MemberListGridTS tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></MemberListGridTS>
+                                    <TeamHierMemberListGridTS tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></TeamHierMemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>
                                     <Header3>Team Leads</Header3>
-                                    <MemberListGridTS tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></MemberListGridTS>
+                                    <TeamHierMemberListGridTS tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></TeamHierMemberListGridTS>
                                 </HierSubSection>
 
                                 <HierSubSection>
