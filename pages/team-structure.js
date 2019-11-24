@@ -213,13 +213,15 @@ const HierSubSection = styled(SystemComponent)`
 
 const teamHierCustomTheme = {
     ...theme,
-    breakpoints: ["810px","1090px"]
+    breakpoints: ["810px","1090px", "1200px"]
 };
 
 // TODO: this component should own the "Selected Member state field"
 const TeamHierParentContainer = styled(Card)`
     border-radius: 0;
     overflow-x: hidden;
+
+    flex-grow: 1;
 `;
 
 const SearchFormContainer = styled(SystemComponent)`
@@ -282,6 +284,9 @@ const TeamHierSearchBar = styled(Input)`
     
     @media screen and (min-width: ${props => props.theme.breakpoints[1]}) {
         width: 465px;
+    }
+    @media screen and (min-width: ${props => props.theme.breakpoints[2]}) {
+        width: 375px;
     }
 `
 
@@ -397,7 +402,7 @@ class TeamHierarchy extends React.Component {
                 
                     <div id="ts-container">
                         <SystemComponent 
-                        width="337px"
+                        width="240px"
                         height="100%"
                         bg="#D6D6D6"
                         >
