@@ -172,6 +172,7 @@ const project_json = [
 
 const HierSubSection = styled(SystemComponent)`
     overflow-x: hidden;
+    margin-bottom: ${props => props.theme.space[5]}px;
 `;
 
 const teamHierCustomTheme = {
@@ -187,7 +188,7 @@ const TeamHierParentContainer = styled(Card)`
 
 const SearchFormContainer = styled(SystemComponent)`
     width: 100%;
-    margin-top: ${theme.space[4]}px;
+    margin-top: ${props => props.theme.space[4]}px;
 
     @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
         width: 66.66%;
@@ -214,12 +215,13 @@ const RadioFormContainer = styled(SystemComponent)`
 // previous and current selections ie) SW team, team hub
 const TeamStructSideNav = styled(SystemComponent)`
     background-color: #FFFFFF;
-    margin: ${theme.space[4]}px;
+    margin: ${props => props.theme.space[4]}px;
 `;
 
 const FormWrapper = styled(SystemComponent)`
     display: flex;
     flex-direction: column;
+    margin: ${props => props.theme.space[2]}px 0 ${props => props.theme.space[5]}px;
 
     @media screen and (min-width: ${props => props.theme.breakpoints[0]}) {
         flex-direction: row;
@@ -233,7 +235,7 @@ const CustomRadio = styled(SystemSpan)`
     border-radius: 50%;
 
     display: inline-block;
-    margin-right: ${theme.space[4]};
+    margin-right: ${props => props.theme.space[4]};
     cursor: pointer;
 }
 `
