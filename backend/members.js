@@ -83,7 +83,7 @@ router.post('/search', async (req, res, next) => {
 });
 
 //get members by a particular field -- beta
-// router.put('/by/:field', async (req, res, next) => {
+// app.put('/by/:field', async (req, res, next) => {
 //     try {
 //         res.send(await data.members.findBy(req.params.field));
 //     } catch (err) {

@@ -120,3 +120,4 @@ A JSON object with the results
 - age
 - birthday
 - links
+- imageUrl
