@@ -1,24 +1,13 @@
 version: 2.1
 jobs:
   build:
+    machine: 
+      image: ubuntu-1604:201903-01
     working_directory: ~/teamhub
-    docker:
-      - image: circleci/node:10.16.3
-      - image: mongo:4.2.0
     steps:
       - checkout
       - run:
-          name: Install Docker Compose
+          name: Start containerdocker-compose
           command: |
-            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-            chmod +x ~/docker-compose
-            sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      - setup_remote_docker
-      - run:
-          name: Start container and verify it is working
-          command: |
-            set -x
             docker-compose up -d
-            docker run --network container:contacts \
-              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:3000/
 
