@@ -241,7 +241,7 @@ const TeamHierParentContainer = styled(Card)`
 `;
 
 const HierSubSection = styled(SystemComponent)`
-    overflow-x: hidden;
+    overflow: hidden;
     margin-bottom: ${props => props.theme.space[5]}px;
 `;
 
@@ -264,17 +264,28 @@ class GridListParentContainer extends React.Component {
     render() {
         const {selectedTeam, tierId, roleCards, onSelect} = this.props;
         if (selectedTeam !== undefined) {
-            return(
-                <React.Fragment>
+            if (roleCards.length >= 4){
+                <SystemComponent position="relative">
                     <TeamHierMemberListGrid 
                         tierId={tierId}
-                        roleCards={roleCards} 
+                        roleCards={roleCards.slice(0,4)}
                         currentPage={this.state.page}
                         onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
                     </TeamHierMemberListGrid>
                     <NextSetButton onClick={() => this.setState({page: this.state.page + 1})}></NextSetButton>
-                </React.Fragment>
-            )
+                </SystemComponent>
+            } else {
+                return(
+                    <SystemComponent position="relative">
+                        <TeamHierMemberListGrid 
+                            tierId={tierId}
+                            roleCards={roleCards} 
+                            currentPage={this.state.page}
+                            onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
+                        </TeamHierMemberListGrid>
+                    </SystemComponent>
+                )
+            }
         } else{
             return(<React.Fragment></React.Fragment>)
         }
