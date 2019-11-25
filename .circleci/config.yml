@@ -1,13 +1,15 @@
 version: 2.1
 jobs:
   build:
-    machine: 
-      image: ubuntu-1604:201903-01
+    machine:
+      image: ubuntu-1604:201903-01    
     working_directory: ~/teamhub
     steps:
       - checkout
       - run:
-          name: Start containerdocker-compose
+          name: Start container and run docker-compose
           command: |
+            mv /backend/data/config.template.json /backend/data/config.json
+            docker build ./docker -t teamhub
             docker-compose up -d
 
