@@ -261,19 +261,28 @@ class GridListParentContainer extends React.Component {
         }
     }
 
+    onDeterminePage = (e) => {
+        if ((this.state.page+1) * 4 >= this.props.roleCards.length) {
+            this.setState({page: 0})
+        } else {
+            this.setState({page: this.state.page + 1})
+        }
+    }
+
     render() {
         const {selectedTeam, tierId, roleCards, onSelect} = this.props;
         if (selectedTeam !== undefined) {
-            if (roleCards.length >= 4){
+            if (roleCards.length > 4){
+                return(
                 <SystemComponent position="relative">
                     <TeamHierMemberListGrid 
                         tierId={tierId}
-                        roleCards={roleCards.slice(0,4)}
+                        roleCards={roleCards.slice(this.state.page * 4, Math.min( (this.state.page+1) * 4, roleCards.length))}
                         currentPage={this.state.page}
                         onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
                     </TeamHierMemberListGrid>
-                    <NextSetButton onClick={() => this.setState({page: this.state.page + 1})}></NextSetButton>
-                </SystemComponent>
+                    <NextSetButton onSelect={this.onDeterminePage}></NextSetButton>
+                </SystemComponent>)
             } else {
                 return(
                     <SystemComponent position="relative">
@@ -311,7 +320,6 @@ class TeamHierarchy extends React.Component {
         // TODO: put a condition ??
         if (tierId === 2) {
             const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
-            //console.log(selectedSubTeamCard); 
             this.setState({
                 selectedTierId: tierId, 
                 selectedMemberId: selectedSubTeamCard._id, 
@@ -329,9 +337,6 @@ class TeamHierarchy extends React.Component {
     }
 
     render() {
-        //console.log("Selected tier ", this.state.selectedTierId)
-        //console.log("selectedMemberId ", this.state.selectedMemberId)
-        //console.log("Selected Team ", this.state.selectedTeam)
         return (
             <PageTemplate title="Team Structure">
                 <React.Fragment>

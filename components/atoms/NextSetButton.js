@@ -31,9 +31,9 @@ const NextSymbol = styled(SystemComponent)`
     }
 `;
 
-const NextSetButton = () => {
+const NextSetButton = ({onSelect}) => {
     return (
-        <ButtonWrapper>
+        <ButtonWrapper onClick={() => {onSelect()}}>
             <NextSymbol>&rsaquo;</NextSymbol>
         </ButtonWrapper>
     )

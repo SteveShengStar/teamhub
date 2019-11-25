@@ -6,7 +6,6 @@ import { SystemComponent } from "../atoms/SystemComponents";
 import TeamHierMemberPreviewComponent from './TeamHierMemberPreviewComponent';
 
 
-const tempGridGap = (theme.space[4] + theme.space[3]*2 + 205)*2;
 const Container = styled(SystemComponent)`
     margin: 0 -${props => props.theme.space.cardPadding}px;
     padding: ${props => props.theme.space[1]}px ${props => props.theme.space.cardPadding}px 0;
@@ -19,7 +18,6 @@ const Container = styled(SystemComponent)`
     align-items: start;
 
     position: relative;
-    right: ${props => props.currentPage * tempGridGap}px;
 `;
 
 class TeamHierMemberListGrid extends React.Component {
