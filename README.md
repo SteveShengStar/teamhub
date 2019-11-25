@@ -39,6 +39,15 @@ Make a copy and rename it to `config.json`.
 Ask Michael Pu for the database url.
 
 
+## Testing Locally (Update this)
+To convert the circle ci version 2.1 config into the local compatible 2.0 version:
+`circleci config process .circleci/config.yml > process.yml`
+
+Start docker
+Run: ` circleci local execute -c process.yml`
+
+
+
 (Navigate to repository then)
 ```npm install```
 
