@@ -19,6 +19,12 @@ Here are the steps to run locally:
 2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
 3. Go to the root directory and run `docker build ./docker -t teamhub`
 4. To start the server, simply go to the root directory and run `docker-compose up`
+
+### Troubleshooting
+To use the MongoDB compass desktop app, use `localhost` as the hostname and the default port 27017.
+
+If the DB did not load succesufully from the dump (is empty), run `docker-compse rm` and then restart the server with `docker-compose up`.
+
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
 2. Assign yourself to the issue to let others know you are working on it.
@@ -29,6 +35,9 @@ Here are the steps to run locally:
 5. Check up on your Pull Request and respond to any comments/questions
 6. Once your Pull Request has been reviewed and approved, you may merge it with `master` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
 
+
+
+
 ## Installation
 
 Clone from GitHub with: 
@@ -37,15 +46,6 @@ Clone from GitHub with:
 Navigate to `/backend/data/config.template.json`.
 Make a copy and rename it to `config.json`.
 Ask Michael Pu for the database url.
-
-
-## Testing Locally (Update this)
-To convert the circle ci version 2.1 config into the local compatible 2.0 version:
-`circleci config process .circleci/config.yml > process.yml`
-
-Start docker
-Run: ` circleci local execute -c process.yml`
-
 
 
 (Navigate to repository then)
