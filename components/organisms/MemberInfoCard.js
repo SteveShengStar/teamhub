@@ -22,7 +22,7 @@ const MemberInfoCard = ({memberData, index, className, subteams}) => {
     const subteam = memberData.subteam ? subteams[memberData.subteam].name : "";
 
     return (
-        <InfoCard className={className}>
+        <InfoCard className={className} memberExists={memberData && memberData._id}>
             <SystemComponent>
                 <Header3 mb={3}>Member</Header3>
                 <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ""} </Header2>
@@ -87,6 +87,7 @@ const InfoCard = styled(Card)`
     justify-content: space-between;
     position: relative;
     z-index: 10;
+    visibility: ${props => props.memberExists ? "visible" : "hidden"}
 `;
 
 const PersonalCard = styled(SystemComponent)`

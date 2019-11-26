@@ -28,11 +28,11 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
         overflow="hidden"
         display="grid"
         gridTemplateRows="auto auto"
-        gridTemplateColumns="auto 1fr"
+        gridTemplateColumns="repeat(auto-fit, minmax(30vw, 1fr))"
         gridGap="cardMargin"
       >
         <Card 
-          width={"auto"} minWidth={[300, 300, 300, "30vw"]} maxWidth={400, 400, 400, "30vw"} gridRow="1/3" 
+          width={"auto"} minWidth={[300, 300, 300, "30vw"]} maxWidth={400, 400, 400, "auto"} gridRow="1/3" 
           display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
           overflow="scroll"
         >
@@ -40,11 +40,8 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
           <MemberFilterComponent />
           <MemberListGrid members={members.members} onSelect={onSelectMember} />
         </Card>
-        {
-          selectedMember && (
-            <MemberInfoCard memberData={selectedMember} />
-          )
-        }
+          
+        <MemberInfoCard memberData={selectedMember} />
       </SystemComponent>
     </PageTemplate>
   );
