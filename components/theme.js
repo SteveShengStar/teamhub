@@ -1,41 +1,41 @@
-import { system } from "styled-system";
+import { system } from 'styled-system';
 
 /**
  * Define colors
  */
-const white = "#FFFFFF";
+const white = '#FFFFFF';
 const greys = [
-  "#F5F5F5", // light
-  "#D6D6D6", // light gray
-  "#B4B4B4", // grayed text
-  "#888888", // gray
-  "#333333" // dark gray
-]
-const black = "#131313";
-const primaryBlue = "#2C8DFF";
-const messagesBlue = "#1C9FFF";
-const themeYellow = "#FED138";
-const clickUpPurple = "#7B68EE";
-const alertRed = "#F44848";
+    '#F5F5F5', // light
+    '#D6D6D6', // light gray
+    '#B4B4B4', // grayed text
+    '#888888', // gray
+    '#333333' // dark gray
+];
+const black = '#131313';
+const primaryBlue = '#2C8DFF';
+const messagesBlue = '#1C9FFF';
+const themeYellow = '#FED138';
+const clickUpPurple = '#7B68EE';
+const alertRed = '#F44848';
 
-const softwareMagenta = "#DF39F5";
-const mechRed = "#E03C3C";
-const electricalGreen = "#26C309";
-const adminPurple = "#892FF2";
-const execYellow = "#CEAC36";
-const infraOrange = "#CEAC36";
+const softwareMagenta = '#DF39F5';
+const mechRed = '#E03C3C';
+const electricalGreen = '#26C309';
+const adminPurple = '#892FF2';
+const execYellow = '#CEAC36';
+const infraOrange = '#CEAC36';
 
 /**
  * Responsive Scaling
  */
 
-const breakpoints = ["600px","900px","1200px"];
+const breakpoints = ['600px','900px','1200px'];
 
 const mediaQueries = {
-  tablet: `@media screen and (min-width: ${breakpoints[0]})`,
-  smallDesktop: `@media screen and (min-width: ${breakpoints[1]})`,
-  desktop: `@media screen and (min-width: ${breakpoints[2]})`,
-}
+    tablet: `@media screen and (min-width: ${breakpoints[0]})`,
+    smallDesktop: `@media screen and (min-width: ${breakpoints[1]})`,
+    desktop: `@media screen and (min-width: ${breakpoints[2]})`,
+};
 
 /**
  * Fonts
@@ -74,37 +74,37 @@ cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
 
-const shadows = ["none", "0 2px 5px 0 rgba(0,0,0,0.05)", "0 2px 10px 0 rgba(0,0,0,0.1)"];
+const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)'];
 shadows.none = shadows[0];
 shadows.light = shadows[1];
 shadows.default = shadows[2];
 
 /** Transition */
-const transitions = ["none", "all 0.2s ease"];
+const transitions = ['none', 'all 0.2s ease'];
 transitions.none = transitions[0];
 transitions.default = transitions[1];
 
 
 const theme = {
     colors: {
-      theme: themeYellow,
-      action: primaryBlue,
-      alertAction: alertRed,
-      foreground: black,
-      background: white,
-      greys,
-      messagesBackground: messagesBlue,
-      clickUp: clickUpPurple,
-      software: softwareMagenta,
-      mechanical: mechRed,
-      electrical: electricalGreen,
-      admin: adminPurple,
-      exec: execYellow,
-      infrastructure: infraOrange
+        theme: themeYellow,
+        action: primaryBlue,
+        alertAction: alertRed,
+        foreground: black,
+        background: white,
+        greys,
+        messagesBackground: messagesBlue,
+        clickUp: clickUpPurple,
+        software: softwareMagenta,
+        mechanical: mechRed,
+        electrical: electricalGreen,
+        admin: adminPurple,
+        exec: execYellow,
+        infrastructure: infraOrange
     },
     fonts: {
-        title: "futura-pt",
-        body: "Nunito Sans"
+        title: 'futura-pt',
+        body: 'Nunito Sans'
     },
     fontSizes,
     fontWeights,
@@ -113,6 +113,6 @@ const theme = {
     shadows,
     breakpoints, mediaQueries,
     transitions
-}
+};
 
 export default theme;

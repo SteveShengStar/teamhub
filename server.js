@@ -10,16 +10,16 @@ const api = require('./backend/index');
 nextapp.prepare().then(async () => {
     const server = express();
 
-  server.use(bodyParser.urlencoded({ extended: true }));
-  server.use(bodyParser.json());
+    server.use(bodyParser.urlencoded({ extended: true }));
+    server.use(bodyParser.json());
 
     await api.data.init();
     server.use('/api', api);
 
-  server.all('*', nextapp.getRequestHandler());
+    server.all('*', nextapp.getRequestHandler());
 
-  server.listen(port, (err) => {
-    if (err) throw err;
-    console.log(`> Ready on http://localhost:${port}`);
-  });
+    server.listen(port, (err) => {
+        if (err) throw err;
+        console.log(`> Ready on http://localhost:${port}`);
+    });
 });

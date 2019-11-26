@@ -2,25 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  addMember,
-  removeMember,
-  loadAllMembers,
-  loadSelectedMember
+    addMember,
+    removeMember,
+    loadAllMembers,
+    loadSelectedMember
 } from '../data/reducers/memberSlice';
 
 import PageTemplate from '../components/templates/PageTemplate';
 import { SystemComponent } from '../components/atoms/SystemComponents';
 import Header3 from '../components/atoms/Header3';
 import Card from '../components/atoms/Card';
-import MemberFilterComponent from "../components/molecules/MemberFilterComponent";
+import MemberFilterComponent from '../components/molecules/MemberFilterComponent';
 import MemberListGrid from '../components/molecules/MemberListGrid';
 import MemberInfoCard from '../components/organisms/MemberInfoCard';
 
 const Home = ({ members, loadSelectedMember, selectedMember }) => {
 
-  function onSelectMember(id) {
-    loadSelectedMember(id);
-  }
+    function onSelectMember(id) {
+        loadSelectedMember(id);
+    }
 
   return (
     <PageTemplate title="Explore">
@@ -52,19 +52,19 @@ Home.getInitialProps = async ({ store }) => {
 };
 
 const mapStateToProps = (state) => {
-  return {
-    members: state.members,
-    selectedMember: state.members.selectedMember
-  };
+    return {
+        members: state.members,
+        selectedMember: state.members.selectedMember
+    };
 };
 
 const mapDispatchToProps = {
-  addMember,
-  removeMember,
-  loadSelectedMember
+    addMember,
+    removeMember,
+    loadSelectedMember
 };
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Home);

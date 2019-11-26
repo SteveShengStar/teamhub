@@ -13,63 +13,63 @@ import { configureStore } from 'redux-starter-kit';
 import rootReducer from '../data/rootReducer';
 
 import { ThemeProvider } from 'styled-components';
-import theme from "../components/theme";
+import theme from '../components/theme';
 
 import Nav from '../components/molecules/Nav';
 
 const navItems = [
-  {
-    name: "Explore", link: "/"
-  },
-  {
-    name: "The Team", link: "/team",
-  },
-  {
-    name: "Meetings", link: "/meetings"
-  },
-  {
-    name: "Discover", link: "/discover"
-  },
-  {
-    name: "Account", link: "/account"
-  }
+    {
+        name: 'Explore', link: '/'
+    },
+    {
+        name: 'The Team', link: '/team',
+    },
+    {
+        name: 'Meetings', link: '/meetings'
+    },
+    {
+        name: 'Discover', link: '/discover'
+    },
+    {
+        name: 'Account', link: '/account'
+    }
 ];
 
 const makeStore = (initialState, options) => {
-  return configureStore({
-    reducer: rootReducer,
-    preloadedState: initialState
-  });
+    return configureStore({
+        reducer: rootReducer,
+        preloadedState: initialState
+    });
 };
 
 class MyApp extends App {
 
-  static async getInitialProps({ Component, ctx }) {
-    return {
-      pageProps: Component.getInitialProps
-        ? await Component.getInitialProps(ctx)
-        : {}
-    };
-  }
-
-  render () {
-    const { Component, pageProps, router, store } = this.props;
-
-    let index = -1;
-    if (router && router.route) {
-      const split = router.route.split("/")[1];
-      if (split) index = navItems.findIndex(item => item.link === "/" + split[1]);
-      else index = navItems.findIndex(item => item.link === "/");
+    static async getInitialProps({ Component, ctx }) {
+        return {
+            pageProps: Component.getInitialProps
+                ? await Component.getInitialProps(ctx)
+                : {}
+        };
     }
-    return (
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <Nav navItems={navItems} index={index}/>
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </Provider>
-    )
-  }
+
+    render () {
+        const { Component, pageProps, router, store } = this.props;
+
+        let index = -1;
+        if (router && router.route) {
+            const split = router.route.split('/')[1];
+            if (split) index = navItems.findIndex(item => item.link === '/' + split[1]);
+            else index = navItems.findIndex(item => item.link === '/');
+        }
+        return (
+            <Provider store={store}>
+                <ThemeProvider theme={theme}>
+                    <Nav navItems={navItems} index={index}/>
+                    <Component {...pageProps} />
+                </ThemeProvider>
+            </Provider>
+        );
+    }
 }
 
 export default withRedux(makeStore)(MyApp);
