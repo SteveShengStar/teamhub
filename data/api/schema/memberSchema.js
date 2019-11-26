@@ -8,20 +8,20 @@ const project = new schema.Entity('projects', {}, { idAttribute: '_id' });
 const stream = new schema.Entity('streams', {}, { idAttribute: '_id' });
 
 const member = new schema.Entity(
-  'members',
-  {
-    skills: [skill],
-    interests: [interest],
-    memberType,
-    subteam,
-    project,
-    stream
-  },
-  {
-    idAttribute: '_id'
-  }
+    'members',
+    {
+        skills: [skill],
+        interests: [interest],
+        memberType,
+        subteam,
+        project,
+        stream
+    },
+    {
+        idAttribute: '_id'
+    }
 );
 
 export default {
-  body: [member]
+    body: [member]
 };

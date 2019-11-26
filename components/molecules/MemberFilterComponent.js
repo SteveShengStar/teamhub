@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import Input from "../atoms/Input";
-import BorderlessButton from "../atoms/BorderlessButton";
-import { SystemComponent } from "../atoms/SystemComponents";
-import Header5 from "../atoms/Header5";
-import Select from "../atoms/Select";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import Input from '../atoms/Input';
+import BorderlessButton from '../atoms/BorderlessButton';
+import { SystemComponent } from '../atoms/SystemComponents';
+import Header5 from '../atoms/Header5';
+import Select from '../atoms/Select';
 
 const MemberFilterComponent = () => {
     const [ onState, setOnState ] = useState(false);
@@ -17,7 +17,7 @@ const MemberFilterComponent = () => {
         <SystemComponent>
             <Search variant="text" placeholder="Search"/>
             <SystemComponent mt={2} display="flex" flexDirection="row-reverse">
-                <BorderlessButton onClick={toggle}>{onState ? "Hide Filters" : "Show Filters"}</BorderlessButton>
+                <BorderlessButton onClick={toggle}>{onState ? 'Hide Filters' : 'Show Filters'}</BorderlessButton>
                 <BorderlessButton mr={5}>Show Sort</BorderlessButton>
             </SystemComponent>
             {
@@ -34,7 +34,7 @@ const MemberFilterComponent = () => {
             }
         </SystemComponent>
     );
-}
+};
 
 export default MemberFilterComponent;
 

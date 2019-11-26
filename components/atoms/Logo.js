@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { composition } from "./SystemComponents";
+import styled from 'styled-components';
+import { composition } from './SystemComponents';
 
 const CustomLogo = ({className}) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="259" height="37.829" viewBox="0 0 259 37.829" className={className}>

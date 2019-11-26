@@ -2,9 +2,9 @@ import { createSlice } from 'redux-starter-kit';
 import { normalize } from 'normalizr';
 
 const userSlice = createSlice({
-  name: 'user',
-  initialState: {},
-  reducers: {}
+    name: 'user',
+    initialState: {},
+    reducers: {}
 });
 
 export const {} = userSlice.actions;

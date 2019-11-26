@@ -15,6 +15,9 @@
 # production
 /build
 
+# circle-ci
+process.yml
+
 # misc
 .DS_Store
 .env*
