@@ -23,6 +23,13 @@ Here are the steps to run locally:
 ### Troubleshooting
 To use the MongoDB compass desktop app, use `localhost` as the hostname and the default port 27017.
 
+To run tests locally with `npm run test`, paste the following connection string into `/backend/data/config.json`:
+```json
+{
+  "url": "mongodb://localhost:27017/teamhub"
+}
+```
+
 If the DB did not load succesufully from the dump (is empty), run `docker-compse rm` and then restart the server with `docker-compose up`.
 
 ## Contributing

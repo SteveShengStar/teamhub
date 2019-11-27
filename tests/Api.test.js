@@ -1,4 +1,4 @@
-jest.setTimeout(60000)
+jest.setTimeout(60000);
 
 const express = require('express');
 const bodyParser = require('body-parser');
