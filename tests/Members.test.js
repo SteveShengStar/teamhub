@@ -9,7 +9,7 @@ beforeAll(async (done) => {
 });
 
 // Needs to Be valid JSON
-const testMemberData = {
+const testMemberData1 = {
     "name": {
         "first": "TestUser1010",
         "last": "TestUser1010",
@@ -54,35 +54,46 @@ const testMemberData = {
     ]
 };
 
+const testMemberData2 = {
+    "name": {
+        "first": "TestUser2",
+        "last": "TestUser2",
+        "display": "TestUser2"
+    },
+    "email": "testuser2@testing.ca"
+};
 
-// TODO: potential conflict when many tests running at once, potentially adding 2 members before they're deleted
+const testMemberData3 = {
+    "name": {
+        "first": "TestUser3",
+        "last": "TestUser3",
+        "display": "TestUser3"
+    },
+    "email": "testuser3@testing.ca"
+};
 
 
 // Boiler plate for adding the member to the DB before test
-const addTestMember = async () => {
+const addTestMember = async (data) => {
 
-    return await api.data.util.resWrapper(async () => {
-        return await api.data.members.add(testMemberData);
+    return api.data.util.resWrapper(async () => {
+        return await api.data.members.add(data);
     });
 
 };
 
 // Drop member before / after running a test
-const dropTestMember = async () => {
-    return await Member.deleteMany({"name.first": "TestUser1010"});
+const dropTestMember = async (data) => {
+    return await Member.deleteMany({"name.first": data.name.first});
 };
 
 
 describe('Testing Members functions', () => {
 
-    it('Tests Adding Member', async () => {
-
-        // Ensure the test user is deleted first
-        let resp = await dropTestMember();
-        expect(resp.ok).toBe(1);
+    it('Tests Adding testMemberData1', async (done) => {
 
         // Test adding the member
-        resp = await addTestMember();
+        let resp = await addTestMember(testMemberData1);
         expect(resp.success).toBe(true);
 
         // Find the member that was just created
@@ -96,17 +107,22 @@ describe('Testing Members functions', () => {
         expect(resp.body[0].email).toBeTruthy();
         expect(resp.body[0].name).toBeTruthy();
 
-        await dropTestMember();
+        await dropTestMember(testMemberData1);
+
+        // Callback to wait until first test done executing
+        done()
 
     });
 
-    it('Tests deleting a members data', async () => {
+    it('Tests deleting testMemberData2', async (done) => {
 
-        let resp = await addTestMember();
-        let id = resp.body._id;
+        await dropTestMember(testMemberData2);
+
+        let resp = await api.data.members.add(testMemberData2);
+        let id = resp._id;
 
         resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.delete({_id: id});
+            return await api.data.members.delete({"_id": id});
         });
         expect(resp.success).toBe(true);
 
@@ -120,45 +136,32 @@ describe('Testing Members functions', () => {
         // Ensures member deleted
         expect(resp.body).toStrictEqual([]);
 
+        done()
     });
-
-});
-
-
-describe('Updating and Searching Members', () => {
 
     it('Tests updating a members data', async () => {
 
-        // TODO: create member and update with ID
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.updateMember({_id: '5dd1df5bc08e041f7d7b83f1'}, {"email": "user1011@testing.ca"});
+        await addTestMember(testMemberData3);
+
+        let resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.updateMember({"name.first": "TestUser3"}, {"email": "userupdated@testing.ca"});
         });
-
-
-        expect(resp.success).toBe(true);
-    });
-
-    it('Tests searching a Member', async () => {
-
-        await addTestMember();
-
-        const searchData = {
-            "name.first": "TestUser1010"
-        };
-
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.search(searchData);
-        });
-
-        console.log(resp);
-
         expect(resp.success).toBe(true);
 
-        await dropTestMember();
-    });
+        // Check to see if email updated
+        resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.search({
+                "name.first": "TestUser3"
+            });
+        });
 
+        expect(resp.body[0].email).toBe("userupdated@testing.ca");
+
+        await dropTestMember(testMemberData3);
+    });
 
 });
+
 
 afterAll(() => {
     api.data.close();
