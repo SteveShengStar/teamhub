@@ -10,6 +10,7 @@ Repository for the TeamHub Project. Technologies used:
 * Back-endhttps://docs.docker.com/install/
     * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
     * MongoDB for database
+    * [Jest](https://jestjs.io/) for testing
 
 Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
 
@@ -20,20 +21,13 @@ Here are the steps to run locally:
 3. Go to the root directory and run `docker build ./docker -t teamhub`
 4. To start the server, simply go to the root directory and run `docker-compose up`
 
+To run tests locally, use the command `npm run test` to ensure there were no breaking changes.
+
 ### Troubleshooting
 
-When running the dev environment for the web app make sure you switch the config.js to what is in `config.template.json`.
+* To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
 
-To use the MongoDB compass desktop app, use `localhost` as the hostname and the default port 27017.
-
-To run tests locally with `npm run test`, paste the following connection string into `/backend/data/config.json`:
-```json
-{
-  "url": "mongodb://localhost:27017/teamhub"
-}
-```
-
-If the DB did not load succesufully from the dump (is empty), run `docker-compose rm` and then restart the server with `docker-compose up`.
+* If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
@@ -66,3 +60,6 @@ Build project
 
 Run server (development)
 ```npm run dev```
+
+Run tests
+```npm run test```
