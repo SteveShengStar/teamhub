@@ -8,7 +8,7 @@
     "build:docker": "docker build ./docker -t teamhub",
     "docker": "docker-compose up",
     "start": "next start",
-    "test": "jest"
+    "test": "export NODE_ENV=testing && jest"
   },
   "jest": {
     "testEnvironment": "node"
