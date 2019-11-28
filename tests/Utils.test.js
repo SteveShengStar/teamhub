@@ -1,4 +1,4 @@
-jest.setTimeout(60000);
+jest.setTimeout(15000);
 
 
 const api = require('../backend/index');

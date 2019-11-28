@@ -1,4 +1,4 @@
-jest.setTimeout(30000);
+jest.setTimeout(15000);
 
 const api = require('../backend/index');
 const Member = require('../backend/data/schema/Member');
@@ -73,7 +73,7 @@ const testMemberData3 = {
 };
 
 
-// Boiler plate for adding the member to the DB before test
+// Adding the member to the DB before test
 const addTestMember = async (data) => {
 
     return api.data.util.resWrapper(async () => {
