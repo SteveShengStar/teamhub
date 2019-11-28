@@ -1,4 +1,4 @@
-jest.setTimeout(60000);
+jest.setTimeout(15000);
 
 
 const api = require('../backend/index');
@@ -29,9 +29,11 @@ describe('Testing Utility functions', () => {
 
         const resp = (await api.data.util.resWrapper(async () => {
             return await api.data.members.getAll();
-        })).success;
+        }));
 
-        expect(resp).toBe(true);
+        expect(resp.success).toBe(true);
+        // Check that members were returned
+        expect(resp.body.length).toBeGreaterThan(1);
     });
 
     it('Tests retrieving ID or creating new document', async () => {
@@ -41,8 +43,8 @@ describe('Testing Utility functions', () => {
             category: 'Software'
         }], skills);
 
-        // TODO: check for a specific ID returned
-        expect(resp).toBeDefined();
+        // Check that the string returned is ID, 24 char
+        expect(resp.length).toBe(24);
     });
 
     it('Tests retrieving IDs for multiple document bodies', async () => {
@@ -52,13 +54,10 @@ describe('Testing Utility functions', () => {
             category: 'Software'
         }], skills);
 
-        expect(resp.length).toBe(1);
+        // Check if array contains ids
+        expect(resp[0].length).toBe(24);
     })
 
-    // TODO: Add Tests for find / delete
-
-    // https://zellwk.com/blog/jest-and-mongoose/
-    // For testing the add / drop routes
 
 });
 

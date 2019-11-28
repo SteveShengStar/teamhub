@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
-const config = require('./config.json');
+
+const env = process.env.NODE_ENV;
+
+let config = require('./config.json');
+if(env === 'testing') {
+    // Different connection string required for unit tests
+    config = require('./config.tests.json');
+}
 
 const data = {};
 
@@ -14,7 +21,7 @@ data.init = async () => {
         useNewUrlParser: true
     });
 
-    console.log('Connected');
+    console.log(`Connected to: ${config.url}`);
 };
 
 data.close = async () => {

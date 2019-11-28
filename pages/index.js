@@ -22,8 +22,6 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
         loadSelectedMember(id);
     }
 
-    console.log(members);
-
     return (
         <PageTemplate title="Explore">
             <SystemComponent

@@ -10,6 +10,7 @@ Repository for the TeamHub Project. Technologies used:
 * Back-endhttps://docs.docker.com/install/
     * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
     * MongoDB for database
+    * [Jest](https://jestjs.io/) for testing
 
 Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
 
@@ -21,6 +22,16 @@ Here are the steps to run locally:
 4. To start the server, simply go to the root directory and run `docker-compose up -d`
 5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/bash`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
 6. To stop the docker containers, run `docker-compose stop`
+
+
+To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
+
+### Troubleshooting
+
+* To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+
+* If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
+
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
 2. Assign yourself to the issue to let others know you are working on it.
@@ -30,6 +41,9 @@ Here are the steps to run locally:
 6. Once you are finished, remove the `wip` label and `[WIP]` from the title of the Pull Request, add the `ready-to-merge` label to your Pull Request, and add at least one reviewer.
 5. Check up on your Pull Request and respond to any comments/questions
 6. Once your Pull Request has been reviewed and approved, you may merge it with `master` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
+
+
+
 
 ## Installation
 
@@ -41,15 +55,6 @@ Make a copy and rename it to `config.json`.
 Ask Michael Pu for the database url.
 
 
-## Testing Locally (Update this)
-To convert the circle ci version 2.1 config into the local compatible 2.0 version:
-`circleci config process .circleci/config.yml > process.yml`
-
-Start docker
-Run: ` circleci local execute -c process.yml`
-
-
-
 (Navigate to repository then)
 ```npm install```
 
@@ -58,3 +63,6 @@ Build project
 
 Run server (development)
 ```npm run dev```
+
+Run tests
+```npm run test```
