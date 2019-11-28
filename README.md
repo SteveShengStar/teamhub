@@ -21,6 +21,9 @@ Here are the steps to run locally:
 4. To start the server, simply go to the root directory and run `docker-compose up`
 
 ### Troubleshooting
+
+When running the dev environment for the web app make sure you switch the config.js to what is in `config.template.json`.
+
 To use the MongoDB compass desktop app, use `localhost` as the hostname and the default port 27017.
 
 To run tests locally with `npm run test`, paste the following connection string into `/backend/data/config.json`:
@@ -30,7 +33,7 @@ To run tests locally with `npm run test`, paste the following connection string 
 }
 ```
 
-If the DB did not load succesufully from the dump (is empty), run `docker-compse rm` and then restart the server with `docker-compose up`.
+If the DB did not load succesufully from the dump (is empty), run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ## Contributing
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
