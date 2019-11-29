@@ -1,6 +1,7 @@
-jest.setTimeout(60000);
+jest.setTimeout(15000);
 
 const api = require('../backend/index');
+const Member = require('../backend/data/schema/Member');
 
 beforeAll(async (done) => {
     await api.data.init();
@@ -8,12 +9,11 @@ beforeAll(async (done) => {
 });
 
 // Needs to Be valid JSON
-const testMemberData = {
-    "_id": "5dd1df5bc08e041f7d7b83f1",
+const testMemberData1 = {
     "name": {
-        "first": "User1010",
-        "last": "User1010",
-        "display": "User1010"
+        "first": "TestUser1010",
+        "last": "TestUser1010",
+        "display": "TestUser1010"
     },
     "skills": [
         "MongoDB"
@@ -34,7 +34,7 @@ const testMemberData = {
             "Software"
         ]
     },
-    "email": "user1010@testing.ca",
+    "email": "testuser1010@testing.ca",
     "stream": {
         "isCoop": true,
         "onStream": true,
@@ -54,54 +54,114 @@ const testMemberData = {
     ]
 };
 
+const testMemberData2 = {
+    "name": {
+        "first": "TestUser2",
+        "last": "TestUser2",
+        "display": "TestUser2"
+    },
+    "email": "testuser2@testing.ca"
+};
+
+const testMemberData3 = {
+    "name": {
+        "first": "TestUser3",
+        "last": "TestUser3",
+        "display": "TestUser3"
+    },
+    "email": "testuser3@testing.ca"
+};
+
+
+// Adding the member to the DB before test
+const addTestMember = async (data) => {
+
+    return api.data.util.resWrapper(async () => {
+        return await api.data.members.add(data);
+    });
+
+};
+
+// Drop member before / after running a test
+const dropTestMember = async (data) => {
+    return await Member.deleteMany({"name.first": data.name.first});
+};
+
 
 describe('Testing Members functions', () => {
 
-    it('Test Adding Member', async () => {
+    it('Tests Adding testMemberData1', async (done) => {
 
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.add(testMemberData);
+        // Test adding the member
+        let resp = await addTestMember(testMemberData1);
+        expect(resp.success).toBe(true);
+
+        // Find the member that was just created
+        resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.search({
+                "_id": resp.body._id
+            });
         });
 
+        // Ensures member now exists, response contains name and email
+        expect(resp.body[0].email).toBeTruthy();
+        expect(resp.body[0].name).toBeTruthy();
+
+        await dropTestMember(testMemberData1);
+
+        // Callback to wait until first test done executing
+        done()
+
+    });
+
+    it('Tests deleting testMemberData2', async (done) => {
+
+        await dropTestMember(testMemberData2);
+
+        let resp = await api.data.members.add(testMemberData2);
+        let id = resp._id;
+
+        resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.delete({"_id": id});
+        });
         expect(resp.success).toBe(true);
+
+        // Try finding the inserted user
+        resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.search({
+                "_id": id
+            });
+        });
+
+        // Ensures member deleted
+        expect(resp.body).toStrictEqual([]);
+
+        done()
     });
 
     it('Tests updating a members data', async () => {
 
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.updateMember({ _id: '5dd1df5bc08e041f7d7b83f1' }, {"email": "user1011@testing.ca"});
+        await addTestMember(testMemberData3);
+
+        let resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.updateMember({"name.first": "TestUser3"}, {"email": "userupdated@testing.ca"});
+        });
+        expect(resp.success).toBe(true);
+
+        // Check to see if email updated
+        resp = await api.data.util.resWrapper(async () => {
+            return await api.data.members.search({
+                "name.first": "TestUser3"
+            });
         });
 
-        expect(resp.success).toBe(true);
-    });
+        expect(resp.body[0].email).toBe("userupdated@testing.ca");
 
-    it('Tests searching a Member', async () => {
-
-        const searchData = {
-            "query": {
-                "name": {
-                    "first": "User1010"
-                }
-            }
-        };
-
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.search(searchData);
-        });
-
-        expect(resp.success).toBe(true);
-    });
-
-    it('Tests deleting a members data', async () => {
-
-        const resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.delete({ _id: '5dd1df5bc08e041f7d7b83f1'});
-        });
-
-        expect(resp.success).toBe(true);
+        await dropTestMember(testMemberData3);
     });
 
 });
+
 
 afterAll(() => {
     api.data.close();
