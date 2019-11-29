@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import styled, {ThemeProvider} from 'styled-components';
 import PageTemplate from '../components/templates/PageTemplate';
 import Card from '../components/atoms/Card';
-import TeamHierFormWrapper from '../components/molecules/TeamHierFormWrapper';
 import Header3 from '../components/atoms/Header3';
+import TeamHierFormWrapper from '../components/molecules/TeamHierFormWrapper';
 import TeamHierMemberListGrid from '../components/molecules/TeamHierMemberListGrid';
-import NextSetButton from '../components/atoms/NextSetButton';
+import GridListParentContainer from '../components/molecules/GridListParentContainer';
 
 import theme from "../components/theme";
 
@@ -249,58 +249,9 @@ const HierSubSection = styled(SystemComponent)`
 // state : not owned --> the particular level we are at 
 // previous and current selections ie) SW team, team hub
 const TeamStructSideNav = styled(SystemComponent)`
-    background-color: #FFFFFF;
+    background-color: ${props => props.theme.colors.background};
     margin: ${props => props.theme.space[4]}px;
 `;
-
-class GridListParentContainer extends React.Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            page: 0
-        }
-    }
-
-    onDeterminePage = (e) => {
-        if ((this.state.page+1) * 4 >= this.props.roleCards.length) {
-            this.setState({page: 0})
-        } else {
-            this.setState({page: this.state.page + 1})
-        }
-    }
-
-    render() {
-        const {selectedTeam, tierId, roleCards, onSelect} = this.props;
-        if (selectedTeam !== undefined) {
-            if (roleCards.length > 4){
-                return(
-                <SystemComponent position="relative">
-                    <TeamHierMemberListGrid 
-                        tierId={tierId}
-                        roleCards={roleCards.slice(this.state.page * 4, Math.min( (this.state.page+1) * 4, roleCards.length))}
-                        currentPage={this.state.page}
-                        onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
-                    </TeamHierMemberListGrid>
-                    <NextSetButton onSelect={this.onDeterminePage}></NextSetButton>
-                </SystemComponent>)
-            } else {
-                return(
-                    <SystemComponent position="relative">
-                        <TeamHierMemberListGrid 
-                            tierId={tierId}
-                            roleCards={roleCards} 
-                            currentPage={this.state.page}
-                            onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
-                        </TeamHierMemberListGrid>
-                    </SystemComponent>
-                )
-            }
-        } else{
-            return(<React.Fragment></React.Fragment>)
-        }
-    }
-}
-
 
 class TeamHierarchy extends React.Component {
 
@@ -339,7 +290,7 @@ class TeamHierarchy extends React.Component {
     render() {
         return (
             <PageTemplate title="Team Structure">
-                <React.Fragment>
+                <>
                 <ThemeProvider theme={teamHierCustomTheme}>
                     <SystemComponent 
                         display="flex"
@@ -394,7 +345,7 @@ class TeamHierarchy extends React.Component {
                         }
                     `}</style>
                 </ThemeProvider>
-                </React.Fragment>
+                </>
             </PageTemplate>
         )
     };
