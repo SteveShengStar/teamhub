@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { SystemComponent } from "../atoms/SystemComponents";
-import Header5 from "../atoms/Header5";
-import Body from "../atoms/Body";
-import BorderlessButton from "../atoms/BorderlessButton";
-import Image from "../atoms/Image";
+import { SystemComponent } from '../atoms/SystemComponents';
+import Header5 from '../atoms/Header5';
+import Body from '../atoms/Body';
+import BorderlessButton from '../atoms/BorderlessButton';
+import Image from '../atoms/Image';
 
 const GridLayout = styled(SystemComponent)`
     display: grid;
@@ -50,11 +50,11 @@ const MemberPreviewComponent = ({name, subteam, role, onClick}) => {
             <Header5>{name}</Header5>
 
             <RowFlexLayout gridRow="2/3" gridColumn="2/3">
-                <BorderlessButton variant={"software"}>{subteam}</BorderlessButton>
+                <BorderlessButton variant={'software'}>{subteam}</BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
         </GridLayout>
-    )
-}
+    );
+};
 
 export default MemberPreviewComponent;

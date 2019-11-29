@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { SystemBody } from "./SystemComponents";
-import { variant, space } from "styled-system";
+import styled from 'styled-components';
+import { SystemBody } from './SystemComponents';
+import { variant, space } from 'styled-system';
 
 const Body = styled(SystemBody)(
     {
@@ -15,10 +15,10 @@ const Body = styled(SystemBody)(
         }
     }),
     space
-)
+);
 
 Body.defaultProps = {
-    variant: "default"
-}
+    variant: 'default'
+};
 
 export default Body;

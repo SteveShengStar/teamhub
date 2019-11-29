@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 import Title from '../atoms/Title';
-import Link from "../atoms/Link";
-import NextLink from "next/link";
+import Link from '../atoms/Link';
+import NextLink from 'next/link';
 import { SystemNav, SystemSpan, SystemComponent } from '../atoms/SystemComponents';
 import Logo from '../atoms/Logo';
 
@@ -35,42 +35,42 @@ const NavLogo = styled(Logo)`
 `;
 
 const Nav = ({navItems, index}) => (
-  <MyNav display="flex" flexDirection="column" alignItems="flex-end">
-    <SystemComponent display="flex" justifyContent="flex-end">
-      <Title 
-        fontSize={["smallTitle", "smallTitle", "smallTitle", "title"]} 
-        alignSelf="center"
-        transition="default"
-      >
-        Team Hub
-      </Title>
-      <Line width={["5px","5px","5px","10px"]} bg="foreground" mx={[4,4,4,6]}/>
-      <NavLogo alignSelf="center" />
-    </SystemComponent>
-    <SystemComponent 
-      display="flex" 
-      flexWrap="wrap" 
-      justifyContent="flex-end" 
-      mt={3} 
-      width={["80%", "80%", "80%", "auto"]}
-    >
-      {
-        navItems.map(({name, link}, i) => 
-          <NextLink href={link} key={i}>
-            <NavLink 
-              fontSize={["smallNav", "smallNav", "smallNav", "nav"]}
-              fontWeight="bold"
-              ml={7}
-              color={i === index ? "theme" : "foreground"}
-              display={["none", "block"]}
+    <MyNav display="flex" flexDirection="column" alignItems="flex-end">
+        <SystemComponent display="flex" justifyContent="flex-end">
+            <Title 
+                fontSize={['smallTitle', 'smallTitle', 'smallTitle', 'title']} 
+                alignSelf="center"
+                transition="default"
             >
-              {name}
-            </NavLink>
-          </NextLink>
-        )
-      }
-    </SystemComponent>
-  </MyNav>
-)
+        Team Hub
+            </Title>
+            <Line width={['5px','5px','5px','10px']} bg="foreground" mx={[4,4,4,6]}/>
+            <NavLogo alignSelf="center" />
+        </SystemComponent>
+        <SystemComponent 
+            display="flex" 
+            flexWrap="wrap" 
+            justifyContent="flex-end" 
+            mt={3} 
+            width={['80%', '80%', '80%', 'auto']}
+        >
+            {
+                navItems.map(({name, link}, i) => 
+                    <NextLink href={link} key={i}>
+                        <NavLink 
+                            fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
+                            fontWeight="bold"
+                            ml={7}
+                            color={i === index ? 'theme' : 'foreground'}
+                            display={['none', 'block']}
+                        >
+                            {name}
+                        </NavLink>
+                    </NextLink>
+                )
+            }
+        </SystemComponent>
+    </MyNav>
+);
 
-export default Nav
+export default Nav;

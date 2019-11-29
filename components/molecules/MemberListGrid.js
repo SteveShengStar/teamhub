@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { SystemComponent } from "../atoms/SystemComponents";
-import MemberPreviewComponent from "./MemberPreviewComponent";
+import { SystemComponent } from '../atoms/SystemComponents';
+import MemberPreviewComponent from './MemberPreviewComponent';
 
 const MemberListGrid = ({members, onSelect, className}) => {
     return (
@@ -11,8 +11,8 @@ const MemberListGrid = ({members, onSelect, className}) => {
                 members && Object.keys(members).map((key, i) => 
                     <MemberPreviewComponent key={i}
                         name={`${members[key].name.first} ${members[key].name.last}`}
-                        subteam={members[key].subteam ? members[key].subteam.name : ""} 
-                        role={members[key].memberType ? members[key].memberType.name : ""}
+                        subteam={members[key].subteam ? members[key].subteam.name : ''} 
+                        role={members[key].memberType ? members[key].memberType.name : ''}
                         onClick={() => onSelect(members[key]._id)}
                     />
                 )
@@ -20,7 +20,7 @@ const MemberListGrid = ({members, onSelect, className}) => {
             <SystemComponent height="10px" />
         </Container>
     );
-}
+};
 
 export default MemberListGrid;
 
