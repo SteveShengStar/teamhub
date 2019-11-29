@@ -206,23 +206,28 @@ const project_json = [
     }
 ]
 
+
 // TODO: use this later
 const selectionTiers = [
     {
         id: 1,
-        label: "Directors"
+        label: "Directors",
+        roleCards: director_json
     },
     {
         id: 2,
-        label: "Team Leads"
+        label: "Team Leads",
+        roleCards: subteam_json
     },
     {
         id: 3,
-        label: "Project Head"
+        label: "Project Head",
+        roleCards: []
     },
     {
         id: 4,
-        label: "Subordinates"
+        label: "Subordinates",
+        roleCards: []
     },
 ];
 
@@ -267,10 +272,15 @@ class TeamHierarchy extends React.Component {
         };
     }
 
+    componentDidMount(){
+        selectionTiers[3].roleCards = this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects;
+    }
+
     onSelectMember = (cardId, tierId) => {
         // TODO: put a condition ??
         if (tierId === 2) {
             const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
+            selectionTiers[3].roleCards = this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects;
             this.setState({
                 selectedTierId: tierId, 
                 selectedMemberId: selectedSubTeamCard._id, 
@@ -296,7 +306,6 @@ class TeamHierarchy extends React.Component {
                         display="flex"
                         overflow="hidden"
                         height="100%"
-                        border="3px solid black"
                     >
                         <SystemComponent 
                             width="240px"
@@ -311,30 +320,18 @@ class TeamHierarchy extends React.Component {
                                 
                             <SystemComponent display="flex" flexDirection="column" overflowX="hidden">
                                 
-                                <HierSubSection>
-                                    <Header3>Directors</Header3>
-                                    <TeamHierMemberListGrid tierId={1} roleCards={director_json} onSelect={this.onSelectMember}></TeamHierMemberListGrid>
-                                </HierSubSection>
-
-                                <HierSubSection>
-                                    <Header3>Team Leads</Header3>
-                                    <TeamHierMemberListGrid tierId={2} roleCards={subteam_json} onSelect={this.onSelectMember}></TeamHierMemberListGrid>
-                                </HierSubSection>
-
-                                <HierSubSection>
-                                    <Header3>Project Heads</Header3>
-                                    <GridListParentContainer 
-                                        selectedTeam={this.state.selectedTeam}
-                                        tierId={3}
-                                        roleCards={this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects} 
-                                        onSelect={this.onSelectMember}
-                                    >
-                                    </GridListParentContainer>
-                                </HierSubSection>
-
-                                <HierSubSection>
-                                    <Header3>Subordinates</Header3>
-                                </HierSubSection>
+                                {
+                                    selectionTiers.map(tierData => (
+                                        <HierSubSection>
+                                            <Header3>{tierData.label}</Header3>
+                                            <GridListParentContainer 
+                                                selectedTeam={this.state.selectedTeam}
+                                                tierId={tierData.id} 
+                                                roleCards={tierData.roleCards} 
+                                                onSelect={this.onSelectMember}></GridListParentContainer>
+                                        </HierSubSection>
+                                    ))
+                                }
                             </SystemComponent>
 
                         </TeamHierParentContainer>
