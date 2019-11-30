@@ -1,4 +1,5 @@
 # TeamHub Project
+[![CircleCI](https://circleci.com/gh/waterloop/teamhub.svg?style=svg)](https://circleci.com/gh/waterloop/teamhub)
 
 Repository for the TeamHub Project. Technologies used: 
 * Based on [NextJS](https://nextjs.org) framework (Server-Side Rendered React).
