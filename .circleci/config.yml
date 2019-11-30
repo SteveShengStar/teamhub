@@ -14,8 +14,8 @@ jobs:
             docker-compose up -d
       - run:
           name: Install packages
-          command: docker exec -it teamhub_nodejs "npm install"
+          command: docker exec -it teamhub_nodejs "npm instal
       - run:
           name: Run Tests
-          command: docker exec -it teamhub_nodejs "npm run test"
+          command: docker exec -it teamhub_nodejs npm run test
 
