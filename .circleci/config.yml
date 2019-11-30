@@ -13,8 +13,8 @@ jobs:
             docker build ./docker -t teamhub
             docker-compose up -d
       - run:
-          - name: Install packages
-          - command: npm install
+          name: Install packages
+          command: npm install
       - run:
           name: Run Tests
           command: npm run test
