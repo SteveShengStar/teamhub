@@ -22,33 +22,30 @@ class GridListParentContainer extends React.Component {
     }
 
     render() {
-        const {selectedTeam, tierId, roleCards, onSelect} = this.props;
-        if (tierId === 3 && selectedTeam !== undefined) {
-            if (roleCards.length > 4){
-                return(
+        const {tierId, roleCards, onSelect} = this.props;
+        
+        if (roleCards.length > 4){
+            return(
+            <SystemComponent position="relative">
+                <TeamHierMemberListGrid 
+                    tierId={tierId}
+                    roleCards={roleCards.slice(this.state.page * 4, Math.min( (this.state.page+1) * 4, roleCards.length))}
+                    currentPage={this.state.page}
+                    onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
+                </TeamHierMemberListGrid>
+                <NextSetButton onSelect={this.onDeterminePage}></NextSetButton>
+            </SystemComponent>)
+        } else {
+            return(
                 <SystemComponent position="relative">
                     <TeamHierMemberListGrid 
                         tierId={tierId}
-                        roleCards={roleCards.slice(this.state.page * 4, Math.min( (this.state.page+1) * 4, roleCards.length))}
+                        roleCards={roleCards} 
                         currentPage={this.state.page}
                         onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
                     </TeamHierMemberListGrid>
-                    <NextSetButton onSelect={this.onDeterminePage}></NextSetButton>
-                </SystemComponent>)
-            } else {
-                return(
-                    <SystemComponent position="relative">
-                        <TeamHierMemberListGrid 
-                            tierId={tierId}
-                            roleCards={roleCards} 
-                            currentPage={this.state.page}
-                            onSelect={(cardId, tierId) => onSelect(cardId, tierId)}>
-                        </TeamHierMemberListGrid>
-                    </SystemComponent>
-                )
-            }
-        } else{
-            return(<></>)
+                </SystemComponent>
+            )
         }
     }
 }

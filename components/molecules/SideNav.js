@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import SystemComponent from '../atoms/SystemComponents';
+import { SystemComponent } from '../atoms/SystemComponents';
 
 const SideNav = styled(SystemComponent)`
     background-color: ${props => props.theme.colors.background};

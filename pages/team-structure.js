@@ -264,14 +264,14 @@ class TeamHierarchy extends React.Component {
     }
 
     componentDidMount(){
-        selectionTiers[3].roleCards = this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects;
+        selectionTiers[2].roleCards = this.state.selectedTeam ? subteam_project_relationships[this.state.selectedTeam - 1].projects : [];
     }
 
     onSelectMember = (cardId, tierId) => {
         // TODO: put a condition ??
         if (tierId === 2) {
             const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
-            selectionTiers[3].roleCards = this.state.selectedTeam && subteam_project_relationships[this.state.selectedTeam - 1].projects;
+            selectionTiers[2].roleCards = subteam_project_relationships[selectedSubTeamCard._id - 1].projects;
             this.setState({
                 selectedTierId: tierId, 
                 selectedMemberId: selectedSubTeamCard._id, 
@@ -279,16 +279,20 @@ class TeamHierarchy extends React.Component {
                 selectedTeam: selectedSubTeamCard._id
             })
         } else {
+            selectionTiers[2].roleCards = []
             this.setState({
                 selectedTierId: tierId, 
                 selectedMemberId: cardId, 
-                memberSelected: true, 
+                memberSelected: true,
                 selectedTeam: undefined
             })
         }
     }
 
     render() {
+        console.log("1: "+ selectionTiers[0].length);
+        console.log("2: "+ selectionTiers[1].length);
+        console.log("3: "+ selectionTiers[2].length);
         return (
             <PageTemplate title="Team Structure">
                 <>
@@ -313,10 +317,10 @@ class TeamHierarchy extends React.Component {
                                 
                                 {
                                     selectionTiers.map(tierData => (
-                                        <HierSubSection>
+
+                                        <HierSubSection key={tierData.id}>
                                             <Header3>{tierData.label}</Header3>
                                             <GridListParentContainer 
-                                                selectedTeam={this.state.selectedTeam}
                                                 tierId={tierData.id} 
                                                 roleCards={tierData.roleCards} 
                                                 onSelect={this.onSelectMember}></GridListParentContainer>
