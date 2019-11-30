@@ -1,4 +1,20 @@
 {
-    "presets": ["next/babel"],
-    "plugins": [["styled-components", { "ssr": true }]]
+  "presets": [
+    "next/babel"
+  ],
+  "plugins": [
+    [
+      "styled-components",
+      {
+        "ssr": true
+      }
+    ]
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        "@babel/plugin-transform-modules-commonjs"
+      ]
+    }
   }
+}
