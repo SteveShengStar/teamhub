@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { port } from '../../config';
+import { port } from '../../../config';
 
 export const BASE_API = (isSSR = false) => isSSR ? `http://localhost:${port}/api` : `/api` ;
 

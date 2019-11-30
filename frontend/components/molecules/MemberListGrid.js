@@ -4,16 +4,18 @@ import styled from 'styled-components';
 import { SystemComponent } from '../atoms/SystemComponents';
 import MemberPreviewComponent from './MemberPreviewComponent';
 
-const MemberListGrid = ({members, onSelect, className}) => {
+const MemberListGrid = ({members, onSelect, className, animRef}) => {
     return (
-        <Container gridGap={4} overflowY="scroll" className={className}>
+        <Container gridGap={4} overflowY="scroll" className={className} ref={animRef}>
             {
                 members && Object.keys(members).map((key, i) => 
-                    <MemberPreviewComponent key={i}
+                    <MemberPreviewComponent 
+                        key={i}
                         name={`${members[key].name.first} ${members[key].name.last}`}
                         subteam={members[key].subteam ? members[key].subteam.name : ''} 
                         role={members[key].memberType ? members[key].memberType.name : ''}
                         onClick={() => onSelect(members[key]._id)}
+                        imageUrl={members[key].picture}
                     />
                 )
             }
@@ -27,7 +29,6 @@ export default MemberListGrid;
 /**
  * Styled component definitions
  */
-
 
 const Container = styled(SystemComponent)`
     margin: 0 -${props => props.theme.space.cardPadding}px;

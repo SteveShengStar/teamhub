@@ -10,12 +10,12 @@ import withRedux from 'next-redux-wrapper';
 import { Provider } from 'react-redux';
 import { configureStore } from 'redux-starter-kit';
 
-import rootReducer from '../data/rootReducer';
+import rootReducer from '../frontend/data/rootReducer';
 
 import { ThemeProvider } from 'styled-components';
-import theme from '../components/theme';
+import theme from '../frontend/components/theme';
 
-import Nav from '../components/molecules/Nav';
+import Nav from '../frontend/components/molecules/Nav';
 
 const navItems = [
     {

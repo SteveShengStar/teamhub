@@ -30,7 +30,7 @@ const RowFlexLayout = styled(SystemComponent)`
     justify-content: space-between;
 `;
 
-const MemberPreviewComponent = ({name, subteam, role, onClick}) => {
+const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl}) => {
     return (
         <GridLayout 
             backgroundColor="greys.0" 
@@ -41,7 +41,7 @@ const MemberPreviewComponent = ({name, subteam, role, onClick}) => {
         >
             <Image 
                 height="36px" 
-                src="/static/default-headshot.png" 
+                src={imageUrl || "/static/default-headshot.png"}
                 gridRow="1/3"
                 borderRadius="18px"
                 overflow="visible"

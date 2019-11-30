@@ -42,7 +42,7 @@ const MemberInfoCard = ({memberData, index, className, subteams}) => {
             <SystemComponent>
                 <PersonalCard mb={3}>
                     <Image 
-                        src={memberData.imageUrl || '/static/default-headshot.png'}
+                        src={memberData.picture || '/static/default-headshot.png'}
                         width={'100%'}
                     />
                     <SystemComponent display="flex" flexDirection="column" padding={3}>

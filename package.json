@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "nodemon -w ./server.js ./server.js",
     "build": "next build",
+    "build:docker": "docker build ./docker -t teamhub",
+    "docker": "docker-compose up",
     "start": "next start",
     "test": "jest"
   },
@@ -12,6 +14,7 @@
     "testEnvironment": "node"
   },
   "dependencies": {
+    "animejs": "^3.1.0",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "eslint-plugin-react": "^7.16.0",
@@ -26,8 +29,8 @@
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "react-google-login": "^5.0.7",
-    "react-select": "^3.0.8",
     "react-redux": "^7.1.1",
+    "react-select": "^3.0.8",
     "redux-starter-kit": "^1.0.1",
     "styled-components": "^4.4.0",
     "styled-system": "^5.1.2"
