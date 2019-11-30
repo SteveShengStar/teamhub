@@ -20,7 +20,7 @@ Here are the steps to run locally:
 2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
 3. Go to the root directory and run `docker build ./docker -t teamhub`
 4. To start the server, simply go to the root directory and run `docker-compose up -d`
-5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/bash`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
+5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
 6. To stop the docker containers, run `docker-compose stop`
 
 
