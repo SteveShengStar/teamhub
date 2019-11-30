@@ -28,6 +28,7 @@
     "next-redux-wrapper": "^4.0.1",
     "nodemon": "^1.19.3",
     "normalizr": "^3.4.1",
+    "now": "^16.6.0",
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "react-google-login": "^5.0.7",

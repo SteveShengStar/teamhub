@@ -19,3 +19,16 @@ jobs:
           name: Run Tests
           command: docker exec teamhub_nodejs npm run test
 
+  deploy:
+    steps:
+      - attach_workspace:
+          at: ~/tmp/circlci-now
+      - run:
+          name: Install Now CLI
+          command: sudo npm install --global --unsafe-perm now
+      - deploy:
+          name: Deploy & Alias
+          command: |
+            now --token $ZEIT_TOKEN --local-config .now/now.production.json
+            now --token $ZEIT_TOKEN --local-config .now/now.production.json alias
+
