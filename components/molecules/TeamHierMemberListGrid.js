@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import theme from "../theme";
 
 import { SystemComponent } from "../atoms/SystemComponents";
 import TeamHierMemberPreviewComponent from './TeamHierMemberPreviewComponent';
@@ -20,28 +19,25 @@ const Container = styled(SystemComponent)`
     position: relative;
 `;
 
-class TeamHierMemberListGrid extends React.Component {
-    onSelect = (cardId) => {
-        this.props.onSelect(cardId, this.props.tierId)
+const TeamHierMemberListGrid = ({className, tierId, currentPage, roleCards, onSelect}) => {
+    const onSelectMember = (cardId) => {
+        onSelect(cardId, tierId)
     }
-
-    render(){
-        const {roleCards, className, currentPage} = this.props;
-        return (
-            <Container gridGap={4} overflow="hidden" className={className} childCount={roleCards.length} currentPage={currentPage}>
-                {
-                    roleCards && roleCards.map(roleCard => 
-                        <TeamHierMemberPreviewComponent key={roleCard._id}
-                            cardId={roleCard._id}
-                            name={`${roleCard.leader.name.first} ${roleCard.leader.name.last}`}
-                            roleTitle={roleCard.name ? roleCard.name : ""} 
-                            onClick={this.onSelect}
-                        />
-                    )
-                }
-                <SystemComponent height="10px" />
-            </Container>
-        )
-    }
+    
+    return (
+        <Container gridGap={4} overflow="hidden" className={className} childCount={roleCards.length} currentPage={currentPage}>
+            {
+                roleCards && roleCards.map(roleCard => 
+                    <TeamHierMemberPreviewComponent key={roleCard._id}
+                        cardId={roleCard._id}
+                        name={`${roleCard.leader.name.first} ${roleCard.leader.name.last}`}
+                        roleTitle={roleCard.name ? roleCard.name : ""} 
+                        onClick={onSelectMember}
+                    />
+                )
+            }
+            <SystemComponent height="10px" />
+        </Container>
+    )
 }
 export default TeamHierMemberListGrid;
