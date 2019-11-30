@@ -258,7 +258,6 @@ const TeamHierarchy = () => {
     const [selectedTeam, setSelectedTeam] = useState(undefined);
 
     useEffect(() => {
-        console.log("USED")
         selectionTiers[2].roleCards = selectedTeam ? subteam_project_relationships[selectedTeam - 1].projects : [];
     }, []);
 
