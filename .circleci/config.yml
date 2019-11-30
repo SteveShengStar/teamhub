@@ -17,5 +17,5 @@ jobs:
           command: npm install
       - run:
           name: Run Tests
-          command: npm run test
+          command: docker exec -it teamhub_nodejs /bin/sh
 
