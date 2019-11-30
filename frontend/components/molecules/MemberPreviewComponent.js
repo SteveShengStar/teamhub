@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { SystemComponent } from '../atoms/SystemComponents';
@@ -41,6 +41,7 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl}) => {
         >
             <Image 
                 height="36px" 
+                key={0}
                 src={imageUrl || "/static/default-headshot.png"}
                 gridRow="1/3"
                 borderRadius="18px"

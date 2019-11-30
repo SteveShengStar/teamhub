@@ -80,7 +80,7 @@ export default memberSlice.reducer;
 export const loadAllMembers = function(options = { isSSR: true }) {
   return async function(dispatch) {
     try {
-      const res = await memberService.getAll(options.isSSR);
+      const res = await memberService.getAll(options);
       if (res.success) {
         const normalizedData = normalize(res, memberSchema);
         dispatch(memberSlice.actions.setAllMembers(normalizedData.entities));
@@ -97,7 +97,6 @@ export const loadSelectedMember = function(id) {
             const res = await memberService.get(id);
             if (res.success) {
                 const normalizedData = normalize(res, memberSchema);
-                console.log(normalizedData.entities.members);
                 dispatch(
                     memberSlice.actions.setSelectedMember(normalizedData.entities)
                 );

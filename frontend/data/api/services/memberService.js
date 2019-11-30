@@ -1,9 +1,21 @@
-import { HttpVerb, executeRequest, BASE_API } from '../baseApi';
+import { HttpVerb, executeRequest, getBaseApi } from '../baseApi';
 
-export function getAll(isSSR = false) {
+export function getAll(options = {isSSR: true}) {
+  let ssr = false;
+  let query = undefined
+  if (options) {
+    query = options;
+    ssr = !!options.isSSR;
+    delete query.isSSR;
+  }
+
+
   const request = {
     method: HttpVerb.POST,
-    url: `${BASE_API(isSSR)}/members`
+    url: `${getBaseApi(!!options.isSSR)}/members/search`,
+    data: {
+      query
+    }
   };
   return executeRequest(request);
 }
@@ -11,7 +23,7 @@ export function getAll(isSSR = false) {
 export function get(id) {
   const request = {
     method: HttpVerb.GET,
-    url: `${BASE_API()}/members/${id}/info`
+    url: `${getBaseApi()}/members/${id}/info`
   };
   return executeRequest(request);
 }

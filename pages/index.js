@@ -16,13 +16,20 @@ import MemberFilterComponent from '../frontend/components/molecules/MemberFilter
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 
-const Home = ({ members, loadSelectedMember, selectedMember }) => {
+const Home = ({ members, loadSelectedMember, selectedMember, loadAllMembers }) => {
   const onSelectMember = (id) => {
     loadSelectedMember(id);
   }
 
   const updateSearchQuery = (input, filters) => {
-    
+    let normalized = {};
+    Object.keys(filters).forEach(key => {
+      if (filters[key].length > 0) normalized[key] = {
+        _id: filters[key][0].value,
+        name: filters[key][0].label
+      }
+    });
+    loadAllMembers(normalized);
   }
 
   // get filters for members list
@@ -52,7 +59,7 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
       >
         <Card 
           style={{transformOrigin: "left"}}
-          width={"40vw"} minWidth={[300, 300, 300, "30vw"]} maxWidth={400, 400, 400, "inherit"} gridRow="1/3" 
+          width={"40vw"} minWidth={[300, 300, 300, "25vw"]} maxWidth={400, 400, 400, "inherit"} gridRow="1/3" 
           display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
           overflow="scroll"
         >
@@ -67,10 +74,6 @@ const Home = ({ members, loadSelectedMember, selectedMember }) => {
   );
 };
 
-Home.getInitialProps = async ({ store }) => {
-  await store.dispatch(loadAllMembers({ isSSR: true}));
-};
-
 const mapStateToProps = (state) => {
     return {
         members: state.members,
@@ -81,7 +84,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
     addMember,
     removeMember,
-    loadSelectedMember
+    loadSelectedMember,
+    loadAllMembers
 };
 
 export default connect(
