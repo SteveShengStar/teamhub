@@ -75,7 +75,7 @@ router.post('/search', async (req, res, next) => {
                     fields[field] = 1;
                 }
             }
-            return await data.members.search(req.body.query, fieldsnp);
+            return await data.members.search(req.body.query, fields);
         }));
     } catch (err) {
         next(err);

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon -w ./server.js ./server.js",
+    "dev": "nodemon ./server.js",
     "build": "next build",
     "build:docker": "docker build ./docker -t teamhub",
     "docker": "docker-compose up",
@@ -17,6 +17,7 @@
     }
   },
   "dependencies": {
+    "animejs": "^3.1.0",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "eslint-plugin-react": "^7.16.0",
