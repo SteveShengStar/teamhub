@@ -15,6 +15,8 @@ services:
       - database
     depends_on:
       - database
+    command:
+      - docker exec -i -t composename_my-test_1 bash
   database:
     image: mongo
     container_name: teamhub_mongodb
