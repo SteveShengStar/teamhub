@@ -13,9 +13,8 @@
   "jest": {
     "testEnvironment": "node",
     "transform": {
-      "^.+\\.js$": "babel-jest"
+      "^.+\\.[t|j]sx?$": "babel-jest"
     }
-    
   },
   "dependencies": {
     "axios": "^0.19.0",
@@ -32,20 +31,19 @@
     "react": "16.10.1",
     "react-dom": "16.10.1",
     "react-google-login": "^5.0.7",
-    "react-select": "^3.0.8",
     "react-redux": "^7.1.1",
+    "react-select": "^3.0.8",
     "redux-starter-kit": "^1.0.1",
     "styled-components": "^4.4.0",
     "styled-system": "^5.1.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.7.4",
     "@types/node": "^12.7.11",
     "@types/react": "^16.9.5",
-    "babel-jest": "^24.9.0",
     "babel-plugin-styled-components": "^1.10.6",
     "jest": "^24.9.0",
     "supertest": "^4.0.2",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "babel-jest": "^24.9.0"
   }
 }

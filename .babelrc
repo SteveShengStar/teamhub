@@ -9,14 +9,5 @@
         "ssr": true
       }
     ]
-  ],
-  "env": {
-    "test": {
-      "presets": ["env", "stage-2", "jest"],
-      "plugins": [
-        "transform-es2015-modules-commonjs",
-        "transform-object-rest-spread"
-      ]
-    }
-  }
+  ]
 }
