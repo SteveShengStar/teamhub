@@ -249,97 +249,83 @@ const HierSubSection = styled(SystemComponent)`
     margin-bottom: ${props => props.theme.space[5]}px;
 `;
 
-class TeamHierarchy extends React.Component {
 
-    constructor(props){
-        super(props)
-        // NOTE: selectedMemberId -- each tier's card has a unique id
-        // selectedTier -- each tier has a unique ID
-        this.state = {
-            memberSelected: false,
-            selectedMemberId: undefined,
-            selectedTierId: 1,
-            selectedTeam: undefined,
-        };
-    }
+const TeamHierarchy = () => {
 
-    componentDidMount(){
-        selectionTiers[2].roleCards = this.state.selectedTeam ? subteam_project_relationships[this.state.selectedTeam - 1].projects : [];
-    }
+    const [memberSelected, setMemberSelected] = useState(false);
+    const [selectedMemberId, setSelectedMemberId] = useState(undefined);
+    const [selectedTierId, setSelectedTierId] = useState(1);
+    const [selectedTeam, setSelectedTeam] = useState(undefined);
 
-    onSelectMember = (cardId, tierId) => {
+    useEffect(() => {
+        console.log("USED")
+        selectionTiers[2].roleCards = selectedTeam ? subteam_project_relationships[selectedTeam - 1].projects : [];
+    }, []);
+
+    const onSelectMember = (cardId, tierId) => {
         // TODO: put a condition ??
+        setSelectedTierId(tierId)
+        setMemberSelected(true)
+    
         if (tierId === 2) {
             const selectedSubTeamCard = subteam_json.filter(function(subTeamCard){return subTeamCard._id === cardId})[0]
             selectionTiers[2].roleCards = subteam_project_relationships[selectedSubTeamCard._id - 1].projects;
-            this.setState({
-                selectedTierId: tierId, 
-                selectedMemberId: selectedSubTeamCard._id, 
-                memberSelected: true, 
-                selectedTeam: selectedSubTeamCard._id
-            })
+            
+            setSelectedMemberId(selectedSubTeamCard._id)
+            setSelectedTeam(selectedSubTeamCard._id)
         } else {
             selectionTiers[2].roleCards = []
-            this.setState({
-                selectedTierId: tierId, 
-                selectedMemberId: cardId, 
-                memberSelected: true,
-                selectedTeam: undefined
-            })
+            setSelectedMemberId(cardId)
+            setSelectedTeam(undefined)
         }
-    }
-
-    render() {
-        console.log("1: "+ selectionTiers[0].length);
-        console.log("2: "+ selectionTiers[1].length);
-        console.log("3: "+ selectionTiers[2].length);
-        return (
-            <PageTemplate title="Team Structure">
-                <>
-                <ThemeProvider theme={teamHierCustomTheme}>
-                    <SystemComponent 
-                        display="flex"
-                        overflow="hidden"
-                        height="100%"
-                    >
-                        <SystemComponent 
-                            width="240px"
-                            height="100%"
-                            bg="#D6D6D6"
-                        >
-                            <SideNav></SideNav>
-                        </SystemComponent>
-                        
-                        <TeamHierParentContainer pl={28} pr={28}>
-                            <TeamHierFormWrapper></TeamHierFormWrapper>
-                                
-                            <SystemComponent display="flex" flexDirection="column" overflowX="hidden">
-                                
-                                {
-                                    selectionTiers.map(tierData => (
-
-                                        <HierSubSection key={tierData.id}>
-                                            <Header3>{tierData.label}</Header3>
-                                            <GridListParentContainer 
-                                                tierId={tierData.id} 
-                                                roleCards={tierData.roleCards} 
-                                                onSelect={this.onSelectMember}></GridListParentContainer>
-                                        </HierSubSection>
-                                    ))
-                                }
-                            </SystemComponent>
-
-                        </TeamHierParentContainer>
-                    </SystemComponent>
-                    <style jsx>{`
-                        * {
-                            box-sizing: border-box;
-                        }
-                    `}</style>
-                </ThemeProvider>
-                </>
-            </PageTemplate>
-        )
     };
+
+    return (
+        <PageTemplate title="Team Structure">
+            <>
+            <ThemeProvider theme={teamHierCustomTheme}>
+                <SystemComponent 
+                    display="flex"
+                    overflow="hidden"
+                    height="100%"
+                >
+                    <SystemComponent 
+                        width="240px"
+                        height="100%"
+                        bg="#D6D6D6"
+                    >
+                        <SideNav></SideNav>
+                    </SystemComponent>
+                    
+                    <TeamHierParentContainer pl={28} pr={28}>
+                        <TeamHierFormWrapper></TeamHierFormWrapper>
+                            
+                        <SystemComponent display="flex" flexDirection="column" overflowX="hidden">
+                            
+                            {
+                                selectionTiers.map(tierData => (
+
+                                    <HierSubSection key={tierData.id}>
+                                        <Header3>{tierData.label}</Header3>
+                                        <GridListParentContainer 
+                                            tierId={tierData.id} 
+                                            roleCards={tierData.roleCards} 
+                                            onSelect={onSelectMember}></GridListParentContainer>
+                                    </HierSubSection>
+                                ))
+                            }
+                        </SystemComponent>
+
+                    </TeamHierParentContainer>
+                </SystemComponent>
+                <style jsx>{`
+                    * {
+                        box-sizing: border-box;
+                    }
+                `}</style>
+            </ThemeProvider>
+            </>
+        </PageTemplate>
+    )
 };
 export default TeamHierarchy;
