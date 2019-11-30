@@ -1,18 +1,18 @@
 import React from 'react';
 
-import Button from '../components/atoms/Button';
-import Title from '../components/atoms/Title';
-import Subtitle from '../components/atoms/Subtitle';
-import Header2 from '../components/atoms/Header2';
-import Header3 from '../components/atoms/Header3';
-import Header4 from '../components/atoms/Header4';
-import Header5 from '../components/atoms/Header5';
-import Body from '../components/atoms/Body';
-import Card from '../components/atoms/Card';
-import Select from '../components/atoms/Select';
-import Input from '../components/atoms/Input';
-import { SystemComponent } from '../components/atoms/SystemComponents';
-import PageTemplate from '../components/templates/PageTemplate';
+import Button from '../frontend/components/atoms/Button';
+import Title from '../frontend/components/atoms/Title';
+import Subtitle from '../frontend/components/atoms/Subtitle';
+import Header2 from '../frontend/components/atoms/Header2';
+import Header3 from '../frontend/components/atoms/Header3';
+import Header4 from '../frontend/components/atoms/Header4';
+import Header5 from '../frontend/components/atoms/Header5';
+import Body from '../frontend/components/atoms/Body';
+import Card from '../frontend/components/atoms/Card';
+import Select from '../frontend/components/atoms/Select';
+import Input from '../frontend/components/atoms/Input';
+import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
+import PageTemplate from '../frontend/components/templates/PageTemplate';
 
 const options = [
     { value: 'chocolate', label: 'Chocolate' },
