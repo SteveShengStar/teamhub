@@ -13,10 +13,9 @@ jobs:
             docker build ./docker -t teamhub
             docker-compose up -d
       - run:
-          name: Start Shell into teamhub_nodejs Docker and run tests
-          command: |
-            docker exec -it teamhub_nodejs /bin/sh
-            npm install
-            npm run test
-            exit
+          name: Install packages
+          command: docker exec teamhub_nodejs npm install
+      - run:
+          name: Run Tests
+          command: docker exec teamhub_nodejs npm run test
 
