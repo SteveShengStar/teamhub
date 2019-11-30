@@ -11,7 +11,7 @@ jobs:
           command: |
             mv ./backend/data/config.template.json ./backend/data/config.json
             docker build ./docker -t teamhub
-            docker-compose up
+            docker-compose up -d
       - run:
           name: Install packages
           command: npm install
