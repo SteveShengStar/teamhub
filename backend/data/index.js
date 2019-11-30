@@ -6,6 +6,9 @@ let config = require('./config.json');
 if(env === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
+} else if (env === 'production') {
+    config = {};
+    config.url = process.env.MONGO_URL;
 }
 
 const data = {};
