@@ -12,8 +12,10 @@
   ],
   "env": {
     "test": {
+      "presets": ["env", "stage-2", "jest"],
       "plugins": [
-        "@babel/plugin-transform-modules-commonjs"
+        "transform-es2015-modules-commonjs",
+        "transform-object-rest-spread"
       ]
     }
   }
