@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon -w ./server.js ./server.js",
+    "dev": "nodemon ./server.js",
     "build": "next build",
     "build:docker": "docker build ./docker -t teamhub",
     "docker": "docker-compose up",

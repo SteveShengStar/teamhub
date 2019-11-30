@@ -150,6 +150,9 @@ const MemberSchema = new Schema({
     },
     links: {
         type: [Member_Link]
+    },
+    token: {
+        type: String
     }
 });
 
