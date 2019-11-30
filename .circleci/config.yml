@@ -12,4 +12,10 @@ jobs:
             mv ./backend/data/config.template.json ./backend/data/config.json
             docker build ./docker -t teamhub
             docker-compose up -d
+      - run:
+          name: Install packages
+          command: docker exec teamhub_nodejs npm install
+      - run:
+          name: Run Tests
+          command: docker exec teamhub_nodejs npm run test
 

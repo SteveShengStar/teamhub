@@ -15,6 +15,7 @@ services:
       - database
     depends_on:
       - database
+    tty: true
   database:
     image: mongo
     container_name: teamhub_mongodb
