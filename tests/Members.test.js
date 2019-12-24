@@ -81,6 +81,9 @@ const dropTestMember = async (testData) => {
     return await Member.deleteMany({ 'name.first': testData.name.first });
 };
 
+beforeAll(async () => {
+    await data.initIfNotStarted();
+});
 
 describe('Testing Members functions', () => {
 
