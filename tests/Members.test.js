@@ -3,11 +3,6 @@ jest.setTimeout(15000);
 const data = require('../backend/data/index');
 const Member = require('../backend/data/schema/Member');
 
-beforeAll(async (done) => {
-    await data.init();
-    done();
-});
-
 // Needs to Be valid JSON
 const testMemberData1 = {
     'name': {
