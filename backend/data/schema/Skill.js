@@ -15,7 +15,10 @@ const SkillSchema = new Schema({
 });
 
 SkillSchema.plugin(uniqueValidator);
-
-const Skill = mongoose.model('Skill', SkillSchema);
-
+let Skill;
+try {
+    Skill = mongoose.connection.model('Skill');
+} catch (e) {
+    Skill = mongoose.model('Skill', SkillSchema);
+}
 module.exports = Skill;

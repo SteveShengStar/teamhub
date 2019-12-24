@@ -12,7 +12,10 @@ const SubteamSchema = new Schema({
 });
 
 SubteamSchema.plugin(uniqueValidator);
-
-const Subteam = mongoose.model('Subteam', SubteamSchema);
-
+let Subteam;
+try {
+    Subteam = mongoose.connection.model('Subteam');
+} catch (e) {
+    Subteam = mongoose.model('Subteam', SubteamSchema);
+}
 module.exports = Subteam;
