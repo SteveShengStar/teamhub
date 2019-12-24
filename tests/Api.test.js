@@ -1,25 +1,27 @@
 jest.setTimeout(15000);
 
+const data = require('../backend/data/index');
+
 const express = require('express');
-const bodyParser = require('body-parser');
 
-const api = require('../backend/index');
-
-const server = express();
-server.use(bodyParser.urlencoded({ extended: true }));
-server.use(bodyParser.json());
-server.use('/api', api);
+const next = require('next');
+const nextapp = next({ dev: false, dir: './' });
+const handle = nextapp.getRequestHandler();
 
 const request = require('supertest');
+let server;
 
 beforeAll(async (done) => {
-    await api.data.init();
-    done();
+    await data.init();
+    nextapp.prepare().then(() => {
+        server = express();
+        server.all('*', (req, res) => handle(req, res));
+        done();
+    });
 });
 
 
 describe('API Integration Testing', () => {
-
     it('Gets a list of members', async (done) => {
         const response = await request(server).post('/api/members');
         const json = response.body;
@@ -28,12 +30,11 @@ describe('API Integration Testing', () => {
         expect(json.success).toBe(true);
         expect(json.body.length).toBeGreaterThan(1);
 
-        done()
-
+        done();
     });
 
     it('Gets info on a member', async (done) => {
-        const testID = "5dbe69a2ae4a666a47273383";
+        const testID = '5dbe69a2ae4a666a47273383';
         const response = await request(server).get(`/api/members/${testID}/info`);
 
         expect(response.statusCode).toBe(200);
@@ -41,11 +42,12 @@ describe('API Integration Testing', () => {
         // Expect info on only one member returned
         expect(response.body.body).toHaveLength(1);
 
-        done()
+        done();
     });
 
 });
 
-afterAll(() => {
-    api.data.close();
+afterAll((done) => {
+    data.close();
+    done();
 });
