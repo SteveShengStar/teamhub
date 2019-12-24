@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const env = process.env.NODE_ENV;
+const env = process.env.TEAMHUB_ENV;
 
 let config = require('./config.json');
+console.log(env);
 if (env === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
