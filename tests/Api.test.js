@@ -12,7 +12,6 @@ const request = require('supertest');
 let server;
 
 beforeAll(async (done) => {
-    await data.init();
     nextapp.prepare().then(() => {
         server = express();
         server.all('*', (req, res) => handle(req, res));

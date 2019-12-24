@@ -4,12 +4,6 @@ jest.setTimeout(15000);
 const data = require('../backend/data/index');
 const skills = require('../backend/data/handlers/skills');
 
-beforeAll(async (done) => {
-    await data.init();
-    done();
-});
-
-
 describe('Testing Utility functions', () => {
 
     it('Test Handle Wrapper', async () => {
