@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const env = process.env.NODE_ENV;
 
 let config = require('./config.json');
-if(env === 'testing') {
+if (env === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
 } else if (env === 'production') {
@@ -11,6 +11,14 @@ if(env === 'testing') {
 }
 
 const data = {};
+
+data.connected = false;
+
+data.initIfNotStarted = async () => {
+    if (!data.connected) {
+        await data.init();
+    }
+};
 
 data.init = async () => {
     if (!config.url) {
@@ -23,10 +31,13 @@ data.init = async () => {
         useNewUrlParser: true
     });
 
+    data.connected = true;
+
     console.log(`Connected to: ${config.url}`);
 };
 
 data.close = async () => {
+    data.connected = false;
     await mongoose.disconnect();
 };
 
