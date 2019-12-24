@@ -1,6 +1,6 @@
 const data = require('../../../../backend/data/index');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
     if (req.method === 'PUT') {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 200;
