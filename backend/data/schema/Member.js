@@ -158,6 +158,11 @@ const MemberSchema = new Schema({
 
 MemberSchema.plugin(uniqueValidator);
 
-const Member = mongoose.model('Member', MemberSchema);
+let Member;
+try {
+    Member = mongoose.connection.model('Member');
+} catch (e) {
+    Member = mongoose.model('Member', MemberSchema);
+}
 
 module.exports = Member;

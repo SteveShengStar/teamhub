@@ -13,6 +13,10 @@ const MemberTypeSchema = new Schema({
 
 MemberTypeSchema.plugin(uniqueValidator);
 
-const MemberType = mongoose.model('MemberType', MemberTypeSchema);
-
+let MemberType;
+try {
+    MemberType = mongoose.connection.model('MemberType');
+} catch (e) {
+    MemberType = mongoose.model('MemberType', MemberTypeSchema);
+}
 module.exports = MemberType;

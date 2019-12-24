@@ -17,6 +17,11 @@ const ProjectSchema = new Schema({
 
 ProjectSchema.plugin(uniqueValidator);
 
-const Project = mongoose.model('Project', ProjectSchema);
+let Project;
+try {
+    Project = mongoose.connection.model('Project');
+} catch (e) {
+    Project = mongoose.model('Project', ProjectSchema);
+}
 
 module.exports = Project;

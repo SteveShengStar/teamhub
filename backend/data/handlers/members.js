@@ -62,13 +62,14 @@ members.search = async (body, fields) => {
             }
             return (await query.exec());
         } else {
-            return (await (Member.find(body)
+            const res = await (Member.find(body)
                 .populate('skills')
                 .populate('interests')
                 .populate('memberType')
                 .populate('subteam')
                 .populate('project')
-                .exec()));
+                .exec());
+            return res;
         }
     });
 };
