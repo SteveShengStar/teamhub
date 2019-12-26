@@ -1,14 +1,12 @@
 jest.setTimeout(15000);
 
 
-const api = require('../backend/index');
+const data = require('../backend/data/index');
 const skills = require('../backend/data/handlers/skills');
 
-beforeAll(async (done) => {
-    await api.data.init();
-    done();
+beforeAll(async () => {
+    await data.initIfNotStarted();
 });
-
 
 describe('Testing Utility functions', () => {
 
@@ -17,18 +15,18 @@ describe('Testing Utility functions', () => {
         const test = async () => {
             return new Promise((resolve => {
                 setTimeout(() => {
-                    resolve("resolved")
+                    resolve('resolved');
                 }, 2000);
             }));
         };
 
-        expect(await api.data.util.handleWrapper(test)).toBe("resolved")
+        expect(await data.util.handleWrapper(test)).toBe('resolved');
     });
 
     it('Tests Res Wrapper', async () => {
 
-        const resp = (await api.data.util.resWrapper(async () => {
-            return await api.data.members.getAll();
+        const resp = (await data.util.resWrapper(async () => {
+            return await data.members.getAll();
         }));
 
         expect(resp.success).toBe(true);
@@ -38,7 +36,7 @@ describe('Testing Utility functions', () => {
 
     it('Tests retrieving ID or creating new document', async () => {
 
-        const resp = await api.data.util.replaceBodyWithId([{
+        const resp = await data.util.replaceBodyWithId([{
             name: 'MongoDB',
             category: 'Software'
         }], skills);
@@ -49,20 +47,20 @@ describe('Testing Utility functions', () => {
 
     it('Tests retrieving IDs for multiple document bodies', async () => {
 
-        const resp = await api.data.util.replaceBodiesWithIdsArray([{
+        const resp = await data.util.replaceBodiesWithIdsArray([{
             name: 'Javascript',
             category: 'Software'
         }], skills);
 
         // Check if array contains ids
         expect(resp[0].length).toBe(24);
-    })
+    });
 
 
 });
 
 afterAll(() => {
-    api.data.close();
+    data.close();
 });
 
 

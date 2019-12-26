@@ -1,24 +1,21 @@
-const express = require('express');
+const { createServer } = require('http');
+const { parse } = require('url');
 const next = require('next');
-const bodyParser = require('body-parser');
 
 const { port } = require('./config');
 const dev = process.env.NODE_ENV !== 'production';
 const nextapp = next({ dev });
-const api = require('./backend/index');
+const data = require('./backend/data/index');
+const handle = nextapp.getRequestHandler();
 
 nextapp.prepare().then(async () => {
-    const server = express();
-
-    server.use(bodyParser.urlencoded({ extended: true }));
-    server.use(bodyParser.json());
-
-    await api.data.init();
-    server.use('/api', api);
-
-    server.all('*', nextapp.getRequestHandler());
-
-    server.listen(port, (err) => {
+    await data.init();
+    createServer((req, res) => {
+        // Be sure to pass `true` as the second argument to `url.parse`.
+        // This tells it to parse the query portion of the URL.
+        const parsedUrl = parse(req.url, true);
+        handle(req, res, parsedUrl);
+    }).listen(port, err => {
         if (err) throw err;
         console.log(`> Ready on http://localhost:${port}`);
     });

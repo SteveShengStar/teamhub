@@ -1,105 +1,101 @@
 jest.setTimeout(15000);
 
-const api = require('../backend/index');
+const data = require('../backend/data/index');
 const Member = require('../backend/data/schema/Member');
-
-beforeAll(async (done) => {
-    await api.data.init();
-    done();
-});
 
 // Needs to Be valid JSON
 const testMemberData1 = {
-    "name": {
-        "first": "TestUser1010",
-        "last": "TestUser1010",
-        "display": "TestUser1010"
+    'name': {
+        'first': 'TestUser1010',
+        'last': 'TestUser1010',
+        'display': 'TestUser1010'
     },
-    "skills": [
-        "MongoDB"
+    'skills': [
+        'MongoDB'
     ],
-    "interests": [
-        "Database"
+    'interests': [
+        'Database'
     ],
-    "joined": {
-        "year": 2019,
-        "season": "Fall"
+    'joined': {
+        'year': 2019,
+        'season': 'Fall'
     },
-    "coopExp": [],
-    "memberType": "Newbie",
-    "subteam": "Software",
-    "project": {
-        "name": "TeamHub",
-        "subteams": [
-            "Software"
+    'coopExp': [],
+    'memberType': 'Newbie',
+    'subteam': 'Software',
+    'project': {
+        'name': 'TeamHub',
+        'subteams': [
+            'Software'
         ]
     },
-    "email": "testuser1010@testing.ca",
-    "stream": {
-        "isCoop": true,
-        "onStream": true,
-        "coopStream": 1,
-        "currentSchoolTerm": "1A"
+    'email': 'testuser1010@testing.ca',
+    'stream': {
+        'isCoop': true,
+        'onStream': true,
+        'coopStream': 1,
+        'currentSchoolTerm': '1A'
     },
-    "age": 15,
-    "birthday": {
-        "month": 5,
-        "day": 12
+    'age': 15,
+    'birthday': {
+        'month': 5,
+        'day': 12
     },
-    "links": [
+    'links': [
         {
-            "type": "GitHub",
-            "link": "https://github.com/robobob"
+            'type': 'GitHub',
+            'link': 'https://github.com/robobob'
         }
     ]
 };
 
 const testMemberData2 = {
-    "name": {
-        "first": "TestUser2",
-        "last": "TestUser2",
-        "display": "TestUser2"
+    'name': {
+        'first': 'TestUser2',
+        'last': 'TestUser2',
+        'display': 'TestUser2'
     },
-    "email": "testuser2@testing.ca"
+    'email': 'testuser2@testing.ca'
 };
 
 const testMemberData3 = {
-    "name": {
-        "first": "TestUser3",
-        "last": "TestUser3",
-        "display": "TestUser3"
+    'name': {
+        'first': 'TestUser3',
+        'last': 'TestUser3',
+        'display': 'TestUser3'
     },
-    "email": "testuser3@testing.ca"
+    'email': 'testuser3@testing.ca'
 };
 
 
 // Adding the member to the DB before test
-const addTestMember = async (data) => {
-
-    return api.data.util.resWrapper(async () => {
-        return await api.data.members.add(data);
+const addTestMember = async (testData) => {
+    return data.util.resWrapper(async () => {
+        return await data.members.add(testData);
     });
 
 };
 
 // Drop member before / after running a test
-const dropTestMember = async (data) => {
-    return await Member.deleteMany({"name.first": data.name.first});
+const dropTestMember = async (testData) => {
+    return await Member.deleteMany({ 'name.first': testData.name.first });
 };
 
+beforeAll(async () => {
+    await data.initIfNotStarted();
+});
 
 describe('Testing Members functions', () => {
 
     it('Tests Adding testMemberData1', async (done) => {
-
         // Test adding the member
         let resp = await addTestMember(testMemberData1);
         expect(resp.success).toBe(true);
 
         // Find the member that was just created
-        resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.search({
-                "_id": resp.body._id
+        resp = await data.util.resWrapper(async () => {
+            return await data.members.search({
+                '_id': resp.body._id
             });
         });
 
@@ -110,7 +106,7 @@ describe('Testing Members functions', () => {
         await dropTestMember(testMemberData1);
 
         // Callback to wait until first test done executing
-        done()
+        done();
 
     });
 
@@ -118,44 +114,44 @@ describe('Testing Members functions', () => {
 
         await dropTestMember(testMemberData2);
 
-        let resp = await api.data.members.add(testMemberData2);
+        let resp = await data.members.add(testMemberData2);
         let id = resp._id;
 
-        resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.delete({"_id": id});
+        resp = await data.util.resWrapper(async () => {
+            return await data.members.delete({ '_id': id });
         });
         expect(resp.success).toBe(true);
 
         // Try finding the inserted user
-        resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.search({
-                "_id": id
+        resp = await data.util.resWrapper(async () => {
+            return await data.members.search({
+                '_id': id
             });
         });
 
         // Ensures member deleted
         expect(resp.body).toStrictEqual([]);
 
-        done()
+        done();
     });
 
     it('Tests updating a members data', async () => {
 
         await addTestMember(testMemberData3);
 
-        let resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.updateMember({"name.first": "TestUser3"}, {"email": "userupdated@testing.ca"});
+        let resp = await data.util.resWrapper(async () => {
+            return await data.members.updateMember({ 'name.first': 'TestUser3' }, { 'email': 'userupdated@testing.ca' });
         });
         expect(resp.success).toBe(true);
 
         // Check to see if email updated
-        resp = await api.data.util.resWrapper(async () => {
-            return await api.data.members.search({
-                "name.first": "TestUser3"
+        resp = await data.util.resWrapper(async () => {
+            return await data.members.search({
+                'name.first': 'TestUser3'
             });
         });
 
-        expect(resp.body[0].email).toBe("userupdated@testing.ca");
+        expect(resp.body[0].email).toBe('userupdated@testing.ca');
 
         await dropTestMember(testMemberData3);
     });
@@ -164,7 +160,7 @@ describe('Testing Members functions', () => {
 
 
 afterAll(() => {
-    api.data.close();
+    data.close();
 });
 
 
