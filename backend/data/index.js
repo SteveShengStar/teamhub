@@ -11,8 +11,6 @@ if (process.env.TEAMHUB_ENV === 'testing') {
     config = require('./config.json');
 }
 
-console.log(process.env.MONGO_URL);
-
 const data = {};
 
 data.connected = false;

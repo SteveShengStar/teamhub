@@ -9,6 +9,7 @@ const data = require('./backend/data/index');
 const handle = nextapp.getRequestHandler();
 
 nextapp.prepare().then(async () => {
+    console.log(process.env.MONGO_URL);
     await data.init();
     createServer((req, res) => {
         // Be sure to pass `true` as the second argument to `url.parse`.
