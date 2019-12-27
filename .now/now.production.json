@@ -3,8 +3,4 @@
   "type": "npm",
   "forwardNpm": true,
   "alias": ["hub.waterloop.ca"],
-  "env": {
-    "NODE_ENV": "production",
-    "MONGO_URL": "@TEAMHUB_MONGO_URL"
-  }
 }
