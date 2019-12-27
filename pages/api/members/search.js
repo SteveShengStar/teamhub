@@ -1,7 +1,6 @@
 const data = require('../../../backend/data/index.js');
 
 module.exports = async (req, res) => {
-    console.log(process.env.MONGO_URL);
     await data.initIfNotStarted();
     if (req.method === 'POST') {
         res.setHeader('Content-Type', 'application/json');
