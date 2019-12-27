@@ -5,11 +5,13 @@ let config = {};
 if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
-} else if (process.env.TEAMHUB_ENV  === 'production') {
+} else if (process.env.TEAMHUB_ENV === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
     config = require('./config.json');
 }
+
+console.log(process.env.MONGO_URL);
 
 const data = {};
 
