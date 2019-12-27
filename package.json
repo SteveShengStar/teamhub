@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./server.js",
-    "build": "next build",
+    "build": "NODE_ENV=production next build",
     "build:docker": "docker build ./docker -t teamhub",
     "docker": "docker-compose up",
     "start": "next start",
