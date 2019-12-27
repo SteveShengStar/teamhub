@@ -14,7 +14,7 @@ if (test_env === 'testing') {
 } else if (env === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
-    config = require('./config.json');
+    config.url = process.env.MONGO_URL;
 }
 
 const data = {};
