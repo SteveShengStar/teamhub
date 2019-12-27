@@ -1,6 +1,0 @@
-{
-  "name": "circleci-with-zeith-now-production",
-  "type": "npm",
-  "forwardNpm": true,
-  "alias": ["hub.waterloop.ca"],
-}
