@@ -3,7 +3,7 @@ const { parse } = require('url');
 const next = require('next');
 
 const { port } = require('./config');
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.TEAMHUB_ENV !== 'production';
 const nextapp = next({ dev });
 const data = require('./backend/data/index');
 const handle = nextapp.getRequestHandler();
