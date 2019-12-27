@@ -8,7 +8,7 @@ if (process.env.TEAMHUB_ENV === 'testing') {
 } else if (process.env.TEAMHUB_ENV  === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
-    config.url = process.env.MONGO_URL;
+    config = require('./config.json');
 }
 
 const data = {};
