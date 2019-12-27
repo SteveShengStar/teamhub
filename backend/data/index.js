@@ -5,6 +5,9 @@ const env = process.env.NODE_ENV;
 
 let config = {};
 
+console.log(test_env);
+console.log(env);
+
 if (test_env === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
