@@ -1,7 +1,7 @@
 {
   "build": {
     "env": {
-      "NODE_ENV": "production",
+      "TEAMHUB_ENV": "production",
       "MONGO_URL": "@teamhub_mongo_url"
     }
   }
