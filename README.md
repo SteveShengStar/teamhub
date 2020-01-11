@@ -41,7 +41,8 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 5. Add the `wip` label to the Pull Request as well as `[WIP]` to the title of the Pull Request.
 6. Once you are finished, remove the `wip` label and `[WIP]` from the title of the Pull Request, add the `ready-to-merge` label to your Pull Request, and add at least one reviewer.
 5. Check up on your Pull Request and respond to any comments/questions
-6. Once your Pull Request has been reviewed and approved, you may merge it with `master` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
+6. Once your Pull Request has been reviewed and approved, you may merge it with `staging` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
+7. After testing, the `staging` branch will then be merged with `master` and deployed to production by site maintainers.
 
 
 
