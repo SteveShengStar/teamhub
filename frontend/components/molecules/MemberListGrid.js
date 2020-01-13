@@ -8,14 +8,14 @@ const MemberListGrid = ({members, onSelect, className, animRef}) => {
     return (
         <Container gridGap={4} overflowY="scroll" className={className} ref={animRef}>
             {
-                members && Object.keys(members).map((key, i) => 
+                members && members.map((member, i) => 
                     <MemberPreviewComponent 
                         key={i}
-                        name={`${members[key].name.first} ${members[key].name.last}`}
-                        subteam={members[key].subteam ? members[key].subteam.name : ''} 
-                        role={members[key].memberType ? members[key].memberType.name : ''}
-                        onClick={() => onSelect(members[key]._id)}
-                        imageUrl={members[key].picture}
+                        name={`${member.name.first} ${member.name.last}`}
+                        subteam={member.subteam ? member.subteam.name : ''} 
+                        role={member.memberType ? members[key].memberType.name : ''}
+                        onClick={() => onSelect(member._id)}
+                        imageUrl={members.imageUrl}
                     />
                 )
             }

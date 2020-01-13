@@ -6,14 +6,15 @@ import {
     loadAllMembers,
     loadSelectedMember,
     setSelectedMemberId
-} from '../frontend/store/reducers/memberSlice';
+} from '../../frontend/store/reducers/memberSlice';
 
-import PageTemplate from '../frontend/components/templates/PageTemplate';
-import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
-import Header3 from '../frontend/components/atoms/Header3';
-import Card from '../frontend/components/atoms/Card';
-import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
-import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
+import PageTemplate from '../../frontend/components/templates/PageTemplate';
+import { SystemComponent } from '../../frontend/components/atoms/SystemComponents';
+import Header3 from '../../frontend/components/atoms/Header3';
+import Card from '../../frontend/components/atoms/Card';
+import MemberFilterComponent from '../../frontend/components/molecules/MemberFilterComponent';
+import MemberListGrid from '../../frontend/components/molecules/MemberListGrid';
+import MemberInfoCard from '../../frontend/components/organisms/MemberInfoCard';
 
 const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }) => {
     const onSelectMember = (id) => {
@@ -24,6 +25,8 @@ const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }
     useEffect(() => {
         console.log(selectedMemberId)
     }, [selectedMemberId])
+
+    console.log(members)
 
     const updateSearchQuery = (input, filters) => {
         let normalized = {};
@@ -67,9 +70,10 @@ const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }
                     overflow="scroll"
                 >
                     <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
-                    <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
+                    <MemberFilterComponent filterOptions={filters(members)} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </Card>
+                {/*<MemberInfoCard memberData={} />*/}
             </SystemComponent>
         </PageTemplate>
     );
@@ -82,7 +86,7 @@ const mapStateToProps = (state) => {
         loadedMembers: state.membersState.loadedMembers
     };
 };
-
+setSelectedMemberId
 const mapDispatchToProps = {
     setSelectedMemberId,
     loadAllMembers
@@ -92,3 +96,5 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Home);
+
+                

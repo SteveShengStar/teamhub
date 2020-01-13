@@ -10,7 +10,7 @@ import withRedux from 'next-redux-wrapper';
 import { Provider } from 'react-redux';
 import { configureStore } from 'redux-starter-kit';
 
-import rootReducer from '../frontend/data/rootReducer';
+import rootReducer from '../frontend/store/rootReducer';
 
 import { ThemeProvider } from 'styled-components';
 import theme from '../frontend/components/theme';
@@ -52,6 +52,10 @@ class MyApp extends App {
         };
     }
 
+    componentDidUpdate() {
+        console.log(this.props.store.getState())
+    }
+
     render () {
         const { Component, pageProps, router, store } = this.props;
 
@@ -61,6 +65,7 @@ class MyApp extends App {
             if (split) index = navItems.findIndex(item => item.link === '/' + split[1]);
             else index = navItems.findIndex(item => item.link === '/');
         }
+        console.log(store.getState())
         return (
             <Provider store={store}>
                 <ThemeProvider theme={theme}>

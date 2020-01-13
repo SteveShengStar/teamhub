@@ -28,7 +28,7 @@ const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
 
     useEffect(() => {
         // on change, update query
-        updateSearchQuery(searchInput, filterStates);
+        updateSearchQuery && updateSearchQuery(searchInput, filterStates);
     }, [searchInput, filterStates]);
 
     return (
