@@ -2,8 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Button from '../atoms/Button';
-import Title from '../atoms/Title';
-import Subtitle from '../atoms/Subtitle';
 import Header2 from '../atoms/Header2';
 import Header3 from '../atoms/Header3';
 import Header4 from '../atoms/Header4';

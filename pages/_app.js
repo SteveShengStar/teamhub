@@ -15,7 +15,6 @@ import { ThemeProvider } from 'styled-components';
 import theme from '../frontend/components/theme';
 
 import Nav from '../frontend/components/molecules/Nav';
-import { initializeStore } from '../frontend/store';
 
 const navItems = [
     {
@@ -34,13 +33,6 @@ const navItems = [
         name: 'Account', link: '/account'
     }
 ];
-
-const makeStore = (initialState, options) => {
-    return configureStore({
-        reducer: rootReducer,
-        preloadedState: initialState
-    });
-};
 
 class MyApp extends App {
 

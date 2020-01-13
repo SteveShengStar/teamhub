@@ -1,5 +1,4 @@
 import * as memberService from '../api/services/memberService';
-import memberSchema from '../api/schema/memberSchema';
 
 export const SET_ALL_MEMBERS = "SET_ALL_MEMBERS";
 export const SET_SELECTED_MEMBER = "SET_SELECTED_MEMBER";
