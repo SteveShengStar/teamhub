@@ -14,12 +14,12 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 
-const MemberInfoCard = ({memberData, index, className, subteams}) => {
+const MemberInfoCard = ({memberData, className}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const subteam = memberData.subteam ? subteams[memberData.subteam].name : '';
+    const subteam = memberData.subteam ? memberData.subteam.name : '';
 
     return (
         <InfoCard className={className} memberExists={memberData && memberData._id}>
@@ -67,13 +67,7 @@ const MemberInfoCard = ({memberData, index, className, subteams}) => {
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        subteams: state.members.subteams,
-    };
-};
-
-export default connect(mapStateToProps)(MemberInfoCard);
+export default MemberInfoCard;
 
 /**
  * Styled component definitions

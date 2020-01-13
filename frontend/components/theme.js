@@ -74,13 +74,15 @@ cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
 
-const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)'];
+const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)', '0 2px 18px 0 rgba(0,0,0,0.2)'];
 shadows.none = shadows[0];
 shadows.light = shadows[1];
 shadows.default = shadows[2];
+shadows.dark = shadows[3];
+
 
 /** Transition */
-const transitions = ['none', 'all 0.2s ease'];
+const transitions = ['none', 'all 0.2s ease-out'];
 transitions.none = transitions[0];
 transitions.default = transitions[1];
 

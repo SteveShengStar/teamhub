@@ -1,12 +1,5 @@
-import React, { useEffect } from 'react';
-import Router from "next/router";
-import { connect } from 'react-redux';
-
-import {
-    loadAllMembers,
-    loadSelectedMember,
-    setSelectedMemberId
-} from '../frontend/store/reducers/memberSlice';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
@@ -14,16 +7,26 @@ import Header3 from '../frontend/components/atoms/Header3';
 import Card from '../frontend/components/atoms/Card';
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
+import { SET_SELECTED_MEMBER, searchMembers, lookupMember } from '../frontend/store/reducers/membersReducer';
+import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 
-const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }) => {
+const Home = () => {
+    const dispatch = useDispatch();
+    const members = useSelector(state => state.membersState.members)
+    const selectedMember = useSelector(state => state.membersState.selectedMember)
+    const loadedMembers = useSelector(state => state.membersState.loadedMembers)
+
     const onSelectMember = (id) => {
-        setSelectedMemberId(id)
-        Router.push(`/members/${id}`);
-    };
+        if (loadedMembers[id]) {
+            dispatch({
+                type: SET_SELECTED_MEMBER,
+                payload: loadedMembers[id]
+            })
+            return
+        }
+        lookupMember(dispatch, id);
 
-    useEffect(() => {
-        console.log(selectedMemberId)
-    }, [selectedMemberId])
+    };
 
     const updateSearchQuery = (input, filters) => {
         let normalized = {};
@@ -33,9 +36,9 @@ const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }
                 name: filters[key][0].label
             };
         });
-        loadAllMembers(normalized);
+        searchMembers(dispatch, normalized)
     };
-    
+
     // get filters for members list
     const filters = (data) => {
         let returnData = {};
@@ -50,6 +53,8 @@ const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }
 
         return returnData;
     };
+
+    console.log("selected", selectedMember)
 
     return (
         <PageTemplate title="Explore">
@@ -70,25 +75,10 @@ const Home = ({ members, setSelectedMemberId, selectedMemberId, loadAllMembers }
                     <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </Card>
+                <MemberInfoCard memberData={selectedMember} />
             </SystemComponent>
         </PageTemplate>
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        members: state.membersState.members,
-        selectedMemberId: state.membersState.selectedMemberId,
-        loadedMembers: state.membersState.loadedMembers
-    };
-};
-
-const mapDispatchToProps = {
-    setSelectedMemberId,
-    loadAllMembers
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Home);
+export default Home;

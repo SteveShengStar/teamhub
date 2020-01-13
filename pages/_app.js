@@ -5,17 +5,17 @@
 
 import App from 'next/app';
 import React from 'react';
-import withRedux from 'next-redux-wrapper';
+import withReduxStore from "../frontend/store/withReduxStore"
 
+import { persistStore } from 'redux-persist'
+import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux';
-import { configureStore } from 'redux-starter-kit';
-
-import rootReducer from '../frontend/store/rootReducer';
 
 import { ThemeProvider } from 'styled-components';
 import theme from '../frontend/components/theme';
 
 import Nav from '../frontend/components/molecules/Nav';
+import { initializeStore } from '../frontend/store';
 
 const navItems = [
     {
@@ -52,12 +52,17 @@ class MyApp extends App {
         };
     }
 
+    constructor(props) {
+        super(props)
+        this.persistor = persistStore(props.reduxStore)
+    }
+
     componentDidUpdate() {
         console.log(this.props.store.getState())
     }
 
     render () {
-        const { Component, pageProps, router, store } = this.props;
+        const { Component, pageProps, router, reduxStore } = this.props;
 
         let index = -1;
         if (router && router.route) {
@@ -65,16 +70,21 @@ class MyApp extends App {
             if (split) index = navItems.findIndex(item => item.link === '/' + split[1]);
             else index = navItems.findIndex(item => item.link === '/');
         }
-        console.log(store.getState())
         return (
-            <Provider store={store}>
+            <Provider store={reduxStore}>
                 <ThemeProvider theme={theme}>
-                    <Nav navItems={navItems} index={index}/>
-                    <Component {...pageProps} />
+                    <PersistGate
+                        loading={<Component {...pageProps} />}
+                        persistor={this.persistor}
+                    >
+                        <Nav navItems={navItems} index={index}/>
+                        <Component {...pageProps} />
+                    </PersistGate>
                 </ThemeProvider>
+                
             </Provider>
         );
     }
 }
 
-export default withRedux(makeStore)(MyApp);
+export default withReduxStore(MyApp);
