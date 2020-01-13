@@ -1,5 +1,3 @@
-import { system } from 'styled-system';
-
 /**
  * Define colors
  */
@@ -29,12 +27,13 @@ const infraOrange = '#CEAC36';
  * Responsive Scaling
  */
 
-const breakpoints = ['600px','900px','1200px'];
+const breakpoints = ['576px','768px', '992px', '1200px'];
 
 const mediaQueries = {
-    tablet: `@media screen and (min-width: ${breakpoints[0]})`,
-    smallDesktop: `@media screen and (min-width: ${breakpoints[1]})`,
-    desktop: `@media screen and (min-width: ${breakpoints[2]})`,
+    mobile: `@media screen and (min-width: ${breakpoints[0]})`,
+    tablet: `@media screen and (min-width: ${breakpoints[1]})`,
+    smallDesktop: `@media screen and (min-width: ${breakpoints[2]})`,
+    desktop: `@media screen and (min-width: ${breakpoints[3]})`,
 };
 
 /**

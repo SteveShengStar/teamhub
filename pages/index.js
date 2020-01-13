@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import styled from "styled-components";
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
@@ -7,7 +8,7 @@ import Header3 from '../frontend/components/atoms/Header3';
 import Card from '../frontend/components/atoms/Card';
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
-import { SET_SELECTED_MEMBER, searchMembers, lookupMember } from '../frontend/store/reducers/membersReducer';
+import { searchMembers, lookupMember } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 
 const Home = () => {
@@ -19,7 +20,7 @@ const Home = () => {
     const onSelectMember = (id) => {
         if (loadedMembers[id]) {
             dispatch({
-                type: SET_SELECTED_MEMBER,
+                type: "SET_SELECTED_MEMBER",
                 payload: loadedMembers[id]
             })
             return
@@ -54,8 +55,6 @@ const Home = () => {
         return returnData;
     };
 
-    console.log("selected", selectedMember)
-
     return (
         <PageTemplate title="Explore">
             <SystemComponent
@@ -67,7 +66,7 @@ const Home = () => {
             >
                 <Card
                     style={{ transformOrigin: 'left' }}
-                    width={'40vw'} minWidth={[300, 300, 300, '25vw']} maxWidth={400, 400, 400, 'inherit'} gridRow="1/3"
+                    minWidth={[300, 300, 300, '35vw']} maxWidth={[400, 400, 400, '35vw']} gridRow="1/3"
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
                     overflow="scroll"
                 >
@@ -75,10 +74,23 @@ const Home = () => {
                     <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </Card>
-                <MemberInfoCard memberData={selectedMember} />
+                <MemberCard 
+                    memberData={selectedMember} 
+                    onClose={() => 
+                        dispatch({
+                            type: "SET_SELECTED_MEMBER",
+                            payload: {}
+                        })
+                    } 
+                />
             </SystemComponent>
         </PageTemplate>
     );
 };
 
 export default Home;
+
+const MemberCard = styled(MemberInfoCard)`
+    transition: transform 0.2s ease-out;
+    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? 0 : 120}%)
+`;

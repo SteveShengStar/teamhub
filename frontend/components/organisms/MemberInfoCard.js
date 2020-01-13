@@ -14,7 +14,7 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 
-const MemberInfoCard = ({memberData, className}) => {
+const MemberInfoCard = ({memberData, className, onClose}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
@@ -22,9 +22,17 @@ const MemberInfoCard = ({memberData, className}) => {
     const subteam = memberData.subteam ? memberData.subteam.name : '';
 
     return (
-        <InfoCard className={className} memberExists={memberData && memberData._id}>
+        <InfoCard className={className}>
+            <Header3 mb={3}>Member</Header3>
+            <BorderlessButton 
+                alignSelf="start"
+                justifySelf="end"
+                onClick={onClose}
+            >
+                Close
+            </BorderlessButton>
+
             <SystemComponent>
-                <Header3 mb={3}>Member</Header3>
                 <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ''} </Header2>
                 {
                     memberData.subteam ? (
@@ -75,13 +83,12 @@ export default MemberInfoCard;
 const InfoCard = styled(Card)`
     display: grid;
     max-width: 800px;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto 1fr;
     grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
     grid-gap: ${props => props.theme.space[3]}px;
     justify-content: space-between;
     position: relative;
     z-index: 10;
-    visibility: ${props => props.memberExists ? "visible" : "hidden"}
 `;
 
 const PersonalCard = styled(SystemComponent)`

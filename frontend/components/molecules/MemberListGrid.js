@@ -35,7 +35,7 @@ const Container = styled(SystemComponent)`
     mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
     padding: 10px ${props => props.theme.space.cardPadding}px 0;
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(250px, auto));
     grid-auto-rows: min-content;
     align-items: start;
 `;
