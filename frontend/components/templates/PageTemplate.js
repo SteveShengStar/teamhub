@@ -24,7 +24,7 @@ const PageTemplate = ({className, title, children}) => (
             <PageTemplateGridLayout
                 className={className}
                 height="inherit"
-                p="cardMargin"
+                p={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 width="inherit"
                 flex={1}
                 alignItems={'stretch'}

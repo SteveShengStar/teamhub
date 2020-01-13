@@ -41,7 +41,7 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl}) => {
             onClick={onClick}
         >
             <Image 
-                height="36px" 
+                height={36} 
                 key={0}
                 src={imageUrl || "/static/default-headshot.png"}
                 gridRow="1/3"

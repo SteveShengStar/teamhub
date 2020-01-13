@@ -26,7 +26,6 @@ const Home = () => {
             return
         }
         lookupMember(dispatch, id);
-
     };
 
     const updateSearchQuery = (input, filters) => {
@@ -58,22 +57,23 @@ const Home = () => {
     return (
         <PageTemplate title="Explore">
             <SystemComponent
+                position="relative"
                 overflow="hidden"
-                gridGap="cardMargin"
-                display="grid"
+                gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
+                display={["block", "block", "grid"]}
                 gridTemplateRows="auto auto"
                 gridTemplateColumns="auto 1fr"
             >
-                <Card
-                    style={{ transformOrigin: 'left' }}
-                    minWidth={[300, 300, 300, '35vw']} maxWidth={[400, 400, 400, '35vw']} gridRow="1/3"
-                    display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
-                    overflow="scroll"
+                <MembersListCard
+                    display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
+                    overflowY="scroll"
+                    position={["absolute", "absolute", "relative"]}
+                    memberData={selectedMember}
                 >
                     <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                     <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
-                </Card>
+                </MembersListCard>
                 <MemberCard 
                     memberData={selectedMember} 
                     onClose={() => 
@@ -81,7 +81,7 @@ const Home = () => {
                             type: "SET_SELECTED_MEMBER",
                             payload: {}
                         })
-                    } 
+                    }
                 />
             </SystemComponent>
         </PageTemplate>
@@ -90,7 +90,33 @@ const Home = () => {
 
 export default Home;
 
-const MemberCard = styled(MemberInfoCard)`
+const MembersListCard = styled(Card)`
     transition: transform 0.2s ease-out;
-    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? 0 : 120}%)
+    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? -120 : 0}%);
+    width: calc(100vw - ${props => 2 * props.theme.space.cardMarginSmall + 2 * props.theme.space.cardPaddingSmall}px);
+    //height: calc(100% - ${props => 3 * props.theme.space.cardMarginSmall}px);
+    top: 0;
+    bottom: 0;
+    ${props => props.theme.mediaQueries.tablet} {
+        height: auto;
+        transform: none;
+        width: 300px;
+    }
+
+    ${props => props.theme.mediaQueries.smallDesktop} {
+        width: 35vw;
+    }
+`
+
+const MemberCard = styled(MemberInfoCard)`
+    position: absolute;
+    transition: transform 0.2s ease-out;
+    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? 0 : 120}%);
+    width: calc(100vw - ${props => 2 * props.theme.space.cardMarginSmall + 2 * props.theme.space.cardPaddingSmall}px);
+    height: 100%;
+    ${props => props.theme.mediaQueries.tablet} {
+        width: auto;
+        position: relative;
+        height: auto;
+    }
 `;

@@ -87,7 +87,6 @@ const InfoCard = styled(Card)`
     grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
     grid-gap: ${props => props.theme.space[3]}px;
     justify-content: space-between;
-    position: relative;
     z-index: 10;
 `;
 

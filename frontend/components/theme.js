@@ -62,7 +62,9 @@ fontWeights.black = fontWeights[2];
 
 const space = [0, 2, 5, 10, 15, 20, 25, 30, 35, 40];
 space.cardMargin = space[9];
+space.cardMarginSmall = space[5];
 space.cardPadding = space[5];
+space.cardPaddingSmall = space[4];
 space.headerBottomMargin = space[4];
 space.titleBottomMargin = space[6];
 
