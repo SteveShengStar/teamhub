@@ -74,7 +74,6 @@ cornerRadius.small = cornerRadius[1];
 cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
-
 const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)', '0 2px 18px 0 rgba(0,0,0,0.2)'];
 shadows.none = shadows[0];
 shadows.light = shadows[1];
