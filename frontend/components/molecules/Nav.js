@@ -1,21 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Title from '../atoms/Title';
 import Link from '../atoms/Link';
 import NextLink from 'next/link';
-import { SystemNav, SystemSpan, SystemComponent } from '../atoms/SystemComponents';
+import { SystemNav, SystemComponent } from '../atoms/SystemComponents';
 import Logo from '../atoms/Logo';
 
 const MyNav = styled(SystemNav)`
-  background-color: transparent;
-  position: absolute;
-  right: ${props => props.theme.space.cardMargin}px;
-  top: ${props => props.theme.space.cardMargin}px;
-  z-index: 10;
-`;
+  position: fixed;
+  padding-right: ${props => props.theme.space.cardMarginSmall}px;
+  padding-top: ${props => props.theme.space[4]}px;
+  z-index: 20;
 
-const Line = styled(SystemSpan)`
-  height: inherit;
+  ${props => props.theme.mediaQueries.tablet} {
+    padding-right: ${props => props.theme.space.cardMargin}px;
+    padding-top: ${props => props.theme.space.cardMargin}px;
+  }
 `;
 
 const NavLink = styled(Link)`
@@ -28,29 +28,35 @@ const NavLink = styled(Link)`
 `;
 
 const NavLogo = styled(Logo)`
-  width: 35%;
-  ${props => props.theme.mediaQueries.desktop} {
-    width: auto;
+  width: 80%;
+  ${props => props.theme.mediaQueries.mobile} {
+    width: 70%;
+  }
+  ${props => props.theme.mediaQueries.tablet} {
+    width: 50%;
   }
 `;
 
-const Nav = ({navItems, index}) => (
-    <MyNav display="flex" flexDirection="column" alignItems="flex-end">
+const Nav = ({navItems, index}) => {
+  const [ scrolled, setScrolled ] = useState(false);
+  function updateNavStyle() {
+    if (window.pageYOffset > 0 && !scrolled) setScrolled(true);
+    if (window.pageYOffset <= 0 && scrolled) setScrolled(false);
+  }
+  useEffect(() => {
+    window.addEventListener("scroll", updateNavStyle);
+    return () => window.removeEventListener("scroll", updateNavStyle);
+  });
+
+  return (
+    <MyNav display="flex" flexDirection="column" alignItems="flex-end" bg={scrolled ? "greys.0" : "transparent"} shadow={scrolled ? "default" : "none"}>
         <SystemComponent display="flex" justifyContent="flex-end">
-            <Title 
-                fontSize={['smallTitle', 'smallTitle', 'smallTitle', 'title']} 
-                alignSelf="center"
-                transition="default"
-            >
-        Team Hub
-            </Title>
-            <Line width={['5px','5px','5px','10px']} bg="foreground" mx={[4,4,4,6]}/>
             <NavLogo alignSelf="center" />
         </SystemComponent>
         <SystemComponent 
             display="flex" 
             flexWrap="wrap" 
-            justifyContent="flex-end" 
+            justifyContent="flex-end"
             mt={3} 
             width={['80%', '80%', '80%', 'auto']}
         >
@@ -71,6 +77,7 @@ const Nav = ({navItems, index}) => (
             }
         </SystemComponent>
     </MyNav>
-);
+  );
+}
 
 export default Nav;

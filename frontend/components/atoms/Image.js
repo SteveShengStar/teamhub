@@ -6,7 +6,7 @@ const Image = styled(SystemImage)(
     variant({
         variants: {
             background: {
-                position: 'absolute',
+                position: 'fixed',
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',

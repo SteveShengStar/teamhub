@@ -49,10 +49,6 @@ class MyApp extends App {
         this.persistor = persistStore(props.reduxStore)
     }
 
-    componentDidUpdate() {
-        console.log(this.props.store.getState())
-    }
-
     render () {
         const { Component, pageProps, router, reduxStore } = this.props;
 

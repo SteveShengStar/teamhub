@@ -5,7 +5,8 @@ const Header5 = styled(SystemHeader.H5)``;
 Header5.defaultProps = {
     fontFamily: 'body',
     fontSize: 'header5',
-    my: 0
+    mb: 0,
+    mt: 0
 };
 
 export default Header5;

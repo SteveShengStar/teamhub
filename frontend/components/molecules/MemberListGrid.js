@@ -6,7 +6,7 @@ import MemberPreviewComponent from './MemberPreviewComponent';
 
 const MemberListGrid = ({members, onSelect, className, animRef}) => {
     return (
-        <Container gridGap={4} overflowY="scroll" className={className} ref={animRef}>
+        <Container gridGap={4} overflowY={["auto", "auto", "scroll"]} className={className} ref={animRef}>
             {
                 members && members.map((member, i) => 
                     <MemberPreviewComponent 
@@ -32,7 +32,6 @@ export default MemberListGrid;
 
 const Container = styled(SystemComponent)`
     margin: 0 -${props => props.theme.space.cardPaddingSmall}px;
-    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
     padding: 10px ${props => props.theme.space.cardPaddingSmall}px 0;
 
     display: grid;
@@ -42,6 +41,7 @@ const Container = styled(SystemComponent)`
 
     ${props => props.theme.mediaQueries.tablet} {
         margin: 0 -${props => props.theme.space.cardPadding}px;
+        mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
         padding: 10px ${props => props.theme.space.cardPadding}px 0;
     }
 `;

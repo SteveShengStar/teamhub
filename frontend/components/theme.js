@@ -51,7 +51,7 @@ fontSizes.header5 = fontSizes[0];
 fontSizes.title = fontSizes[5];
 fontSizes.subtitle = fontSizes[4];
 fontSizes.smallSubtitle = fontSizes[3];
-fontSizes.smallTitle = fontSizes[3];
+fontSizes.smallTitle = fontSizes[2];
 fontSizes.nav = fontSizes[3];
 fontSizes.smallNav = fontSizes[2];
 
@@ -62,9 +62,9 @@ fontWeights.black = fontWeights[2];
 
 const space = [0, 2, 5, 10, 15, 20, 25, 30, 35, 40];
 space.cardMargin = space[9];
-space.cardMarginSmall = space[5];
+space.cardMarginSmall = space[2];
 space.cardPadding = space[5];
-space.cardPaddingSmall = space[4];
+space.cardPaddingSmall = space[3];
 space.headerBottomMargin = space[4];
 space.titleBottomMargin = space[6];
 

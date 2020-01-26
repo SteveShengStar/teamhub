@@ -1,21 +1,28 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
+import { useRouter } from "next/router";
 import { useDispatch, useSelector } from 'react-redux';
-import styled from "styled-components";
+import styled, { ThemeContext } from "styled-components";
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
 import Header3 from '../frontend/components/atoms/Header3';
 import Card from '../frontend/components/atoms/Card';
+import Button from "../frontend/components/atoms/Button";
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
 import { searchMembers, lookupMember } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
+import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
 const Home = () => {
     const dispatch = useDispatch();
+    const router = useRouter();
     const members = useSelector(state => state.membersState.members)
     const selectedMember = useSelector(state => state.membersState.selectedMember)
     const loadedMembers = useSelector(state => state.membersState.loadedMembers)
+    const [ modalVisible, setModalVisible ] = useState(false);
+
+    const theme = useContext(ThemeContext);
 
     const onSelectMember = (id) => {
         if (loadedMembers[id]) {
@@ -23,6 +30,9 @@ const Home = () => {
                 type: "SET_SELECTED_MEMBER",
                 payload: loadedMembers[id]
             })
+            if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
+                router.push(`/members/${id}`);
+            }
             return
         }
         lookupMember(dispatch, id);
@@ -41,36 +51,40 @@ const Home = () => {
 
     // get filters for members list
     const filters = (data) => {
-        let returnData = {};
-        function map(dataKey) {
-            if (data[dataKey]) return Object.keys(data[dataKey]).map(key => ({ label: data[dataKey][key].name, value: key }));
-            return undefined;
+        // get filters
+        return {
+            Program: [],
         }
-        returnData.skills = map('skills');
-        returnData.subteam = map('subteams');
-        returnData.program = map('program');
-        returnData.interests = map('interests');
-
-        return returnData;
     };
 
     return (
         <PageTemplate title="Explore">
             <SystemComponent
                 position="relative"
-                overflow="hidden"
+                overflow={["auto", "auto", "hidden"]}
+                overflowX={"hidden"}
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}
                 gridTemplateRows="auto auto"
                 gridTemplateColumns="auto 1fr"
             >
+                <MembersFilterModal visible={modalVisible} filters={filters()}/>
                 <MembersListCard
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
-                    overflowY="scroll"
-                    position={["absolute", "absolute", "relative"]}
+                    overflowY={["auto", "auto", "scroll"]}
+                    overflowX="hidden"
+                    position={["relative", "relative", "relative"]}
                     memberData={selectedMember}
                 >
-                    <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
+                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start">
+                        <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
+                        <Button 
+                            display={["block", "block", "none"]}
+                            onClick={() => setModalVisible(!modalVisible)}
+                        >
+                            Edit Filters
+                        </Button>
+                    </SystemComponent>
                     <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </MembersListCard>
@@ -92,11 +106,10 @@ export default Home;
 
 const MembersListCard = styled(Card)`
     transition: transform 0.2s ease-out;
-    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? -120 : 0}%);
+    -webkit-transition: transform 0.5s ease;
+
     width: calc(100vw - ${props => 2 * props.theme.space.cardMarginSmall + 2 * props.theme.space.cardPaddingSmall}px);
-    //height: calc(100% - ${props => 3 * props.theme.space.cardMarginSmall}px);
     top: 0;
-    bottom: 0;
     ${props => props.theme.mediaQueries.tablet} {
         height: auto;
         transform: none;
@@ -109,12 +122,9 @@ const MembersListCard = styled(Card)`
 `
 
 const MemberCard = styled(MemberInfoCard)`
-    position: absolute;
-    transition: transform 0.2s ease-out;
-    transform: translateX(${props => Object.keys(props.memberData).length > 0 ? 0 : 120}%);
-    width: calc(100vw - ${props => 2 * props.theme.space.cardMarginSmall + 2 * props.theme.space.cardPaddingSmall}px);
-    height: 100%;
+    display: none;
     ${props => props.theme.mediaQueries.tablet} {
+        display: block;
         width: auto;
         position: relative;
         height: auto;

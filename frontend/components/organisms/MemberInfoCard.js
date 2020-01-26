@@ -12,7 +12,6 @@ import Header5 from '../atoms/Header5';
 import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
-import SwitchButton from '../atoms/SwitchButton';
 
 const MemberInfoCard = ({memberData, className, onClose}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
@@ -101,6 +100,7 @@ const PersonalCard = styled(SystemComponent)`
     border-radius: ${props => props.theme.radii.default}px;
     box-shadow: ${props => props.theme.shadows.default};
     overflow: hidden;
+    max-width: 400px;
 `;
 
 const MemberSubtitle = styled(Header4)`
@@ -125,8 +125,8 @@ const ContentContainer = styled.div`
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
+        overflow-y: scroll;
     }
-    overflow-y: scroll;
 `
 
 const LeftColumn = styled.div`

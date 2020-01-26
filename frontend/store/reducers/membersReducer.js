@@ -11,7 +11,6 @@ export const membersInitialState = {
     loadedMembers: {}
 }
 export const membersStateReducer = (state = membersInitialState, action) => {
-    console.log(action)
     switch (action.type) {
         case SET_ALL_MEMBERS:
             return {
