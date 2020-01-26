@@ -12,6 +12,7 @@ import Header5 from '../atoms/Header5';
 import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
+import Button from '../atoms/Button';
 
 const MemberInfoCard = ({memberData, className, onClose}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
@@ -23,13 +24,13 @@ const MemberInfoCard = ({memberData, className, onClose}) => {
     return (
         <InfoCard className={className}>
             <Header3 mb={3}>Member</Header3>
-            <BorderlessButton 
+            <Button 
                 alignSelf="start"
                 justifySelf="end"
                 onClick={onClose}
             >
                 Close
-            </BorderlessButton>
+            </Button>
 
             <ContentContainer>
                 <LeftColumn>
