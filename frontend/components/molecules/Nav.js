@@ -13,8 +13,9 @@ const MyNav = styled(SystemNav)`
   z-index: 20;
 
   ${props => props.theme.mediaQueries.tablet} {
-    padding-right: ${props => props.theme.space.cardMargin}px;
-    padding-top: ${props => props.theme.space.cardMargin}px;
+    right: ${props => props.theme.space.cardMargin}px;
+    top: ${props => props.theme.space.cardMargin}px;
+    padding: 0;
   }
 `;
 

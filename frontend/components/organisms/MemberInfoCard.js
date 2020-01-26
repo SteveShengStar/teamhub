@@ -119,7 +119,7 @@ const ContentContainer = styled.div`
     display: grid;
     grid-gap: ${props => props.theme.space[3]}px;
     height: calc(100% - ${props => props.theme.space.cardPaddingSmall * 2}px);
-    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
+    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 5px,rgba(0,0,0,1.0) calc(100% - 5px),transparent);
 
     ${props => props.theme.mediaQueries.tablet} {
         display: grid;

@@ -25,14 +25,15 @@ const Home = () => {
     const theme = useContext(ThemeContext);
 
     const onSelectMember = (id) => {
+        if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
+            router.push(`/members/${id}`);
+            return
+        }
         if (loadedMembers[id]) {
             dispatch({
                 type: "SET_SELECTED_MEMBER",
                 payload: loadedMembers[id]
             })
-            if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
-                router.push(`/members/${id}`);
-            }
             return
         }
         lookupMember(dispatch, id);
@@ -124,9 +125,11 @@ const MembersListCard = styled(Card)`
 const MemberCard = styled(MemberInfoCard)`
     display: none;
     ${props => props.theme.mediaQueries.tablet} {
-        display: block;
+        display: grid;
         width: auto;
         position: relative;
         height: auto;
+        transition: all 0.2s ease-in-out;
+        transform: translateX(${props => props.memberData._id ? 0 : "calc(100% + 10px)"});
     }
 `;
