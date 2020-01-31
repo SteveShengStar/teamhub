@@ -65,7 +65,10 @@ const space = [0, 2, 5, 10, 15, 20, 25, 30, 35, 40];
 space.cardMargin = space[9];
 space.cardPadding = space[5];
 space.headerBottomMargin = space[4];
-space.titleBottomMargin = space[6];
+space.titleBottomMargin = space[6]; 
+// For Account Settings Page
+space.editableHeaderMargin = space[8];
+space.settingsSubsectionPadding = space[4];
 
 const cornerRadius = [0, 3, 5, 200];
 cornerRadius.none = cornerRadius[0];

@@ -63,6 +63,7 @@ const Home = ({ members, loadSelectedMember, selectedMember, loadAllMembers }) =
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr"
                     overflow="scroll"
                 >
+                HAHA
                     <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                     <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members.members} onSelect={onSelectMember} />
