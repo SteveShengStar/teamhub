@@ -69,20 +69,40 @@ const ButtonWrapper = ({variant, label}) => {
     );
 };
 
-const SettingsDivSubsection = ({children, headerText}) => {
+const SettingsDivSubsection = ({
+                                headerText, 
+                                isLabelListSection = false,
+                                labelValues,
+                                labelStyleVariants,
+                                children}) => {
     //console.log(theme.colors[subteams[1]]);
 
+    // TODO: revise this condition later
+    // TODO: update the keys later
+    // TODO: make sure labelValues and labelStylingVariants have same length
+    let sectionBody;
+    if (isLabelListSection) {
+        sectionBody = labelValues.map((labelValue, i) => 
+            <ButtonWrapper key={i}
+                variant={labelStyleVariants[i]} 
+                label={startCase(labelValue)}
+            />
+        );
+    } else {
+        sectionBody = children;
+    }
+    
     return (
-        <SystemComponent>
+        <>
             {headerText &&  
                 <SystemComponent height={subheadingHeight}>
                     <CustomSubHeading>{headerText}</CustomSubHeading>
                 </SystemComponent>
             }
             <SystemComponent>
-                {children}
+                {sectionBody}
             </SystemComponent>
-        </SystemComponent>
+        </>
     );
 };
 
@@ -109,6 +129,7 @@ const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing})
     );
 }
 
+// TODO: insert icons to the left of the labels
 const ProfileSummary = () => {
     return (
         <SettingsHorizontalFlexbox leftChildWidth={200} componentSpacing={20}>
@@ -119,13 +140,15 @@ const ProfileSummary = () => {
             />
             <SystemComponent overflowY='auto'>
                 <table style={{width: '100%'}}>
-                    {Object.values(userInformation).map(fieldInfo =>
-                        <tr>
-                            <td></td>
-                            <td>{fieldInfo.label}</td>
-                            <td style={{'text-align': 'right'}}>{fieldInfo.value}</td>
-                        </tr>
-                    )}
+                    <tbody>
+                        {Object.values(userInformation).map((fieldInfo, i) =>
+                            <tr key={i}>
+                                <td></td>
+                                <td>{fieldInfo.label}</td>
+                                <td style={{textAlign: 'right'}}>{fieldInfo.value}</td>
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
             </SystemComponent>
         </SettingsHorizontalFlexbox>
@@ -168,30 +191,21 @@ const userInformation = {
 
 
 const Home = () => {
-    console.log(Object.values(userInformation)[0].label)
     return (
         <PageTemplate >
             <Card overflowY="auto">
                 <EditableSectionHeader title="Teams &amp; Responsibilities"></EditableSectionHeader>
                 <SettingsDivBody>
-                    <SettingsDivSubsection headerText='My Subteams'>
-                        {
-                            subteams.map(subteamName => 
-                                <ButtonWrapper variant={subteamName} 
-                                    label={startCase(subteamName)}
-                                />
-                            )
-                        }
-                    </SettingsDivSubsection>
-                    <SettingsDivSubsection headerText='My Projects'>
-                        {
-                            projects.map(project => 
-                                <ButtonWrapper variant={'software'} 
-                                    label={startCase(project)}
-                                />
-                            )
-                        }
-                    </SettingsDivSubsection>
+                    <SettingsDivSubsection headerText='My Subteams'
+                        isLabelListSection={true}
+                        labelValues={subteams}
+                        labelStyleVariants={subteams}
+                    />
+                    <SettingsDivSubsection headerText='My Projects'
+                        isLabelListSection={true}
+                        labelValues={projects}
+                        labelStyleVariants={['software', 'software']}
+                    />
                     <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
                         <NonEditableTextArea>
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
