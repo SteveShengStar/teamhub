@@ -17,6 +17,7 @@ import {capitalize, startCase} from 'lodash';
 
 const subheadingHeight = 30;
 const SettingsDivBody = styled(SystemComponent)`
+    padding-left: ${theme.space.settingsSubsectionPadding}px;
 `;
 
 // Assumption: I receive an ID representing subteam
@@ -39,10 +40,8 @@ const CustomButton = styled(Button)`
     padding-top: 2px;
     padding-bottom: 2px;
 
-    // TODO: make this not scale by 1.5
-    &:hover: {
-        transform: scale(1.0);
-    }
+    // TODO: Is there a better way to do this ?
+    transform: scale(1.0) !important;
 `;
 
 const EditableSectionHeader = ({title}) => {
@@ -74,7 +73,7 @@ const SettingsDivSubsection = ({children, headerText}) => {
     //console.log(theme.colors[subteams[1]]);
 
     return (
-        <SystemComponent pl={theme.space.settingsSubsectionPadding}>
+        <SystemComponent>
             {headerText &&  
                 <SystemComponent height={subheadingHeight}>
                     <CustomSubHeading>{headerText}</CustomSubHeading>
@@ -87,6 +86,52 @@ const SettingsDivSubsection = ({children, headerText}) => {
     );
 };
 
+const Grid = styled(SystemComponent)`
+    display: grid;
+`
+
+// TODO: using styled component may be better
+// because I never pass parameters that actually configure properties of this container.
+const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing}) => {
+
+    return (
+        <Grid 
+            gridTemplateColumns={leftChildWidth + 'px auto'}
+            gridColumnGap={componentSpacing}
+        >
+            <SystemComponent>
+                {children[0]}
+            </SystemComponent>
+            <SystemComponent>
+                {children[1]}
+            </SystemComponent>
+        </Grid>
+    );
+}
+
+const ProfileSummary = () => {
+    return (
+        <SettingsHorizontalFlexbox leftChildWidth={200} componentSpacing={20}>
+            <Image
+                width='100%'
+                src={imageUrl || "/static/default-headshot.png"}
+                borderRadius="18px"
+            />
+            <SystemComponent overflowY='auto'>
+                <table style={{width: '100%'}}>
+                    {Object.values(userInformation).map(fieldInfo =>
+                        <tr>
+                            <td></td>
+                            <td>{fieldInfo.label}</td>
+                            <td style={{'text-align': 'right'}}>{fieldInfo.value}</td>
+                        </tr>
+                    )}
+                </table>
+            </SystemComponent>
+        </SettingsHorizontalFlexbox>
+    );
+}
+
 // Text Area
 // TODO: Delete this component
 const NonEditableTextArea = styled(SystemComponent)`
@@ -94,62 +139,81 @@ const NonEditableTextArea = styled(SystemComponent)`
 `;
 // TODO: Set actual image URL later
 const imageUrl = undefined;
+const userInformation = {
+    firstName: {
+        label: 'First Name',
+        value: "Steven"
+    },
+    lastName: {
+        label: "Last Name",
+        value: "Xiong"
+    },
+    birthDay: {
+        label: "Birthday",
+        value: "Nov 20, 1998"
+    },
+    birthDay: {
+        label: "Program",
+        value: "Computer Engineering"
+    },
+    term: {
+        label: "Term",
+        value: "3B"
+    },
+    email: {
+        label: "Email",
+        value: "ssxiong@edu.uwaterloo.ca"
+    }
+};
 
 
-const Home = () => (
-    <PageTemplate >
-        <Card>
-            <EditableSectionHeader title="Teams &amp; Responsibilities"></EditableSectionHeader>
-            <SettingsDivBody>
-                <SettingsDivSubsection headerText='My Subteams'>
-                    {
-                        subteams.map(subteamName => 
-                            <ButtonWrapper variant={subteamName} 
-                                label={startCase(subteamName)}
-                            />
-                        )
-                    }
-                </SettingsDivSubsection>
-                <SettingsDivSubsection headerText='My Projects'>
-                    {
-                        projects.map(project => 
-                            <ButtonWrapper variant={'software'} 
-                                label={startCase(project)}
-                            />
-                        )
-                    }
-                </SettingsDivSubsection>
-                <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
-                    <NonEditableTextArea>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
-                        sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
-                        euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
-                        sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
-                        varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
-                    </NonEditableTextArea>
-                </SettingsDivSubsection>
-                
-            </SettingsDivBody>
+const Home = () => {
+    console.log(Object.values(userInformation)[0].label)
+    return (
+        <PageTemplate >
+            <Card overflowY="auto">
+                <EditableSectionHeader title="Teams &amp; Responsibilities"></EditableSectionHeader>
+                <SettingsDivBody>
+                    <SettingsDivSubsection headerText='My Subteams'>
+                        {
+                            subteams.map(subteamName => 
+                                <ButtonWrapper variant={subteamName} 
+                                    label={startCase(subteamName)}
+                                />
+                            )
+                        }
+                    </SettingsDivSubsection>
+                    <SettingsDivSubsection headerText='My Projects'>
+                        {
+                            projects.map(project => 
+                                <ButtonWrapper variant={'software'} 
+                                    label={startCase(project)}
+                                />
+                            )
+                        }
+                    </SettingsDivSubsection>
+                    <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
+                        <NonEditableTextArea>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
+                            sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
+                            euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
+                            sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
+                            varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
+                        </NonEditableTextArea>
+                    </SettingsDivSubsection>
+                    
+                </SettingsDivBody>
 
-            <EditableSectionHeader title="Profile Information"></EditableSectionHeader>
-            <SettingsDivBody display='flex'>
-                <SettingsDivSubsection>
-                    <SystemComponent width='200px'>
-                        <Image  
-                            key={0}
-                            width='100%'
-                            src={imageUrl || "/static/default-headshot.png"}
-                            gridRow="1/3"
-                            borderRadius="18px"
-                            overflow="visible"
-                        />
-                    </SystemComponent>
-                    <SystemComponent overflowY='scroll'>
-                        
-                    </SystemComponent>
-                </SettingsDivSubsection>
-            </SettingsDivBody>
-        </Card>
-    </PageTemplate>
-);
+                <EditableSectionHeader title="Profile Information"></EditableSectionHeader>
+                <SettingsDivBody>
+                    <ProfileSummary />
+                </SettingsDivBody>
+            </Card>
+        </PageTemplate>
+    )
+};
 export default Home;
+// TODO: The styling between thhe 2 sections is too different.
+// Break up into 2 components
+// Futhermore, start organizing the code a little more.
+// Modularize and put into separate files
