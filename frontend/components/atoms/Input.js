@@ -22,7 +22,8 @@ const Input = styled(SystemInput)(
                 },
                 '&::placeholder': {
                     color: 'greys.2'
-                }
+                },
+                fontSize: 1
             }
         }
     })

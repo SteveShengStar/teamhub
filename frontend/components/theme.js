@@ -1,5 +1,3 @@
-import { system } from 'styled-system';
-
 /**
  * Define colors
  */
@@ -29,12 +27,13 @@ const infraOrange = '#CEAC36';
  * Responsive Scaling
  */
 
-const breakpoints = ['600px','900px','1200px'];
+const breakpoints = ['576px','768px', '992px', '1200px'];
 
 const mediaQueries = {
-    tablet: `@media screen and (min-width: ${breakpoints[0]})`,
-    smallDesktop: `@media screen and (min-width: ${breakpoints[1]})`,
-    desktop: `@media screen and (min-width: ${breakpoints[2]})`,
+    mobile: `@media screen and (min-width: ${breakpoints[0]})`,
+    tablet: `@media screen and (min-width: ${breakpoints[1]})`,
+    smallDesktop: `@media screen and (min-width: ${breakpoints[2]})`,
+    desktop: `@media screen and (min-width: ${breakpoints[3]})`,
 };
 
 /**
@@ -52,7 +51,7 @@ fontSizes.header5 = fontSizes[0];
 fontSizes.title = fontSizes[5];
 fontSizes.subtitle = fontSizes[4];
 fontSizes.smallSubtitle = fontSizes[3];
-fontSizes.smallTitle = fontSizes[3];
+fontSizes.smallTitle = fontSizes[2];
 fontSizes.nav = fontSizes[3];
 fontSizes.smallNav = fontSizes[2];
 
@@ -63,7 +62,9 @@ fontWeights.black = fontWeights[2];
 
 const space = [0, 2, 5, 10, 15, 20, 25, 30, 35, 40];
 space.cardMargin = space[9];
+space.cardMarginSmall = space[2];
 space.cardPadding = space[5];
+space.cardPaddingSmall = space[3];
 space.headerBottomMargin = space[4];
 space.titleBottomMargin = space[6];
 
@@ -73,14 +74,15 @@ cornerRadius.small = cornerRadius[1];
 cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
-
-const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)'];
+const shadows = ['none', '0 2px 5px 0 rgba(0,0,0,0.05)', '0 2px 10px 0 rgba(0,0,0,0.1)', '0 2px 18px 0 rgba(0,0,0,0.2)'];
 shadows.none = shadows[0];
 shadows.light = shadows[1];
 shadows.default = shadows[2];
+shadows.dark = shadows[3];
+
 
 /** Transition */
-const transitions = ['none', 'all 0.2s ease'];
+const transitions = ['none', 'all 0.2s ease-out'];
 transitions.none = transitions[0];
 transitions.default = transitions[1];
 

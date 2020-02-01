@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 
 import Link from '../atoms/Link';
 import { SystemComponent } from '../atoms/SystemComponents';
@@ -14,80 +13,86 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 
-const MemberInfoCard = ({memberData, index, className, subteams}) => {
+const MemberInfoCard = ({memberData, className, onClose}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const subteam = memberData.subteam ? subteams[memberData.subteam].name : '';
+    const subteam = memberData.subteam ? memberData.subteam.name : '';
 
     return (
-        <InfoCard className={className} memberExists={memberData && memberData._id}>
-            <SystemComponent>
-                <Header3 mb={3}>Member</Header3>
-                <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ''} </Header2>
-                {
-                    memberData.subteam ? (
-                        <MemberSubtitle>
-                            Member of <BorderlessButton variant={subteam.toLowerCase()} fontSize="inherit" fontWeight="inherit">
-                                {subteam}
-                            </BorderlessButton> team
-                        </MemberSubtitle>
-                    )
-                        : <MemberSubtitle>New Member</MemberSubtitle>
-                }
-                <Body mb={3}>{memberData.bio || ''}</Body>
-            </SystemComponent>
+        <InfoCard className={className}>
+            <Header3 mb={3}>Member</Header3>
+            <BorderlessButton 
+                alignSelf="start"
+                justifySelf="end"
+                onClick={onClose}
+            >
+                Close
+            </BorderlessButton>
 
-            <SystemComponent>
-                <PersonalCard mb={3}>
-                    <Image 
-                        src={memberData.picture && memberData.picture.replace(/s96/, "s400") || '/static/default-headshot.png'}
-                        width={'100%'}
-                    />
-                    <SystemComponent display="flex" flexDirection="column" padding={3}>
-                        <InlineItemRow>
-                            <MailIcon />
-                            <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ''}>Email</Link>
-                        </InlineItemRow>
-                        {
-                            memberData.links && memberData.links.map(({type, link}, i) =>
-                                <Link href={link} key={i} mt={2}>{type}</Link>
-                            )
-                        }
-                        <Body>{`🎂 ${birthday}`}</Body>
-                    </SystemComponent>
-                </PersonalCard>
+            <ContentContainer>
+                <LeftColumn>
+                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ''} </Header2>
+                    {
+                        memberData.subteam ? (
+                            <MemberSubtitle>
+                                Member of <BorderlessButton variant={subteam.toLowerCase()} fontSize="inherit" fontWeight="inherit">
+                                    {subteam}
+                                </BorderlessButton> team
+                            </MemberSubtitle>
+                        )
+                            : <MemberSubtitle>New Member</MemberSubtitle>
+                    }
 
-                <Header5>Skills</Header5>
-                <Body>{skills}</Body>
+                    <Body mb={3}>{memberData.bio || ''}</Body>
+                </LeftColumn>
 
-            </SystemComponent>
+                <RightColumn>
+                    <PersonalCard mb={3}>
+                        <Image 
+                            src={memberData.picture && memberData.picture.replace(/s96/, "s400") || '/static/default-headshot.png'}
+                            width={'100%'}
+                        />
+                        <SystemComponent display="flex" flexDirection="column" padding={3}>
+                            <InlineItemRow>
+                                <MailIcon />
+                                <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ''}>Email</Link>
+                            </InlineItemRow>
+                            {
+                                memberData.links && memberData.links.map(({type, link}, i) =>
+                                    <Link href={link} key={i} mt={2}>{type}</Link>
+                                )
+                            }
+                            <Body>{`🎂 ${birthday}`}</Body>
+                        </SystemComponent>
+                    </PersonalCard>
+
+                    <Header5>Skills</Header5>
+                    <Body>{skills}</Body>
+                </RightColumn>
+            </ContentContainer>
         </InfoCard>
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        subteams: state.members.subteams,
-    };
-};
-
-export default connect(mapStateToProps)(MemberInfoCard);
+export default MemberInfoCard;
 
 /**
  * Styled component definitions
  */
 const InfoCard = styled(Card)`
     display: grid;
-    max-width: 800px;
-    grid-template-rows: 1fr;
+    grid-template-rows: auto 1fr;
     grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
-    grid-gap: ${props => props.theme.space[3]}px;
     justify-content: space-between;
-    position: relative;
     z-index: 10;
-    visibility: ${props => props.memberExists ? "visible" : "hidden"}
+    width: 100%;
+
+    ${props => props.theme.mediaQueries.tablet} {
+        max-width: 800px;
+        width: auto;
+    }
 `;
 
 const PersonalCard = styled(SystemComponent)`
@@ -95,6 +100,7 @@ const PersonalCard = styled(SystemComponent)`
     border-radius: ${props => props.theme.radii.default}px;
     box-shadow: ${props => props.theme.shadows.default};
     overflow: hidden;
+    max-width: 400px;
 `;
 
 const MemberSubtitle = styled(Header4)`
@@ -107,3 +113,27 @@ const InlineItemRow = styled(SystemComponent)`
     display: flex;
     align-items: center;
 `;
+
+const ContentContainer = styled.div`
+    grid-column: 1/3;
+    display: grid;
+    grid-gap: ${props => props.theme.space[3]}px;
+    height: calc(100% - ${props => props.theme.space.cardPaddingSmall * 2}px);
+    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 5px,rgba(0,0,0,1.0) calc(100% - 5px),transparent);
+
+    ${props => props.theme.mediaQueries.tablet} {
+        display: grid;
+        grid-template-rows: 1fr;
+        grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
+        overflow-y: scroll;
+    }
+`
+
+const LeftColumn = styled.div`
+`
+const RightColumn = styled.div`
+    padding: 0 0 ${props => props.theme.space[1]}px;
+    ${props => props.theme.mediaQueries.tablet} {
+        padding: 0;
+    }
+`
