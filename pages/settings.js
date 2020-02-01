@@ -1,48 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import PageTemplate from '../frontend/components/templates/PageTemplate';
 import Card from '../frontend/components/atoms/Card';
-
-/* Testing Steven Steven's changes */
 import Header3 from '../frontend/components/atoms/Header3';
 import Header4 from '../frontend/components/atoms/Header4';
+import EditButton from '../frontend/components/atoms/AccountSettings/EditButton';
 import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import Image from '../frontend/components/atoms/Image';
+import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
+import PageTemplate from '../frontend/components/templates/PageTemplate';
 
-import Button from '../frontend/components/atoms/Button';
 import theme from '../frontend/components/theme';
-import {capitalize, startCase} from 'lodash';
 
-
-const subheadingHeight = 30;
-const SettingsDivBody = styled(SystemComponent)`
-    padding-left: ${theme.space.settingsSubsectionPadding}px;
-`;
 
 // Assumption: I receive an ID representing subteam
 // I can look up the corresponding subteam color code
 const subteams = ['software', 'electrical'];
 const projects = ['teamhub', 'test rig programming'];
 
-const CustomSubHeading = styled(Header4)`
-    font-size: 16.5px;
+const SettingsDivBody = styled(SystemComponent)`
+    padding-left: ${theme.space.settingsSubsectionPadding}px;
 `;
 
- 
-// TODO: change to props => props.theme later
-const EditButton = styled(Button)`
-    background-color: ${theme.colors.greys[2]};
-    height: 30px;
-`;
-
-const CustomButton = styled(Button)`
-    padding-top: 2px;
-    padding-bottom: 2px;
-
-    // TODO: Is there a better way to do this ?
-    transform: scale(1.0) !important;
-`;
 
 const EditableSectionHeader = ({title}) => {
     const buttonLabel = 'Edit';
@@ -58,53 +37,6 @@ const EditableSectionHeader = ({title}) => {
         </SystemComponent>
     )
 }
-
-const ButtonWrapper = ({variant, label}) => {
-    return (
-        <CustomButton variant={variant} 
-            mr={theme.space[5]}
-        >
-            {label}
-        </CustomButton>
-    );
-};
-
-const SettingsDivSubsection = ({
-                                headerText, 
-                                isLabelListSection = false,
-                                labelValues,
-                                labelStyleVariants,
-                                children}) => {
-    //console.log(theme.colors[subteams[1]]);
-
-    // TODO: revise this condition later
-    // TODO: update the keys later
-    // TODO: make sure labelValues and labelStylingVariants have same length
-    let sectionBody;
-    if (isLabelListSection) {
-        sectionBody = labelValues.map((labelValue, i) => 
-            <ButtonWrapper key={i}
-                variant={labelStyleVariants[i]} 
-                label={startCase(labelValue)}
-            />
-        );
-    } else {
-        sectionBody = children;
-    }
-    
-    return (
-        <>
-            {headerText &&  
-                <SystemComponent height={subheadingHeight}>
-                    <CustomSubHeading>{headerText}</CustomSubHeading>
-                </SystemComponent>
-            }
-            <SystemComponent>
-                {sectionBody}
-            </SystemComponent>
-        </>
-    );
-};
 
 const Grid = styled(SystemComponent)`
     display: grid;
