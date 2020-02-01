@@ -1,20 +1,17 @@
 import { HttpVerb, executeRequest, getBaseApi } from '../baseApi';
 
 export function getAll(options = {isSSR: true}) {
-  let ssr = false;
-  let query = undefined
+  let ssr = options.isSSR
   if (options) {
-    query = options;
-    ssr = !!options.isSSR;
-    delete query.isSSR;
+    delete options.isSSR;
   }
-
-
+  console.log(options)
   const request = {
     method: HttpVerb.POST,
-    url: `${getBaseApi(!!options.isSSR)}/members/search`,
+    url: `${getBaseApi(ssr)}/members/search`,
     data: {
-      query
+      options,
+      fields: ["name", "subteam", "role", "imageUrl"]
     }
   };
   return executeRequest(request);

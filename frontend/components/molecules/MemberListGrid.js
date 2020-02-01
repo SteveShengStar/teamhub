@@ -6,16 +6,16 @@ import MemberPreviewComponent from './MemberPreviewComponent';
 
 const MemberListGrid = ({members, onSelect, className, animRef}) => {
     return (
-        <Container gridGap={4} overflowY="scroll" className={className} ref={animRef}>
+        <Container gridGap={4} overflowY={["auto", "auto", "scroll"]} className={className} ref={animRef}>
             {
-                members && Object.keys(members).map((key, i) => 
+                members && members.map((member, i) => 
                     <MemberPreviewComponent 
                         key={i}
-                        name={`${members[key].name.first} ${members[key].name.last}`}
-                        subteam={members[key].subteam ? members[key].subteam.name : ''} 
-                        role={members[key].memberType ? members[key].memberType.name : ''}
-                        onClick={() => onSelect(members[key]._id)}
-                        imageUrl={members[key].picture}
+                        name={`${member.name.first} ${member.name.last}`}
+                        subteam={member.subteam ? member.subteam.name : ''} 
+                        role={member.memberType ? members[key].memberType.name : ''}
+                        onClick={() => onSelect(member._id)}
+                        imageUrl={members.imageUrl}
                     />
                 )
             }
@@ -31,11 +31,17 @@ export default MemberListGrid;
  */
 
 const Container = styled(SystemComponent)`
-    margin: 0 -${props => props.theme.space.cardPadding}px;
-    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
-    padding: 10px ${props => props.theme.space.cardPadding}px 0;
+    margin: 0 -${props => props.theme.space.cardPaddingSmall}px;
+    padding: 10px ${props => props.theme.space.cardPaddingSmall}px 0;
+
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(250px, auto));
     grid-auto-rows: min-content;
     align-items: start;
+
+    ${props => props.theme.mediaQueries.tablet} {
+        margin: 0 -${props => props.theme.space.cardPadding}px;
+        mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 10px,rgba(0,0,0,1.0) calc(100% - 10px),transparent);
+        padding: 10px ${props => props.theme.space.cardPadding}px 0;
+    }
 `;

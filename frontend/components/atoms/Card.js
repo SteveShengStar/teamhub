@@ -5,7 +5,10 @@ import theme from '../theme';
 
 const Card = styled(SystemComponent)`
     backdrop-filter: blur(13px);
-    padding: ${props => props.theme.space.cardPadding}px;
+    padding: ${props => props.theme.space.cardPaddingSmall}px;
+    ${props => props.theme.mediaQueries.tablet} {
+        padding: ${props => props.theme.space.cardPadding}px;
+    }
     ${space}
 `;
 
