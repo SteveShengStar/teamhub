@@ -98,6 +98,7 @@ const theme = {
         foreground: black,
         background: white,
         greys,
+        inactive: greys[2],
         messagesBackground: messagesBlue,
         clickUp: clickUpPurple,
         software: softwareMagenta,
