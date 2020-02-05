@@ -9,18 +9,21 @@ import LargeButton from '../atoms/LargeButton';
 import theme from '../theme';
 
 const CustomContentContainer = styled(ContentContainer)`
+    box-sizing: border-box;
     width: 650px;
     max-height: 80vh;
     min-height: 30vh;
     height: 800px;
+
+    padding: 25px;
 `;
+// TODO: pull from theme
 
 const EditSettingsModal = ({children, className, visible, title, onCloseModal}) => {
     return (
         <Background visible={visible}>
             <CustomContentContainer 
                 className={className}
-                padding={["cardPaddingSmall", "cardPaddingSmall", "cardPadding"]}
                 visible={visible}
             >
                 <SystemComponent>

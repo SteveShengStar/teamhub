@@ -7,7 +7,7 @@ import LargeButton from '../frontend/components/atoms/LargeButton';
 import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
-import EditSettingsModal from '../frontend/components/molecules/EditSettingsModal';
+import EditTeamsModal from '../frontend/components/organisms/EditTeamsModal';
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 
 import theme from '../frontend/components/theme';
@@ -49,12 +49,10 @@ const SettingsDiv = ({children, title}) => {
 
     return (
         <>
-            <EditSettingsModal visible={modalVisible} 
+            <EditTeamsModal modalVisible={modalVisible} 
                 title={title}
                 onCloseModal={() => setModalVisible(false)}
-            >
-                <SystemComponent>HAHAHAHA</SystemComponent>
-            </EditSettingsModal>
+            />
             <EditableSectionHeader title={title} onEditClicked={() => setModalVisible(true)}/>
             <SettingsDivBody>
                 {children}
