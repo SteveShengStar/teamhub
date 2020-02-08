@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents'
-import InputPair from '../molecules/InputPair';
+import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -9,31 +9,34 @@ const CustomInput = styled(Input)`
     box-sizing: border-box;
     height: 34px;
     width: 100%;
-    
 `;
 
 const EditTeamsModal = () => {
     return (
         <SystemComponent display="grid" 
             gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-            gridTemplateRows={["repeat(4, 70px)", "repeat(2, 70px)"]}
             gridColumnGap={[20, 30, 40]}
+            gridAutoRows='minmax(70px, auto)'
         >
-            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+            <SystemComponent>
                 <Header5>First Name</Header5>
                 <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
-            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+            <SystemComponent>
                 <Header5>Last Name</Header5>   
                 <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
-            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+            <SystemComponent>
                 <Header5>BirthDate</Header5>  
                 <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
-            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">   
+            <SystemComponent>   
                 <Header5>Email</Header5>  
                 <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            </SystemComponent>
+
+            <SystemComponent>
+                <SettingsInputPair title="Academic Program"></SettingsInputPair>
             </SystemComponent>
         </SystemComponent>
     );

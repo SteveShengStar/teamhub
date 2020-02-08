@@ -11,7 +11,6 @@ import theme from '../theme';
 
 const CustomContentContainer = styled(ContentContainer)`
     box-sizing: border-box;
-    height: 800px;
     width: 86vw;
     min-width: 300px;
     max-height: 80vh;
@@ -76,10 +75,10 @@ const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
                 <SystemComponent display='flex' 
                     justifyContent='center' 
                     alignItems='center'
-                    gridColumnGap={theme.space[4]}
+                    mt={20}
                 >
-                    <LargeButton variant="primary">Save</LargeButton>
-                    <Button variant="cancel" onClick={() => onCloseModal()}>Cancel</Button>
+                    <LargeButton variant="primary" >Save</LargeButton>
+                    <Button variant="cancel" display="block" ml={theme.space[5]} onClick={() => onCloseModal()}>Cancel</Button>
                 </SystemComponent>
             </CustomContentContainer>
         </Background>
