@@ -61,37 +61,59 @@ const SettingsDiv = ({children, title}) => {
     );
 }
 
+const SideNavContainer = styled(SystemComponent)`
+    box-sizing: border-box;
+    display: none;
+
+    width: 360px;
+    padding-right: 25px;
+
+    ${theme.mediaQueries.tablet} {
+        display: block;
+    }
+`
+
+const SideNavMenu = styled(Card)`
+    box-sizing: border-box;
+    width: "100%";
+`
+
 const Home = () => {
     return (
         <PageTemplate>
-            <Card overflowY="auto">
-                <SettingsDiv title="Teams &amp; Responsibilities">
-                    <SettingsDivSubsection headerText='My Subteams'
-                        isLabelListSection={true}
-                        labelValues={subteams}
-                        labelStyleVariants={subteams}
-                    />
-                    <SettingsDivSubsection headerText='My Projects'
-                        isLabelListSection={true}
-                        labelValues={projects}
-                        labelStyleVariants={['software', 'software']}
-                    />
-                    <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
-                        <NonEditableTextArea>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
-                            sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
-                            euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
-                            sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
-                            varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
-                        </NonEditableTextArea>
-                    </SettingsDivSubsection>
-                </SettingsDiv>
+            <SystemComponent display="flex" >
+                <SideNavContainer>
+                    <SideNavMenu></SideNavMenu>
+                </SideNavContainer>
+                <Card overflowY="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
+                    <SettingsDiv title="Teams &amp; Responsibilities">
+                        <SettingsDivSubsection headerText='My Subteams'
+                            isLabelListSection={true}
+                            labelValues={subteams}
+                            labelStyleVariants={subteams}
+                        />
+                        <SettingsDivSubsection headerText='My Projects'
+                            isLabelListSection={true}
+                            labelValues={projects}
+                            labelStyleVariants={['software', 'software']}
+                        />
+                        <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
+                            <NonEditableTextArea>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
+                                sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
+                                euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
+                                sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
+                                varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
+                            </NonEditableTextArea>
+                        </SettingsDivSubsection>
+                    </SettingsDiv>
 
 
-                <SettingsDiv title="Profile Information">
-                    <ProfileSummary />
-                </SettingsDiv>
-            </Card>
+                    <SettingsDiv title="Profile Information">
+                        <ProfileSummary />
+                    </SettingsDiv>
+                </Card>
+            </SystemComponent>
         </PageTemplate>
     )
 };

@@ -3,12 +3,42 @@ import styled from 'styled-components';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
 
+import theme from '../../theme';
+
 
 // TODO: Set actual image URL later
 // TODO: Use server data
 const imageUrl = undefined;
 const Grid = styled(SystemComponent)`
     display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: 200px;
+    justify-items: center;
+    & table {
+        width: 390px;
+    }
+
+    ${theme.mediaQueries.mobile} {
+        & table {
+            width: 320px;
+        }
+
+        grid-template-columns: ${props => props.leftColumnWidth} auto;
+        grid-template-rows: 200px;
+    }
+    @media screen and (min-width: 670px) {
+        & table {
+            width: 390px;
+        }
+    }
+    ${theme.mediaQueries.tablet} {
+        grid-template-columns: 1fr;
+        grid-template-rows: 200px 200px;
+    }
+    @media screen and (min-width: 935px) {
+        grid-template-columns: ${props => props.leftColumnWidth} auto;
+        grid-template-rows: 200px;
+    }
 `;
 const userInformation = {
     firstName: {
@@ -43,8 +73,7 @@ const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing})
 
     return (
         <Grid 
-            gridTemplateColumns={leftChildWidth + 'px auto'}
-            gridColumnGap={componentSpacing}
+            leftColumnWidth={leftChildWidth + 'px'}
         >
             <SystemComponent>
                 {children[0]}
@@ -61,12 +90,12 @@ const ProfileSummary = () => {
     return (
         <SettingsHorizontalFlexbox leftChildWidth={200} componentSpacing={20}>
             <Image
-                width='100%'
+                height='100%'
                 src={imageUrl || "/static/default-headshot.png"}
                 borderRadius="18px"
             />
             <SystemComponent overflowY='auto'>
-                <table style={{width: '100%'}}>
+                <table>
                     <tbody>
                         {Object.values(userInformation).map((fieldInfo, i) =>
                             <tr key={i}>
