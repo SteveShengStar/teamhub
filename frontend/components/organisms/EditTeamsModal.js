@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import {SystemComponent} from '../atoms/SystemComponents'
-import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
+import {SystemComponent} from '../atoms/SystemComponents';
+import TextArea from '../atoms/TextArea';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -15,48 +15,23 @@ const EditTeamsModal = () => {
     return (
         <>
             <SystemComponent display="grid" 
-                gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-                gridColumnGap={[20, 30, 40]}
+                gridTemplateColumns={"100%"}
                 gridAutoRows='minmax(70px, auto)'
             >
                 <SystemComponent>
-                    <Header5>First Name</Header5>
+                    <Header5>Which Subteams are you in ?</Header5>
                     <CustomInput variant="text" placeholder="Search" value={"Filler"} />
                 </SystemComponent>
                 <SystemComponent>
-                    <Header5>Last Name</Header5>   
+                    <Header5>What Projects are you Working on ?</Header5>   
                     <CustomInput variant="text" placeholder="Search" value={"Filler"} />
                 </SystemComponent>
                 <SystemComponent>
-                    <Header5>BirthDate</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                    <Header5>What do you do on Waterloop ?</Header5>  
+                    <TextArea variant="default"/>
                 </SystemComponent>
-                <SystemComponent>   
-                    <Header5>Email</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-                </SystemComponent>
-
-                <SystemComponent>
-                    <SettingsInputPair title="Academic Program"></SettingsInputPair>
-                </SystemComponent>
-                <SystemComponent>
-                    <SettingsInputPair title="School Term"></SettingsInputPair>
-                </SystemComponent>
-                <SystemComponent>
-                    <SettingsInputPair title="Work/Study Sequence"></SettingsInputPair>
-                </SystemComponent>
-            </SystemComponent>
-
-            <SystemComponent>
-                <Header5>Skills</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>
-                <Header5>Interests</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
+            </SystemComponent>            
         </>
     );
 }
-// TODO: for skills section, allow suggestions to pop up.
 export default EditTeamsModal;

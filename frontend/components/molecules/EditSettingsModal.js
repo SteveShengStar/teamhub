@@ -4,6 +4,7 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import Header3 from '../atoms/Header3';
 import {Background, ContentContainer} from '../atoms/ModalSubComponents';
 import EditTeamsModal from '../organisms/EditTeamsModal';
+import EditProfileModal from '../organisms/EditProfileModal';
 import Button from '../atoms/Button';
 import LargeButton from '../atoms/LargeButton';
 
@@ -39,20 +40,20 @@ const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
     switch(activeModal) {
         case 0:
             title = "Teams & Responsibilities";
-            visibleModal =  <EditTeamsModal/>;
+            visibleModal = <EditTeamsModal/>;
             // TODO: change to separate modal types later
             break;
         case 1:
             title =  "Profile Information";
-            visibleModal =  <EditTeamsModal/>;
+            visibleModal = <EditProfileModal/>;
             break;
         case 2:
             title = "External Profiles";
-            visibleModal =  <EditTeamsModal/>;
+            visibleModal = <></>;
             break;
         case 3:
             title = "Resume";
-            visibleModal =  <EditTeamsModal/>;
+            visibleModal =  <></>;
             break;
         default:
             title="";
