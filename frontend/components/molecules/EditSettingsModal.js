@@ -30,7 +30,8 @@ const CustomContentContainer = styled(ContentContainer)`
     }
 `;
 // TODO: pull from theme
-
+// TODO: remove hard-coded height later
+// 28px - 15px (header of modal) - 50px (modal padding) - 70px (button section height) - 80px (background spacing) = 243px
 const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
     
     let title;
@@ -69,7 +70,7 @@ const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
                         {title}
                     </Header3>
                 </SystemComponent>
-                <SystemComponent>
+                <SystemComponent height='calc(100vh - 252px)' overflowY="auto">
                     {visibleModal}
                 </SystemComponent>
                 <SystemComponent display='flex' 
@@ -77,7 +78,7 @@ const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
                     alignItems='center'
                     mt={20}
                 >
-                    <LargeButton variant="primary" >Save</LargeButton>
+                    <LargeButton variant="primary">Save</LargeButton>
                     <Button variant="cancel" display="block" ml={theme.space[5]} onClick={() => onCloseModal()}>Cancel</Button>
                 </SystemComponent>
             </CustomContentContainer>

@@ -13,32 +13,50 @@ const CustomInput = styled(Input)`
 
 const EditTeamsModal = () => {
     return (
-        <SystemComponent display="grid" 
-            gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-            gridColumnGap={[20, 30, 40]}
-            gridAutoRows='minmax(70px, auto)'
-        >
-            <SystemComponent>
-                <Header5>First Name</Header5>
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>
-                <Header5>Last Name</Header5>   
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>
-                <Header5>BirthDate</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>   
-                <Header5>Email</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+        <>
+            <SystemComponent display="grid" 
+                gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
+                gridColumnGap={[20, 30, 40]}
+                gridAutoRows='minmax(70px, auto)'
+            >
+                <SystemComponent>
+                    <Header5>First Name</Header5>
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>Last Name</Header5>   
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>BirthDate</Header5>  
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+                <SystemComponent>   
+                    <Header5>Email</Header5>  
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+
+                <SystemComponent>
+                    <SettingsInputPair title="Academic Program"></SettingsInputPair>
+                </SystemComponent>
+                <SystemComponent>
+                    <SettingsInputPair title="School Term"></SettingsInputPair>
+                </SystemComponent>
+                <SystemComponent>
+                    <SettingsInputPair title="Work/Study Sequence"></SettingsInputPair>
+                </SystemComponent>
             </SystemComponent>
 
             <SystemComponent>
-                <SettingsInputPair title="Academic Program"></SettingsInputPair>
+                <Header5>Skills</Header5>  
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
-        </SystemComponent>
+            <SystemComponent>
+                <Header5>Interests</Header5>  
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            </SystemComponent>
+        </>
     );
 }
+// TODO: for skills section, allow suggestions to pop up.
 export default EditTeamsModal;
