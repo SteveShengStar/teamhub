@@ -8,6 +8,8 @@ import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import EditTeamsModal from '../frontend/components/organisms/EditTeamsModal';
+import EditSettingsModal from '../frontend/components/molecules/EditSettingsModal';
+
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 
 import theme from '../frontend/components/theme';
@@ -44,16 +46,10 @@ const NonEditableTextArea = styled(SystemComponent)`
     width: 100%;
 `;
 
-const SettingsDiv = ({children, title}) => {
-    const [ modalVisible, setModalVisible ] = useState(false);
-
+const SettingsDiv = ({children, title, onEditClicked}) => {
     return (
         <>
-            <EditTeamsModal modalVisible={modalVisible} 
-                title={title}
-                onCloseModal={() => setModalVisible(false)}
-            />
-            <EditableSectionHeader title={title} onEditClicked={() => setModalVisible(true)}/>
+            <EditableSectionHeader title={title} onEditClicked={() => onEditClicked()}/>
             <SettingsDivBody>
                 {children}
             </SettingsDivBody>
@@ -78,42 +74,73 @@ const SideNavMenu = styled(Card)`
     width: "100%";
 `
 
+const ACTIVE_MODAL = {
+    TEAMS_RESPONSIBILITIES: 0,
+    PROFILE_INFO: 1,
+    EXTERNAL_LINKS: 2,
+    RESUME: 3,
+    NONE: 4
+}
+if (Object.freeze) { Object.freeze(ACTIVE_MODAL); }
+
 const Home = () => {
+    const [ modalVisible, setModalVisible ] = useState(false);
+    const [ activeModal, setActiveModal ] = useState(false);
+
     return (
         <PageTemplate>
-            <SystemComponent display="flex" >
-                <SideNavContainer>
-                    <SideNavMenu></SideNavMenu>
-                </SideNavContainer>
-                <Card overflowY="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
-                    <SettingsDiv title="Teams &amp; Responsibilities">
-                        <SettingsDivSubsection headerText='My Subteams'
-                            isLabelListSection={true}
-                            labelValues={subteams}
-                            labelStyleVariants={subteams}
-                        />
-                        <SettingsDivSubsection headerText='My Projects'
-                            isLabelListSection={true}
-                            labelValues={projects}
-                            labelStyleVariants={['software', 'software']}
-                        />
-                        <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
-                            <NonEditableTextArea>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
-                                sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
-                                euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
-                                sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
-                                varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
-                            </NonEditableTextArea>
-                        </SettingsDivSubsection>
-                    </SettingsDiv>
+            <>
+                <EditSettingsModal visible={modalVisible} 
+                    activeModal={activeModal}
+                    onCloseModal={() => {
+                        setModalVisible(false);
+                        setActiveModal(ACTIVE_MODAL.NONE);
+                    }}
+                />
+                <SystemComponent display="flex">
+                    <SideNavContainer>
+                        <SideNavMenu></SideNavMenu>
+                    </SideNavContainer>
+                    <Card overflowY="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
+                        <SettingsDiv title="Teams &amp; Responsibilities" 
+                            onEditClicked={() => {
+                                setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
+                                setModalVisible(true);
+                            }
+                        }>
+                            <SettingsDivSubsection headerText='My Subteams'
+                                isLabelListSection={true}
+                                labelValues={subteams}
+                                labelStyleVariants={subteams}
+                            />
+                            <SettingsDivSubsection headerText='My Projects'
+                                isLabelListSection={true}
+                                labelValues={projects}
+                                labelStyleVariants={['software', 'software']}
+                            />
+                            <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
+                                <NonEditableTextArea>
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
+                                    sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
+                                    euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
+                                    sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
+                                    varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
+                                </NonEditableTextArea>
+                            </SettingsDivSubsection>
+                        </SettingsDiv>
 
 
-                    <SettingsDiv title="Profile Information">
-                        <ProfileSummary />
-                    </SettingsDiv>
-                </Card>
-            </SystemComponent>
+                        <SettingsDiv title="Profile Information"
+                            onEditClicked={() => {
+                                setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
+                                setModalVisible(true);
+                            }
+                        }>
+                            <ProfileSummary />
+                        </SettingsDiv>
+                    </Card>
+                </SystemComponent>
+            </>
         </PageTemplate>
     )
 };

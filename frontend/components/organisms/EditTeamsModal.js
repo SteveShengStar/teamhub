@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import EditSettingsModal from '../molecules/EditSettingsModal';
 import {SystemComponent} from '../atoms/SystemComponents'
 import InputPair from '../molecules/InputPair';
 
@@ -11,38 +10,32 @@ const CustomInput = styled(Input)`
     height: 34px;
     width: 100%;
     
-`
+`;
 
-const EditTeamsModal = ({modalVisible, title, onCloseModal}) => {
+const EditTeamsModal = () => {
     return (
-        <EditSettingsModal visible={modalVisible}
-            title={title}
-            onCloseModal={onCloseModal}
+        <SystemComponent display="grid" 
+            gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
+            gridTemplateRows={["repeat(4, 70px)", "repeat(2, 70px)"]}
+            gridColumnGap={[20, 30, 40]}
         >
-            <SystemComponent display="grid" 
-                gridTemplateColumns="repeat(2, 1fr)" 
-                gridTemplateRows="repeat(4, 80px)" 
-                gridColumnGap={40}
-            >
-                <SystemComponent gridColumn="1/2" gridRow="1/2">
-                    <Header5>First Name</Header5>
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-                </SystemComponent>
-                <SystemComponent gridColumn="2/3" gridRow="1/2">
-                    <Header5>Last Name</Header5>   
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-                </SystemComponent>
-                <SystemComponent gridColumn="1/2" gridRow="2/3">
-                    <Header5>BirthDate</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-                </SystemComponent>
-                <SystemComponent gridColumn="2/3" gridRow="2/3">   
-                    <Header5>Email</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-                </SystemComponent>
+            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+                <Header5>First Name</Header5>
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
-
-        </EditSettingsModal>
+            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+                <Header5>Last Name</Header5>   
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            </SystemComponent>
+            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">
+                <Header5>BirthDate</Header5>  
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            </SystemComponent>
+            <SystemComponent gridColumn="1 span 1" gridRow="1 span 1">   
+                <Header5>Email</Header5>  
+                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            </SystemComponent>
+        </SystemComponent>
     );
 }
 export default EditTeamsModal;
