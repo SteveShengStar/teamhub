@@ -31,4 +31,8 @@ const TextArea = styled(SystemTextArea) (
         }
     })
 );
+
+TextArea.defaultProps = {
+    variant: 'default'
+}
 export default TextArea;

@@ -7,7 +7,6 @@ import LargeButton from '../frontend/components/atoms/LargeButton';
 import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
-import EditTeamsModal from '../frontend/components/organisms/EditTeamsModal';
 import EditSettingsModal from '../frontend/components/molecules/EditSettingsModal';
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';

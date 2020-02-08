@@ -5,7 +5,8 @@ const AnchorListItem = styled(Button)`
     padding-top: 2px;
     padding-bottom: 2px;
 
-    // TODO: Is there a better way to do this ?
-    transform: scale(1.0) !important;
+    &:hover {
+        opacity: 1;
+    }
 `;
 export default AnchorListItem;
