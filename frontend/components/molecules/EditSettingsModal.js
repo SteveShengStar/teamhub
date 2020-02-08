@@ -5,6 +5,7 @@ import Header3 from '../atoms/Header3';
 import {Background, ContentContainer} from '../atoms/ModalSubComponents';
 import EditTeamsModal from '../organisms/EditTeamsModal';
 import EditProfileModal from '../organisms/EditProfileModal';
+import EditLinksModal from '../organisms/EditLinksModal';
 import Button from '../atoms/Button';
 import LargeButton from '../atoms/LargeButton';
 
@@ -49,7 +50,7 @@ const EditSettingsModal = ({className, visible, activeModal, onCloseModal}) => {
             break;
         case 2:
             title = "External Profiles";
-            visibleModal = <></>;
+            visibleModal = <EditLinksModal/>;
             break;
         case 3:
             title = "Resume";

@@ -7,6 +7,7 @@ import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 
+// TODO: make this an atom. It's used by many modals.
 const CustomInput = styled(Input)`
     box-sizing: border-box;
     height: 34px;
@@ -17,9 +18,6 @@ const subteams = ["Software", "Electrical", "Mechanical", "Executive", "Infrastr
 const themeVariantLabels = ["software", "electrical", "mechanical", "exec", "infrastructure", "admin"]
 
 const EditTeamsModal = () => {
-    // TODO: Think about where this state should live
-    const [ selected, setModalVisible ] = useState(false);
-
     return (
         <>
             <SystemComponent display="grid" 
