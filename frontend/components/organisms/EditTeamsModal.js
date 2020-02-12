@@ -14,10 +14,31 @@ const CustomInput = styled(Input)`
     width: 100%;
 `;
 
-const subteams = ["Software", "Electrical", "Mechanical", "Executive", "Infrastructure", "Admin"]
-const themeVariantLabels = ["software", "electrical", "mechanical", "exec", "infrastructure", "admin"]
+// Subteam ID to String Mapping
+const subteamMapping = {
+    0: "software",
+    1: "electrical",
+    2: "mechanical",
+    3: "executive",
+    4: "infrastructure",
+    5: "admin"
+}
+const subteamThemeMapping = {
+    0: "software",
+    1: "electrical",
+    2: "mechanical",
+    3: "exec",
+    4: "infrastructure",
+    5: "admin"
+}
+ 
+// The top-level component needs to know which are selected in order to sort the selected ones to the front
+// selected should be a state owned by the parent
 
+// go through only selected subteams first
 const EditTeamsModal = () => {
+    const [selectedSubteams, setSelectedSubteams] = useState([0, 1]);
+
     return (
         <>
             <SystemComponent display="grid" 
@@ -26,13 +47,13 @@ const EditTeamsModal = () => {
             >
                 <SystemComponent>
                     <Header5>Which Subteams are you in ?</Header5>
-                    {subteams.map((subteam, i) => 
-                        <SystemComponent mb={3}>
-                            <ToggleListItem variant={themeVariantLabels[i]}>
-                                {subteam}
+                    {
+                        selectedSubteams.map(selectedSubteams => 
+                            <ToggleListItem variant={subteamThemeMapping[selectedSubteams]}>
+                                {subteamMapping[selectedSubteams]}
                             </ToggleListItem>
-                        </SystemComponent>
-                    )}
+                        )
+                    }
                 </SystemComponent>
                 <SystemComponent>
                     <Header5>What Projects are you Working on ?</Header5>   

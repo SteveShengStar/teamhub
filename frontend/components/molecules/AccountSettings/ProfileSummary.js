@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
+import { ThemeProvider } from 'styled-components';
 
 import theme from '../../theme';
 
@@ -17,10 +18,17 @@ const Grid = styled(SystemComponent)`
     & table {
         width: 390px;
     }
+    & .avatarContainer {
+        width: 100%;
+        text-align: center;
+    }
 
     ${theme.mediaQueries.mobile} {
         & table {
             width: 320px;
+        }
+        & .avatarContainer {
+            text-align: left;
         }
 
         grid-template-columns: ${props => props.leftColumnWidth} auto;
@@ -32,10 +40,18 @@ const Grid = styled(SystemComponent)`
         }
     }
     ${theme.mediaQueries.tablet} {
+        & .avatarContainer {
+            text-align: center;
+        }
+
         grid-template-columns: 1fr;
         grid-template-rows: 200px 200px;
     }
     @media screen and (min-width: 935px) {
+        & .avatarContainer {
+            text-align: left;
+        }
+
         grid-template-columns: ${props => props.leftColumnWidth} auto;
         grid-template-rows: 200px;
     }
@@ -75,7 +91,7 @@ const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing})
         <Grid 
             leftColumnWidth={leftChildWidth + 'px'}
         >
-            <SystemComponent>
+            <SystemComponent className="avatarContainer">
                 {children[0]}
             </SystemComponent>
             <SystemComponent>
