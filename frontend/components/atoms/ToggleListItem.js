@@ -7,15 +7,28 @@ import { variant } from 'styled-system';
 const CustomButton = styled(Button)`
     padding-top: 2px;
     padding-bottom: 2px;
+
+    &:hover {
+        /* TODO: Deactivate these effects for now. Think about what to do for this later */
+        opacity: 1;
+        transform: none;
+    }
     
     &::after {
-        margin-left: 15px;
-        content: "✔";
+        ${props => props.selected && 'margin-left: 15px;'}
+        ${props => props.selected && 'content: "✔";'}
     }
 `;
-const ToggleListItem = ({variant}) => {
+// TODO: use proptypes to make this take only text
+const ToggleListItem = ({children, id, variant, selected, onSelect}) => {
+    
     return (
-        <CustomButton variant={variant}/>
+        <CustomButton variant={variant}
+            selected={selected}
+            onClick={() => onSelect(id)}
+        >
+            {children}
+        </CustomButton>
     )
 }
 

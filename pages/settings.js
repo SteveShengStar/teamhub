@@ -66,12 +66,12 @@ const SideNavContainer = styled(SystemComponent)`
     ${theme.mediaQueries.tablet} {
         display: block;
     }
-`
+`;
 
 const SideNavMenu = styled(Card)`
     box-sizing: border-box;
     width: "100%";
-`
+`;
 
 const ACTIVE_MODAL = {
     TEAMS_RESPONSIBILITIES: 0,
