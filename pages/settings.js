@@ -96,11 +96,11 @@ const Home = () => {
                         setActiveModal(ACTIVE_MODAL.NONE);
                     }}
                 />
-                <SystemComponent display="flex">
+                <SystemComponent display="flex" overflow="hidden">
                     <SideNavContainer>
                         <SideNavMenu></SideNavMenu>
                     </SideNavContainer>
-                    <Card overflowY="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
+                    <Card overflow="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
                         <SettingsDiv title="Teams &amp; Responsibilities" 
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
