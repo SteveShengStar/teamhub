@@ -7,7 +7,10 @@ const TextArea = styled(SystemTextArea) (
         variants: {
             default: {
                 boxSizing: 'border-box',
+                borderWidth: 1,
                 borderRadius: 'default',
+                borderStyle: 'solid',
+                borderColor: 'greys.2',
                 width: '100%',
                 height: '5.5em',
                 resize: 'none',
