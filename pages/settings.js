@@ -19,6 +19,14 @@ import theme from '../frontend/components/theme';
 const subteams = ['software', 'electrical'];
 const projects = ['teamhub', 'test rig programming'];
 
+const externalLinks = {
+    0: "www.steven.xiong.me",
+    1: "www.linkedin.ca",
+    2: "www.github.com",
+    3: "www.facebook.com",
+}
+const externalLinkLabels = ['Personal Website', 'LinkedIN', 'GitHub', 'Facebook'];
+
 
 const EditableSectionHeader = ({title, onEditClicked}) => {
     return (
@@ -133,9 +141,51 @@ const Home = () => {
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
                                 setModalVisible(true);
-                            }
-                        }>
+                            }}
+                        >
                             <ProfileSummary />
+                            <SettingsDivSubsection headerText='My Skills'
+                                isLabelListSection={true}
+                                labelValues={["Circuit Design", "Web Design", "Public Speaking"]}
+                                labelStyleVariants={['cancel', 'cancel', 'cancel']}
+                            />
+                            <SettingsDivSubsection headerText='My Interests'
+                                isLabelListSection={true}
+                                labelValues={["Self-Driving Cars", "UX Design"]}
+                                labelStyleVariants={['cancel', 'cancel']}
+                            />
+                            <SettingsDivSubsection headerText='Short Bio'
+                                isLabelListSection={false}
+                            />
+                        </SettingsDiv>
+
+                        <SettingsDiv title="Profile Information"
+                            onEditClicked={() => {
+                                setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS); 
+                                setModalVisible(true);
+                            }}
+                        >
+                            <SystemComponent display="grid"
+                                gridTemplateColumns="150px min(500px, auto)"
+                                gridAutoRows="minmax(30px, auto)"
+                            >
+                                {Object.values(externalLinks).map((url, i) =>
+                                    <> 
+                                        <SystemComponent fontWeight={theme.fontWeights[1]} 
+                                            gridColumn="1 / 2" 
+                                            gridRow={(i+1).toString().concat(" / span 1")}
+                                        >
+                                            {externalLinkLabels[i]}
+                                        </SystemComponent>
+                                        <SystemComponent gridColumn="2 / 3" 
+                                            gridRow={(i+1).toString().concat(" / span 1")}
+                                            textAlign="right"
+                                        >
+                                            {url}
+                                        </SystemComponent>
+                                    </>
+                                )}
+                            </SystemComponent>
                         </SettingsDiv>
                     </Card>
                 </SystemComponent>
