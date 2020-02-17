@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
 import { ThemeProvider } from 'styled-components';
@@ -53,7 +54,7 @@ const Grid = styled(SystemComponent)`
             text-align: center;
         }
 
-        grid-template-columns: 1fr;
+        grid-template-columns: 100%;
         grid-template-rows: ${props => props.leftColumnWidth} ${props => props.leftColumnWidth};
     }
     @media screen and (min-width: 935px) {
@@ -156,7 +157,7 @@ const ProfileSummary = () => {
                         {Object.values(userInformation).map((fieldInfo, i) =>
                             <tr key={i}>
                                 <td></td>
-                                <td>{fieldInfo.label}</td>
+                                <td><Header5>{fieldInfo.label}</Header5></td>
                                 <td style={{textAlign: 'right'}}>{fieldInfo.value}</td>
                             </tr>
                         )}

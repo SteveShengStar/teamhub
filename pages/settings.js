@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Card from '../frontend/components/atoms/Card';
 import Header3 from '../frontend/components/atoms/Header3';
+import Header5 from '../frontend/components/atoms/Header5';
 import LargeButton from '../frontend/components/atoms/LargeButton';
 import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
@@ -79,6 +80,22 @@ const SideNavContainer = styled(SystemComponent)`
 const SideNavMenu = styled(Card)`
     box-sizing: border-box;
     width: "100%";
+`;
+
+const ThreeColumnGrid = styled(SystemComponent)`
+    display: grid;
+    grid-template-columns: 150px auto;
+    grid-auto-rows: minmax(30px, auto);
+
+    ${theme.mediaQueries.mobile} {
+        grid-template-columns: 150px 350px;
+    }
+    ${theme.mediaQueries.tablet} {
+        grid-template-columns: 150px auto;
+    }
+    @media screen and (min-width: 935px) {
+        grid-template-columns: 150px 300px;
+    }
 `;
 
 const ACTIVE_MODAL = {
@@ -165,17 +182,13 @@ const Home = () => {
                                 setModalVisible(true);
                             }}
                         >
-                            <SystemComponent display="grid"
-                                gridTemplateColumns="150px min(500px, auto)"
-                                gridAutoRows="minmax(30px, auto)"
-                            >
+                            <ThreeColumnGrid>
                                 {Object.values(externalLinks).map((url, i) =>
                                     <> 
-                                        <SystemComponent fontWeight={theme.fontWeights[1]} 
-                                            gridColumn="1 / 2" 
+                                        <SystemComponent gridColumn="1 / 2" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                         >
-                                            {externalLinkLabels[i]}
+                                            <Header5>{externalLinkLabels[i]}</Header5>
                                         </SystemComponent>
                                         <SystemComponent gridColumn="2 / 3" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
@@ -185,7 +198,7 @@ const Home = () => {
                                         </SystemComponent>
                                     </>
                                 )}
-                            </SystemComponent>
+                            </ThreeColumnGrid>
                         </SettingsDiv>
                     </Card>
                 </SystemComponent>
