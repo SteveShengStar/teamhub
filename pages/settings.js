@@ -20,7 +20,7 @@ const subteams = ['software', 'electrical'];
 const projects = ['teamhub', 'test rig programming'];
 
 const externalLinks = {
-    0: "www.steven.xiong.me",
+    0: "steven.xiong.me",
     1: "www.linkedin.ca",
     2: "www.github.com",
     3: "www.facebook.com",

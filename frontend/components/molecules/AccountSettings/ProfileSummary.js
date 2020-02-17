@@ -13,14 +13,20 @@ const imageUrl = undefined;
 const Grid = styled(SystemComponent)`
     display: grid;
     grid-template-columns: 100%;
-    grid-template-rows: 200px;
+    grid-template-rows: ${props => props.leftColumnWidth};
     justify-items: center;
     & table {
-        width: 390px;
+        width: 80vw;
     }
     & .avatarContainer {
         width: 100%;
         text-align: center;
+    }
+
+    @media screen and (min-width: 420px) {
+        & table {
+            width: 390px;
+        }
     }
 
     ${theme.mediaQueries.mobile} {
@@ -31,13 +37,16 @@ const Grid = styled(SystemComponent)`
             text-align: left;
         }
 
-        grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: 200px;
+        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
+        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
     }
-    @media screen and (min-width: 670px) {
+    @media screen and (min-width: 690px) {
         & table {
             width: 390px;
         }
+
+        grid-template-columns: ${props => props.leftColumnWidth} auto ;
+        grid-template-rows: ${props => props.leftColumnWidth};
     }
     ${theme.mediaQueries.tablet} {
         & .avatarContainer {
@@ -45,15 +54,46 @@ const Grid = styled(SystemComponent)`
         }
 
         grid-template-columns: 1fr;
-        grid-template-rows: 200px 200px;
+        grid-template-rows: ${props => props.leftColumnWidth} ${props => props.leftColumnWidth};
     }
     @media screen and (min-width: 935px) {
         & .avatarContainer {
             text-align: left;
         }
+        & table {
+            width: 340px;
+        }
 
+        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
+        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
+    }
+    @media screen and (min-width: 1015px) {
+        & table {
+            width: 390px;
+        }
         grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: 200px;
+        grid-template-rows: ${props => props.leftColumnWidth};
+    }
+    ${theme.mediaQueries.desktop} {
+        & table {
+            width: 320px;
+        }
+        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
+        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
+    }
+    @media screen and (min-width: 1320px) {
+        & table {
+            width: 360px;
+        }
+        grid-template-columns: calc(${props => props.leftColumnWidth} - 20px) auto;
+        grid-template-rows: calc(${props => props.leftColumnWidth} - 20px);
+    }
+    @media screen and (min-width: 1400px) {
+        & table {
+            width: 390px;
+        }
+        grid-template-columns: ${props => props.leftColumnWidth} auto;
+        grid-template-rows: ${props => props.leftColumnWidth};
     }
 `;
 const userInformation = {
