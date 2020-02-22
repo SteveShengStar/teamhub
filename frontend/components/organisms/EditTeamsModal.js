@@ -6,6 +6,7 @@ import TextArea from '../atoms/TextArea';
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
+import EditSettingsModal from '../molecules/EditSettingsModal';
 import {filter} from 'lodash';
 
 // TODO: make this an atom. It's used by many modals.
@@ -37,7 +38,7 @@ const subteamThemeMapping = {
 // selected should be a state owned by the parent
 
 // go through only selected subteams first
-const EditTeamsModal = () => {
+const EditTeamsModal = ({visible, handleCloseModal}) => {
     const [selectedSubteams, setSelectedSubteams] = useState([0, 1]);
     
     let nonMemberSubteams = filter(Object.keys(subteamMapping), 
@@ -45,8 +46,17 @@ const EditTeamsModal = () => {
     );
     nonMemberSubteams = nonMemberSubteams.map(subteamId => parseInt(subteamId, 10));
 
+    const handleSave = () => {
+
+    }
+
     return (
-        <>
+        <EditSettingsModal 
+            visible={visible} 
+            title="Edit Teams &amp; Responsibilities" 
+            handleCloseModal={handleCloseModal}
+            handleSave={handleSave}
+        >
             <SystemComponent display="grid" 
                 gridTemplateColumns="100%"
                 gridAutoRows='minmax(70px, auto)'
@@ -112,7 +122,7 @@ const EditTeamsModal = () => {
                     <TextArea/>
                 </SystemComponent>
             </SystemComponent>            
-        </>
+        </EditSettingsModal>
     );
 }
 export default EditTeamsModal;

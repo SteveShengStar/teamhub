@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 
+import {ACTIVE_MODAL} from '../frontend/components/constants';
 import Card from '../frontend/components/atoms/Card';
 import Header3 from '../frontend/components/atoms/Header3';
 import Header5 from '../frontend/components/atoms/Header5';
@@ -8,10 +9,10 @@ import LargeButton from '../frontend/components/atoms/LargeButton';
 import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
-import EditSettingsModal from '../frontend/components/molecules/EditSettingsModal';
+import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
+
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
-
 import theme from '../frontend/components/theme';
 
 
@@ -29,7 +30,7 @@ const externalLinks = {
 const externalLinkLabels = ['Personal Website', 'LinkedIN', 'GitHub', 'Facebook'];
 
 
-const EditableSectionHeader = ({title, onEditClicked}) => {
+const EditableSectionHeader = ({title, handleEditClicked}) => {
     return (
         <SystemComponent display='flex' justifyContent='flex-start' flexDirection='row'>
             <SystemComponent style={{ transformOrigin: 'left' }} 
@@ -37,7 +38,7 @@ const EditableSectionHeader = ({title, onEditClicked}) => {
             >
                 <Header3>{title}</Header3>
             </SystemComponent>
-            <LargeButton onClickHandler={() => onEditClicked()} variant="cancel">Edit</LargeButton>
+            <LargeButton handleClick={handleEditClicked} variant="cancel">Edit</LargeButton>
         </SystemComponent>
     )
 }
@@ -57,7 +58,7 @@ const NonEditableTextArea = styled(SystemComponent)`
 const SettingsDiv = ({children, title, onEditClicked}) => {
     return (
         <>
-            <EditableSectionHeader title={title} onEditClicked={() => onEditClicked()}/>
+            <EditableSectionHeader title={title} handleEditClicked={() => onEditClicked()}/>
             <SettingsDivBody>
                 {children}
             </SettingsDivBody>
@@ -98,28 +99,19 @@ const ThreeColumnGrid = styled(SystemComponent)`
     }
 `;
 
-const ACTIVE_MODAL = {
-    TEAMS_RESPONSIBILITIES: 0,
-    PROFILE_INFO: 1,
-    EXTERNAL_LINKS: 2,
-    RESUME: 3,
-    NONE: 4
-}
-if (Object.freeze) { Object.freeze(ACTIVE_MODAL); }
-
 const Home = () => {
-    const [ modalVisible, setModalVisible ] = useState(false);
     const [ activeModal, setActiveModal ] = useState(false);
+
+    const handleCloseModal = () => {
+        setActiveModal(ACTIVE_MODAL.NONE);
+    }
 
     return (
         <PageTemplate>
             <>
-                <EditSettingsModal visible={modalVisible} 
+                <SettingsModalSelector  
                     activeModal={activeModal}
-                    onCloseModal={() => {
-                        setModalVisible(false);
-                        setActiveModal(ACTIVE_MODAL.NONE);
-                    }}
+                    handleCloseModal={handleCloseModal}
                 />
                 <SystemComponent display="flex" overflow="hidden">
                     <SideNavContainer>
@@ -129,7 +121,6 @@ const Home = () => {
                         <SettingsDiv title="Teams &amp; Responsibilities" 
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
-                                setModalVisible(true);
                             }
                         }>
                             <SettingsDivSubsection headerText='My Subteams'
@@ -157,7 +148,6 @@ const Home = () => {
                         <SettingsDiv title="Profile Information"
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
-                                setModalVisible(true);
                             }}
                         >
                             <ProfileSummary />
@@ -176,10 +166,9 @@ const Home = () => {
                             />
                         </SettingsDiv>
 
-                        <SettingsDiv title="Profile Information"
+                        <SettingsDiv title="Edit External Accounts"
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS); 
-                                setModalVisible(true);
                             }}
                         >
                             <ThreeColumnGrid>

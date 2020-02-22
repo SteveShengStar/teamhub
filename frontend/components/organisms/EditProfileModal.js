@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import {SystemComponent} from '../atoms/SystemComponents'
+import {SystemComponent} from '../atoms/SystemComponents';
+import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
 
 import Input from '../atoms/Input';
@@ -11,9 +12,18 @@ const CustomInput = styled(Input)`
     width: 100%;
 `;
 
-const EditProfileModal = () => {
+const EditProfileModal = ({visible, handleCloseModal}) => {
+    const handleSave = () => {
+
+    }
+    
     return (
-        <>
+        <EditSettingsModal 
+            visible={visible} 
+            title="Edit Profile Information" 
+            handleCloseModal={handleCloseModal}
+            handleSave={handleSave}
+        >
             <SystemComponent display="grid" 
                 gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
                 gridColumnGap={[20, 30, 40]}
@@ -56,7 +66,7 @@ const EditProfileModal = () => {
                 <CustomInput variant="text" placeholder="Search" value={"Filler"} />
             </SystemComponent>
             
-        </>
+        </EditSettingsModal>
     );
 }
 // TODO: for skills section, allow suggestions to pop up.

@@ -4,6 +4,7 @@ import {SystemComponent} from '../atoms/SystemComponents';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
+import EditSettingsModal from '../molecules/EditSettingsModal';
 import isURL from 'validator/lib/isURL';
 
 const CustomInput = styled(Input)`
@@ -16,10 +17,10 @@ const CustomInput = styled(Input)`
 
 // How about value
 // validation happens here, so just store the value here.
-const URLField = ({headerText, name, placeholder, value, onHandleChange}) => {
+const URLField = ({label, name, placeholder, value, onHandleChange}) => {
     return (
         <>
-            <Header5>{headerText}</Header5>
+            <Header5>{label}</Header5>
             <CustomInput 
                 name={name}
                 placeholder={placeholder}
@@ -32,15 +33,15 @@ const URLField = ({headerText, name, placeholder, value, onHandleChange}) => {
     )
 }
 
-const EditLinksModal = () => {
+const EditLinksModal = ({visible, handleCloseModal}) => {
     
-    const [formValues, setformValues] = useState({
+    const [formValues, setFormValues] = useState({
         facebookUrl: '',
         linkedInUrl: '',
         githubUrl: '',
         websiteUrl: ''
     });
-    const [hasError, setHasError] = setState({
+    const [hasError, setHasError] = useState({
         facebookUrl: '',
         linkedInUrl: '',
         githubUrl: '',
@@ -76,34 +77,41 @@ const EditLinksModal = () => {
     }
 
     return (
-        <SystemComponent display="grid" 
-            gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-            gridColumnGap={[20, 30, 40]}
-            gridAutoRows='minmax(70px, auto)'
+        <EditSettingsModal 
+            visible={visible} 
+            title="Edit External Accounts" 
+            handleCloseModal={handleCloseModal}
+            handleSave={handleSave}
         >
-            <SystemComponent>
-                <URLField
-                    label="Personal Website"
-                    name="websiteUrl"
-                    placeholder="Search" 
-                    value={formValues["websiteUrl"]}
-                    errorText={"Please Enter Valid Facebook Profile Url."}
-                    onHandleChange={handleChange}
-                />
+            <SystemComponent display="grid" 
+                gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
+                gridColumnGap={[20, 30, 40]}
+                gridAutoRows='minmax(70px, auto)'
+            >
+                <SystemComponent>
+                    <URLField
+                        label="Personal Website"
+                        name="websiteUrl"
+                        placeholder="Search" 
+                        value={formValues["websiteUrl"]}
+                        errorText={"Please Enter Valid Facebook Profile Url."}
+                        onHandleChange={handleChange}
+                    />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>Github</Header5>   
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>LinkedIn</Header5>  
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
+                <SystemComponent>   
+                    <Header5>Facebook</Header5>  
+                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                </SystemComponent>
             </SystemComponent>
-            <SystemComponent>
-                <Header5>Github</Header5>   
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>
-                <Header5>LinkedIn</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-            <SystemComponent>   
-                <Header5>Facebook</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
-            </SystemComponent>
-        </SystemComponent>
+        </EditSettingsModal>
     )
 }
 export default EditLinksModal;
