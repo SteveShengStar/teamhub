@@ -37,7 +37,8 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.0.0",
-    "styled-system": "^5.1.2"
+    "styled-system": "^5.1.2",
+    "validator": "^12.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.11",
