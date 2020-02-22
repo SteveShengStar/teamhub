@@ -5,7 +5,6 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import EditSettingsModal from '../molecules/EditSettingsModal';
-import isURL from 'validator/lib/isURL';
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;

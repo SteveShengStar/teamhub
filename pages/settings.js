@@ -58,7 +58,7 @@ const NonEditableTextArea = styled(SystemComponent)`
 const SettingsDiv = ({children, title, onEditClicked}) => {
     return (
         <>
-            <EditableSectionHeader title={title} handleEditClicked={() => onEditClicked()}/>
+            <EditableSectionHeader title={title} handleEditClicked={onEditClicked}/>
             <SettingsDivBody>
                 {children}
             </SettingsDivBody>
