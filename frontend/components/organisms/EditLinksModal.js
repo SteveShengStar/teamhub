@@ -5,6 +5,8 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import EditSettingsModal from '../molecules/EditSettingsModal';
+import theme from '../theme';
+import {isURL} from 'validator';
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -16,7 +18,7 @@ const CustomInput = styled(Input)`
 
 // How about value
 // validation happens here, so just store the value here.
-const URLField = ({label, name, placeholder, value, onHandleChange}) => {
+const URLField = ({label, name, placeholder, value, onHandleChange, error, errorText}) => {
     return (
         <>
             <Header5>{label}</Header5>
@@ -27,7 +29,7 @@ const URLField = ({label, name, placeholder, value, onHandleChange}) => {
                 value={value}
                 onChange={(evt) => onHandleChange(name, evt.target.value)} 
             />
-            <SystemComponent></SystemComponent>
+            {error && <SystemComponent color={theme.colors.alertAction}>{errorText}</SystemComponent>}
         </>
     )
 }
@@ -41,34 +43,48 @@ const EditLinksModal = ({visible, handleCloseModal}) => {
         websiteUrl: ''
     });
     const [hasError, setHasError] = useState({
-        facebookUrl: '',
-        linkedInUrl: '',
-        githubUrl: '',
-        websiteUrl: ''
+        facebookUrl: false,
+        linkedInUrl: false,
+        githubUrl: false,
+        websiteUrl: false
     });
 
-    const validateUrl = (errorList, fieldName, fieldValue, allowedHostsList = false) => {
-        if (!isUrl(fieldValue, {host_whitelist: allowedHostsList})) {
-            errorList[fieldName] = false;
-        } else {
+    const validateUrl = (errorList, fieldName, fieldValue, allowedHosts = false) => {
+        if(!fieldValue) return;
+
+        if (allowedHosts) {
+            allowedHosts = 
+                allowedHosts.concat(allowedHosts.map(host => 'www.'.concat(host)));
+        }
+        console.log(allowedHosts)
+
+        if (!isURL(fieldValue, {require_host: true, 
+                                allow_underscores: true,
+                                host_whitelist: allowedHosts})) {
             errorList[fieldName] = true;
+        } else {
+            errorList[fieldName] = false;
         }
     }
 
     const handleSave = (evt) => {
         evt.preventDefault();
 
-        const errors = {};
+        const errors = {...hasError};
         validateUrl(errors, 'facebookUrl', formValues['facebookUrl'], ['facebook.com']);
         validateUrl(errors, 'githubUrl', formValues['githubUrl'], ['github.com']);
         validateUrl(errors, 'linkedInUrl', formValues['linkedInUrl'], ['linkedin.com']);
         validateUrl(errors, 'websiteUrl', formValues['websiteUrl']);
 
-        // TODO: remove error as soon as typing begins
         setHasError(errors);
     }
 
     const handleChange = (name, value) => {
+        setHasError({
+            ...hasError,
+            [name]: false
+        })
+        
         setFormValues({
             ...formValues,
             [name]: value
@@ -93,21 +109,43 @@ const EditLinksModal = ({visible, handleCloseModal}) => {
                         name="websiteUrl"
                         placeholder="Search" 
                         value={formValues["websiteUrl"]}
-                        errorText={"Please Enter Valid Facebook Profile Url."}
+                        error={hasError['websiteUrl']}
+                        errorText={"Please Enter Valid Url."}
                         onHandleChange={handleChange}
                     />
                 </SystemComponent>
                 <SystemComponent>
-                    <Header5>Github</Header5>   
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                    <URLField
+                        label="Github"
+                        name="githubUrl"
+                        placeholder="Search" 
+                        value={formValues["githubUrl"]}
+                        error={hasError['githubUrl']}
+                        errorText={"Please Enter Valid Github Profile Url."}
+                        onHandleChange={handleChange}
+                    />
                 </SystemComponent>
                 <SystemComponent>
-                    <Header5>LinkedIn</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                    <URLField
+                        label="LinkedIn"
+                        name="linkedInUrl"
+                        placeholder="Search"
+                        value={formValues["linkedInUrl"]}
+                        error={hasError['linkedInUrl']} 
+                        errorText={"Please Enter Valid LinkedIn Profile Url."}
+                        onHandleChange={handleChange}
+                    />
                 </SystemComponent>
                 <SystemComponent>   
-                    <Header5>Facebook</Header5>  
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                    <URLField
+                        label="Facebook"
+                        name="facebookUrl"
+                        placeholder="Search" 
+                        value={formValues["facebookUrl"]}
+                        error={hasError.facebookUrl}
+                        errorText={"Please Enter Valid Facebook Profile Url."}
+                        onHandleChange={handleChange}
+                    />
                 </SystemComponent>
             </SystemComponent>
         </EditSettingsModal>

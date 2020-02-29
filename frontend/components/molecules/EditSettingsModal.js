@@ -52,7 +52,7 @@ const EditSettingsModal = ({className, children, visible, title, handleCloseModa
                     alignItems='center'
                     mt={20}
                 >
-                    <LargeButton variant="primary" onClick={handleSave}>Save</LargeButton>
+                    <LargeButton variant="primary" handleClick={handleSave}>Save</LargeButton>
                     <Button variant="cancel" display="block" ml={theme.space[5]} onClick={handleCloseModal}>Cancel</Button>
                 </SystemComponent>
             </CustomContentContainer>
