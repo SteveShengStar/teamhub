@@ -10,6 +10,7 @@ const greys = [
     '#333333' // dark gray
 ];
 const black = '#131313';
+const frostyBlue = '#d7e8f5'
 const primaryBlue = '#2C8DFF';
 const messagesBlue = '#1C9FFF';
 const themeYellow = '#FED138';
@@ -100,6 +101,7 @@ const theme = {
         greys,
         inactive: greys[2],
         messagesBackground: messagesBlue,
+        listBackgroundBlue: frostyBlue,
         clickUp: clickUpPurple,
         software: softwareMagenta,
         mechanical: mechRed,

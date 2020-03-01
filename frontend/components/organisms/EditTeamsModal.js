@@ -1,13 +1,17 @@
 import {useState} from 'react';
 import styled from 'styled-components';
-import {SystemComponent} from '../atoms/SystemComponents';
+import {SystemComponent, SystemSpan} from '../atoms/SystemComponents';
 import TextArea from '../atoms/TextArea';
 
+import SuggestionBox from '../atoms/SuggestionBox';
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
+
 import {filter} from 'lodash';
+
+import theme from '../theme';
 
 // TODO: make this an atom. It's used by many modals.
 const CustomInput = styled(Input)`
@@ -34,12 +38,53 @@ const subteamThemeMapping = {
     5: "admin"
 };
 
-// The top-level component needs to know which are selected in order to sort the selected ones to the front
-// selected should be a state owned by the parent
+const CrossIcon = styled(SystemComponent)`
+    cursor: pointer;
+`;
 
-// go through only selected subteams first
+const ProjectListItem = ({projName, handleDeselect}) => {
+    return (
+        <SystemComponent 
+            display='flex' 
+            flexDirection='row'
+            mt={0}
+            mr={4}
+            mb={2}
+            ml={0}
+            pt={1}
+            pr={4}  
+            pb={1}
+            pl={4}
+            borderRadius={theme.radii[2]}
+            backgroundColor={theme.colors.listBackgroundBlue}
+        >
+            <SystemComponent mr={3}>{projName}</SystemComponent>
+            <CrossIcon onClick={() => handleDeselect(projName)}><span className="fas fa fa-times"></span></CrossIcon>
+        </SystemComponent>
+    )
+}
+
+const HorizontalList = ({projects, handleDeselectItem}) => {
+    console.log(projects);
+    return(
+        <SystemComponent display="flex"
+            flexDirection="row"
+            flexWrap="wrap"
+            mt={1}
+            mb={2}
+        >
+            {projects.map(proj => 
+                <ProjectListItem projName={proj} handleDeselect={handleDeselectItem}/>
+            )}
+        </SystemComponent>
+    )
+}
+
 const EditTeamsModal = ({visible, handleCloseModal}) => {
     const [selectedSubteams, setSelectedSubteams] = useState([0, 1]);
+    const [project, setProject] = useState('');
+    const [selectedProjects, setSelectedProjects] = useState(['Teamhub', 'Motor Control'])
+    const [roleDescription, setRoleDescription] = useState('');
     
     let nonMemberSubteams = filter(Object.keys(subteamMapping), 
         subteamId => selectedSubteams.includes(parseInt(subteamId, 10)) === false
@@ -48,6 +93,26 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
 
     const handleSave = () => {
 
+    }
+
+    const handleInputChange = (evt) => {
+        setProject(evt.target.value);
+    }
+
+    const addProject = () => {
+        const newProject = project.trim();
+        if (newProject && !selectedProjects.includes(newProject)) setSelectedProjects(selectedProjects.concat(newProject));
+        setProject('');
+    }
+
+    const removeProject = (projectToRemove) => {
+        console.log(projectToRemove);
+        const updatedSelectedProjects = filter(selectedProjects, p => p !== projectToRemove)
+        setSelectedProjects(updatedSelectedProjects);
+    }
+
+    const handleKeyPressed = (evt) => {
+        if (evt.keyCode === 13) addProject();
     }
 
     return (
@@ -114,15 +179,30 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                     </SystemComponent>
                 </SystemComponent>  
                 <SystemComponent>
-                    <Header5>What Projects are you Working on ?</Header5>   
-                    <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+                    <Header5>What Projects are you Working on ?</Header5>
+                    <HorizontalList
+                        projects={selectedProjects}
+                        handleDeselectItem={removeProject}
+                    />
+                    <SystemComponent position="relative">
+                        <SuggestionBox p={theme.space[4]} position="absolute" value={project.trim()} handleClick={addProject}/>
+                        <CustomInput variant="text" 
+                            placeholder="Add Project" 
+                            value={project} 
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyPressed}
+                        />
+                    </SystemComponent>
                 </SystemComponent>
                 <SystemComponent>
                     <Header5>What do you do on Waterloop ?</Header5>  
-                    <TextArea/>
+                    <TextArea value={roleDescription} onChange={(evt) => {setRoleDescription(evt.target.value)}} />
                 </SystemComponent>
             </SystemComponent>            
         </EditSettingsModal>
     );
 }
 export default EditTeamsModal;
+
+// TODO: Maximum length for role description
+// Give suggestions for Projects -- Fetch from backend
