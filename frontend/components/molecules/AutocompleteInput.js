@@ -5,6 +5,9 @@ import theme from '../theme';
 import Header5 from '../atoms/Header5';
 import {SystemComponent} from '../atoms/SystemComponents';
 import Input from '../atoms/Input';
+import {filter} from 'lodash';
+import PropTypes from 'prop-types';
+
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -55,18 +58,30 @@ const HorizontalList = ({listItems, handleDeselect}) => {
 
 // TODO: Make Autocomplete Work
 const AutocompleteInput = ({title,
-                                    listOfSelected,
-                                    handleDeselect,
-                                    placeholder,
-                                    value,
-                                    handleInputChange,
-                                    handleSelect}) => {
+                                listOfSelected,
+                                updateList,
+                                placeholder,
+                                value,
+                                handleInputChange}) => {
 
     const handleKeyDown = (evt) => {
         if (evt.keyCode === 13)
             handleSelect();
     }
 
+    const handleDeselect = (itemToRemove) => {
+        const updatedSelectedProjects = filter(listOfSelected, i => i !== itemToRemove)
+        updateList(updatedSelectedProjects);
+    }
+
+    const handleSelect = () => {
+        const newListItem = value.trim();
+        if (newListItem && !listOfSelected.includes(newListItem)) {
+            updateList(listOfSelected.concat(newListItem));
+        }
+        handleInputChange('');
+    }
+    
     return (
         <SystemComponent>
             <SystemComponent>
@@ -77,16 +92,22 @@ const AutocompleteInput = ({title,
                 handleDeselect={handleDeselect}
             />
             <SystemComponent position="relative">
-                <SuggestionBox p={theme.space[4]} position="absolute" value={value.trim()} handleClick={handleSelect}/>
+                <SuggestionBox p={theme.space[4]} position="absolute" value={value} handleClick={handleSelect}/>
                 <CustomInput 
                     variant="text" 
                     placeholder={placeholder}
                     value={value}
-                    onChange={handleInputChange}
+                    onChange={(evt) => handleInputChange(evt.target.value)}
                     onKeyDown={handleKeyDown}
                 />
             </SystemComponent>
         </SystemComponent>
     );
 }
+
+AutocompleteInput.propTypes = {
+    value: PropTypes.string
+};
+
 export default AutocompleteInput;
+

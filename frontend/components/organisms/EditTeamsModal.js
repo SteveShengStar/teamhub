@@ -44,20 +44,8 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
 
     }
 
-    const handleInputChange = (evt) => {
-        setProject(evt.target.value);
-    }
-
-    const addProject = () => {
-        const newProject = project.trim();
-        if (newProject && !selectedProjects.includes(newProject)) setSelectedProjects(selectedProjects.concat(newProject));
-        setProject('');
-    }
-
-    const removeProject = (projectToRemove) => {
-        console.log(projectToRemove);
-        const updatedSelectedProjects = filter(selectedProjects, p => p !== projectToRemove)
-        setSelectedProjects(updatedSelectedProjects);
+    const handleInputChange = (newProject) => {
+        setProject(newProject);
     }
 
     return (
@@ -127,11 +115,10 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                     <AutocompleteInput 
                         title="What Projects are you Working on?"
                         listOfSelected={selectedProjects}
-                        handleDeselect={removeProject}
+                        updateList={(projList) => setSelectedProjects(projList)}
                         placeholder="Add Project"   
                         value={project}
                         handleInputChange={handleInputChange}
-                        handleSelect={addProject}
                     />
                 </SystemComponent>
                 <SystemComponent>

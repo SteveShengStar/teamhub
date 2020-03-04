@@ -3,6 +3,7 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import {useState} from 'react';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
+import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -70,8 +71,12 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
         email: "",
         program: "",
         term: "",
-        sequence: ""
+        sequence: "",
+        interest: "",
+        skill: ""
     });
+    const [interests, setInterests] = useState([]);
+    const [skills, setSkills] = useState([]);
     const [hasError, setHasError] = useState({ // TODO: Think about different locales later
         firstName: false,
         email: false,
@@ -187,13 +192,26 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
                 />
             </SystemComponent>
 
-            <SystemComponent height={70}>
-                <Header5>Skills</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            <SystemComponent marginBottom="10px">
+                <AutocompleteInput
+                    title="Skills"
+                    placeholder="Add Skills"
+                    listOfSelected={skills}
+                    updateList={setSkills}
+                    value={formValues['skill']}
+                    handleInputChange={(value) => handleInputChange('skill', value)}
+                />
             </SystemComponent>
-            <SystemComponent height={70}>
-                <Header5>Interests</Header5>  
-                <CustomInput variant="text" placeholder="Search" value={"Filler"} />
+            
+            <SystemComponent>
+                <AutocompleteInput
+                    title="Interests"
+                    placeholder="Add Interests"
+                    listOfSelected={interests}
+                    updateList={setInterests}
+                    value={formValues['interest']}
+                    handleInputChange={(value) => handleInputChange('interest', value)}
+                />
             </SystemComponent>
             
         </EditSettingsModal>
