@@ -1,24 +1,15 @@
 import {useState} from 'react';
 import styled from 'styled-components';
-import {SystemComponent, SystemSpan} from '../atoms/SystemComponents';
+import AutocompleteInput from '../molecules/AutocompleteInput';
+import {SystemComponent} from '../atoms/SystemComponents';
 import TextArea from '../atoms/TextArea';
 
-import SuggestionBox from '../atoms/SuggestionBox';
-import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
 import {filter} from 'lodash';
 
-import theme from '../theme';
-
-// TODO: make this an atom. It's used by many modals.
-const CustomInput = styled(Input)`
-    box-sizing: border-box;
-    height: 34px;
-    width: 100%;
-`;
 
 // Subteam ID to String Mapping
 const subteamMapping = {
@@ -37,48 +28,6 @@ const subteamThemeMapping = {
     4: "infrastructure",
     5: "admin"
 };
-
-const CrossIcon = styled(SystemComponent)`
-    cursor: pointer;
-`;
-
-const ProjectListItem = ({projName, handleDeselect}) => {
-    return (
-        <SystemComponent 
-            display='flex' 
-            flexDirection='row'
-            mt={0}
-            mr={4}
-            mb={2}
-            ml={0}
-            pt={1}
-            pr={4}  
-            pb={1}
-            pl={4}
-            borderRadius={theme.radii[2]}
-            backgroundColor={theme.colors.listBackgroundBlue}
-        >
-            <SystemComponent mr={3}>{projName}</SystemComponent>
-            <CrossIcon onClick={() => handleDeselect(projName)}><span className="fas fa fa-times"></span></CrossIcon>
-        </SystemComponent>
-    )
-}
-
-const HorizontalList = ({projects, handleDeselectItem}) => {
-    console.log(projects);
-    return(
-        <SystemComponent display="flex"
-            flexDirection="row"
-            flexWrap="wrap"
-            mt={1}
-            mb={2}
-        >
-            {projects.map(proj => 
-                <ProjectListItem projName={proj} handleDeselect={handleDeselectItem}/>
-            )}
-        </SystemComponent>
-    )
-}
 
 const EditTeamsModal = ({visible, handleCloseModal}) => {
     const [selectedSubteams, setSelectedSubteams] = useState([0, 1]);
@@ -109,10 +58,6 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
         console.log(projectToRemove);
         const updatedSelectedProjects = filter(selectedProjects, p => p !== projectToRemove)
         setSelectedProjects(updatedSelectedProjects);
-    }
-
-    const handleKeyPressed = (evt) => {
-        if (evt.keyCode === 13) addProject();
     }
 
     return (
@@ -179,20 +124,15 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                     </SystemComponent>
                 </SystemComponent>  
                 <SystemComponent>
-                    <Header5>What Projects are you Working on ?</Header5>
-                    <HorizontalList
-                        projects={selectedProjects}
-                        handleDeselectItem={removeProject}
+                    <AutocompleteInput 
+                        title="What Projects are you Working on?"
+                        listOfSelected={selectedProjects}
+                        handleDeselect={removeProject}
+                        placeholder="Add Project"   
+                        value={project}
+                        handleInputChange={handleInputChange}
+                        handleSelect={addProject}
                     />
-                    <SystemComponent position="relative">
-                        <SuggestionBox p={theme.space[4]} position="absolute" value={project.trim()} handleClick={addProject}/>
-                        <CustomInput variant="text" 
-                            placeholder="Add Project" 
-                            value={project} 
-                            onChange={handleInputChange}
-                            onKeyDown={handleKeyPressed}
-                        />
-                    </SystemComponent>
                 </SystemComponent>
                 <SystemComponent>
                     <Header5>What do you do on Waterloop ?</Header5>  

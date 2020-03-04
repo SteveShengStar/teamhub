@@ -73,16 +73,19 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
         sequence: ""
     });
     const [hasError, setHasError] = useState({ // TODO: Think about different locales later
+        firstName: false,
         email: false,
         program: false
     });
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
-        updatedErrorList['email'] = 
-            !isEmail(formValues['email']);
-        //console.log(validProgramPattern.test(formValues['program'].value.trim()));
+        if (!formValues['firstName']) {
+            updatedErrorList['firstName'] = true;
+        }
+        updatedErrorList['email'] = !isEmail(formValues['email']);
         updatedErrorList['program'] = 
+            !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
 
         setHasError(updatedErrorList);
@@ -113,7 +116,9 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
                         name="firstName"
                         placeholder="First Name" 
                         value={formValues['firstName']}
-                        onHandleChange={handleInputChange} />
+                        onHandleChange={handleInputChange}
+                        error={hasError['firstName']}
+                        errorText="Please enter your First Name." />
                 </SystemComponent>
                 <SystemComponent>
                     <InputSegment
