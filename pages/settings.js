@@ -42,7 +42,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
       flexDirection="row"
     >
       <SystemComponent
-        style={{ transformOrigin: "left", marginBottom: "1%" }}
+        style={{ transformOrigin: "left", marginBottom: "1%", marginTop: "1%" }}
         mr={theme.space.editableHeaderMargin}
       >
         <Header2>{title}</Header2>
