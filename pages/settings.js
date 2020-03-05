@@ -51,7 +51,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
 
 const EditButton = styled(LargeButton)`
   margin-top: 1%;
-  margin-bottom: 1%;
+  margin-bottom: 0%;
 `;
 
 const SettingsDivBody = styled(SystemComponent)`
@@ -62,7 +62,7 @@ const SettingsDivBody = styled(SystemComponent)`
 // TODO: Delete this component
 const NonEditableTextArea = styled(SystemComponent)`
   width: 100%;
-  margin-bottom: 3%;
+  margin-bottom: 2%;
 `;
 
 const SettingsDiv = ({ children, title, onEditClicked }) => {

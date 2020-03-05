@@ -96,6 +96,11 @@ const Grid = styled(SystemComponent)`
     grid-template-columns: ${props => props.leftColumnWidth} auto;
     grid-template-rows: ${props => props.leftColumnWidth};
   }
+  @media screen and (min-width: 1800px) {
+    justify-items: left;
+    grid-template-columns: ${props => props.leftColumnWidth} auto;
+    grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
+  }
 `;
 const userInformation = {
   firstName: {
