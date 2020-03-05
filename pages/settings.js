@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { ACTIVE_MODAL } from "../frontend/components/constants";
 import Card from "../frontend/components/atoms/Card";
+import Header2 from "../frontend/components/atoms/Header2";
 import Header3 from "../frontend/components/atoms/Header3";
 import Header5 from "../frontend/components/atoms/Header5";
 import LargeButton from "../frontend/components/atoms/LargeButton";
@@ -43,7 +44,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
         style={{ transformOrigin: "left" }}
         mr={theme.space.editableHeaderMargin}
       >
-        <Header3>{title}</Header3>
+        <Header2>{title}</Header2>
       </SystemComponent>
       <LargeButton handleClick={handleEditClicked}>Edit</LargeButton>
     </SystemComponent>
