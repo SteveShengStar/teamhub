@@ -21,7 +21,6 @@ const Post = () => {
             return true;
         }
     }
-    console.log(selectedMember);
     useEffect(() => {
         if (reroute()) return;
         if (routeId === selectedMember._id);

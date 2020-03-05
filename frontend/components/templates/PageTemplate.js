@@ -17,14 +17,14 @@ export const PageTemplateGridLayout = styled(SystemComponent)`
     }
 `;
 
-const PageTemplate = ({className, title, children}) => (
+const PageTemplate = ({className, title, children, myHubHidden}) => (
     <div>
         <Head>
             <title>{title} | Team Hub</title>
         </Head>
         <Image variant="background" src="/static/background.png" alt="background" position="fixed" left={0} right={0} top={0} bottom={0}/>
         <SystemComponent display="flex" position={["relative", "relative","absolute"]} top={0} left={0} right={0} bottom={0} overflow={["auto", "auto", "hidden"]} alignItems={'stretch'}>
-            <MyHub />
+            { myHubHidden ? null : <MyHub /> }
             <PageTemplateGridLayout
                 className={className}
                 height="inherit"

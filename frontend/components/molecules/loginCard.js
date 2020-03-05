@@ -1,19 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 import GoogleLogin from 'react-google-login';
 
-import Button from '../atoms/Button';
-import Title from '../atoms/Title';
-import Subtitle from '../atoms/Subtitle';
 import Header2 from '../atoms/Header2';
-import Header3 from '../atoms/Header3';
 import Header4 from '../atoms/Header4';
-import Body from '../atoms/Body';
-import Image from '../atoms/Image';
 import Card from '../atoms/Card';
-import Select from '../atoms/Select';
-import Input from '../atoms/Input';
-import theme from '../theme';
 
 const responseGoogle = response => {
     fetch('/api/auth/login', {
