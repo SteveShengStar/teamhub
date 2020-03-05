@@ -14,6 +14,7 @@ import SettingsModalSelector from "../frontend/components/atoms/SettingsModalSel
 
 import PageTemplate from "../frontend/components/templates/PageTemplate";
 import theme from "../frontend/components/theme";
+import { marginBottom } from "styled-system";
 
 // Assumption: I receive an ID representing subteam
 // I can look up the corresponding subteam color code
@@ -41,7 +42,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
       flexDirection="row"
     >
       <SystemComponent
-        style={{ transformOrigin: "left" }}
+        style={{ transformOrigin: "left", marginBottom: "1%" }}
         mr={theme.space.editableHeaderMargin}
       >
         <Header2>{title}</Header2>
