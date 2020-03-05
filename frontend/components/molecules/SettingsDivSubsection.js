@@ -13,6 +13,10 @@ const CustomHeading = styled(Header4)`
     font-size: 16.5px;
 `;
 
+const BoxedListItem_C = styled(BoxedListItem)`
+    margin-right: ${theme.space[5]}px;
+`;
+
 const ListItemWrapper = ({variant, label, isLink}) => (
     <>
         {
@@ -24,8 +28,7 @@ const ListItemWrapper = ({variant, label, isLink}) => (
                         {label}
                     </AnchorListItem>,
                 false: 
-                    <BoxedListItem variant={variant} 
-                        mr={theme.space[5]}
+                    <BoxedListItem_C variant={variant} 
                         text={label}
                     />
             }[isLink]
@@ -33,9 +36,6 @@ const ListItemWrapper = ({variant, label, isLink}) => (
     </>
 );
 
-const BoxedListItem_C = styled(BoxedListItem)`
-    margin-right: ${theme.space[3]}px;
-`;
 
 const SettingsDivSubsection = ({type,
                                 headerText, 
@@ -48,7 +48,6 @@ const SettingsDivSubsection = ({type,
     // TODO: update the keys later
     // TODO: make sure labelValues and labelStylingVariants have same length
     let sectionBody;
-    console.log(type);
     switch(type) {
         case 'normal':
             sectionBody = children;
@@ -71,7 +70,6 @@ const SettingsDivSubsection = ({type,
                 />
             ));
     }
-    console.log(type);
     
     return (
         <SystemComponent>
@@ -80,7 +78,7 @@ const SettingsDivSubsection = ({type,
                     <CustomHeading>{headerText}</CustomHeading>
                 </SystemComponent>
             }
-            <SystemComponent>
+            <SystemComponent display="flex" flexWrap="wrap">
                 {sectionBody}
             </SystemComponent>
         </SystemComponent>

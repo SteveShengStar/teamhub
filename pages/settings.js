@@ -173,7 +173,7 @@ const Home = () => {
                             <SettingsDivSubsection headerText='My Skills'
                                 type="list"
                                 isLabelListSection={true}
-                                labelValues={["Circuit Design", "Web Design", "Public Speaking"]}
+                                labelValues={["Circuit Design", "Web Design", "Public Speaking", "Gift Giving"]}
                                 labelStyleVariants={['cancel', 'cancel', 'cancel']}
                             />
                             <SettingsDivSubsection headerText='My Interests'

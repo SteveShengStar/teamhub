@@ -1,7 +1,7 @@
 import {SystemComponent} from '../SystemComponents';
 
 
-const BoxedListItem = ({variant, text}) => {
+const BoxedListItem = ({className, variant, text}) => {
     return (
         <SystemComponent pt={1}
             pb={1}
@@ -9,7 +9,7 @@ const BoxedListItem = ({variant, text}) => {
             borderRadius={2}
             pl={4}
             pr={4}
-            display="inline-block"
+            className={className}
         >
             {text}
         </SystemComponent>
