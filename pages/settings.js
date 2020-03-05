@@ -61,6 +61,7 @@ const SettingsDivBody = styled(SystemComponent)`
 // TODO: Delete this component
 const NonEditableTextArea = styled(SystemComponent)`
   width: 100%;
+  margin-bottom: 3%;
 `;
 
 const SettingsDiv = ({ children, title, onEditClicked }) => {

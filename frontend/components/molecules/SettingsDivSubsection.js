@@ -11,6 +11,7 @@ import theme from "../theme"; // TODO: use props=>theme instead of importing
 const CustomHeading = styled(Header4)`
   font-size: 16.5px;
   margin-top: 1%;
+  margin-bottom: 1%;
 `;
 
 const ListItemWrapper = ({ variant, label }) => {
