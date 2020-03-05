@@ -45,7 +45,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
         style={{ transformOrigin: "left", marginBottom: "1%", marginTop: "1%" }}
         mr={theme.space.editableHeaderMargin}
       >
-        <Header2>{title}</Header2>
+        <Header3>{title}</Header3>
       </SystemComponent>
       <LargeButton handleClick={handleEditClicked}>Edit</LargeButton>
     </SystemComponent>
