@@ -6,7 +6,7 @@ import Card from '../frontend/components/atoms/Card';
 import Header3 from '../frontend/components/atoms/Header3';
 import Header5 from '../frontend/components/atoms/Header5';
 import LargeButton from '../frontend/components/atoms/LargeButton';
-import {SystemComponent} from '../frontend/components/atoms/SystemComponents';
+import {SystemComponent, SystemLink} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
@@ -27,6 +27,12 @@ const externalLinks = {
     2: "www.github.com",
     3: "www.facebook.com",
 }
+const altText = {
+    0: "Website link",
+    1: "Linkedin Profile link",
+    2: "Github Profile link",
+    3: "Facebook Profile link",
+}
 const externalLinkLabels = ['Personal Website', 'LinkedIN', 'GitHub', 'Facebook'];
 
 
@@ -38,7 +44,7 @@ const EditableSectionHeader = ({title, handleEditClicked}) => {
             >
                 <Header3>{title}</Header3>
             </SystemComponent>
-            <LargeButton handleClick={handleEditClicked} variant="cancel">Edit</LargeButton>
+            <LargeButton handleClick={handleEditClicked} variant="primary">Edit</LargeButton>
         </SystemComponent>
     )
 }
@@ -47,6 +53,9 @@ const EditableSectionHeader = ({title, handleEditClicked}) => {
 
 const SettingsDivBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
+    display: grid;
+    grid-row-gap: ${theme.space[3]}px;
+    margin-bottom: ${theme.space[4]}px;
 `;
 
 // Text Area
@@ -99,6 +108,14 @@ const ThreeColumnGrid = styled(SystemComponent)`
     }
 `;
 
+const NonUnderlinedLink = styled(SystemLink)`
+    text-decoration: none;
+
+    a:hover {
+        color: text-decoration: none;
+    }
+`;
+
 const Home = () => {
     const [ activeModal, setActiveModal ] = useState(false);
 
@@ -124,16 +141,18 @@ const Home = () => {
                             }
                         }>
                             <SettingsDivSubsection headerText='My Subteams'
+                                type='anchorlist'
                                 isLabelListSection={true}
                                 labelValues={subteams}
                                 labelStyleVariants={subteams}
                             />
                             <SettingsDivSubsection headerText='My Projects'
+                                type='anchorlist'
                                 isLabelListSection={true}
                                 labelValues={projects}
                                 labelStyleVariants={['software', 'software']}
                             />
-                            <SettingsDivSubsection headerText='What do I do on Teamhub ?'>
+                            <SettingsDivSubsection headerText='What do I do on Teamhub ?' type='normal'>
                                 <NonEditableTextArea>
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
                                     sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
@@ -152,16 +171,19 @@ const Home = () => {
                         >
                             <ProfileSummary />
                             <SettingsDivSubsection headerText='My Skills'
+                                type="list"
                                 isLabelListSection={true}
                                 labelValues={["Circuit Design", "Web Design", "Public Speaking"]}
                                 labelStyleVariants={['cancel', 'cancel', 'cancel']}
                             />
                             <SettingsDivSubsection headerText='My Interests'
+                                type="list"
                                 isLabelListSection={true}
                                 labelValues={["Self-Driving Cars", "UX Design"]}
                                 labelStyleVariants={['cancel', 'cancel']}
                             />
                             <SettingsDivSubsection headerText='Short Bio'
+                                type="normal"
                                 isLabelListSection={false}
                             />
                         </SettingsDiv>
@@ -177,13 +199,18 @@ const Home = () => {
                                         <SystemComponent gridColumn="1 / 2" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                         >
-                                            <Header5>{externalLinkLabels[i]}</Header5>
+                                            <Header5>
+                                                {externalLinkLabels[i]}
+                                            </Header5>
                                         </SystemComponent>
-                                        <SystemComponent gridColumn="2 / 3" 
+                                        <SystemComponent 
+                                            gridColumn="2 / 3" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            {url}
+                                            <NonUnderlinedLink href={externalLinkLabels[i]} alt={altText[i]}>
+                                                {url}
+                                            </NonUnderlinedLink>
                                         </SystemComponent>
                                     </>
                                 )}
