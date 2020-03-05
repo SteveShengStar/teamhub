@@ -33,7 +33,7 @@ describe('API Integration Testing', () => {
     });
 
     it('Gets info on a member', async (done) => {
-        const testID = '5dbe69a2ae4a666a47273383';
+        const testID = '5e1a1cdd64b10c0008b03fd6';
         const response = await request(server).get(`/api/members/${testID}/info`);
 
         expect(response.statusCode).toBe(200);
