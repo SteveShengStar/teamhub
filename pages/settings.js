@@ -36,9 +36,18 @@ const externalLinkLabels = [
 
 const EditableSectionHeader = ({ title, handleEditClicked }) => {
   return (
-    <SystemComponent display="flex" justifyContent="flex" flexDirection="row">
+    <SystemComponent
+      display="flex"
+      justifyContent="flex"
+      flexDirection="row"
+      alignItems={0}
+    >
       <SystemComponent
-        style={{ transformOrigin: "left", marginBottom: "1%", marginTop: "1%" }}
+        style={{
+          transformOrigin: "left",
+          marginBottom: "0%",
+          marginTop: "0%"
+        }}
         mr={theme.space.editableHeaderMargin}
       >
         <Header3>{title}</Header3>
@@ -50,7 +59,7 @@ const EditableSectionHeader = ({ title, handleEditClicked }) => {
 // TODO: Discuss naming of button colours, especially for gray. "cancel" may be a bad label
 
 const EditButton = styled(LargeButton)`
-  margin-top: 1%;
+  margin-top: 0%;
   margin-bottom: 0%;
 `;
 
@@ -133,7 +142,6 @@ const Home = () => {
               }}
             >
               <SettingsDivSubsection
-                headerText="My Subteams"
                 isLabelListSection={true}
                 labelValues={subteams}
                 labelStyleVariants={subteams}
