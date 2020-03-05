@@ -36,22 +36,23 @@ const externalLinkLabels = [
 
 const EditableSectionHeader = ({ title, handleEditClicked }) => {
   return (
-    <SystemComponent
-      display="flex"
-      justifyContent="flex-start"
-      flexDirection="row"
-    >
+    <SystemComponent display="flex" justifyContent="flex" flexDirection="row">
       <SystemComponent
         style={{ transformOrigin: "left", marginBottom: "1%", marginTop: "1%" }}
         mr={theme.space.editableHeaderMargin}
       >
         <Header3>{title}</Header3>
       </SystemComponent>
-      <LargeButton handleClick={handleEditClicked}>Edit</LargeButton>
+      <EditButton handleClick={handleEditClicked}>Edit</EditButton>
     </SystemComponent>
   );
 };
 // TODO: Discuss naming of button colours, especially for gray. "cancel" may be a bad label
+
+const EditButton = styled(LargeButton)`
+  margin-top: 1%;
+  margin-bottom: 1%;
+`;
 
 const SettingsDivBody = styled(SystemComponent)`
   padding-left: ${theme.space.settingsSubsectionPadding}px;
