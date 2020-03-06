@@ -76,11 +76,22 @@ const CustomCard = styled(Card)`
     overflow-x: hidden;
   }
 `;
+const InlineItemRow = styled(SystemComponent)`
+  display: flex;
+  align-items: center;
+`;
+const CustomBody = styled(Body)`
+  ${props => props.theme.mediaQueries.mobile} {
+    width: 83.5%;
+  }
+`;
 
-// style={{ paddingLeft: "5px" }}
-// variant="variant"
-// placeholder="Day"
-// style={{ lineHeight: "33px" }}
+const GridLayout = styled(SystemComponent)`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  grid-gap: 5px;
+  width: calc(100vw - ${props => props.theme.space.cardPaddingSmall * 2}px);
+`;
 
 const months = [
   { value: "January", label: "January" },
@@ -161,12 +172,6 @@ const LoginStep3 = () => (
           <TermSelect>F23</TermSelect>
           <TermSelect>W24</TermSelect>
         </GridLayout>
-        {/* <Select
-          style={{ paddingLeft: "30px" }}
-          placeholder="Choose Sequence"
-          options={term}
-          width="25%"
-        /> */}
       </div>
 
       <div
@@ -204,22 +209,5 @@ const LoginStep3 = () => (
     </CustomCard>
   </div>
 );
-
-const InlineItemRow = styled(SystemComponent)`
-  display: flex;
-  align-items: center;
-`;
-const CustomBody = styled(Body)`
-  ${props => props.theme.mediaQueries.mobile} {
-    width: 83.5%;
-  }
-`;
-
-const GridLayout = styled(SystemComponent)`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  grid-gap: 5px;
-  width: calc(100vw - ${props => props.theme.space.cardPaddingSmall * 2}px);
-`;
 
 export default LoginStep3;
