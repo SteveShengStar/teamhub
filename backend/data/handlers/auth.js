@@ -71,8 +71,7 @@ auth.login = async (tokenObj) => {
                 const res = await members.add({
                     name: {
                         first: payload['given_name'],
-                        last: payload['family_name'],
-                        display: payload['name']
+                        last: payload['family_name']
                     },
                     email: payload['email'],
                     imageUrl: payload['imageUrl'],
