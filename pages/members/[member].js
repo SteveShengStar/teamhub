@@ -32,7 +32,7 @@ const Post = () => {
             
             return
         }
-        lookupMember(dispatch, routeId);
+        lookupMember(dispatch, window.localStorage.getItem("refreshToken"), routeId);
     }, []);
 
     useEffect(() => {

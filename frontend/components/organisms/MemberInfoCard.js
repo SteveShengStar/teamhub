@@ -34,11 +34,11 @@ const MemberInfoCard = ({memberData, className, onClose}) => {
 
             <ContentContainer>
                 <LeftColumn>
-                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.first} ${memberData.name.last}` : ''} </Header2>
+                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.display}` : ''} </Header2>
                     {
                         memberData.subteam ? (
                             <MemberSubtitle>
-                                Member of <BorderlessButton variant={subteam.toLowerCase()} fontSize="inherit" fontWeight="inherit">
+                                Member of <BorderlessButton variant={subteam ? subteam.toLowerCase() : ""} fontSize="inherit" fontWeight="inherit">
                                     {subteam}
                                 </BorderlessButton> team
                             </MemberSubtitle>
@@ -69,8 +69,8 @@ const MemberInfoCard = ({memberData, className, onClose}) => {
                         </SystemComponent>
                     </PersonalCard>
 
-                    <Header5>Skills</Header5>
-                    <Body>{skills}</Body>
+                    <Header5>Been on team since</Header5>
+                    <Body>{memberData.joined ? `${memberData.joined.season} ${memberData.joined.year}` : ''}</Body>
                 </RightColumn>
             </ContentContainer>
         </InfoCard>

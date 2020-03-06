@@ -55,4 +55,27 @@ export const userLogin = async (response, dispatch) => {
     }
 }
 
+/**
+ * 
+ * @param {*} options 
+ * @param {string} token 
+ * @param {string} id 
+ */
+export const updateUser = async (dispatch, options, token, id) => {
+    try {
+        const res = await api.members.update(options, token, id);
+        if (res && res.success) {
+            const user = await api.members.getMember(id, token);
+            if (user && user.success) {
+                dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
+                return user;
+            }
+        }
+        return;
+    }
+    catch(err) {
+        throw new Error(err)
+    }
+}
+
 export default userReducer;
