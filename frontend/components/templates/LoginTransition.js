@@ -14,11 +14,15 @@ export const LoginTransitionTypes = new Proxy({
 /**
  * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: () => void, setRef: (ref: HTMLElement) => void }}}
  */
-export default ({children, loginTransition}) => {
+export default ({children, loginTransition, shouldHide}) => {
     const ref = useRef(null);
     useEffect(() => {
         loginTransition.setRef(ref);
     }, [ref])
+
+    useEffect(() => {
+        if (shouldHide) loginTransition.hide();
+    }, [shouldHide])
 
     return (
         <Container state={loginTransition.state || LoginTransitionTypes.PRE_TRANSITION} ref={ref}>
@@ -28,13 +32,6 @@ export default ({children, loginTransition}) => {
 }
 
 const Container = styled.div`
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-
     transition: all 1s ease;
-
-    transform: translateX(-100%);
+    transform: translateX(100%);
 `;

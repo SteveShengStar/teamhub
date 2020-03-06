@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { ThemeContext } from "styled-components";
@@ -10,7 +10,7 @@ import Card from '../frontend/components/atoms/Card';
 import Button from "../frontend/components/atoms/Button";
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
-import { searchMembers, lookupMember } from '../frontend/store/reducers/membersReducer';
+import { searchMembers, lookupMember, getFilters } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
@@ -21,6 +21,7 @@ const Home = () => {
     const selectedMember = useSelector(state => state.membersState.selectedMember)
     const loadedMembers = useSelector(state => state.membersState.loadedMembers)
     const [ modalVisible, setModalVisible ] = useState(false);
+    const filters = useSelector(state => state.membersState.filters);
 
     const theme = useContext(ThemeContext);
 
@@ -36,27 +37,20 @@ const Home = () => {
             })
             return
         }
-        lookupMember(dispatch, id);
+        lookupMember(dispatch, localStorage.getItem("refreshToken"), id);
     };
 
     const updateSearchQuery = (input, filters) => {
         let normalized = {};
         Object.keys(filters).forEach(key => {
-            if (filters[key].length > 0) normalized[key] = {
-                _id: filters[key][0].value,
-                name: filters[key][0].label
-            };
+            if (filters[key] && filters[key].length > 0) normalized[key == "roles" ? "memberType" : key.toLowerCase()] = filters[key][0].label
         });
         searchMembers(dispatch, normalized)
     };
 
-    // get filters for members list
-    const filters = (data) => {
-        // get filters
-        return {
-            Program: [],
-        }
-    };
+    useEffect(() => {
+        getFilters(dispatch, localStorage.getItem("refreshToken"));
+    }, [])
 
     return (
         <PageTemplate title="Explore">
@@ -69,7 +63,7 @@ const Home = () => {
                 gridTemplateRows="auto auto"
                 gridTemplateColumns="auto 1fr"
             >
-                <MembersFilterModal visible={modalVisible} filters={filters()}/>
+                <MembersFilterModal visible={modalVisible} filters={filters}/>
                 <MembersListCard
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
                     overflowY={["auto", "auto", "scroll"]}
@@ -86,7 +80,7 @@ const Home = () => {
                             Edit Filters
                         </Button>
                     </SystemComponent>
-                    <MemberFilterComponent filterOptions={filters(members)} updateSearchQuery={updateSearchQuery} />
+                    <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery} />
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </MembersListCard>
                 <MemberCard 

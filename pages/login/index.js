@@ -9,11 +9,12 @@ import { useSelector } from 'react-redux';
 
 export default () => {
     const router = useRouter();
+    const [ shouldHide, setShouldHide ] = useState(false);
     return (
         <PageTemplate myHubHidden={true}>
-            <LoginTransition>
-                <Login onFinish={() => {
-                    router.push("/login/onboarding1")
+            <LoginTransition shouldHide={shouldHide}>
+                <Login shouldHide={() => setShouldHide(true)} onFinish={() => {
+                    router.push("/login/name")
                 }}/>
             </LoginTransition>
         </PageTemplate>
