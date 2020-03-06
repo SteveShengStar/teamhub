@@ -58,8 +58,9 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
             <SystemComponent display="grid" 
                 gridTemplateColumns="100%"
                 gridAutoRows='minmax(70px, auto)'
+                gridRowGap={4}
             >
-                <SystemComponent>
+                <SystemComponent mr>
                     <Header5>Which Subteams are you in ?</Header5>
                     <SystemComponent display='grid' 
                         gridTemplateColumns='1fr 1fr'

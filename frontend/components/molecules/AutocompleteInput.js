@@ -43,16 +43,19 @@ const ProjectListItem = ({projName, handleDeselect}) => {
 
 const HorizontalList = ({listItems, handleDeselect}) => {
     return(
-        <SystemComponent display="flex"
-            flexDirection="row"
-            flexWrap="wrap"
-            mt={1}
-            mb={2}
-        >
-            {listItems.map(proj => 
-                <ProjectListItem projName={proj} handleDeselect={handleDeselect}/>
-            )}
-        </SystemComponent>
+        (listItems && listItems.length > 0) && 
+            (<SystemComponent 
+                display="flex"
+                flexDirection="row"
+                flexWrap="wrap"
+                mt={1}
+                mb={2}
+            >
+                {listItems.map(proj => 
+                    <ProjectListItem projName={proj} handleDeselect={handleDeselect}/>
+                )}
+            </SystemComponent>
+            )
     )
 }
 

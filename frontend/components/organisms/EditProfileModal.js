@@ -192,26 +192,30 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
                 />
             </SystemComponent>
 
-            <SystemComponent marginBottom="10px">
-                <AutocompleteInput
-                    title="Skills"
-                    placeholder="Add Skills"
-                    listOfSelected={skills}
-                    updateList={setSkills}
-                    value={formValues['skill']}
-                    handleInputChange={(value) => handleInputChange('skill', value)}
-                />
-            </SystemComponent>
-            
-            <SystemComponent>
-                <AutocompleteInput
-                    title="Interests"
-                    placeholder="Add Interests"
-                    listOfSelected={interests}
-                    updateList={setInterests}
-                    value={formValues['interest']}
-                    handleInputChange={(value) => handleInputChange('interest', value)}
-                />
+            <SystemComponent display="grid" 
+                gridAutoRows='minmax(70px, auto)'
+            >
+                <SystemComponent pb={4}>
+                    <AutocompleteInput
+                        title="Skills"
+                        placeholder="Add Skills"
+                        listOfSelected={skills}
+                        updateList={setSkills}
+                        value={formValues['skill']}
+                        handleInputChange={(value) => handleInputChange('skill', value)}
+                    />
+                </SystemComponent>
+                
+                <SystemComponent>
+                    <AutocompleteInput
+                        title="Interests"
+                        placeholder="Add Interests"
+                        listOfSelected={interests}
+                        updateList={setInterests}
+                        value={formValues['interest']}
+                        handleInputChange={(value) => handleInputChange('interest', value)}
+                    />
+                </SystemComponent>
             </SystemComponent>
             
         </EditSettingsModal>
