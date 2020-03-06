@@ -12,6 +12,7 @@ import theme from '../../theme';
 const imageUrl = undefined;
 const Grid = styled(SystemComponent)`
     display: grid;
+    width: 85vw;
     grid-template-columns: 100%;
     grid-template-rows: ${props => props.leftColumnWidth};
     justify-items: center;
@@ -39,6 +40,7 @@ const Grid = styled(SystemComponent)`
         & .avatarContainer {
             text-align: left;
         }
+        width: inherit;
 
         grid-template-columns: ${props => props.leftColumnWidth} auto;
         grid-template-rows: ${props => props.leftColumnWidth};
@@ -49,6 +51,7 @@ const Grid = styled(SystemComponent)`
         }
     }
     ${theme.mediaQueries.tablet} {
+        width: 54vw;
         & .avatarContainer {
             text-align: center;
         }
@@ -60,6 +63,7 @@ const Grid = styled(SystemComponent)`
         grid-template-rows: ${props => props.leftColumnWidth} ${props => props.leftColumnWidth};
     }
     @media screen and (min-width: 935px) {
+        width: inherit;
         & .avatarContainer {
             text-align: left;
         }

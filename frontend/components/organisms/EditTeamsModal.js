@@ -64,7 +64,7 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                     <Header5>Which Subteams are you in ?</Header5>
                     <SystemComponent display='grid' 
                         gridTemplateColumns='1fr 1fr'
-                        gridRowGap={10}
+                        gridRowGap={3}
                     >
                         {
                             selectedSubteams.map((subteam, i) => 
