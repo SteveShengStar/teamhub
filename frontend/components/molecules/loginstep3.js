@@ -14,6 +14,7 @@ import Body from "../atoms/Body";
 import Image from "../atoms/Image";
 import Card from "../atoms/Card";
 import Input from "../atoms/Input";
+import TermSelect from "../atoms/TermSelect";
 import theme from "../theme";
 
 const TextBox = styled.textarea`
@@ -101,20 +102,30 @@ const LoginStep3 = () => (
         <InlineItemRow>
           <Header5>What program are you in?</Header5>
         </InlineItemRow>
-        <InlineItemRow>
-          {/* <div style={{ paddingLeft: "30px" }}>
-            <Button>Onstream</Button>
-            <Button>Offstream</Button>
-          </div> */}
-        </InlineItemRow>
+        <InlineItemRow></InlineItemRow>
         <Select placeholder="Choose Program" options={months} width="25%" />
         <Header5>Select your Co-op Sequence</Header5>
-        <Select
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        <TermSelect>F19</TermSelect>
+        {/* <Select
           style={{ paddingLeft: "30px" }}
           placeholder="Choose Sequence"
           options={term}
           width="25%"
-        />
+        /> */}
       </div>
 
       <div
