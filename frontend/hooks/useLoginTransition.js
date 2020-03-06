@@ -1,31 +1,47 @@
 import { useEffect, useState } from "react";
+import { LoginTransitionTypes } from "../components/templates/LoginTransition";
 
-export default function(ref, onExit) {
-    const [ state, setState ] = useState("pre-transition");
+/**
+ * 
+ * @param { HTMLElement } ref  
+ * @param { () => void } onExit 
+ * @returns { { hide: () => void, show: () => void, setRef: (ref: HTMLElement) => void, ref: HTMLElement }}
+ */
+export default function(onExit) {
+    const [ htmlRef, setHTMLRef ] = useState(null);
 
     useEffect(() => {
         const handleEventEnd = () => {
-            if (state == "post-transition") {
-                onExit && onExit()
-            }
+            
         }
-        if (ref && ref.current) ref.current.addEventListener("transitionend", handleEventEnd);
+        if (htmlRef && htmlRef.current) htmlRef.current.addEventListener("transitionend", handleEventEnd);
         return () => {
-            if (ref && ref.current) {
-                return ref.current.removeEventListener("transitionend"< handleEventEnd);
+            if (htmlRef && htmlRef.current) {
+                return htmlRef.current.removeEventListener("transitionend", handleEventEnd);
             }
         }
     });
 
-    useEffect(() => {
-        setState("show");
-    }, [])
-
     function hide() {
-        setState("post-transition")
+        if (htmlRef && htmlRef.current) {
+            htmlRef.current.style.transform = "translateX(100%)";
+        }
+    }
+
+    function show() {
+        if (htmlRef && htmlRef.current) {
+            htmlRef.current.style.transform = "translateX(0)";
+        }
+    }
+
+    /**
+     * @param { HTMLElement } ref
+     */
+    function setRef(ref) {
+        setHTMLRef(ref);
     }
 
     return {
-        state, hide,
+        hide, show, setRef, ref: htmlRef
     }
 }

@@ -1,33 +1,40 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
 
-export default ({children, state}) => {
+export const LoginTransitionTypes = new Proxy({
+    PRE_TRANSITION: "PRE_TRANSITION",
+    POST_TRANSITION: "POST_TRANSITION",
+    SHOWN: "SHOWN"
+}, {
+    set: () => {
+        throw new Error("Can't mutate immutable type LoginTransitionTypes")
+    }
+})
+
+/**
+ * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: () => void, setRef: (ref: HTMLElement) => void }}}
+ */
+export default ({children, loginTransition}) => {
+    const ref = useRef(null);
+    useEffect(() => {
+        loginTransition.setRef(ref);
+    }, [ref])
+
     return (
-        <Container state={state}>
+        <Container state={loginTransition.state || LoginTransitionTypes.PRE_TRANSITION} ref={ref}>
             {children}
         </Container>
     )
 }
 
 const Container = styled.div`
-    position: absolute;
+    position: fixed;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
 
-    transition: all 0.5s ease;
+    transition: all 1s ease;
 
-    transform: ${props => {
-        switch(props.state) {
-            case state == "pre-transition":
-                return "translateX(-100%)"
-            case state == "shown":
-                return "translateX(0)";
-            case state: "post-transition";
-                return "translateX(100%)";
-            default:
-                return "translateX(0)"
-        }
-    }};
+    transform: translateX(-100%);
 `;

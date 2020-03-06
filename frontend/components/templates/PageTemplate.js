@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from "next/head";
 import Image from '../atoms/Image';
 import { SystemComponent } from '../atoms/SystemComponents';
 import Subtitle from '../atoms/Subtitle';
 import MyHub from '../organisms/MyHub';
 import styled from 'styled-components';
+import useLoginController from '../../hooks/useLoginController';
+import useLoginTransition from '../../hooks/useLoginTransition';
 
 export const PageTemplateGridLayout = styled(SystemComponent)`
     display: grid;
@@ -17,28 +19,37 @@ export const PageTemplateGridLayout = styled(SystemComponent)`
     }
 `;
 
-const PageTemplate = ({className, title, children, myHubHidden}) => (
-    <div>
-        <Head>
-            <title>{title} | Team Hub</title>
-        </Head>
-        <Image variant="background" src="/static/background.png" alt="background" position="fixed" left={0} right={0} top={0} bottom={0}/>
-        <SystemComponent display="flex" position={["relative", "relative","absolute"]} top={0} left={0} right={0} bottom={0} overflow={["auto", "auto", "hidden"]} alignItems={'stretch'}>
-            { myHubHidden ? null : <MyHub /> }
-            <PageTemplateGridLayout
-                className={className}
-                height="inherit"
-                p={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
-                width="inherit"
-                mt={["20vw", "20vw", 0]}
-                flex={1}
-                alignItems={'stretch'}
-            >
-                <Subtitle as="h1" alignSelf="end" fontSize={['smallSubtitle','subtitle']} display={["none", "none", "block"]}>{title}</Subtitle>
-                {React.Children.only(children)}
-            </PageTemplateGridLayout>
-        </SystemComponent>
-    </div>
-);
+const PageTemplate = ({className, title, children, myHubHidden}) => {
+    const loginTransition = useLoginTransition();
+    const { canRender } = useLoginController();
+    useEffect(() => {
+        if (canRender) loginTransition.show();
+    }, [canRender, loginTransition.ref])
+    return (
+        <div>
+            <Head>
+                <title>{title} | Team Hub</title>
+            </Head>
+            <Image variant="background" src="/static/background.png" alt="background" position="fixed" left={0} right={0} top={0} bottom={0}/>
+            { canRender && 
+                <SystemComponent display="flex" position={["relative", "relative","absolute"]} top={0} left={0} right={0} bottom={0} overflow={["auto", "auto", "hidden"]} alignItems={'stretch'}>
+                    { myHubHidden ? null : <MyHub /> }
+                    <PageTemplateGridLayout
+                        className={className}
+                        height="inherit"
+                        p={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
+                        width="inherit"
+                        mt={["20vw", "20vw", 0]}
+                        flex={1}
+                        alignItems={'stretch'}
+                    >
+                        <Subtitle as="h1" alignSelf="end" fontSize={['smallSubtitle','subtitle']} display={["none", "none", "block"]}>{title}</Subtitle>
+                        {React.cloneElement(React.Children.only(children), { loginTransition })}
+                    </PageTemplateGridLayout>
+                </SystemComponent>
+            }
+        </div>
+    )
+};
 
 export default PageTemplate;

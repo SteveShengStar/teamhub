@@ -52,7 +52,7 @@ const MemberInfoCard = ({memberData, className, onClose}) => {
                 <RightColumn>
                     <PersonalCard mb={3}>
                         <Image 
-                            src={memberData.picture && memberData.picture.replace(/s96/, "s400") || '/static/default-headshot.png'}
+                            src={memberData.imageUrl && memberData.imageUrl.replace(/s96/, "s400") || '/static/default-headshot.png'}
                             width={'100%'}
                         />
                         <SystemComponent display="flex" flexDirection="column" padding={3}>
