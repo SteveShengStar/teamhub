@@ -9,5 +9,8 @@ export default async (req, res) => {
             const res = await data.auth.login(req.body);
             return res;
         })));
+    } else {
+        res.statusCode = 404;
+        res.end();
     }
 };

@@ -6,6 +6,54 @@ const crypto = require('crypto');
 
 const auth = {};
 
+auth.checkAnyUser = async (authHeader, res) => {
+    if (!authHeader) {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.end('No auth header found.');
+        return false;
+    }
+    const authType = authHeader.split(' ')[0];
+    if (authType !== 'Bearer') {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.end('No bearer token found.');
+        return false;
+    }
+    const authToken = authHeader.split(' ')[1];
+    const searchRes = await members.search({ token: authToken });
+    if (searchRes.length == 0) {
+        res.statusCode = 403;
+        res.end('Token forbidden.');
+        return false;
+    }
+    return true;
+};
+
+auth.checkSpecificUser = async (authHeader, userId, res) => {
+    if (!authHeader) {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.end('No auth header found.');
+        return false;
+    }
+    const authType = authHeader.split(' ')[0];
+    if (authType !== 'Bearer') {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.end('No bearer token found.');
+        return false;
+    }
+    const authToken = authHeader.split(' ')[1];
+    const searchRes = await members.search({ token: authToken });
+    if (searchRes.length == 0 || searchRes[0].id != userId) {
+        res.statusCode = 403;
+        res.end('Token forbidden.');
+        return false;
+    }
+    return true;
+};
+
 auth.login = async (tokenObj) => {
     return util.handleWrapper(async () => {
         const client = new OAuth2Client(authConfig['client_id']);
