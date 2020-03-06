@@ -26,7 +26,23 @@ const TextBox = styled.textarea`
   line-height: 1.2rem;
   border-radius: 5px;
   padding: 15px;
+  ${props => props.theme.mediaQueries.tablet} {
+    width: 600px;
+  }
+  $(props =>props.theme.mediaQueries.mobile) {
+    width: 350px;
+  }
 `;
+const CustomInput = styled(Input)`
+  padding-left: 10px;
+  line-height: 33px;
+  margin-left: 20px;
+`;
+
+// style={{ paddingLeft: "5px" }}
+// variant="variant"
+// placeholder="Day"
+// style={{ lineHeight: "33px" }}
 
 const months = [
   { value: "January", label: "January" },
@@ -79,18 +95,8 @@ const LoginStep3 = () => (
         <Header5>Birthday</Header5>
         <InlineItemRow>
           <Select placeholder="Month" options={months} width="15%" />
-          <Input
-            style={{ paddingLeft: "5px" }}
-            variant="variant"
-            placeholder="Day"
-            style={{ lineHeight: "33px" }}
-          />
-          <Input
-            style={{ paddingLeft: "5px" }}
-            variant="variant"
-            placeholder="Year"
-            style={{ lineHeight: "33px" }}
-          />
+          <CustomInput placeholder="Day" />
+          <CustomInput placeholder="Year" />
         </InlineItemRow>
       </div>
 
@@ -103,7 +109,7 @@ const LoginStep3 = () => (
           <Header5>What program are you in?</Header5>
         </InlineItemRow>
         <InlineItemRow></InlineItemRow>
-        <Select placeholder="Choose Program" options={months} width="25%" />
+        <Input placeholder="Choose Program" options={months} width="25%" />
         <Header5>Select your Co-op Sequence</Header5>
         <TermSelect>F19</TermSelect>
         <TermSelect>W20</TermSelect>
