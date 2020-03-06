@@ -1,13 +1,12 @@
-const data = require('../../../backend/data/index');
+const data = require('../../backend/data/index');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 200;
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
-            const res = await data.auth.login(req.body);
-            return res;
+            return await data.filters.getAll();
         })));
     }
 };
