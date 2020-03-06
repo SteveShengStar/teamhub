@@ -16,9 +16,15 @@ import Card from "../atoms/Card";
 import Input from "../atoms/Input";
 import theme from "../theme";
 
-const TextBox = styled(Input)`
+const TextBox = styled.textarea`
   width: 900px;
   height: 200px;
+  font-family: nunito-sans;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2rem;
+  border-radius: 5px;
+  padding: 15px;
 `;
 
 const months = [
@@ -139,13 +145,11 @@ const LoginStep3 = () => (
         <Header5>Write a little bio!</Header5>
         <Body>
           You gotta write at least 100 words about yourself. If you hate
-          writing, use this template and just change some
+          writing, use this template and just change some content If you're
+          feeling extra craftly, write something different and be creative!
         </Body>
-        <Body>
-          content If you're feeling extra craftly, write something different and
-          be creative!
-        </Body>
-        <TextBox />
+
+        <TextBox placeholder="Write bio here..." />
       </div>
     </Card>
   </div>
