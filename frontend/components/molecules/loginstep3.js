@@ -18,7 +18,7 @@ import TermSelect from "../atoms/TermSelect";
 import theme from "../theme";
 
 const TextBox = styled.textarea`
-  width: 900px;
+  width: 400px;
   height: 200px;
   font-family: nunito-sans;
   font-size: 14px;
@@ -26,11 +26,11 @@ const TextBox = styled.textarea`
   line-height: 1.2rem;
   border-radius: 5px;
   padding: 15px;
+  ${props => props.theme.mediaQueries.mobile} {
+    width: 900px;
+  }
   ${props => props.theme.mediaQueries.tablet} {
     width: 600px;
-  }
-  $(props =>props.theme.mediaQueries.mobile) {
-    width: 350px;
   }
 `;
 const CustomInput = styled(Input)`
@@ -111,20 +111,22 @@ const LoginStep3 = () => (
         <InlineItemRow></InlineItemRow>
         <Input placeholder="Choose Program" options={months} width="25%" />
         <Header5>Select your Co-op Sequence</Header5>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>W20</TermSelect>
-        <TermSelect>S20</TermSelect>
-        <TermSelect>F20</TermSelect>
-        <TermSelect>W21</TermSelect>
-        <TermSelect>S21</TermSelect>
-        <TermSelect>F21</TermSelect>
-        <TermSelect>W22</TermSelect>
-        <TermSelect>S22</TermSelect>
-        <TermSelect>F22</TermSelect>
-        <TermSelect>W23</TermSelect>
-        <TermSelect>S23</TermSelect>
-        <TermSelect>F23</TermSelect>
-        <TermSelect>W24</TermSelect>
+        <GridLayout>
+          <TermSelect>F19</TermSelect>
+          <TermSelect>W20</TermSelect>
+          <TermSelect>S20</TermSelect>
+          <TermSelect>F20</TermSelect>
+          <TermSelect>W21</TermSelect>
+          <TermSelect>S21</TermSelect>
+          <TermSelect>F21</TermSelect>
+          <TermSelect>W22</TermSelect>
+          <TermSelect>S22</TermSelect>
+          <TermSelect>F22</TermSelect>
+          <TermSelect>W23</TermSelect>
+          <TermSelect>S23</TermSelect>
+          <TermSelect>F23</TermSelect>
+          <TermSelect>W24</TermSelect>
+        </GridLayout>
         {/* <Select
           style={{ paddingLeft: "30px" }}
           placeholder="Choose Sequence"
@@ -172,6 +174,13 @@ const LoginStep3 = () => (
 const InlineItemRow = styled(SystemComponent)`
   display: flex;
   align-items: center;
+`;
+
+const GridLayout = styled(SystemComponent)`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+  grid-gap: 5px;
+  width: calc(100vw - ${props => props.theme.space.cardPaddingSmall * 2}px);
 `;
 
 export default LoginStep3;

@@ -23,8 +23,6 @@ const TermSelect = styled(SystemButton)({
     opacity: 0.25
   },
   transition: "all 0.2s ease",
-  cursor: "pointer",
-  marginRight: "10px",
   padding: "8px"
 });
 export default TermSelect;
