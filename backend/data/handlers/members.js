@@ -60,6 +60,9 @@ members.search = async (body, fields, showToken = false) => {
             if (fields['project']) {
                 query.populate('project');
             }
+            if (showToken) {
+                query.select('+token');
+            }
             return (await query.exec());
         } else {
             let res;
