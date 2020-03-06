@@ -18,7 +18,7 @@ import TermSelect from "../atoms/TermSelect";
 import theme from "../theme";
 
 const TextBox = styled.textarea`
-  width: 350px;
+  width: 90%;
   height: 200px;
   font-family: nunito-sans;
   font-size: 14px;
@@ -26,25 +26,54 @@ const TextBox = styled.textarea`
   line-height: 1.2rem;
   border-radius: 5px;
   padding: 15px;
-  ${props => props.theme.mediaQueries.mobile} {
-    width: 900px;
-  }
   ${props => props.theme.mediaQueries.tablet} {
-    width: 600px;
+    /* width: 80vw; */
+    width: 80%;
   }
 `;
+
+const CustomSelect = styled(Select)`
+  line-height: 33px;
+
+  width: 80%;
+
+  margin-bottom: 5px;
+  ${props => props.theme.mediaQueries.tablet} {
+    width: 80%;
+  }
+`;
+
 const CustomInput = styled(Input)`
   padding-left: 10px;
   line-height: 33px;
-  margin-left: 20px;
+  width: 90%;
+
+  margin-bottom: 5px;
+  ${props => props.theme.mediaQueries.mobile} {
+    /* margin-left: 20px; */
+    width: 80%;
+  }
 `;
 
-const DateLayout = styled(SystemComponent)``;
+const DateLayout = styled(SystemComponent)`
+  display: flex;
+  flex-direction: column;
+  ${props => props.theme.mediaQueries.mobile} {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+`;
 
 const CustomCard = styled(Card)`
-  ${props => props.theme.mediaQueries.mobile} {
-    width: 90%;
-    height: 90%;
+  ${props => props.theme.mediaQueries.tablet} {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    max-width: 60%;
+    max-height: 60%;
+    overflow-y: scroll;
+    transform: translate(-50%, -50%);
+    overflow-x: hidden;
   }
 `;
 
@@ -98,7 +127,7 @@ const LoginStep3 = () => (
       >
         <Header5>Birthday</Header5>
         <DateLayout>
-          <Select placeholder="Month" options={months} width="15%" />
+          <CustomSelect placeholder="Month" options={months} />
           <CustomInput placeholder="Day" />
           <CustomInput placeholder="Year" />
         </DateLayout>
@@ -114,7 +143,7 @@ const LoginStep3 = () => (
           <Header5>What program are you in?</Header5>
         </InlineItemRow>
         <InlineItemRow></InlineItemRow>
-        <Input placeholder="Choose Program" options={months} width="25%" />
+        <CustomInput placeholder="Choose Program" options={months} />
         <Header5>Select your Co-op Sequence</Header5>
         <GridLayout>
           <TermSelect>F19</TermSelect>
@@ -146,7 +175,7 @@ const LoginStep3 = () => (
         }}
       >
         <Header5>What are some of your interests?</Header5>
-        <Select options={months} width="100%" />
+        <CustomInput />
       </div>
 
       <div
@@ -155,7 +184,7 @@ const LoginStep3 = () => (
         }}
       >
         <Header5>What are some of your skills?</Header5>
-        <Select options={months} width="100%" />
+        <CustomInput width="100%" />
       </div>
 
       <div
@@ -164,11 +193,11 @@ const LoginStep3 = () => (
         }}
       >
         <Header5>Write a little bio!</Header5>
-        <Body>
+        <CustomBody>
           You gotta write at least 100 words about yourself. If you hate
           writing, use this template and just change some content If you're
           feeling extra craftly, write something different and be creative!
-        </Body>
+        </CustomBody>
 
         <TextBox placeholder="Write bio here..." />
       </div>
@@ -179,6 +208,11 @@ const LoginStep3 = () => (
 const InlineItemRow = styled(SystemComponent)`
   display: flex;
   align-items: center;
+`;
+const CustomBody = styled(Body)`
+  ${props => props.theme.mediaQueries.mobile} {
+    width: 83.5%;
+  }
 `;
 
 const GridLayout = styled(SystemComponent)`
