@@ -85,7 +85,7 @@ auth.login = async (tokenObj) => {
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
-                return await members.search({ email: payload['email'] }).select('+token');
+                return await members.search({ email: payload['email'] });
             }
         }
     });

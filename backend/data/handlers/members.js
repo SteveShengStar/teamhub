@@ -41,7 +41,7 @@ members.getAll = async (fields) => {
 };
 
 
-members.search = async (body, fields) => {
+members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
         if (fields) {
             const query = Member.find(body).select(fields);
@@ -62,13 +62,25 @@ members.search = async (body, fields) => {
             }
             return (await query.exec());
         } else {
-            const res = await (Member.find(body)
-                .populate('skills')
-                .populate('interests')
-                .populate('memberType')
-                .populate('subteam')
-                .populate('project')
-                .exec());
+            let res;
+            if (showToken) {
+                res = await (Member.find(body)
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteam')
+                    .populate('project')
+                    .select('+token')
+                    .exec());
+            } else {
+                res = await (Member.find(body)
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteam')
+                    .populate('project')
+                    .exec());
+            }
             return res;
         }
     });
