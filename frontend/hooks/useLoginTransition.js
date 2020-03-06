@@ -24,7 +24,7 @@ export default function(onExit) {
 
     function hide() {
         if (htmlRef && htmlRef.current) {
-            htmlRef.current.style.transform = "translateX(100%)";
+            htmlRef.current.style.transform = "translateX(-100%)";
         }
     }
 

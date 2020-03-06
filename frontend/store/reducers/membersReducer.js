@@ -4,7 +4,8 @@ import api from "../api";
 export const MemberReducerTypes = new Proxy({
     SET_ALL_MEMBERS: "SET_ALL_MEMBERS",
     SET_SELECTED_MEMBER: "SET_SELECTED_MEMBER",
-    ADD_LOADED_MEMBER: "ADD_LOADED_MEMBER"
+    ADD_LOADED_MEMBER: "ADD_LOADED_MEMBER",
+    LOAD_FILTERS: "LOAD_FILTERS"
 }, {
     set: () => {
         throw new Error("Can't change const MemberReducerTypes")
@@ -14,7 +15,8 @@ export const MemberReducerTypes = new Proxy({
 export const membersInitialState = {
     members: [],
     selectedMember: {},
-    loadedMembers: {}
+    loadedMembers: {},
+    filters: {}
 }
 export default (state = membersInitialState, action) => {
     switch (action.type) {
@@ -40,6 +42,11 @@ export default (state = membersInitialState, action) => {
                     [_id]: action.payload
                 }
             }
+        case "LOAD_FILTERS":
+            return {
+                ...state,
+                filters: action.payload
+            }
         default:
             return state
     }
@@ -47,7 +54,8 @@ export default (state = membersInitialState, action) => {
 
 export async function searchMembers(dispatch, options = { isSSR: true }) {
     try {
-      const res = await api.members.getAll(options);
+      const res = await api.members.getAll(window.localStorage.getItem("refreshToken"), options);
+      console.log(res);
       if (res.success) {
         dispatch({
             type: MemberReducerTypes.SET_ALL_MEMBERS,
@@ -59,16 +67,22 @@ export async function searchMembers(dispatch, options = { isSSR: true }) {
     }
 };
 
-export const lookupMember = async function(dispatch, id) {
+/**
+ * 
+ * @param {*} dispatch 
+ * @param {string} token 
+ * @param {string} id 
+ */
+export const lookupMember = async function(dispatch, token, id) {
     try {
-        const res = await api.members.getMember(id);
+        const res = await api.members.getMember(id, token);
         if (res.success && res.body && res.body.length > 0) {
             dispatch({
-                type: ADD_LOADED_MEMBER,
+                type: "ADD_LOADED_MEMBER",
                 payload: res.body[0]
             });
             dispatch({
-                type: SET_SELECTED_MEMBER,
+                type: "sub",
                 payload: res.body[0]
             })
         }
@@ -76,3 +90,16 @@ export const lookupMember = async function(dispatch, id) {
         console.log(`Error: Failed to fetch member with id ${id} `, err);
     }
 };
+
+export const getFilters = async function(dispatch, token) {
+    try {
+        const res = await api.members.getFilterOptions(token);
+        if (res.success && res.body) {
+            dispatch({ type: MemberReducerTypes.LOAD_FILTERS, payload: res.body })
+            return;
+        }
+    }
+    catch(err) {
+
+    }
+}

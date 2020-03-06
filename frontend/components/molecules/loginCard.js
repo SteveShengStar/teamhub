@@ -9,9 +9,10 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../store/reducers/userReducer';
 
-export default ({onFinish}) => {
+export default ({onFinish, shouldHide}) => {
     const dispatch = useDispatch()
     function responseGoogle(response) {
+        shouldHide && shouldHide()
         userLogin(response, dispatch).then(_ => {
             onFinish && onFinish();
         })
@@ -39,12 +40,12 @@ export default ({onFinish}) => {
 };
 
 const LoginCard = styled(Card)`
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    ${props => props.theme.mediaQueries.tablet} {
-       width: auto;
+    position: relative;
+    
+    ${props => props.theme.mediaQueries.smallDesktop} {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 `
