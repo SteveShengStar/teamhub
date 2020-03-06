@@ -11,30 +11,32 @@ import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivS
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
 
+import member from '../frontend/mockdata/member';
+import {lowerCase} from 'lodash';
+
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import theme from '../frontend/components/theme';
 
+const altText = [
+    "Website link",
+    "Linkedin Profile link",
+    "Github Profile link",
+    "Facebook Profile link"
+]
 
-// Assumption: I receive an ID representing subteam
-// I can look up the corresponding subteam color code
-const subteams = ['software', 'electrical'];
-const projects = ['teamhub', 'test rig programming'];
+const skills = member.skills;
+const subteams = member.subteams;
+const interests = member.interests;
+const projects = member.projects;
+const bio = member.bio;
 
-const externalLinks = {
-    0: "steven.xiong.me",
-    1: "www.linkedin.ca",
-    2: "www.github.com",
-    3: "www.facebook.com",
-}
-const altText = {
-    0: "Website link",
-    1: "Linkedin Profile link",
-    2: "Github Profile link",
-    3: "Facebook Profile link",
-}
-const externalLinkLabels = ['Personal Website', 'LinkedIN', 'GitHub', 'Facebook'];
-
+const externalLinks = [member.facebook, member.github, member.linkedin, member.website];
+const externalLinkLabels = ["Facebook",
+                            "Github",
+                            "LinkedIn",
+                            "Personal Website"];
+    
 
 const EditableSectionHeader = ({title, handleEditClicked}) => {
     return (
@@ -55,7 +57,7 @@ const SettingsDivBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
     display: grid;
     grid-row-gap: ${theme.space[3]}px;
-    margin-bottom: ${theme.space[4]}px;
+    margin-bottom: ${theme.space[5]}px;
 `;
 
 // Text Area
@@ -111,8 +113,8 @@ const ThreeColumnGrid = styled(SystemComponent)`
 const NonUnderlinedLink = styled(SystemLink)`
     text-decoration: none;
 
-    a:hover {
-        color: text-decoration: none;
+    &:hover {
+        text-decoration: underline;
     }
 `;
 
@@ -144,21 +146,16 @@ const Home = () => {
                                 type='anchorlist'
                                 isLabelListSection={true}
                                 labelValues={subteams}
-                                labelStyleVariants={subteams}
+                                labelStyleVariants={subteams.map(subteam => lowerCase(subteam))}
                             />
                             <SettingsDivSubsection headerText='My Projects'
-                                type='anchorlist'
+                                type='list'
                                 isLabelListSection={true}
                                 labelValues={projects}
-                                labelStyleVariants={['software', 'software']}
                             />
                             <SettingsDivSubsection headerText='What do I do on Teamhub ?' type='normal'>
                                 <NonEditableTextArea>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus faucibus 
-                                    sodales blandit. Nam eget dui ipsum. Fusce elit lorem, aliquet sed ipsum quis, 
-                                    euismod porta urna. Suspendisse egestas dui at massa ultricies, in consectetur 
-                                    sapien rutrum. Fusce pulvinar vel felis id pretium. Vestibulum mattis auctor 
-                                    varius. Suspendisse maximus tortor ac lacinia maximus. Nam sit amet ultrices magna. 
+                                    {bio} 
                                 </NonEditableTextArea>
                             </SettingsDivSubsection>
                         </SettingsDiv>
@@ -173,14 +170,12 @@ const Home = () => {
                             <SettingsDivSubsection headerText='My Skills'
                                 type="list"
                                 isLabelListSection={true}
-                                labelValues={["Circuit Design", "Web Design", "Public Speaking", "Gift Giving"]}
-                                labelStyleVariants={['cancel', 'cancel', 'cancel']}
+                                labelValues={skills}
                             />
                             <SettingsDivSubsection headerText='My Interests'
                                 type="list"
                                 isLabelListSection={true}
-                                labelValues={["Self-Driving Cars", "UX Design"]}
-                                labelStyleVariants={['cancel', 'cancel']}
+                                labelValues={interests}
                             />
                             <SettingsDivSubsection headerText='Short Bio'
                                 type="normal"
@@ -194,7 +189,7 @@ const Home = () => {
                             }}
                         >
                             <ThreeColumnGrid>
-                                {Object.values(externalLinks).map((url, i) =>
+                                {externalLinks.map((url, i) =>
                                     <> 
                                         <SystemComponent gridColumn="1 / 2" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
@@ -208,7 +203,7 @@ const Home = () => {
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            <NonUnderlinedLink href={externalLinkLabels[i]} alt={altText[i]}>
+                                            <NonUnderlinedLink href={url} alt={altText[i]}>
                                                 {url}
                                             </NonUnderlinedLink>
                                         </SystemComponent>

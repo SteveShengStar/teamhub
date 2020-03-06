@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
-import { ThemeProvider } from 'styled-components';
+import member from '../../../mockdata/member';
 
 import theme from '../../theme';
 
@@ -97,14 +97,15 @@ const Grid = styled(SystemComponent)`
         grid-template-rows: ${props => props.leftColumnWidth};
     }
 `;
+
 const userInformation = {
     firstName: {
         label: 'First Name',
-        value: "Steven"
+        value: member.name.first
     },
     lastName: {
         label: "Last Name",
-        value: "Xiong"
+        value: member.name.last
     },
     birthDay: {
         label: "Birthday",
@@ -116,7 +117,7 @@ const userInformation = {
     },
     term: {
         label: "Term",
-        value: "3B"
+        value: member.currentSchoolTerm
     },
     email: {
         label: "Email",
@@ -144,6 +145,9 @@ const SettingsHorizontalFlexbox = ({children, leftChildWidth}) => {
 
 // TODO: insert icons to the left of the labels
 const ProfileSummary = () => {
+    let birthday = member.birthday ? new Date(2019, member.birthday.month, member.birthday.day) : new Date();
+    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+
     return (
         <SettingsHorizontalFlexbox leftChildWidth={200}>
             <Image
