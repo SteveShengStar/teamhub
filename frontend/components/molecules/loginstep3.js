@@ -106,18 +106,6 @@ const months = [
   { value: "November", label: "November" },
   { value: "December", label: "December" }
 ];
-const term = [
-  { value: "1A", label: "1A" },
-  { value: "1B", label: "1B" },
-  { value: "2A", label: "2A" },
-  { value: "2B", label: "2B" },
-  { value: "3A", label: "3A" },
-  { value: "3B", label: "3B" },
-  { value: "4A", label: "4A" },
-  { value: "4B", label: "4B" },
-  { value: "5A", label: "5A" },
-  { value: "5B", label: "5B" }
-];
 const Program = [
   { value: "Computer Science", label: "Computer Science" },
   { value: "Mathematics", label: "Mathematics" },
