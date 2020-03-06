@@ -40,12 +40,12 @@ export default ({onFinish, shouldHide}) => {
 };
 
 const LoginCard = styled(Card)`
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    ${props => props.theme.mediaQueries.tablet} {
-       width: auto;
+    position: relative;
+    
+    ${props => props.theme.mediaQueries.smallDesktop} {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
     }
 `
