@@ -103,6 +103,9 @@ const MemberSchema = new Schema({
         type: Member_NameSchema,
         required: true,
     },
+    program: {
+        type: String
+    },
     bio: {
         type: String
     },
