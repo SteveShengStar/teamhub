@@ -6,7 +6,8 @@ import {
   space,
   height,
   width,
-  marginRight
+  marginRight,
+  padding
 } from "styled-system";
 import Button from "./Button";
 
@@ -23,6 +24,7 @@ const TermSelect = styled(SystemButton)({
   },
   transition: "all 0.2s ease",
   cursor: "pointer",
-  marginRight: "10px"
+  marginRight: "10px",
+  padding: "8px"
 });
 export default TermSelect;

@@ -106,20 +106,19 @@ const LoginStep3 = () => (
         <Select placeholder="Choose Program" options={months} width="25%" />
         <Header5>Select your Co-op Sequence</Header5>
         <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
-        <TermSelect>F19</TermSelect>
+        <TermSelect>W20</TermSelect>
+        <TermSelect>S20</TermSelect>
+        <TermSelect>F20</TermSelect>
+        <TermSelect>W21</TermSelect>
+        <TermSelect>S21</TermSelect>
+        <TermSelect>F21</TermSelect>
+        <TermSelect>W22</TermSelect>
+        <TermSelect>S22</TermSelect>
+        <TermSelect>F22</TermSelect>
+        <TermSelect>W23</TermSelect>
+        <TermSelect>S23</TermSelect>
+        <TermSelect>F23</TermSelect>
+        <TermSelect>W24</TermSelect>
         {/* <Select
           style={{ paddingLeft: "30px" }}
           placeholder="Choose Sequence"
