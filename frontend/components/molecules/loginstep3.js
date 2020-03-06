@@ -100,23 +100,21 @@ const LoginStep3 = () => (
       >
         <InlineItemRow>
           <Header5>What program are you in?</Header5>
-          <Header5 style={{ paddingLeft: "40px" }}>
-            Select your Co-op Sequence
-          </Header5>
         </InlineItemRow>
         <InlineItemRow>
-          <Select placeholder="Choose Program" options={months} width="25%" />
-          <Select
-            style={{ paddingLeft: "30px" }}
-            placeholder="Choose Sequence"
-            options={term}
-            width="25%"
-          />
-          <div style={{ paddingLeft: "30px" }}>
+          {/* <div style={{ paddingLeft: "30px" }}>
             <Button>Onstream</Button>
             <Button>Offstream</Button>
-          </div>
+          </div> */}
         </InlineItemRow>
+        <Select placeholder="Choose Program" options={months} width="25%" />
+        <Header5>Select your Co-op Sequence</Header5>
+        <Select
+          style={{ paddingLeft: "30px" }}
+          placeholder="Choose Sequence"
+          options={term}
+          width="25%"
+        />
       </div>
 
       <div
