@@ -30,6 +30,7 @@ const subteams = member.subteams;
 const interests = member.interests;
 const projects = member.projects;
 const bio = member.bio;
+const roleDescription = member.roleDescription;
 
 const externalLinks = [member.facebook, member.github, member.linkedin, member.website];
 const externalLinkLabels = ["Facebook",
@@ -155,7 +156,7 @@ const Home = () => {
                             />
                             <SettingsDivSubsection headerText='What do I do on Teamhub ?' type='normal'>
                                 <NonEditableTextArea>
-                                    {bio} 
+                                    {roleDescription} 
                                 </NonEditableTextArea>
                             </SettingsDivSubsection>
                         </SettingsDiv>
@@ -180,7 +181,9 @@ const Home = () => {
                             <SettingsDivSubsection headerText='Short Bio'
                                 type="normal"
                                 isLabelListSection={false}
-                            />
+                            >
+                                {bio}
+                            </SettingsDivSubsection>
                         </SettingsDiv>
 
                         <SettingsDiv title="Edit External Accounts"

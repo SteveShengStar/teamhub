@@ -13,6 +13,7 @@ const member = {
         day: 20
     },
     bio: "A Short bio.",
+    roleDescription: "I am a member of Teamhub.",
     currentSchoolTerm: "3A",
     program: "Electrical Engineering",
     email: "steveshengstar@gmail.com",

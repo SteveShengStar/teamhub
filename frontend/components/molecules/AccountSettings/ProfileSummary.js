@@ -7,7 +7,6 @@ import member from '../../../mockdata/member';
 
 import theme from '../../theme';
 
-
 // TODO: Set actual image URL later
 // TODO: Use server data
 const imageUrl = undefined;
@@ -82,6 +81,12 @@ const Grid = styled(SystemComponent)`
         grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
         grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
     }
+    @media screen and (min-width: 1270px) {
+        justify-items: left;
+        & table {
+            margin-left: ${props => props.theme.space[4]}px;
+        }
+    }
     @media screen and (min-width: 1320px) {
         & table {
             width: 360px;
@@ -98,6 +103,9 @@ const Grid = styled(SystemComponent)`
     }
 `;
 
+let birthday = member.birthday ? new Date(2019, member.birthday.month, member.birthday.day) : new Date();
+birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+
 const userInformation = {
     firstName: {
         label: 'First Name',
@@ -109,11 +117,11 @@ const userInformation = {
     },
     birthDay: {
         label: "Birthday",
-        value: "Nov 20, 1998"
+        value: birthday
     },
-    birthDay: {
+    program: {
         label: "Program",
-        value: "Computer Engineering"
+        value: member.program
     },
     term: {
         label: "Term",
@@ -121,32 +129,25 @@ const userInformation = {
     },
     email: {
         label: "Email",
-        value: "ssxiong@edu.uwaterloo.ca"
+        value: member.email
     }
 };
 
 // TODO: using styled component may be better
 // because I never pass parameters that actually configure properties of this container.
-const SettingsHorizontalFlexbox = ({children, leftChildWidth}) => {
-
+const SettingsHorizontalFlexbox = ({ children, leftChildWidth }) => {
     return (
-        <Grid 
-            leftColumnWidth={leftChildWidth + 'px'}
-        >
+        <Grid leftColumnWidth={leftChildWidth + "px"}>
             <SystemComponent className="avatarContainer">
                 {children[0]}
             </SystemComponent>
-            <SystemComponent>
-                {children[1]}
-            </SystemComponent>
+            <SystemComponent>{children[1]}</SystemComponent>
         </Grid>
     );
-}
+};
 
 // TODO: insert icons to the left of the labels
 const ProfileSummary = () => {
-    let birthday = member.birthday ? new Date(2019, member.birthday.month, member.birthday.day) : new Date();
-    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     return (
         <SettingsHorizontalFlexbox leftChildWidth={200}>
