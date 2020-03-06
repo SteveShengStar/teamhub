@@ -11,11 +11,9 @@ import Header4 from "../atoms/Header4";
 import Header5 from "../atoms/Header4";
 import Select from "../atoms/Select";
 import Body from "../atoms/Body";
-import Image from "../atoms/Image";
 import Card from "../atoms/Card";
 import Input from "../atoms/Input";
 import TermSelect from "../atoms/TermSelect";
-import theme from "../theme";
 
 const TextBox = styled.textarea`
   width: 90%;
@@ -107,18 +105,6 @@ const months = [
   { value: "October", label: "October" },
   { value: "November", label: "November" },
   { value: "December", label: "December" }
-];
-const term = [
-  { value: "1A", label: "1A" },
-  { value: "1B", label: "1B" },
-  { value: "2A", label: "2A" },
-  { value: "2B", label: "2B" },
-  { value: "3A", label: "3A" },
-  { value: "3B", label: "3B" },
-  { value: "4A", label: "4A" },
-  { value: "4B", label: "4B" },
-  { value: "5A", label: "5A" },
-  { value: "5B", label: "5B" }
 ];
 const Program = [
   { value: "Computer Science", label: "Computer Science" },
