@@ -11,11 +11,9 @@ import Header4 from "../atoms/Header4";
 import Header5 from "../atoms/Header4";
 import Select from "../atoms/Select";
 import Body from "../atoms/Body";
-import Image from "../atoms/Image";
 import Card from "../atoms/Card";
 import Input from "../atoms/Input";
 import TermSelect from "../atoms/TermSelect";
-import theme from "../theme";
 
 const TextBox = styled.textarea`
   width: 90%;
