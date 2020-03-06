@@ -18,7 +18,7 @@ import TermSelect from "../atoms/TermSelect";
 import theme from "../theme";
 
 const TextBox = styled.textarea`
-  width: 400px;
+  width: 350px;
   height: 200px;
   font-family: nunito-sans;
   font-size: 14px;
@@ -37,6 +37,15 @@ const CustomInput = styled(Input)`
   padding-left: 10px;
   line-height: 33px;
   margin-left: 20px;
+`;
+
+const DateLayout = styled(SystemComponent)``;
+
+const CustomCard = styled(Card)`
+  ${props => props.theme.mediaQueries.mobile} {
+    width: 90%;
+    height: 90%;
+  }
 `;
 
 // style={{ paddingLeft: "5px" }}
@@ -73,12 +82,7 @@ const term = [
 
 const LoginStep3 = () => (
   <div>
-    <Card
-      style={{
-        width: "80%",
-        height: "90%"
-      }}
-    >
+    <CustomCard>
       <div
         style={{
           paddingBottom: "10px"
@@ -93,11 +97,12 @@ const LoginStep3 = () => (
         }}
       >
         <Header5>Birthday</Header5>
-        <InlineItemRow>
+        <DateLayout>
           <Select placeholder="Month" options={months} width="15%" />
           <CustomInput placeholder="Day" />
           <CustomInput placeholder="Year" />
-        </InlineItemRow>
+        </DateLayout>
+        <InlineItemRow></InlineItemRow>
       </div>
 
       <div
@@ -167,7 +172,7 @@ const LoginStep3 = () => (
 
         <TextBox placeholder="Write bio here..." />
       </div>
-    </Card>
+    </CustomCard>
   </div>
 );
 
