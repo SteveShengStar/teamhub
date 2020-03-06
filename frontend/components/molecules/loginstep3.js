@@ -119,6 +119,15 @@ const term = [
   { value: "5A", label: "5A" },
   { value: "5B", label: "5B" }
 ];
+const Program = [
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Electrical Engineering", label: "Electrical Engineering" },
+  { value: "Software Engineering", label: "Software Engineering" },
+  { value: "Computer Engineering", label: "Computer Engineering" },
+  { value: "Mechatronics Engineering", label: "Mechatronics Engineering" },
+  { value: "System Design Engineering", label: "System Design Engineering" },
+  { value: "Computer Science", label: "Computer Science" }
+];
 
 const LoginStep3 = () => (
   <div>
@@ -154,7 +163,7 @@ const LoginStep3 = () => (
           <Header5>What program are you in?</Header5>
         </InlineItemRow>
         <InlineItemRow></InlineItemRow>
-        <CustomInput placeholder="Choose Program" options={months} />
+        <CustomSelect placeholder="Choose Program" options={Program} />
         <Header5>Select your Co-op Sequence</Header5>
         <GridLayout>
           <TermSelect>F19</TermSelect>
