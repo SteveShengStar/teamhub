@@ -33,7 +33,10 @@ const testMemberData1 = {
     'stream': {
         'isCoop': true,
         'onStream': true,
-        'coopStream': 1,
+        'coopStream': {
+            'F19': true,
+            'W20': true
+        },
         'currentSchoolTerm': '1A'
     },
     'age': 15,

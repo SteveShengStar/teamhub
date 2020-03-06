@@ -13,7 +13,8 @@ const Member_Stream = new Schema({
         required: true
     },
     coopStream: {
-        type: Number,
+        type: Map,
+        of: Boolean
     },
     currentSchoolTerm: {
         type: String,
