@@ -15,7 +15,7 @@ const MemberListGrid = ({members, onSelect, className, animRef}) => {
                         subteam={member.subteam ? member.subteam.name : ''} 
                         role={member.memberType ? members[key].memberType.name : ''}
                         onClick={() => onSelect(member._id)}
-                        imageUrl={members.imageUrl}
+                        imageUrl={member.imageUrl}
                     />
                 )
             }
