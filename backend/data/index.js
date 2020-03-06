@@ -49,5 +49,6 @@ data.memberTypes = require('./handlers/memberTypes');
 data.subteams = require('./handlers/subteams');
 data.projects = require('./handlers/projects');
 data.auth = require('./handlers/auth');
+data.filters = require('./handlers/filters');
 
 module.exports = data;
