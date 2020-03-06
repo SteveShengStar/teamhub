@@ -80,8 +80,7 @@ const Member_NameSchema = new Schema({
         required: true
     },
     display: {
-        type: String,
-        required: true
+        type: String
     },
 });
 
