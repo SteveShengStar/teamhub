@@ -15,6 +15,7 @@ const CustomHeading = styled(Header4)`
 
 const BoxedListItem_C = styled(BoxedListItem)`
     margin-right: ${theme.space[5]}px;
+    margin-bottom: ${theme.space[2]}px;
 `;
 
 const ListItemWrapper = ({variant, label, isLink}) => (
