@@ -27,7 +27,7 @@ auth.checkAnyUser = async (authHeader, res) => {
         res.end('Token forbidden.');
         return false;
     }
-    return true;
+    return searchRes[0];
 };
 
 auth.checkSpecificUser = async (authHeader, userId, res) => {
