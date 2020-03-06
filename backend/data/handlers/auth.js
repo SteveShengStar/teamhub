@@ -22,7 +22,7 @@ auth.checkAnyUser = async (authHeader, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
-    if (searchRes.length == 0) {
+    if (searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
@@ -46,7 +46,7 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
-    if (searchRes.length == 0 || searchRes[0].id != userId) {
+    if (searchRes.length == 0 || searchRes[0].id != userId || searchRes[0].tokenExpiry >= Date.now()) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
@@ -81,7 +81,10 @@ auth.login = async (tokenObj) => {
                 return res;
             } else {
                 const token = crypto.randomBytes(64).toString('hex');
-                await members.updateMember({ email: payload['email'] }, { token });
+                await members.updateMember({ email: payload['email'] }, {
+                    token,
+                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+                });
                 return await members.search({ email: payload['email'] });
             }
         }
