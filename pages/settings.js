@@ -1,15 +1,15 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import {ACTIVE_MODAL} from '../frontend/components/constants';
 import Card from '../frontend/components/atoms/Card';
-import Header3 from '../frontend/components/atoms/Header3';
 import Header5 from '../frontend/components/atoms/Header5';
-import LargeButton from '../frontend/components/atoms/LargeButton';
+
 import {SystemComponent, SystemLink} from '../frontend/components/atoms/SystemComponents';
 import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
+import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
 
 import member from '../frontend/mockdata/member';
 import {lowerCase} from 'lodash';
@@ -37,22 +37,6 @@ const externalLinkLabels = ["Facebook",
                             "Github",
                             "LinkedIn",
                             "Personal Website"];
-    
-
-const EditableSectionHeader = ({title, handleEditClicked}) => {
-    return (
-        <SystemComponent display='flex' justifyContent='flex-start' flexDirection='row'>
-            <SystemComponent style={{ transformOrigin: 'left' }} 
-                mr={theme.space.editableHeaderMargin}
-            >
-                <Header3>{title}</Header3>
-            </SystemComponent>
-            <LargeButton handleClick={handleEditClicked} variant="primary">Edit</LargeButton>
-        </SystemComponent>
-    )
-}
-// TODO: Discuss naming of button colours, especially for gray. "cancel" may be a bad label
-
 
 const SettingsDivBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
@@ -61,7 +45,6 @@ const SettingsDivBody = styled(SystemComponent)`
     margin-bottom: ${theme.space[5]}px;
 `;
 
-// Text Area
 // TODO: Delete this component
 const NonEditableTextArea = styled(SystemComponent)`
     width: 100%;
@@ -95,6 +78,7 @@ const SideNavMenu = styled(Card)`
     width: "100%";
 `;
 
+// TODO: Add images to make this 3 columns
 const ThreeColumnGrid = styled(SystemComponent)`
     display: grid;
     grid-template-columns: 150px auto;
