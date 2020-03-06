@@ -126,7 +126,8 @@ const Program = [
   { value: "Computer Engineering", label: "Computer Engineering" },
   { value: "Mechatronics Engineering", label: "Mechatronics Engineering" },
   { value: "System Design Engineering", label: "System Design Engineering" },
-  { value: "Computer Science", label: "Computer Science" }
+  { value: "Computer Science", label: "Computer Science" },
+  { value: "Mathematics", label: "Mathematics" }
 ];
 
 const LoginStep3 = () => (
