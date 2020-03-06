@@ -126,7 +126,7 @@ const userInformation = {
 
 // TODO: using styled component may be better
 // because I never pass parameters that actually configure properties of this container.
-const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing}) => {
+const SettingsHorizontalFlexbox = ({children, leftChildWidth}) => {
 
     return (
         <Grid 
@@ -145,7 +145,7 @@ const SettingsHorizontalFlexbox = ({children, leftChildWidth, componentSpacing})
 // TODO: insert icons to the left of the labels
 const ProfileSummary = () => {
     return (
-        <SettingsHorizontalFlexbox leftChildWidth={200} componentSpacing={20}>
+        <SettingsHorizontalFlexbox leftChildWidth={200}>
             <Image
                 height='100%'
                 src={imageUrl || "/static/default-headshot.png"}
