@@ -10,6 +10,8 @@ const testMemberData1 = {
         'last': 'TestUser1010',
         'display': 'TestUser1010'
     },
+    'program': 'Software Engineering',
+    'bio': 'Hello, this is my bio',
     'skills': [
         'MongoDB'
     ],
@@ -23,12 +25,22 @@ const testMemberData1 = {
     'coopExp': [],
     'memberType': 'Newbie',
     'subteam': 'Software',
-    'project': {
-        'name': 'TeamHub',
-        'subteams': [
-            'Software'
-        ]
-    },
+    'projects': [
+        {
+            'project': 'TeamHub',
+            'description': [
+                'descript1',
+                'descript2'
+            ]
+        },
+        {
+            'project': 'Website',
+            'description': [
+                'descriptwebsite1',
+                'descriptwebsite2'
+            ]
+        }
+    ],
     'email': 'testuser1010@testing.ca',
     'stream': {
         'isCoop': true,
@@ -39,6 +51,7 @@ const testMemberData1 = {
         },
         'currentSchoolTerm': '1A'
     },
+    'imageURL': 'www.google.com',
     'age': 15,
     'birthday': {
         'month': 5,
@@ -49,7 +62,8 @@ const testMemberData1 = {
             'type': 'GitHub',
             'link': 'https://github.com/robobob'
         }
-    ]
+    ],
+    'token': 'test-token-123'
 };
 
 const testMemberData2 = {

@@ -34,6 +34,16 @@ const Member_TermSchema = new Schema({
     },
 });
 
+const Member_ProjectSchema = new Schema({
+    project: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: [String]
+    }
+});
+
 const Member_CoopExpSchema = new Schema({
     company: {
         type: String,
@@ -128,12 +138,11 @@ const MemberSchema = new Schema({
         ref: 'MemberType'
     },
     subteam: {
-        type: Schema.Types.ObjectId,
+        type: [Schema.Types.ObjectId],
         ref: 'Subteam',
     },
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project',
+    projects: {
+        type: [Member_ProjectSchema]
     },
     email: {
         type: String,
