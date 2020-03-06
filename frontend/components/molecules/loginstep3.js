@@ -84,6 +84,7 @@ const CustomBody = styled(Body)`
   ${props => props.theme.mediaQueries.mobile} {
     width: 83.5%;
   }
+  font-family: ${props => props.theme.fonts.body};
 `;
 
 const GridLayout = styled(SystemComponent)`
