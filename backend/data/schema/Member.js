@@ -165,7 +165,12 @@ const MemberSchema = new Schema({
         type: [Member_Link]
     },
     token: {
-        type: String
+        type: String,
+        select: false
+    },
+    tokenExpiry: {
+        type: Number,
+        select: false
     }
 });
 

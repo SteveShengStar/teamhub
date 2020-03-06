@@ -75,7 +75,8 @@ auth.login = async (tokenObj) => {
                     },
                     email: payload['email'],
                     imageUrl: payload['imageUrl'],
-                    token
+                    token,
+                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
                 return res;
             } else {
