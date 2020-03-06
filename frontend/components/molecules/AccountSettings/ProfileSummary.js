@@ -17,6 +17,7 @@ const Grid = styled(SystemComponent)`
     justify-items: center;
     & table {
         width: 80vw;
+        margin-top: ${props => props.theme.space[3]}px;
     }
     & .avatarContainer {
         width: 100%;
@@ -25,32 +26,34 @@ const Grid = styled(SystemComponent)`
 
     @media screen and (min-width: 420px) {
         & table {
-            width: 390px;
+            width: 360px;
         }
     }
 
     ${theme.mediaQueries.mobile} {
         & table {
             width: 320px;
+            margin-top: ${props => props.theme.space[0]}px;
+            position: static;
         }
         & .avatarContainer {
             text-align: left;
         }
 
-        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
-        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
+        grid-template-columns: ${props => props.leftColumnWidth} auto;
+        grid-template-rows: ${props => props.leftColumnWidth};
     }
     @media screen and (min-width: 690px) {
         & table {
             width: 390px;
         }
-
-        grid-template-columns: ${props => props.leftColumnWidth} auto ;
-        grid-template-rows: ${props => props.leftColumnWidth};
     }
     ${theme.mediaQueries.tablet} {
         & .avatarContainer {
             text-align: center;
+        }
+        & table {
+            margin-top: ${props => props.theme.space[3]}px;
         }
 
         grid-template-columns: 100%;
@@ -62,44 +65,37 @@ const Grid = styled(SystemComponent)`
         }
         & table {
             width: 340px;
+            margin-top: ${props => props.theme.space[0]}px;
         }
 
-        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
-        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
+        grid-template-columns: ${props => props.leftColumnWidth} auto;
+        grid-template-rows: ${props => props.leftColumnWidth};
     }
     @media screen and (min-width: 1015px) {
         & table {
             width: 390px;
         }
-        grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: ${props => props.leftColumnWidth};
     }
     ${theme.mediaQueries.desktop} {
         & table {
             width: 320px;
         }
-        grid-template-columns: calc(${props => props.leftColumnWidth} - 40px) auto;
-        grid-template-rows: calc(${props => props.leftColumnWidth} - 40px);
     }
     @media screen and (min-width: 1270px) {
         justify-items: left;
         & table {
-            margin-left: ${props => props.theme.space[4]}px;
+            margin-left: ${props => props.theme.space[5]}px;
         }
     }
     @media screen and (min-width: 1320px) {
         & table {
             width: 360px;
         }
-        grid-template-columns: calc(${props => props.leftColumnWidth} - 20px) auto;
-        grid-template-rows: calc(${props => props.leftColumnWidth} - 20px);
     }
     @media screen and (min-width: 1400px) {
         & table {
             width: 390px;
         }
-        grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: ${props => props.leftColumnWidth};
     }
 `;
 
@@ -150,7 +146,7 @@ const SettingsHorizontalFlexbox = ({ children, leftChildWidth }) => {
 const ProfileSummary = () => {
 
     return (
-        <SettingsHorizontalFlexbox leftChildWidth={200}>
+        <SettingsHorizontalFlexbox leftChildWidth={140}>
             <Image
                 height='100%'
                 src={imageUrl || "/static/default-headshot.png"}
