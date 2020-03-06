@@ -94,8 +94,8 @@ members.add = async (memberBody) => {
         memberBody.interests = await util.replaceNamesWithIdsArray(memberBody.interests, interests);
         memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
         memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
-        memberBody.subteam = await util.replaceNameWithId(memberBody.subteam, subteams);
-        memberBody.project = await util.replaceBodyWithId(memberBody.project, projects);
+        memberBody.subteams = await util.replaceNamesWithIdsArray(memberBody.subteams, subteams);
+        memberBody.projects = await util.replaceNamesWithIdsArray(memberBody.project, projects);
         return await Member.create(memberBody);
     });
 };

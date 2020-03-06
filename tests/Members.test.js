@@ -13,10 +13,13 @@ const testMemberData1 = {
     'program': 'Software Engineering',
     'bio': 'Hello, this is my bio',
     'skills': [
-        'MongoDB'
+        'MongoDB',
+        'C++'
     ],
     'interests': [
-        'Database'
+        'Database',
+        'OOP',
+        'Recursion'
     ],
     'joined': {
         'year': 2019,
@@ -24,22 +27,13 @@ const testMemberData1 = {
     },
     'coopExp': [],
     'memberType': 'Newbie',
-    'subteam': 'Software',
+    'subteams': [
+        'Software',
+        'Hardware'
+    ],
     'projects': [
-        {
-            'project': 'TeamHub',
-            'description': [
-                'descript1',
-                'descript2'
-            ]
-        },
-        {
-            'project': 'Website',
-            'description': [
-                'descriptwebsite1',
-                'descriptwebsite2'
-            ]
-        }
+        'TeamHub',
+        'Website'
     ],
     'email': 'testuser1010@testing.ca',
     'stream': {
@@ -120,7 +114,7 @@ describe('Testing Members functions', () => {
         expect(resp.body[0].email).toBeTruthy();
         expect(resp.body[0].name).toBeTruthy();
 
-        await dropTestMember(testMemberData1);
+        //await dropTestMember(testMemberData1);
 
         // Callback to wait until first test done executing
         done();

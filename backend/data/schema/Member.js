@@ -136,13 +136,13 @@ const MemberSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'MemberType'
     },
-    subteam: {
-        type: [Schema.Types.ObjectId],
+    subteams: [{
+        type: Schema.Types.ObjectId,
         ref: 'Subteam',
-    },
-    projects: {
-        type: [Member_ProjectSchema]
-    },
+    }],
+    projects: [{
+        type: Member_ProjectSchema
+    }],
     email: {
         type: String,
         required: true,
