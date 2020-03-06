@@ -120,14 +120,15 @@ const term = [
   { value: "5B", label: "5B" }
 ];
 const Program = [
+  { value: "Computer Science", label: "Computer Science" },
+  { value: "Mathematics", label: "Mathematics" },
   { value: "Mechanical Engineering", label: "Mechanical Engineering" },
   { value: "Electrical Engineering", label: "Electrical Engineering" },
   { value: "Software Engineering", label: "Software Engineering" },
   { value: "Computer Engineering", label: "Computer Engineering" },
   { value: "Mechatronics Engineering", label: "Mechatronics Engineering" },
   { value: "System Design Engineering", label: "System Design Engineering" },
-  { value: "Computer Science", label: "Computer Science" },
-  { value: "Mathematics", label: "Mathematics" }
+  { value: "Management Engineering", label: "Management Engineering" }
 ];
 
 const LoginStep3 = () => (
