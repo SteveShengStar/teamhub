@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
                         fields[field] = 1;
                     }
                 }
-                return await data.members.search(req.body.query, fields);
+                return await data.members.search(req.body.options, fields);
             })));
         }
     } else {

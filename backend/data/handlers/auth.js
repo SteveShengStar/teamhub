@@ -46,9 +46,14 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
-    if (!searchRes || searchRes.length == 0 || searchRes[0].id != userId || searchRes[0].tokenExpiry >= Date.now()) {
+    if (!searchRes || searchRes.length == 0 || searchRes[0].id != userId) {
         res.statusCode = 403;
         res.end('Token forbidden.');
+        return false;
+    }
+    if (searchRes[0].tokenExpiry >= Date.now()) {
+        res.statusCode = 403;
+        res.end('Token expired.');
         return false;
     }
     return true;
