@@ -18,18 +18,36 @@ const termMap = {
 }
 
 export default () => {
-    const user = useSelector(state => state.userState.user);
+    const { user, token } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
     
     const [ shouldHide, setShouldHide ] = useState(false);
 
-    const [ selectedSubteams, setSelectedSubteams ] = useState(user && user.subteams ? user.subteams.map(subteam => subteam.name) : []);
-    const [ selectedProjects, setSelectedProjects ] = useState(user && user.projects ? user.projects.map(project => [project.project, project.description]) : []);
+    const [ selectedSubteams, setSelectedSubteams ] = useState(user && user.subteams && filters.subteams ? user.subteams.map(subteam => {
+        const found = filters.subteams.findIndex(st => st._id == subteam)
+        return found >= 0 ? found : 0
+    }) : []);
+    const [ selectedProjects, setSelectedProjects ] = useState(user && user.projects && filters.projects ? user.projects.map(project => {
+        const found = filters.projects.find(proj => proj._id == project.project)
+        return [found && found.name || "", project.description];
+    }) : []);
     const [ selectedYear, setSelectedYear ] = useState(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
     const [ selectedRole, setSelectedRole ] = useState(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        setSelectedSubteams(user && user.subteams && filters.subteams ? user.subteams.map(subteam => {
+            const found = filters.subteams.findIndex(st => st._id == subteam)
+            return found >= 0 ? found : 0
+        }) : []);
+        setSelectedProjects(user && user.projects && filters.projects ? user.projects.map(project => {
+            const found = filters.projects.find(proj => proj._id == project.project)
+            return [found && found.name || "", project.description];
+        }) : []);
+        setSelectedYear(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
+        setSelectedRole(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
+    }, [filters])
 
     const checkErrors = () => {
         if (!selectedRole.value) {
@@ -46,9 +64,12 @@ export default () => {
         }
         return true;
     }
+
     useEffect(() => {
-        getFilters(dispatch, window.localStorage.getItem("refreshToken"))
-    }, [])
+        if (token && !filters.projects) {
+            getFilters(dispatch, token)
+        }
+    }, [token])
 
     const trySubmit = () => {
         if (!checkErrors()) return;
@@ -66,7 +87,7 @@ export default () => {
                 season: termMap[selectedYear[0]],
                 year: parseInt('20' + selectedYear.slice(1))
             }
-        }, window.localStorage.getItem("refreshToken"), user._id).then(() => {
+        }, token, user._id).then(() => {
             router.push("/login/about");
         })
     }

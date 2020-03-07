@@ -5,10 +5,12 @@ import BorderlessButton from '../atoms/BorderlessButton';
 import { SystemComponent } from '../atoms/SystemComponents';
 import InputPair from './InputPair';
 import useMembersFilters from '../../hooks/useMembersFilters';
+import { useSelector } from 'react-redux';
 
 const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
     const [ onState, setOnState ] = useState(false);
     const [ searchInput, setSearchInput ] = useState("");
+    const { token } = useSelector(state => state.userState);
     const membersFilters = useMembersFilters(filterOptions);
 
     function toggle() {
@@ -17,14 +19,14 @@ const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
 
     useEffect(() => {
         // on change, update query
-        updateSearchQuery && updateSearchQuery(searchInput, membersFilters.states);
+        updateSearchQuery && updateSearchQuery(searchInput);
     }, [searchInput, membersFilters.states]);
     return (
         <SystemComponent ref={animRef}>
             <Search variant="text" placeholder="Search" value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
             <SystemComponent mt={2} display="flex" flexDirection="row-reverse" display={["none", "none", "flex"]}>
-                <BorderlessButton onClick={toggle}>{onState ? 'Hide Filters' : 'Show Filters'}</BorderlessButton>
-                <BorderlessButton mr={5}>Show Sort</BorderlessButton>
+                {/*<BorderlessButton onClick={toggle}>{onState ? 'Hide Filters' : 'Show Filters'}</BorderlessButton> */}
+                {/*<BorderlessButton mr={5}>Show Sort</BorderlessButton>*/}
             </SystemComponent>
             {
                 onState && (

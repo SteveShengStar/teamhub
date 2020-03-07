@@ -31,6 +31,7 @@ export const executeRequest = (request) => {
  * @param {*} dispatch
  */
 export const refreshable = (endpoint, token, options, dispatch) => {
+    if (token == null) throw new Error("Null token for " + endpoint)
     return fetch(endpoint, {...options, headers: {
         ...(options.headers && { ...options.headers }),
         authorization: `Bearer ${token}`

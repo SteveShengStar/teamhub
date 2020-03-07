@@ -33,7 +33,6 @@ export default ({
             }
         });
     const { projects } = useSelector(state => state.membersState.filters);
-    console.log(projects);
     return (
         <>
             <FormCard>

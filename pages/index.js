@@ -28,6 +28,10 @@ const Home = () => {
     const [ modalVisible, setModalVisible ] = useState(false);
     const memberCardRef = useRef();
 
+    const [ searchQuery, setSearchQuery ] = useState({})
+
+    const userState = useSelector(state => state.userState);
+
     const onSelectMember = (id) => {
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
             router.push(`/members/${id}`);
@@ -40,20 +44,29 @@ const Home = () => {
             })
             return
         }
-        lookupMember(dispatch, localStorage.getItem("refreshToken"), id);
+        lookupMember(dispatch, userState.token, id);
     };
 
-    const updateSearchQuery = (input, filters) => {
+    const updateSearchQuery = (input) => {
+        if (typeof(input) == "string") {
+            setSearchQuery({...searchQuery, name: input})
+            return;
+        }
+        console.log(userState)
         let normalized = {};
         Object.keys(filters).forEach(key => {
             if (filters[key] && filters[key].length > 0) normalized[key == "roles" ? "memberType" : key.toLowerCase()] = filters[key][0].label
         });
-        searchMembers(dispatch, normalized)
+        setSearchQuery({...searchQuery, ...normalized})
     };
 
     useEffect(() => {
-        getFilters(dispatch, localStorage.getItem("refreshToken"));
-    }, [])
+        if (userState.token && filters.projects) searchMembers(dispatch, userState.token, searchQuery)
+    }, [searchQuery])
+
+    useEffect(() => {
+        if (userState.token && filters.projects) getFilters(dispatch, userState.token);
+    }, [userState.token])
 
     useEffect(() => {
         if (selectedMember._id) {
@@ -75,9 +88,9 @@ const Home = () => {
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}
                 gridTemplateRows="auto auto"
-                gridTemplateColumns="auto 1fr"
+                gridTemplateColumns="1fr auto"
             >
-                <MembersFilterModal visible={modalVisible} filters={filters}/>
+                <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery}/>
                 <MembersListCard
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
                     overflowY={["auto", "auto", "scroll"]}
@@ -88,7 +101,7 @@ const Home = () => {
                     <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start">
                         <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                         <Button 
-                            display={["block", "block", "none"]}
+                            display={"block"}
                             onClick={() => setModalVisible(!modalVisible)}
                         >
                             Edit Filters
@@ -112,7 +125,6 @@ const Home = () => {
                                 payload: {}
                             })
                         })
-                        
                     }}
                 />
             </SystemComponent>
@@ -123,8 +135,8 @@ const Home = () => {
 export default Home;
 
 const MembersListCard = styled(Card)`
-    transition: transform 0.2s ease-out;
-    -webkit-transition: transform 0.5s ease;
+    transition: all 0.2s ease-out;
+    -webkit-transition: all 0.5s ease;
 
     width: calc(100vw - ${props => 2 * props.theme.space.cardMarginSmall + 2 * props.theme.space.cardPaddingSmall}px);
     top: 0;
@@ -135,7 +147,7 @@ const MembersListCard = styled(Card)`
     }
 
     ${props => props.theme.mediaQueries.smallDesktop} {
-        width: 35vw;
+        width: auto;
     }
 `
 
@@ -145,7 +157,9 @@ const MemberCard = styled(MemberInfoCard)`
         display: grid !important;
         width: auto;
         position: relative;
-        height: auto;
+        height: inherit;
         transition: all 0.2s ease-in-out;
+        transform: translateX(110%);
+        grid-row: 1/3;
     }
 `;

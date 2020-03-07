@@ -3,6 +3,7 @@ import { useRouter } from "next/router"
 import { useSelector, useDispatch } from "react-redux";
 import api from "../store/api";
 import { UserTypes } from "../store/reducers/userReducer";
+import { getFilters } from "../store/reducers/membersReducer";
 
 /**
  * @param { () => void } onRender
@@ -17,6 +18,10 @@ export default (onRender) => {
     useEffect(() => {
         if (!userState.hydrated) return;
         // get refresh token
+        if (userState.token) {
+            redirectUser();
+            return;
+        };
         const token = window.localStorage.getItem("refreshToken");
         if (!token) {
             // if there is no refresh we take them to the login page
@@ -26,7 +31,7 @@ export default (onRender) => {
         if (!userState.user || !userState.user._id) {
             api.auth.loginWithToken(token).then(user => {
                 if (user) {
-                    dispatch({type: UserTypes.RECEIVED_LOGIN, payload: user })
+                    dispatch({type: UserTypes.RECEIVED_LOGIN, token: token, payload: user })
                     redirectUser()
                 }
                 else if (router.pathname != "/login") router.push("/login");

@@ -52,11 +52,10 @@ export default (state = membersInitialState, action) => {
     }
 }
 
-export async function searchMembers(dispatch, options = { isSSR: true }) {
+export async function searchMembers(dispatch, token, options = { isSSR: true }) {
     try {
-      const res = await api.members.getAll(window.localStorage.getItem("refreshToken"), options, dispatch);
-      console.log(res);
-      if (res.success) {
+      const res = await api.members.getAll(token, options, dispatch);
+      if (res && res.success) {
         dispatch({
             type: MemberReducerTypes.SET_ALL_MEMBERS,
             payload: res.body
