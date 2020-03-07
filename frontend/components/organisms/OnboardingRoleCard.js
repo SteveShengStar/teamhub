@@ -37,24 +37,24 @@ export default ({
                 <Subtitle>Tell us more about yourself</Subtitle>
                 <div css={`display: grid; grid-template-rows: 1fr auto; height: calc(100% - 50px);`}>
                     <FlexColumn mt={3}>
-                        <div css={`display: grid; grid-template-columns: 1fr 1fr; grid-gap: 20px; align-items: end;`}>
-                            <SystemComponent>
-                                <FormTitleHeader>When did you join the team?</FormTitleHeader>
-                                <Select 
-                                    options={options} 
-                                    onChange={val => setSelectedYear(val.value)}
-                                    value={{value: selectedYear, label: `${terms[selectedYear[0]]} 20${selectedYear.slice(1)}`}}
-                                />
-                            </SystemComponent>
-                            <SystemComponent>
-                                <FormTitleHeader>What's your main role?</FormTitleHeader>
-                                <Select 
-                                    value={{value: selectedRole.value, label: selectedRole.label}}
-                                    onChange={val => setSelectedRole(val)}
-                                    options={roleOptions.map(val => ({value: val._id, label: val.name}))}
-                                />
-                            </SystemComponent>
-                        </div>
+                        <SystemComponent>
+                            <FormTitleHeader>When did you join the team?</FormTitleHeader>
+                            <Select 
+                                options={options} 
+                                onChange={val => setSelectedYear(val.value)}
+                                value={{value: selectedYear, label: `${terms[selectedYear[0]]} 20${selectedYear.slice(1)}`}}
+                            />
+                        </SystemComponent>
+                            
+
+                        <SystemComponent>
+                            <FormTitleHeader>What's your main role?</FormTitleHeader>
+                            <Select 
+                                value={{value: selectedRole.value, label: selectedRole.label}}
+                                onChange={val => setSelectedRole(val)}
+                                options={roleOptions.map(val => ({value: val._id, label: val.name}))}
+                            />
+                        </SystemComponent>
 
                         <SystemComponent>
                             <FormTitleHeader>What subteam are you on?</FormTitleHeader>

@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Button from '../../frontend/components/atoms/Button';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import { getFilters } from "../../frontend/store/reducers/membersReducer"
+import { useRouter } from 'next/router';
 
 
 const termMap = {
@@ -19,6 +20,7 @@ const termMap = {
 export default () => {
     const user = useSelector(state => state.userState.user);
     const filters = useSelector(state => state.membersState.filters);
+    const router = useRouter();
     
     const [ shouldHide, setShouldHide ] = useState(false);
 
@@ -48,13 +50,11 @@ export default () => {
         getFilters(dispatch, window.localStorage.getItem("refreshToken"))
     }, [])
 
-    console.log(user);
-
     const trySubmit = () => {
         if (!checkErrors()) return;
         setShouldHide(true);
         updateUser(dispatch, {
-            subteam: selectedSubteams.map(index => filters.subteams[index]._id),
+            subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: selectedProjects.map(project => {
                 return {
                     project: project[0],
@@ -67,7 +67,7 @@ export default () => {
                 year: parseInt('20' + selectedYear.slice(1))
             }
         }, window.localStorage.getItem("refreshToken"), user._id).then(() => {
-            console.log("Success");
+            router.push("/login/about");
         })
     }
     return (
