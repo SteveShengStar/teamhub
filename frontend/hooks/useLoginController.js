@@ -15,7 +15,6 @@ export default (onRender) => {
     const dispatch = useDispatch();
     const userState = useSelector(state => state.userState);
     useEffect(() => {
-        console.log(userState)
         if (!userState.hydrated) return;
         // get refresh token
         const token = window.localStorage.getItem("refreshToken");

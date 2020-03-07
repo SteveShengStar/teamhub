@@ -48,10 +48,11 @@ const userReducer = (state = usersInitialState, action) => {
  */
 export const userLogin = async (response, dispatch) => {
     try {
-        const user = await api.auth.login(response);
-        if (user && user.body && user.body.token) {
-            window.localStorage.setItem("refreshToken", user.body.token);
-            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body, display: response.profileObj.name });
+        const res = await api.auth.login(response);
+        const user = res && res.body && res.body[0] || res.body;
+        if (user && user.token) {
+            window.localStorage.setItem("refreshToken", user.token);
+            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, display: response.profileObj.name });
         }
         else {
             dispatch({ type: UserTypes.FAILED_LOGIN })

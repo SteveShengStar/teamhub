@@ -8,10 +8,11 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import { useRouter } from 'next/router';
 
 const Home = () => {
-    const user = useSelector(state => state.userState.user)
+    const userState = useSelector(state => state.userState)
+    const user = userState.user;
     const dispatch = useDispatch();
     const router = useRouter();
-    const [ nameInput, setNameInput ] = useState(user && user.tempDisplayName || "");
+    const [ nameInput, setNameInput ] = useState(userState && userState.tempDisplayName || "");
     const [ shouldHide, setShouldHide ] = useState(false);
 
     const trySubmit = () => {
