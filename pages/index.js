@@ -52,20 +52,26 @@ const Home = () => {
             setSearchQuery({...searchQuery, name: input})
             return;
         }
-        console.log(userState)
         let normalized = {};
-        Object.keys(filters).forEach(key => {
-            if (filters[key] && filters[key].length > 0) normalized[key == "roles" ? "memberType" : key.toLowerCase()] = filters[key][0].label
+        Object.keys(input).forEach(key => {
+            if (input[key] && input[key].length > 0) {
+                let newKey = key.toLowerCase()
+                if (key == "roles") newKey = "roles";
+                normalized[newKey] = input[key][0].label
+            }
         });
-        setSearchQuery({...searchQuery, ...normalized})
+        setSearchQuery({...normalized, name: searchQuery.name})
     };
 
     useEffect(() => {
-        if (userState.token && filters.projects) searchMembers(dispatch, userState.token, searchQuery)
-    }, [searchQuery])
+        if (userState.token && !filters.projects) {
+            console.log(filters)
+            searchMembers(dispatch, userState.token, searchQuery)
+        }
+    }, [searchQuery, userState.token])
 
     useEffect(() => {
-        if (userState.token && filters.projects) getFilters(dispatch, userState.token);
+        if (userState.token && !filters.projects) getFilters(dispatch, userState.token);
     }, [userState.token])
 
     useEffect(() => {
@@ -90,7 +96,7 @@ const Home = () => {
                 gridTemplateRows="auto auto"
                 gridTemplateColumns="1fr auto"
             >
-                <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery}/>
+                <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery} hide={() => setModalVisible(false)}/>
                 <MembersListCard
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
                     overflowY={["auto", "auto", "scroll"]}
@@ -107,7 +113,7 @@ const Home = () => {
                             Edit Filters
                         </Button>
                     </SystemComponent>
-                    <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery} />
+                    <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </MembersListCard>
                 <MemberCard 

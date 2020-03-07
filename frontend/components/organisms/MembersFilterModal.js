@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../molecules/Modal";
 import { SystemComponent } from "../atoms/SystemComponents";
 import Header3 from "../atoms/Header3";
@@ -6,8 +6,12 @@ import useMembersFilters from "../../hooks/useMembersFilters";
 import InputPair from "../molecules/InputPair";
 import Button from "../atoms/Button";
 
-const MembersFilterModal = ({className, visible, filters, updateSearchQuery}) => {
+const MembersFilterModal = ({className, visible, filters, updateSearchQuery, hide}) => {
     const membersFilters = useMembersFilters(filters);
+    useEffect(() => {
+        // on change, update query
+        updateSearchQuery && updateSearchQuery(membersFilters.states);
+    }, [membersFilters.states]);
     return (
         <Modal className={className} visible={visible}>
             <SystemComponent display="flex" flexDirection="column" overflowY="scroll" height="auto">
@@ -34,16 +38,13 @@ const MembersFilterModal = ({className, visible, filters, updateSearchQuery}) =>
                                     }
                                     return { value: option._id, label: option.name }
                                 })}
-                                onChange={() => {
-                                    membersFilters.handleFilterChange
-                                    updateSearchQuery && updateSearchQuery(membersFilters.states);
-                                }} 
+                                onChange={membersFilters.handleFilterChange} 
                                 value={membersFilters.states[name]}
                             />
                         )
                     }
                 </SystemComponent>
-                <Button alignSelf="flex-end">Done</Button>
+                <Button alignSelf="flex-end" onClick={hide}>Done</Button>
             </SystemComponent>
         </Modal>
     );
