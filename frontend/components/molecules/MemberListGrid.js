@@ -48,7 +48,7 @@ const Container = styled(SystemComponent)`
     padding: 10px ${props => props.theme.space.cardPaddingSmall}px 0;
 
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, auto));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: min-content;
     align-items: start;
 

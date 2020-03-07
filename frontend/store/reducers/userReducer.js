@@ -11,6 +11,7 @@ export const UserTypes = new Proxy({
 
 export const usersInitialState = {
     user: {},
+    token: "",
     tempDisplayName: "",
     hydrated: false
 }
@@ -22,11 +23,13 @@ const userReducer = (state = usersInitialState, action) => {
             return {
                 ...state,
                 user: action.payload,
+                ...(action.token && { token: action.token }),
                 ...(action.display && {tempDisplayName: action.display })
             };
         case UserTypes.FAILED_LOGIN:
             return {
                 ...state,
+                token: "",
                 user: {}
             }
         case "persist/REHYDRATE":
@@ -52,7 +55,7 @@ export const userLogin = async (response, dispatch) => {
         const user = res && res.body && res.body[0] || res.body;
         if (user && user.token) {
             window.localStorage.setItem("refreshToken", user.token);
-            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, display: response.profileObj.name });
+            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, token: user.token, display: response.profileObj.name });
         }
         else {
             dispatch({ type: UserTypes.FAILED_LOGIN })

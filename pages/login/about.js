@@ -10,19 +10,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
 export default () => {
-  const user = useSelector(state => state.userState.user);
+  const { user, token } = useSelector(state => state.userState);
   const [shouldHide, setShouldHide] = useState(false);
   const [birthday, setBirthday] = useState(user && user.birthday ? [user.birthday.month || 0, user.birthday.day || 1, user.birthday.year || 2000] : [0,1,2000]);
   const [program, setProgram ] = useState(user && user.program || "");
-  const [term, setTerm] = useState("");
-  const [coopSequence, setCoopSequence] = useState({});
-  const [interests, setInterests] = useState([]);
-  const [skills, setSkills] = useState([]);
-  const [bio, setBio] = useState("");
+  const [term, setTerm] = useState(user && user.stream && user.stream.currentSchoolTerm || "");
+  const [coopSequence, setCoopSequence] = useState(user && user.stream && user.stream.coopStream || {});
+  const [interests, setInterests] = useState(user && user.interests && user.interests.map(it => it.name) || []);
+  const [skills, setSkills] = useState(user && user.skills && user.skills.map(sk => sk.name) || []);
+  const [bio, setBio] = useState(user && user.bio || "");
 
   const router = useRouter()
 
   const dispatch = useDispatch()
+
+  console.log(user && user.interests )
 
   function trySubmit() {
     if (!program) {
@@ -49,7 +51,7 @@ export default () => {
       interests: interests.map(val => val.value),
       skills: skills.map(skill => skill.value),
       bio
-    }, localStorage.getItem("refreshToken"), user._id).then(res => {
+    }, token, user._id).then(res => {
       router.push("/")
     })
   }
