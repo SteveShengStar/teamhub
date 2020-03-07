@@ -35,7 +35,7 @@ const testMemberData1 = {
         {
             'project': 'TeamHub',
             'description': 'Test1'
-        },{
+        }, {
             'project': 'Website',
             'description': 'Test2'
         }
@@ -119,7 +119,7 @@ describe('Testing Members functions', () => {
         expect(resp.body[0].email).toBeTruthy();
         expect(resp.body[0].name).toBeTruthy();
 
-        //await dropTestMember(testMemberData1);
+        await dropTestMember(testMemberData1);
 
         // Callback to wait until first test done executing
         done();

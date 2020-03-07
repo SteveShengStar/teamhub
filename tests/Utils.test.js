@@ -48,8 +48,8 @@ describe('Testing Utility functions', () => {
     it('Tests retrieving IDs for multiple document bodies', async () => {
 
         const resp = await data.util.replaceBodiesWithIdsArray([{
-            name: 'Javascript',
-            category: 'Software'
+            name: 'Eating Cheese',
+            category: 'Misc'
         }], skills);
 
         // Check if array contains ids
