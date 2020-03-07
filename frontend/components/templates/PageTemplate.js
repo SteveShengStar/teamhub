@@ -60,6 +60,7 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
             mt={["20vw", "20vw", 0]}
             flex={1}
             alignItems={"stretch"}
+            opacity={canRender ? 1 : 0}
           >
             <Subtitle
               as="h1"
