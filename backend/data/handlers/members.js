@@ -67,7 +67,13 @@ members.search = async (body, fields, showToken = false) => {
             if (showToken) {
                 query.select('+token');
             }
-            return (await query.exec());
+            let res = (await query.exec());
+            if (searchByDisplayName) {
+                res = res.filter(function (entry) {
+                    return entry.name.display === searchByDisplayName;
+                }).pop();
+            }
+            return res;
         } else {
             let res;
             if (showToken) {
@@ -89,8 +95,8 @@ members.search = async (body, fields, showToken = false) => {
                     .exec());
             }
             if (searchByDisplayName) {
-                res = res.name.filter(function (name) {
-                    return name.display === searchByDisplayName;
+                res = res.filter(function (entry) {
+                    return entry.name.display === searchByDisplayName;
                 }).pop();
             }
             return res;
