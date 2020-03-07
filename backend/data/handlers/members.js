@@ -43,7 +43,10 @@ members.getAll = async (fields) => {
 
 members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
-        console.log(body, fields);
+        const searchByDisplayName = body.displayName;
+        if (searchByDisplayName) {
+            delete body.displayName;
+        }
         if (fields) {
             const query = Member.find(body).select(fields);
             if (fields['skills']) {
@@ -84,6 +87,11 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('subteam')
                     .populate('project')
                     .exec());
+            }
+            if (searchByDisplayName) {
+                res = res.name.filter(function (name) {
+                    return name.display === searchByDisplayName;
+                }).pop();
             }
             return res;
         }
