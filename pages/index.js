@@ -65,7 +65,6 @@ const Home = () => {
 
     useEffect(() => {
         if (userState.token && !filters.projects) {
-            console.log(filters)
             searchMembers(dispatch, userState.token, searchQuery)
         }
     }, [searchQuery, userState.token])
@@ -161,7 +160,7 @@ const MemberCard = styled(MemberInfoCard)`
     display: none !important;
     ${props => props.theme.mediaQueries.tablet} {
         display: grid !important;
-        width: auto;
+        width: 30vw;
         position: relative;
         height: inherit;
         transition: all 0.2s ease-in-out;
