@@ -9,6 +9,7 @@ import Body from "../atoms/Body";
 import Card from "../atoms/Card";
 import TermSelect from "../atoms/TermSelect";
 import Button from "../atoms/Button";
+import { useSelector } from "react-redux";
 
 const months = [
   { value: 0, label: "January" },
@@ -26,21 +27,14 @@ const months = [
 ];
 const days = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-const Program = [
-  { value: "Computer Science", label: "Computer Science" },
-  { value: "Mathematics", label: "Mathematics" },
-  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-  { value: "Electrical Engineering", label: "Electrical Engineering" },
-  { value: "Software Engineering", label: "Software Engineering" },
-  { value: "Computer Engineering", label: "Computer Engineering" },
-  { value: "Mechatronics Engineering", label: "Mechatronics Engineering" },
-  { value: "System Design Engineering", label: "System Design Engineering" },
-  { value: "Management Engineering", label: "Management Engineering" }
-];
+const programs = ["Computer Science", "Mathematics", "Mechanical Engineering", 
+"Electrical Engineering", "Software Engineering", "Computer Engineering", "Mechatronics Engineering", "Systems Design Engineering",
+"Management Engineering", "Physics", "AFM", "CFM"]
 
 const terms = ["F19", "W20", "S20", "F20", "W21", "S21", "F21", "W22", "S22", "F22", "W23", "S23", "F23", "W24", "S24", "F24"]
 
 export default ({values, setValues, submit}) => {
+  const { interests, skills, years } = useSelector(state => state.membersState.filters)
     return (
       <CustomCard>
         <Subtitle mb={3}>Tell us more about yourself</Subtitle>
@@ -56,7 +50,7 @@ export default ({values, setValues, submit}) => {
             placeholder="Day" 
             variant="text" 
             options={[...Array(days[0])].map((_, day) => ({value: day + 1, label: day + 1 < 10 ? "0" + (day + 1) : day + 1}))}
-            value={{value: values.birthday[1], label: values.birthday[1]}}
+            value={{value: values.birthday[1], label: values.birthday[1] < 10 ? '0' + values.birthday[1] : values.birthday[1]}}
             onChange={val => setValues.setBirthday([values.birthday[0], val.value, values.birthday[2]])}
             />
           <Select 
@@ -69,16 +63,28 @@ export default ({values, setValues, submit}) => {
         </DateLayout>
         <InlineItemRow></InlineItemRow>
 
-        <InlineItemRow>
-          <Header5 mb={1} mt={4}>What program are you in?</Header5>
-        </InlineItemRow>
-        <InlineItemRow></InlineItemRow>
-        <Select 
-          placeholder="Choose Program" 
-          options={Program} 
-          value={{value: values.program, label: values.program}}
-          onChange={val => setValues.setProgram(val.value)}
-        />
+          <DateLayout>
+            <SystemComponent>
+              <Header5 mb={1} mt={4}>What program are you in?</Header5>
+              <CreatableSelect 
+                placeholder="Choose Program" 
+                options={programs.map(program => ({value: program, label: program}))} 
+                value={{value: values.program, label: values.program}}
+                onChange={val => setValues.setProgram(val.value)}
+              />
+            </SystemComponent>
+
+            <SystemComponent>
+              <Header5 mb={1} mt={4}>What term are you on?</Header5>
+              <Select 
+                options={years ? years.map(year => ({value: year, label: year})) : []} 
+                value={{value: values.term, label: values.term}}
+                onChange={val => setValues.setTerm(val.value)}
+              />
+            </SystemComponent>
+          </DateLayout>
+          
+        
         <Header5 mb={1} mt={4}>Which terms are you onstream?</Header5>
         <GridLayout>
           {
@@ -106,10 +112,11 @@ export default ({values, setValues, submit}) => {
           isMulti 
           variant="text" 
           placeholder="Interests"
+          options={interests ? interests.map(interest => ({value: interest.name, label: interest.name})) : []}
           values={values.interests}
           onChange={values => {
             setValues.setInterests(values);
-          }}          
+          }}
         />
 
         <Header5 mt={4} mb={1}>What are some of your skills?</Header5>
@@ -117,6 +124,7 @@ export default ({values, setValues, submit}) => {
           isMulti 
           variant="text" 
           placeholder="Skills"
+          options={skills ? skills.map(skill => ({value: skill.name, label: skill.name})) : []}
           values={values.skills}
           onChange={values => {
             setValues.setSkills(values);
@@ -124,12 +132,6 @@ export default ({values, setValues, submit}) => {
         />
 
         <Header5 mt={4} mb={1}>Write a little bio!</Header5>
-        <CustomBody>
-          You gotta write at least 100 words about yourself. If you hate
-          writing, use this template and just change some content If you're
-          feeling extra craftly, write something different and be creative!
-        </CustomBody>
-
         <TextBox placeholder="Write bio here..." value={values.bio} onChange={e => setValues.setBio(e.target.value)}/>
 
         <ContinueButton onClick={submit}>Continue</ContinueButton>

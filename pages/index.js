@@ -140,9 +140,9 @@ const MembersListCard = styled(Card)`
 `
 
 const MemberCard = styled(MemberInfoCard)`
-    display: none;
+    display: none !important;
     ${props => props.theme.mediaQueries.tablet} {
-        display: grid;
+        display: grid !important;
         width: auto;
         position: relative;
         height: auto;

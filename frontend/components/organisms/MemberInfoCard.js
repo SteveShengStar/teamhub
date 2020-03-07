@@ -16,7 +16,7 @@ import Button from '../atoms/Button';
 import { useSelector } from 'react-redux';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
-    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
+    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
     const { subteams, projects } = useSelector(state => state.membersState.filters);
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
@@ -28,9 +28,11 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
             descriptions: project.description
         }
     });
-
     const subteam = memberSubteams && memberSubteams.length > 0 && memberSubteams[0].name ? memberSubteams[0].name : "";
-    console.log(memberData);
+
+    const terms = ["W", "F", "S"];
+    const date = new Date();
+    const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
     return (
         <InfoCard className={className} ref={animRef}>
@@ -39,17 +41,18 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                 alignSelf="start"
                 justifySelf="end"
                 onClick={onClose}
+                gridColumn={2/3}
             >
                 Close
             </Button>
 
             <ContentContainer>
                 <LeftColumn>
-                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.display}` : ''} </Header2>
+                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.display || (memberData.name.first + " " + memberData.name.last)}` : ''} </Header2>
                     {
                         memberData.subteams ? (
                             <MemberSubtitle>
-                                Member of <BorderlessButton variant={ subteam && subteam.toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
+                                { memberData && memberData.memberType && memberData.memberType.name || "Member" } on <BorderlessButton variant={ subteam && subteam.toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
                                     { subteam}
                                 </BorderlessButton> team
                             </MemberSubtitle>
@@ -72,10 +75,9 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <Header5 mb={1}>Projects</Header5>
                         <div css="display: flex; flex-direction: column;">
                             {
-                                memberProjects && memberProjects.map(project => {
-                                    console.log(project)
+                                memberProjects && memberProjects.map((project, i) => {
                                     return (
-                                        <div>
+                                        <div key={i}>
                                             {project.name + ((project.descriptions && project.descriptions.length > 0) ?
                                                     " | " + project.descriptions.join(" • ") : "")
                                             }
@@ -85,6 +87,17 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                             }
                         </div>
                     </>}
+
+                    {memberData && memberData.interests && memberData.interests.length > 0 && <>
+                        <Header5 mt={3} mb={1}>Interests</Header5>
+                        <Body>{memberData.interests.map(interest => interest.name).join(" • ")}</Body>
+                    </>}
+
+                    {memberData && memberData.skills && memberData.skills.length > 0 && <>
+                        <Header5 mt={3} mb={1}>Skills</Header5>
+                        <Body>{memberData.skills.map(skill => skill.name).join(" • ")}</Body>
+                    </>}
+                    
                 </LeftColumn>
 
                 <RightColumn>
@@ -107,8 +120,18 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         </SystemComponent>
                     </PersonalCard>
 
-                    <Header5>Been on team since</Header5>
-                    <Body>{memberData.joined ? `${memberData.joined.season} ${memberData.joined.year}` : ''}</Body>
+                    {
+                        memberData.stream && memberData.stream.currentSchoolTerm && memberData.program &&
+                            <>
+                                <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
+                                <InlineItemRow>
+                                    <Dot onStream={memberData.stream.coopStream[code]}/>
+                                    <Body as="div">{memberData.stream.coopStream[code] ? "Onstream" : "Offstream"}</Body>
+                                </InlineItemRow>
+                            </>
+                    }
+                    <Header5 mt={2} mb={1}>Been on team since</Header5>
+                    <Body mb={5}>{memberData.joined ? `${memberData.joined.season} ${memberData.joined.year}` : ''}</Body>
                 </RightColumn>
             </ContentContainer>
         </InfoCard>
@@ -181,4 +204,12 @@ const SubteamsContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min-content, 100px));
     margin: 0 0 20px 0;
+`
+
+const Dot = styled.div`
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    margin: 0 3px 0 0;
+    background-color: ${props => props.onStream ? "#32E67E" : props.theme.colors.theme};
 `

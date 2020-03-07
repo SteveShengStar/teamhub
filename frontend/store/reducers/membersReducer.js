@@ -54,7 +54,7 @@ export default (state = membersInitialState, action) => {
 
 export async function searchMembers(dispatch, options = { isSSR: true }) {
     try {
-      const res = await api.members.getAll(window.localStorage.getItem("refreshToken"), options);
+      const res = await api.members.getAll(window.localStorage.getItem("refreshToken"), options, dispatch);
       console.log(res);
       if (res.success) {
         dispatch({
@@ -75,7 +75,7 @@ export async function searchMembers(dispatch, options = { isSSR: true }) {
  */
 export const lookupMember = async function(dispatch, token, id) {
     try {
-        const res = await api.members.getMember(id, token);
+        const res = await api.members.getMember(id, token, dispatch);
         if (res.success && res.body && res.body.length > 0) {
             dispatch({
                 type: "ADD_LOADED_MEMBER",
@@ -93,7 +93,7 @@ export const lookupMember = async function(dispatch, token, id) {
 
 export const getFilters = async function(dispatch, token) {
     try {
-        const res = await api.members.getFilterOptions(token);
+        const res = await api.members.getFilterOptions(token, dispatch);
         if (res.success && res.body) {
             dispatch({ type: MemberReducerTypes.LOAD_FILTERS, payload: res.body })
             return;

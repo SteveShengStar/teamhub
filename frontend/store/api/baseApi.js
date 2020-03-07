@@ -21,3 +21,23 @@ export const executeRequest = (request) => {
         headers
     }).then((res) => res.data);
 };
+
+
+/**
+ * 
+ * @param {string} endpoint 
+ * @param {string} token
+ * @param {*} options
+ * @param {*} dispatch
+ */
+export const refreshable = (endpoint, token, options, dispatch) => {
+    return fetch(endpoint, {...options, headers: {
+        ...(options.headers && { ...options.headers }),
+        authorization: `Bearer ${token}`
+    }})
+        .then(res => res.json())
+        .catch(err => {
+            window.localStorage.removeItem("refreshToken");
+            dispatch({ type: "RESET" });
+        })
+}

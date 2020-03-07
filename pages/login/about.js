@@ -7,15 +7,20 @@ import Button from "../../frontend/components/atoms/Button";
 import styled from "styled-components";
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 export default () => {
   const user = useSelector(state => state.userState.user);
-  const [birthday, setBirthday] = useState([6,23,2001]);
-  const [program, setProgram ] = useState("");
+  const [shouldHide, setShouldHide] = useState(false);
+  const [birthday, setBirthday] = useState(user && user.birthday ? [user.birthday.month || 0, user.birthday.day || 1, user.birthday.year || 2000] : [0,1,2000]);
+  const [program, setProgram ] = useState(user && user.program || "");
+  const [term, setTerm] = useState("");
   const [coopSequence, setCoopSequence] = useState({});
   const [interests, setInterests] = useState([]);
   const [skills, setSkills] = useState([]);
   const [bio, setBio] = useState("");
+
+  const router = useRouter()
 
   const dispatch = useDispatch()
 
@@ -28,33 +33,37 @@ export default () => {
       alert("Coop sequence is 0!");
       return;
     }
-    if (!bio.length) {
+    if (!bio) {
       alert("No bio is set");
       return;
     }
-
+    if (!term) {
+      alert("No term is picked");
+      return;
+    }
+    setShouldHide(true)
     updateUser(dispatch, {
       birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,
-      stream: { coopStream: coopSequence },
+      stream: { coopStream: coopSequence, currentSchoolTerm: term },
       interests: interests.map(val => val.value),
       skills: skills.map(skill => skill.value),
       bio
     }, localStorage.getItem("refreshToken"), user._id).then(res => {
-      console.log(res)
+      router.push("/")
     })
   }
   return (
     <>
       <PageTemplate myHubHidden title="Onboarding">
-        <LoginTransition>
+        <LoginTransition shouldHide={shouldHide}>
           <OnboardingAboutCard 
             submit={trySubmit}
             values={{
-              birthday, program, coopSequence, setCoopSequence, interests, skills, bio
+              birthday, program, coopSequence, setCoopSequence, interests, skills, bio, term
             }}
             setValues={{
-              setBirthday, setProgram, setCoopSequence, setInterests, setSkills, setBio
+              setBirthday, setProgram, setCoopSequence, setInterests, setSkills, setBio, setTerm
             }}
           />
         </LoginTransition>
