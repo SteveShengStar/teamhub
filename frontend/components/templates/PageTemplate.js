@@ -51,7 +51,7 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
           overflow={["auto", "auto", "hidden"]}
           alignItems={"stretch"}
         >
-          {myHubHidden ? null : <MyHub />}
+          {/*myHubHidden ? null : <MyHub />*/}
           <PageTemplateGridLayout
             className={className}
             height="inherit"

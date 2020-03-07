@@ -29,10 +29,11 @@ const Background = styled.div`
     background-color: rgba(0,0,0,0.6);
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
-    display: grid;
     justify-items: center;
     align-items: center;
     align-content: center;
+    padding: 20vw 0 0 7.5vw;
+    overflow: scroll;
     ${props => props.visible ?
         `
             opacity: 1;
@@ -47,8 +48,8 @@ const Background = styled.div`
 `;
 
 const ContentContainer = styled(SystemComponent)`
-    max-height: calc(100vh - 40vw);
     width: 80vw;
+    margin: 0 0 20px 0;
     display: block;
     border-radius: ${props => props.theme.radii.small}px;
     box-shadow: ${props => props.theme.shadows.default}px;
