@@ -61,7 +61,7 @@ export default () => {
                     description: project[1]
                 }
             }),
-            memberType: selectedRole.value,
+            memberType: selectedRole.label,
             joined: {
                 season: termMap[selectedYear[0]],
                 year: parseInt('20' + selectedYear.slice(1))

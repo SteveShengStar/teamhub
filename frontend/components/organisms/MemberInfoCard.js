@@ -13,13 +13,24 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
+import { useSelector } from 'react-redux';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
-    let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
+    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
+    const { subteams, projects } = useSelector(state => state.membersState.filters);
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const subteams = memberData.subteams ? memberData.subteams.name : '';
+    const memberSubteams = memberData.subteams && memberData.subteams.map(value => subteams.find(subteam => subteam._id == value));
+    const memberProjects = memberData.projects && memberData.projects.map(project => {
+        const value = projects.find(val => val._id == project.project );
+        return {
+            name: value ? value.name : "",
+            descriptions: project.description
+        }
+    });
+
+    const subteam = memberSubteams && memberSubteams.length > 0 && memberSubteams[0].name ? memberSubteams[0].name : "";
+    console.log(memberData);
 
     return (
         <InfoCard className={className} ref={animRef}>
@@ -38,15 +49,42 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                     {
                         memberData.subteams ? (
                             <MemberSubtitle>
-                                Member of <BorderlessButton variant={subteams && subteams.length > 0 && subteams[0].toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
-                                    {subteams}
+                                Member of <BorderlessButton variant={ subteam && subteam.toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
+                                    { subteam}
                                 </BorderlessButton> team
                             </MemberSubtitle>
                         )
                             : <MemberSubtitle>New Member</MemberSubtitle>
                     }
 
-                    <Body mb={3}>{memberData.bio || ''}</Body>
+                    <Body mb={5}>{memberData.bio || ''}</Body>
+
+                    {memberSubteams && memberSubteams.length > 0 && <>
+                        <Header5 mb={1}>Subteams</Header5>
+                        <SubteamsContainer>
+                            {
+                                memberSubteams.map((subteam, i) => <Button key={i} variant={subteam.name.toLowerCase()}>{subteam.name}</Button>)
+                            }
+                        </SubteamsContainer>
+                    </>}
+
+                    {memberData && memberData.projects && memberData.projects.length > 0 && <>
+                        <Header5 mb={1}>Projects</Header5>
+                        <div css="display: flex; flex-direction: column;">
+                            {
+                                memberProjects && memberProjects.map(project => {
+                                    console.log(project)
+                                    return (
+                                        <div>
+                                            {project.name + ((project.descriptions && project.descriptions.length > 0) ?
+                                                    " | " + project.descriptions.join(" • ") : "")
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </>}
                 </LeftColumn>
 
                 <RightColumn>
@@ -137,4 +175,10 @@ const RightColumn = styled.div`
     ${props => props.theme.mediaQueries.tablet} {
         padding: 0;
     }
+`
+
+const SubteamsContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min-content, 100px));
+    margin: 0 0 20px 0;
 `

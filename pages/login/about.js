@@ -33,9 +33,8 @@ export default () => {
       return;
     }
 
-    const bdate = new Date(birthday[2], birthday[0], birthday[1]);
     updateUser(dispatch, {
-      birthday: { month: birthday[0], day: birthday[1] }, age: Math.floor((new Date().getTime() - bdate.getTime()) / 1000 / 60 / 60 / 24 / 365),
+      birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,
       stream: { coopStream: coopSequence },
       interests: interests.map(val => val.value),

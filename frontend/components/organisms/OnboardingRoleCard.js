@@ -77,7 +77,9 @@ export default ({
                             <CreatableSelect 
                                 isMulti
                                 onChange={items => {
-                                    setSelectedProjects(items ? items.map(item => [item.value, []]) : [])
+                                    const difference = items ? items.filter(item => !selectedProjects.find(proj => proj[0] == item.value)).map(item => [item.value, []]) : [];
+                                    const intersection = selectedProjects.filter(project => items && items.find(it => it.value == project[0]))
+                                    setSelectedProjects([...intersection, ...difference])
                                 }}
                                 value={selectedProjects.map(item => ({value: item[0], label: item[0]}))}
                             />
