@@ -108,6 +108,11 @@ members.delete = async (body) => {
 
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
+        body.interests ? body.interests = await util.replaceNamesWithIdsArray(body.interests, interests) : null;
+        body.skills ? body.skills = await util.replaceNamesWithIdsArray(body.skills, skills) : null;
+        body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
+        body.subteams ? body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams) : null;
+        body.projects ? body.projects = await util.replaceNamesWithIdsArray(body.project, projects) : null;
         return (await Member.update(filter, body).exec());
     });
 };
