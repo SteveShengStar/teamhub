@@ -73,9 +73,9 @@ export const userLogin = async (response, dispatch) => {
  */
 export const updateUser = async (dispatch, options, token, id) => {
     try {
-        const res = await api.members.update(options, token, id);
+        const res = await api.members.update(options, token, id, dispatch);
         if (res && res.success) {
-            const user = await api.members.getMember(id, token);
+            const user = await api.members.getMember(id, token, dispatch);
             if (user && user.success) {
                 dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
                 return user;

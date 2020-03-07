@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 import Card from "../atoms/Card";
 import Subtitle from "../atoms/Subtitle";
@@ -31,6 +32,8 @@ export default ({
                 label: `${term} ${year}`, value: val
             }
         });
+    const { projects } = useSelector(state => state.membersState.filters);
+    console.log(projects);
     return (
         <>
             <FormCard>
@@ -76,6 +79,7 @@ export default ({
                             <FormTitleHeader>What project(s) are you working on?</FormTitleHeader>
                             <CreatableSelect 
                                 isMulti
+                                options={projects ? projects.map(project => ({value: project.name, label: project.name})) : []}
                                 onChange={items => {
                                     const difference = items ? items.filter(item => !selectedProjects.find(proj => proj[0] == item.value)).map(item => [item.value, []]) : [];
                                     const intersection = selectedProjects.filter(project => items && items.find(it => it.value == project[0]))

@@ -16,11 +16,18 @@ const initInitialState = {
     userState: usersInitialState
 }
 
-const rootReducer =  combineReducers({
+const appReducer = combineReducers({
     membersState: membersReducer,
     userState: userReducer,
 });
 
+
+const rootReducer = (state, action) => {
+    if (action.type === 'RESET') {
+        state = initInitialState
+    }
+    return appReducer(state, action)
+}
 
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -31,5 +38,3 @@ export const initializeStore = (initialState = initInitialState) => {
         initialState,
     )
 }
-
-

@@ -1,4 +1,4 @@
-import { HttpVerb, executeRequest, getBaseApi } from './baseApi';
+import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
 
 /**
  * Search for all members in the database with filter options
@@ -6,22 +6,21 @@ import { HttpVerb, executeRequest, getBaseApi } from './baseApi';
  * @param {*} filterOptions 
  * @returns {Promise<{name: string, subteam: string, role: string, imageUrl: string}[]>} members
  */
-export function getAll(token, options = {isSSR: true}) {
+export function getAll(token, options = {isSSR: true}, dispatch) {
   let ssr = options.isSSR
   if (options) {
     delete options.isSSR;
   }
-  return fetch("/api/members/search", {
+  return refreshable("/api/members/search", token, {
     method: "POST",
     headers: {
-      authorization: `Bearer ${token}`,
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
       options,
-      fields: ["name", "subteam", "role", "imageUrl"]
+      fields: ["name", "subteams", "memberType", "imageUrl", "stream"]
     })
-  }).then(res => res.json())
+  }, dispatch)
 }
 
 /**
@@ -29,12 +28,8 @@ export function getAll(token, options = {isSSR: true}) {
  * @param {string} id 
  * @returns {Promise<Member>} members
  */
-export function getMember(id, token) {
-  return fetch(`/api/members/${id}/info`, {
-    headers: {
-      authorization: `Bearer ${token}`
-    }
-  }).then(res => res.json())
+export function getMember(id, token, dispatch) {
+  return refreshable(`/api/members/${id}/info`, token, {}, dispatch)
 }
 
 
@@ -44,25 +39,20 @@ export function getMember(id, token) {
  * @param {string} token 
  * @param {string} id
  */
-export function update(options, token, id) {
-  return fetch(`/api/members/${id}/update`, {
+export function update(options, token, id, dispatch) {
+  return refreshable(`/api/members/${id}/update`, token, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "authorization": `Bearer ${token}`
     },
     body: JSON.stringify({data: options})
-  }).then(res => res.json())
+  }, dispatch)
 }
 
 /**
  * 
  * @param {string} token 
  */
-export function getFilterOptions(token) {
-  return fetch(`/api/filters`, {
-    headers: {
-      "authorization": `Bearer ${token}`
-    }
-  }).then(res => res.json())
+export function getFilterOptions(token, dispatch) {
+  return refreshable(`/api/filters`, token, {}, dispatch)
 }

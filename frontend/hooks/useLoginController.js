@@ -23,7 +23,6 @@ export default (onRender) => {
             if (router.pathname != "/login") router.push("/login");
             return;
         }
-
         if (!userState.user || !userState.user._id) {
             api.auth.loginWithToken(token).then(user => {
                 if (user) {
