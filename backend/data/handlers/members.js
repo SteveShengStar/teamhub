@@ -43,6 +43,7 @@ members.getAll = async (fields) => {
 
 members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
+        console.log(body, fields);
         if (fields) {
             const query = Member.find(body).select(fields);
             if (fields['skills']) {
