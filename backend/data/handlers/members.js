@@ -95,8 +95,10 @@ members.add = async (memberBody) => {
         memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
         memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
         memberBody.subteams = await util.replaceNamesWithIdsArray(memberBody.subteams, subteams);
-        for (let i = 0; i < memberBody.projects.length; i++) {
-            memberBody.projects[i].project = await util.replaceNameWithId(memberBody.projects[i].project, projects);
+        if (memberBody.projects) {
+            for (let i = 0; i < memberBody.projects.length; i++) {
+                memberBody.projects[i].project = await util.replaceNameWithId(memberBody.projects[i].project, projects);
+            }
         }
         return await Member.create(memberBody);
     });

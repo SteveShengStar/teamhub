@@ -66,7 +66,7 @@ auth.login = async (tokenObj) => {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
             const searchRes = await members.search({ email: payload['email'] });
-            if (!searchRes) {
+            if (!searchRes || searchRes.length === 0) {
                 const token = crypto.randomBytes(32).toString('hex');
                 const res = await members.add({
                     name: {
