@@ -95,7 +95,9 @@ members.add = async (memberBody) => {
         memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
         memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
         memberBody.subteams = await util.replaceNamesWithIdsArray(memberBody.subteams, subteams);
-        memberBody.projects = await util.replaceNamesWithIdsArray(memberBody.projects, projects);
+        for (let i = 0; i < memberBody.projects.length; i++) {
+            memberBody.projects[i].project = util.replaceNameWithId(memberBody.projects[i].project);
+        }
         return await Member.create(memberBody);
     });
 };
@@ -112,7 +114,11 @@ members.updateMember = async (filter, body) => {
         body.skills ? body.skills = await util.replaceNamesWithIdsArray(body.skills, skills) : null;
         body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
         body.subteams ? body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams) : null;
-        body.projects ? body.projects = await util.replaceNamesWithIdsArray(body.projects, projects) : null;
+        if (body.projects) {
+            for (let i = 0; i < body.projects.length; i++) {
+                body.projects[i].project = util.replaceNameWithId(body.projects[i].project);
+            }
+        }
         return (await Member.update(filter, body).exec());
     });
 };
