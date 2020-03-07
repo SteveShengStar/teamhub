@@ -78,8 +78,7 @@ auth.login = async (tokenObj) => {
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
-                console.log(res);
-                return res;
+                return [res];
             } else {
                 const token = crypto.randomBytes(64).toString('hex');
                 await members.updateMember({ email: payload['email'] }, {
