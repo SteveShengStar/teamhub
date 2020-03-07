@@ -32,8 +32,13 @@ const testMemberData1 = {
         'Hardware'
     ],
     'projects': [
-        'TeamHub',
-        'Website'
+        {
+            'project': 'TeamHub',
+            'description': 'Test1'
+        },{
+            'project': 'Website',
+            'description': 'Test2'
+        }
     ],
     'email': 'testuser1010@testing.ca',
     'stream': {
