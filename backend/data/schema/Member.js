@@ -36,8 +36,8 @@ const Member_TermSchema = new Schema({
 
 const Member_ProjectSchema = new Schema({
     project: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
     },
     description: {
         type: [String]
