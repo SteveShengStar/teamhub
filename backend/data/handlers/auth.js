@@ -66,7 +66,7 @@ auth.login = async (tokenObj) => {
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
-            if (!(await members.search({ email: payload['email'] })) && (await members.search({ email: payload['email'] })).length == 0) {
+            if (!(await members.search({ email: payload['email'] })) || (await members.search({ email: payload['email'] })).length == 0) {
                 const token = crypto.randomBytes(32).toString('hex');
                 const res = await members.add({
                     name: {
