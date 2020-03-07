@@ -92,6 +92,10 @@ const Member_Birthday = new Schema({
     day: {
         type: Number,
         required: true
+    },
+    year: {
+        type: Number,
+        required: true
     }
 });
 
@@ -153,9 +157,6 @@ const MemberSchema = new Schema({
     },
     imageUrl: {
         type: String
-    },
-    age: {
-        type: Number,
     },
     birthday: {
         type: Member_Birthday

@@ -62,6 +62,7 @@ auth.login = async (tokenObj) => {
             audience: authConfig['client_id'],
         });
         const payload = ticket.getPayload();
+        console.log(payload);
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
@@ -74,7 +75,7 @@ auth.login = async (tokenObj) => {
                         last: payload['family_name']
                     },
                     email: payload['email'],
-                    imageUrl: payload['imageUrl'],
+                    imageUrl: payload['picture'],
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
@@ -86,7 +87,7 @@ auth.login = async (tokenObj) => {
                         first: payload['given_name'],
                         last: payload['family_name']
                     },
-                    imageUrl: payload['imageUrl'],
+                    imageUrl: payload['picture'],
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });

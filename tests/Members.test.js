@@ -46,10 +46,10 @@ const testMemberData1 = {
         'currentSchoolTerm': '1A'
     },
     'imageURL': 'www.google.com',
-    'age': 15,
     'birthday': {
         'month': 5,
-        'day': 12
+        'day': 12,
+        'year': 2001
     },
     'links': [
         {
