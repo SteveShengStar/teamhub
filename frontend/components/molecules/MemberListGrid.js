@@ -11,7 +11,7 @@ const MemberListGrid = ({members, onSelect, className, animRef}) => {
                 members && members.map((member, i) => 
                     <MemberPreviewComponent 
                         key={i}
-                        name={`${member.name.display}`}
+                        name={`${member.name.display || member.name.first + " " + member.name.last}`}
                         subteam={member.subteam ? member.subteam.name : ''} 
                         role={member.memberType ? member.memberType.name : ''}
                         onClick={() => onSelect(member._id)}
