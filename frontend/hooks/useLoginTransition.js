@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { LoginTransitionTypes } from "../components/templates/LoginTransition";
+import anime from "animejs"
 
 /**
  * 
  * @param { HTMLElement } ref  
  * @param { () => void } onExit 
- * @returns { { hide: () => void, show: () => void, setRef: (ref: HTMLElement) => void, ref: HTMLElement }}
+ * @returns { { hide: (onFinish: () => void) => void, show: () => void, setRef: (ref: HTMLElement) => void, ref: HTMLElement }}
  */
 export default function(onExit) {
     const [ htmlRef, setHTMLRef ] = useState(null);
@@ -22,15 +22,28 @@ export default function(onExit) {
         }
     });
 
-    function hide() {
+    function hide(onFinish) {
         if (htmlRef && htmlRef.current) {
-            htmlRef.current.style.transform = "translateX(-100%)";
+            anime({
+                targets: htmlRef.current,
+                translateX: "-100%",
+                duration: 0.5
+            }).finished.then(() => {
+                onFinish && onFinish()
+            })
         }
     }
 
     function show() {
         if (htmlRef && htmlRef.current) {
-            htmlRef.current.style.transform = "translateX(0)";
+            anime({
+                targets: htmlRef.current,
+                keyframes: [
+                    {translateX: "100%"},
+                    {translateX: 0}
+                ],
+                duration: 0.5
+            });
         }
     }
 

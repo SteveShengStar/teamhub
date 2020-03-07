@@ -26,10 +26,12 @@ export default ({options, selected, updateSelected}) => {
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+
     grid-gap: 5px;
     ${props => props.theme.mediaQueries.tablet} {
         grid-gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 `
 

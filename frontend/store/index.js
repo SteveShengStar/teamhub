@@ -3,7 +3,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 
 import membersReducer, { membersInitialState } from './reducers/membersReducer';
-import userReducer from './reducers/userReducer';
+import userReducer, { usersInitialState } from './reducers/userReducer';
 
 const persistConfig = {
     key: 'primary',
@@ -12,12 +12,13 @@ const persistConfig = {
 }
 
 const initInitialState = {
-    membersState: membersInitialState
+    membersState: membersInitialState,
+    userState: usersInitialState
 }
 
 const rootReducer =  combineReducers({
     membersState: membersReducer,
-    userState: userReducer
+    userState: userReducer,
 });
 
 

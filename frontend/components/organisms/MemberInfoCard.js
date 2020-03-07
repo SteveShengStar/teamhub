@@ -14,15 +14,15 @@ import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
 
-const MemberInfoCard = ({memberData, className, onClose}) => {
+const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     let birthday = memberData.birthday ? new Date(2019, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const subteam = memberData.subteam ? memberData.subteam.name : '';
+    const subteams = memberData.subteams ? memberData.subteams.name : '';
 
     return (
-        <InfoCard className={className}>
+        <InfoCard className={className} ref={animRef}>
             <Header3 mb={3}>Member</Header3>
             <Button 
                 alignSelf="start"
@@ -36,10 +36,10 @@ const MemberInfoCard = ({memberData, className, onClose}) => {
                 <LeftColumn>
                     <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.display}` : ''} </Header2>
                     {
-                        memberData.subteam ? (
+                        memberData.subteams ? (
                             <MemberSubtitle>
-                                Member of <BorderlessButton variant={subteam ? subteam.toLowerCase() : ""} fontSize="inherit" fontWeight="inherit">
-                                    {subteam}
+                                Member of <BorderlessButton variant={subteams && subteams.length > 0 && subteams[0].toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
+                                    {subteams}
                                 </BorderlessButton> team
                             </MemberSubtitle>
                         )
@@ -120,7 +120,7 @@ const ContentContainer = styled.div`
     display: grid;
     grid-gap: ${props => props.theme.space[3]}px;
     height: calc(100% - ${props => props.theme.space.cardPaddingSmall * 2}px);
-    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 5px,rgba(0,0,0,1.0) calc(100% - 5px),transparent);
+    mask-image: linear-gradient(transparent,rgba(0,0,0,1.0) 2px,rgba(0,0,0,1.0) calc(100% - 2px),transparent);
 
     ${props => props.theme.mediaQueries.tablet} {
         display: grid;

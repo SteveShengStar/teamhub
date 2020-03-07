@@ -15,6 +15,8 @@ export default (onRender) => {
     const dispatch = useDispatch();
     const userState = useSelector(state => state.userState);
     useEffect(() => {
+        console.log(userState)
+        if (!userState.hydrated) return;
         // get refresh token
         const token = window.localStorage.getItem("refreshToken");
         if (!token) {
@@ -22,10 +24,7 @@ export default (onRender) => {
             if (router.pathname != "/login") router.push("/login");
             return;
         }
-        setCount(count + 1);
-        if (count == 0) {
-            return;
-        }
+
         if (!userState.user || !userState.user._id) {
             api.auth.loginWithToken(token).then(user => {
                 if (user) {
@@ -41,12 +40,16 @@ export default (onRender) => {
 
     function redirectUser() {
         // if user is logged in check user status
-        if (!userState.user.name.display) {
+        if (!userState.user.name || !userState.user.name.display) {
             if (router.pathname != "/login/name") router.push("/login/name")
             return;
         }
-        if (!userState.user.memberType || !userState.user.projects.length === 0 || !userState.user.joined) {
+        if (userState.user.subteams.length === 0 || !userState.user.memberType || !userState.user.projects.length === 0 || !userState.user.joined) {
             if (router.pathname != "/login/role") router.push("/login/role");
+            return;
+        }
+        if (!userState.user.bio) {
+            if (router.pathname != "/login/about") router.push("/login/about");
             return;
         }
         if (router.pathname.startsWith("/login")) {

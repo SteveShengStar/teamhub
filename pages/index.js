@@ -1,7 +1,8 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from 'react-redux';
 import styled, { ThemeContext } from "styled-components";
+import anime from "animejs";
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
@@ -17,13 +18,15 @@ import MembersFilterModal from '../frontend/components/organisms/MembersFilterMo
 const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const theme = useContext(ThemeContext);
+
     const members = useSelector(state => state.membersState.members)
     const selectedMember = useSelector(state => state.membersState.selectedMember)
     const loadedMembers = useSelector(state => state.membersState.loadedMembers)
-    const [ modalVisible, setModalVisible ] = useState(false);
     const filters = useSelector(state => state.membersState.filters);
 
-    const theme = useContext(ThemeContext);
+    const [ modalVisible, setModalVisible ] = useState(false);
+    const memberCardRef = useRef();
 
     const onSelectMember = (id) => {
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
@@ -52,6 +55,17 @@ const Home = () => {
         getFilters(dispatch, localStorage.getItem("refreshToken"));
     }, [])
 
+    useEffect(() => {
+        if (selectedMember._id) {
+            anime({
+                targets: memberCardRef.current,
+                translateX: 0,
+                easing: "easeOutQuad",
+                duration: 200
+            })
+        }
+    }, [selectedMember])
+    
     return (
         <PageTemplate title="Explore">
             <SystemComponent
@@ -84,13 +98,22 @@ const Home = () => {
                     <MemberListGrid members={members} onSelect={onSelectMember} />
                 </MembersListCard>
                 <MemberCard 
-                    memberData={selectedMember} 
-                    onClose={() => 
-                        dispatch({
-                            type: "SET_SELECTED_MEMBER",
-                            payload: {}
+                    animRef={memberCardRef}
+                    memberData={selectedMember}
+                    onClose={() => {
+                        anime({
+                            targets: memberCardRef.current,
+                            translateX: "110%",
+                            easing: "easeOutQuad",
+                            duration: 200
+                        }).finished.then(() => {
+                            dispatch({
+                                type: "SET_SELECTED_MEMBER",
+                                payload: {}
+                            })
                         })
-                    }
+                        
+                    }}
                 />
             </SystemComponent>
         </PageTemplate>
@@ -124,6 +147,5 @@ const MemberCard = styled(MemberInfoCard)`
         position: relative;
         height: auto;
         transition: all 0.2s ease-in-out;
-        transform: translateX(${props => props.memberData._id ? 0 : "calc(100% + 10px)"});
     }
 `;

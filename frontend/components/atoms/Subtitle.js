@@ -6,7 +6,8 @@ Subtitle.defaultProps = {
     fontFamily: 'title',
     fontSize: 'subtitle',
     fontWeight: 'regular',
-    my: 0
+    mt: 0,
+    mb: 0
 };
 
 export default Subtitle;

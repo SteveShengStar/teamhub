@@ -11,7 +11,7 @@ const Home = () => {
     const user = useSelector(state => state.userState.user)
     const dispatch = useDispatch();
     const router = useRouter();
-    const [ nameInput, setNameInput ] = useState(user.name ? user.name.display : "");
+    const [ nameInput, setNameInput ] = useState(user && user.tempDisplayName || "");
     const [ shouldHide, setShouldHide ] = useState(false);
 
     const trySubmit = () => {
@@ -23,8 +23,6 @@ const Home = () => {
             router.push("/login/role")
         });
     }
-
-
 
     return (
         <PageTemplate myHubHidden title="Onboarding">

@@ -82,9 +82,9 @@ export const lookupMember = async function(dispatch, token, id) {
                 payload: res.body[0]
             });
             dispatch({
-                type: "sub",
+                type: "SET_SELECTED_MEMBER",
                 payload: res.body[0]
-            })
+            });
         }
     } catch (err) {
         console.log(`Error: Failed to fetch member with id ${id} `, err);

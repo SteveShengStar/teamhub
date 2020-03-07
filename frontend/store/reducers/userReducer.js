@@ -9,9 +9,10 @@ export const UserTypes = new Proxy({
     }
 });
 
-const usersInitialState = {
+export const usersInitialState = {
     user: {},
-    accessToken: "",
+    tempDisplayName: "",
+    hydrated: false
 }
 
 
@@ -20,12 +21,20 @@ const userReducer = (state = usersInitialState, action) => {
         case UserTypes.RECEIVED_LOGIN:
             return {
                 ...state,
-                user: action.payload
+                user: action.payload,
+                ...(action.display && {tempDisplayName: action.display })
             };
         case UserTypes.FAILED_LOGIN:
             return {
                 ...state,
                 user: {}
+            }
+        case "persist/REHYDRATE":
+            const userState = action.payload && action.payload.userState
+            return {
+                ...state,
+                ...(userState && { ...userState }),
+                hydrated: true
             }
         default:
             return state
@@ -40,9 +49,9 @@ const userReducer = (state = usersInitialState, action) => {
 export const userLogin = async (response, dispatch) => {
     try {
         const user = await api.auth.login(response);
-        if (user && user.body) {
-            window.localStorage.setItem("refreshToken", user.body[0] && user.body[0].token)
-            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
+        if (user && user.body && user.body.token) {
+            window.localStorage.setItem("refreshToken", user.body.token);
+            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body, display: response.profileObj.name });
         }
         else {
             dispatch({ type: UserTypes.FAILED_LOGIN })
