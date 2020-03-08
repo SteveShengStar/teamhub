@@ -88,10 +88,6 @@ auth.login = async (tokenObj) => {
             } else {
                 const token = crypto.randomBytes(64).toString('hex');
                 await members.updateMember({ email: payload['email'] }, {
-                    name: {
-                        first: payload['given_name'],
-                        last: payload['family_name']
-                    },
                     imageUrl: payload['picture'],
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)

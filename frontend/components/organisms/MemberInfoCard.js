@@ -125,7 +125,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                             <>
                                 <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
                                 <InlineItemRow>
-                                    <Dot onStream={memberData.stream.coopStream[code]}/>
+                                    <Dot isOnStream={memberData.stream.coopStream[code]}/>
                                     <Body as="div">{memberData.stream.coopStream[code] ? "Onstream" : "Offstream"}</Body>
                                 </InlineItemRow>
                             </>
@@ -187,7 +187,6 @@ const ContentContainer = styled.div`
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
-        overflow-y: scroll;
     }
 `
 
@@ -211,5 +210,5 @@ const Dot = styled.div`
     height: 15px;
     border-radius: 8px;
     margin: 0 3px 0 0;
-    background-color: ${props => props.onStream ? "#32E67E" : props.theme.colors.theme};
+    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
 `

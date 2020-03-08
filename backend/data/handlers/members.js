@@ -43,7 +43,7 @@ members.getAll = async (fields) => {
 
 members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
-        const searchByDisplayName = body.displayName;
+        const searchByDisplayName = body ? body.displayName : null;
         if (searchByDisplayName) {
             delete body.displayName;
         }

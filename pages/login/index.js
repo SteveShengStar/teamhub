@@ -4,20 +4,27 @@ import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import Login from '../../frontend/components/molecules/LoginCard';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
 import { useRouter } from 'next/router';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import useLoginTransition from '../../frontend/hooks/useLoginTransition';
+import api from '../../frontend/store/api';
+import useLoginController from '../../frontend/hooks/useLoginController';
+import { UserTypes } from '../../frontend/store/reducers/userReducer';
+import useRedirect from '../../frontend/hooks/useRedirect';
 
 
 export default () => {
     const router = useRouter();
-    const [ shouldHide, setShouldHide ] = useState(false);
+    const dispatch = useDispatch()
+    const loginTransition = useLoginTransition()
+    useLoginController(loginTransition, dispatch, router.pathname)
 
     return (
         <PageTemplate myHubHidden={true}>
-            <LoginTransition shouldHide={shouldHide}>
-                <Login setShouldHide={() => setShouldHide(true)} onFinish={() => {
-                    setShouldHide(false);
-                    setTimeout(() => router.push("/login/name"), 500);
-                }}/>
+            <LoginTransition loginTransition={loginTransition}>
+                <Login shouldHide={() => loginTransition.hide()} onFinish={(user) => {
+                    dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
+                    useRedirect(user, router)
+                }} />
             </LoginTransition>
         </PageTemplate>
     )

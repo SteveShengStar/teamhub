@@ -5,8 +5,6 @@ import { SystemComponent } from "../atoms/SystemComponents";
 import Subtitle from "../atoms/Subtitle";
 import MyHub from "../organisms/MyHub";
 import styled from "styled-components";
-import useLoginController from "../../hooks/useLoginController";
-import useLoginTransition from "../../hooks/useLoginTransition";
 
 export const PageTemplateGridLayout = styled(SystemComponent)`
   display: grid;
@@ -20,11 +18,6 @@ export const PageTemplateGridLayout = styled(SystemComponent)`
 `;
 
 const PageTemplate = ({ className, title, children, myHubHidden }) => {
-  const loginTransition = useLoginTransition();
-  const { canRender } = useLoginController();
-  useEffect(() => {
-    if (canRender) loginTransition.show();
-  }, [canRender, loginTransition.ref]);
   return (
     <div>
       <Head>
@@ -60,7 +53,6 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
             mt={["20vw", "20vw", 0]}
             flex={1}
             alignItems={"stretch"}
-            opacity={canRender ? 1 : 0}
           >
             <Subtitle
               as="h1"
@@ -70,9 +62,7 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
             >
               {title}
             </Subtitle>
-            {React.cloneElement(React.Children.only(children), {
-              loginTransition
-            })}
+            {React.Children.only(children)}
           </PageTemplateGridLayout>
         </SystemComponent>
       }

@@ -5,32 +5,36 @@ import LoginNameCard from '../../frontend/components/molecules/LoginNameCard';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
+import useLoginTransition from '../../frontend/hooks/useLoginTransition';
+import useLoginController from '../../frontend/hooks/useLoginController';
 import { useRouter } from 'next/router';
+import useRedirect from '../../frontend/hooks/useRedirect';
 
-const Home = () => {
-    const userState = useSelector(state => state.userState)
-    const user = userState.user;
+export default () => {
+    const router = useRouter()
+    const { user, token,tempDisplayName } = useSelector(state => state.userState)
     const dispatch = useDispatch();
-    const router = useRouter();
-    const [ nameInput, setNameInput ] = useState(userState && userState.tempDisplayName || "");
-    const [ shouldHide, setShouldHide ] = useState(false);
+    const [ nameInput, setNameInput ] = useState(tempDisplayName || "");
+
+    const loginTransition = useLoginTransition()
+    useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
         if (!nameInput) {
             window.alert("No name entered!")
         }
-        setShouldHide(true);
-        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, user.token, user._id).then(() => {
-            router.push("/login/role")
-        });
+        loginTransition.hide()
+        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
+            console.log(user)
+            useRedirect(user, router)
+        })
     }
 
     return (
         <PageTemplate myHubHidden title="Onboarding">
-            <LoginTransition shouldHide={shouldHide}>
+            <LoginTransition loginTransition={loginTransition}>
                 <LoginNameCard submit={trySubmit} nameInput={nameInput} setNameInput={setNameInput} />
             </LoginTransition>
         </PageTemplate>
     )
 };
-export default Home;
