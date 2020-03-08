@@ -6,7 +6,7 @@ import { useRouter } from "next/router"
  */
 export default (user, router) => {
     // if user is logged in check user status
-    if (!user._id) {
+    if (!user || !user._id) {
         if (router.pathname != "/login") router.push("/login")
         return;
     }

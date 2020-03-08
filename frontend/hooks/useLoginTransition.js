@@ -5,32 +5,38 @@ import anime from "animejs"
  * Logic to interface with Login Transition component
  * @param { HTMLElement } ref  
  * @param { () => void } onExit 
- * @returns { { hide: (onFinish: () => void) => void, show: () => void, ref: HTMLElement }}
+ * @returns { { visible: boolean, setVisible: (visible: boolean) => void, hide: (onFinish: () => void) => void, show: () => void, ref: HTMLElement }}
  */
 export default () => {
     const htmlRef = useRef(null);
 
     const [ anim, setAnim ] = useState(false);
+    const [ visible, setVisible ] = useState(true)
+
+    useEffect(() => {
+        if (!visible && anim) hide()
+    }, [visible])
 
     useEffect(() => {
         if (anim && htmlRef && htmlRef.current) {
             anime({
                 targets: htmlRef.current,
                 translateX: [
-                    { value: "110%" },
-                    { value: "0%" }
+                    { value: "100vw" },
+                    { value: 0 }
                 ],
                 duration: 500,
                 easing: "easeInOutQuad"
             })
         }
     }, [anim])
+
     function hide(onFinish) {
         if (htmlRef && htmlRef.current) {
             anime({
                 targets: htmlRef.current,
-                translateX: "-110%",
-                duration: 500
+                translateX: "-110vw",
+                duration: 0
             }).finished.then(() => {
                 onFinish && onFinish()
             })
@@ -44,6 +50,6 @@ export default () => {
     
 
     return {
-        hide, show, ref: htmlRef
+        visible, setVisible, hide, show, ref: htmlRef
     }
 }

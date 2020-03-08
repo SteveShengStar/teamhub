@@ -59,6 +59,10 @@ export default MemberListGrid;
 
 const GhostLoader = styled(SystemComponent)`
     position: relative;
+    min-height: 80vh;
+    ${props => props.theme.mediaQueries.tablet} {
+        min-height: auto;
+    }
 `
 
 const Container = styled(SystemComponent)`

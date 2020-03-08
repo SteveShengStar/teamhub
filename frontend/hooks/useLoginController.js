@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import api from "../store/api"
 import useRedirect from "./useRedirect"
@@ -15,7 +15,7 @@ export default (loginTransition, dispatch, route) => {
 
     useEffect(() => {
         if (hydrated && token) {
-            api.auth.loginWithToken(token).then(user => {
+            api.auth.loginWithToken(token, dispatch, router).then(user => {
                 dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
                 if (route == "/login") useRedirect(user, router)
                 else loginTransition.show()

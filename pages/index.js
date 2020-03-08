@@ -95,7 +95,7 @@ const Home = () => {
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}
                 gridTemplateRows="auto auto"
-                gridTemplateColumns="1fr auto"
+                gridTemplateColumns="auto 1fr"
             >
                 <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery} hide={() => setModalVisible(false)}/>
                 <MembersListCard
@@ -154,7 +154,11 @@ const MembersListCard = styled(Card)`
     }
 
     ${props => props.theme.mediaQueries.smallDesktop} {
-        width: auto;
+        width: 50vw;
+    }
+
+    ${props => props.theme.mediaQueries.desktop} {
+        width: 60vw;
     }
 `
 
@@ -162,7 +166,7 @@ const MemberCard = styled(MemberInfoCard)`
     display: none !important;
     ${props => props.theme.mediaQueries.tablet} {
         display: grid !important;
-        width: 30vw;
+        width: inherit;
         position: relative;
         height: inherit;
         transition: all 0.2s ease-in-out;
