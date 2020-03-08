@@ -26,7 +26,6 @@ export default () => {
         }
         loginTransition.setVisible(false)
         updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
-            console.log(user)
             useRedirect(user, router)
         })
     }

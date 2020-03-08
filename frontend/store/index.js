@@ -23,7 +23,6 @@ const appReducer = combineReducers({
 
 
 const rootReducer = (state, action) => {
-    console.log(action, state)
     if (action.type === 'RESET') {
         state = initInitialState
     }
