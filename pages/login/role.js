@@ -67,7 +67,7 @@ export default () => {
 
     useEffect(() => {
         if (token && !filters.projects) {
-            getFilters(dispatch, token)
+            getFilters(dispatch, token, router)
         }
     }, [token])
 
@@ -87,7 +87,7 @@ export default () => {
                 season: termMap[selectedYear[0]],
                 year: parseInt('20' + selectedYear.slice(1))
             }
-        }, token, user._id).then(() => {
+        }, token, user._id, router).then(() => {
             router.push("/login/about");
         })
     }

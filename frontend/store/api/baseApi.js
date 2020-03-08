@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { port } from '../../../config';
+import useRedirect from '../../hooks/useRedirect';
 
 export const getBaseApi = (isSSR = false) => isSSR ? `http://localhost:${port}/api` : `/api` ;
 
@@ -30,7 +31,7 @@ export const executeRequest = (request) => {
  * @param {*} options
  * @param {*} dispatch
  */
-export const refreshable = (endpoint, token, options, dispatch) => {
+export const refreshable = (endpoint, token, options, dispatch, router) => {
     if (token == null) throw new Error("Null token for " + endpoint)
     return fetch(endpoint, {...options, headers: {
         ...(options.headers && { ...options.headers }),
@@ -38,7 +39,7 @@ export const refreshable = (endpoint, token, options, dispatch) => {
     }})
         .then(res => res.json())
         .catch(err => {
-            window.localStorage.removeItem("refreshToken");
             dispatch({ type: "RESET" });
+            useRedirect({}, router)
         })
 }

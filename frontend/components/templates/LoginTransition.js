@@ -13,31 +13,23 @@ export const LoginTransitionTypes = new Proxy({
 })
 
 /**
- * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: (onFinish: () => void) => void, setRef: (ref: HTMLElement) => void }}}
+ * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: (onFinish: () => void) => void}}}
  */
-export default ({children, loginTransition, shouldHide}) => {
-    const ref = useRef(null);
-    const [ finishHide, setFinishHide ] = useState(false)
-    useEffect(() => {
-        loginTransition.setRef(ref);
-    }, [ref])
+export default ({children, loginTransition}) => {
     const theme = useContext(ThemeContext)
-
-    useEffect(() => {
-        if (shouldHide) loginTransition.hide(() => setFinishHide(true));
-    }, [shouldHide])
+    const ref = useRef(null);
 
     return (
         <>
-            <Container state={loginTransition.state || LoginTransitionTypes.PRE_TRANSITION} ref={ref}>
+            <Container state={loginTransition.state || LoginTransitionTypes.PRE_TRANSITION} ref={loginTransition.ref}>
                 {children}
             </Container>
-            { <LoadingModal visible={finishHide && shouldHide} color={theme.colors.primary}/>}
+            { <LoadingModal visible={loginTransition.state == LoginTransitionTypes.POST_TRANSITION} color={theme.colors.primary}/>}
         </>
     )
 }
 
 const Container = styled.div`
-    transition: all 1s ease;
-    transform: translateX(100%);
+    transition: all 0.5s ease;
+    transform: translateX(110%);
 `;

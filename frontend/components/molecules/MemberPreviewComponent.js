@@ -33,7 +33,7 @@ const Dot = styled.div`
     width: 15px;
     height: 15px;
     border-radius: 8px;
-    background-color: ${props => props.onStream ? "#32E67E" : props.theme.colors.theme};
+    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
     grid-row: 1/3;
 `
 
@@ -42,7 +42,7 @@ const RowFlexLayout = styled(SystemComponent)`
     justify-content: space-between;
 `;
 
-const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, onStream}) => {
+const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream}) => {
     return (
         <GridLayout 
             backgroundColor="greys.0" 
@@ -68,7 +68,7 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, o
                 <BorderlessButton variant={'software'}>{subteam && subteam.name || ""}</BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
-            <Dot onStream={onStream}/>
+            <Dot isOnStream={isOnStream}/>
 
         </GridLayout>
     );
