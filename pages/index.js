@@ -83,6 +83,7 @@ const Home = () => {
             })
         }
     }, [selectedMember])
+
     
     return (
         <PageTemplate title="Explore">
