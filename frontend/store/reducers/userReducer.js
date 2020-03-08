@@ -54,7 +54,6 @@ export const userLogin = async (response, dispatch) => {
         const res = await api.auth.login(response);
         const user = res && res.body && res.body[0] || res.body;
         if (user && user.token) {
-            window.localStorage.setItem("refreshToken", user.token);
             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, token: user.token, display: response.profileObj.name });
         }
         else {
@@ -74,14 +73,14 @@ export const userLogin = async (response, dispatch) => {
  * @param {string} token 
  * @param {string} id 
  */
-export const updateUser = async (dispatch, options, token, id) => {
+export const updateUser = async (dispatch, options, token, id, router) => {
     try {
-        const res = await api.members.update(options, token, id, dispatch);
+        const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
-            const user = await api.members.getMember(id, token, dispatch);
+            const user = await api.members.getMember(id, token, dispatch, router);
             if (user && user.success) {
                 dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
-                return user;
+                return user.body[0];
             }
         }
         return;

@@ -10,7 +10,6 @@ import { useSelector } from 'react-redux';
 const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
     const [ onState, setOnState ] = useState(false);
     const [ searchInput, setSearchInput ] = useState("");
-    const { token } = useSelector(state => state.userState);
     const membersFilters = useMembersFilters(filterOptions);
 
     function toggle() {
@@ -19,11 +18,11 @@ const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
 
     useEffect(() => {
         // on change, update query
-        updateSearchQuery && updateSearchQuery(searchInput);
-    }, [searchInput, membersFilters.states]);
+        updateSearchQuery && updateSearchQuery(searchInput)
+    }, [searchInput]);
     return (
         <SystemComponent ref={animRef}>
-            <Search variant="text" placeholder="Search" value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
+            <Search variant="text" placeholder="Search" value={searchInput} onChange={(e) => updateSearchQuery(e.target.value)}/>
             <SystemComponent mt={2} display="flex" flexDirection="row-reverse" display={["none", "none", "flex"]}>
                 {/*<BorderlessButton onClick={toggle}>{onState ? 'Hide Filters' : 'Show Filters'}</BorderlessButton> */}
                 {/*<BorderlessButton mr={5}>Show Sort</BorderlessButton>*/}

@@ -51,7 +51,7 @@ export default () => {
       interests: interests.map(val => val.value),
       skills: skills.map(skill => skill.value),
       bio
-    }, token, user._id).then(res => {
+    }, token, user._id, router).then(res => {
       router.push("/")
     })
   }

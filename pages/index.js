@@ -20,17 +20,14 @@ const Home = () => {
     const router = useRouter();
     const theme = useContext(ThemeContext);
 
-    const members = useSelector(state => state.membersState.members)
-    const selectedMember = useSelector(state => state.membersState.selectedMember)
-    const loadedMembers = useSelector(state => state.membersState.loadedMembers)
-    const filters = useSelector(state => state.membersState.filters);
 
     const [ modalVisible, setModalVisible ] = useState(false);
     const memberCardRef = useRef();
 
     const [ searchQuery, setSearchQuery ] = useState({})
 
-    const userState = useSelector(state => state.userState);
+    const { token, hydrated } = useSelector(state => state.userState);
+    const { members, selectedMember, loadedMembers, filters, fetchingData } = useSelector(state => state.membersState)
 
     const onSelectMember = (id) => {
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
@@ -44,12 +41,12 @@ const Home = () => {
             })
             return
         }
-        lookupMember(dispatch, userState.token, id);
+        lookupMember(dispatch, token, id, router);
     };
 
     const updateSearchQuery = (input) => {
         if (typeof(input) == "string") {
-            setSearchQuery({...searchQuery, name: input})
+            setSearchQuery({...searchQuery, display: input || undefined})
             return;
         }
         let normalized = {};
@@ -60,18 +57,22 @@ const Home = () => {
                 normalized[newKey] = input[key][0].label
             }
         });
-        setSearchQuery({...normalized, name: searchQuery.name})
+        setSearchQuery({...normalized, display: searchQuery.display })
     };
 
     useEffect(() => {
-        if (userState.token && !filters.projects) {
-            searchMembers(dispatch, userState.token, searchQuery)
+        if (filters.projects && !fetchingData) {
+            searchMembers(dispatch, token, searchQuery, router)
         }
-    }, [searchQuery, userState.token])
+    }, [searchQuery])
 
     useEffect(() => {
-        if (userState.token && !filters.projects) getFilters(dispatch, userState.token);
-    }, [userState.token])
+        if (hydrated && !fetchingData) {
+            getFilters(dispatch, token, router).then(success => {
+                if (success) searchMembers(dispatch, token, searchQuery, router)
+            })
+        }
+    }, [hydrated])
 
     useEffect(() => {
         if (selectedMember._id) {

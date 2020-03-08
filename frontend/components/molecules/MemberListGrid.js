@@ -26,7 +26,7 @@ const MemberListGrid = ({members, onSelect, className, animRef}) => {
                         subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
                         role={member.memberType ? member.memberType.name : ''}
                         term={member.stream && member.stream.currentSchoolTerm || ""}
-                        onStream={member.stream && member.stream.coopStream[code]}
+                        isOnStream={member.stream && member.stream.coopStream[code]}
                         onClick={() => onSelect(member._id)}
                         imageUrl={member.imageUrl}
                     />
