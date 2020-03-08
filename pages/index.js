@@ -11,7 +11,7 @@ import Card from '../frontend/components/atoms/Card';
 import Button from "../frontend/components/atoms/Button";
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
-import { searchMembers, lookupMember, getFilters } from '../frontend/store/reducers/membersReducer';
+import { searchMembers, lookupMember, getFilters, DataFetchType } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
@@ -27,7 +27,7 @@ const Home = () => {
     const [ searchQuery, setSearchQuery ] = useState({})
 
     const { token, hydrated } = useSelector(state => state.userState);
-    const { members, selectedMember, loadedMembers, filters, fetchingData } = useSelector(state => state.membersState)
+    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState)
 
     const onSelectMember = (id) => {
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
@@ -114,7 +114,7 @@ const Home = () => {
                         </Button>
                     </SystemComponent>
                     <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
-                    <MemberListGrid members={members} onSelect={onSelectMember} />
+                    <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
                 </MembersListCard>
                 <MemberCard 
                     animRef={memberCardRef}

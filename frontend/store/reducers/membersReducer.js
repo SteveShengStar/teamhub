@@ -13,12 +13,25 @@ export const MemberReducerTypes = new Proxy({
     }
 });
 
+export const DataFetchType = new Proxy({
+    MEMBER: "MEMBER",
+    MEMBERS: "MEMBERS",
+    FILTERS: "FILTERS",
+    NOT_FETCHING: false
+}, {
+    set: () => {
+        throw new Error("Can't change const MemberReducerTypes")
+    }
+});
+
+
 export const membersInitialState = {
     members: [],
     selectedMember: {},
     loadedMembers: {},
     filters: {},
-    fetchingData: false
+    fetchingData: DataFetchType.NOT_FETCHING,
+    fetchedMembers: false
 }
 export default (state = membersInitialState, action) => {
     switch (action.type) {
@@ -26,13 +39,14 @@ export default (state = membersInitialState, action) => {
             return {
                 ...state,
                 members: action.payload,
-                fetchingData: false
+                fetchingData: DataFetchType.NOT_FETCHING,
+                fetchedMembers: true
             }
         case "SET_SELECTED_MEMBER":
             return {
                 ...state,
                 selectedMember: action.payload,
-                fetchingData: false
+                fetchingData: DataFetchType.NOT_FETCHING
             }
 
         case "ADD_LOADED_MEMBER":
@@ -45,23 +59,24 @@ export default (state = membersInitialState, action) => {
                     ...state.loadedMembers,
                     [_id]: action.payload
                 },
-                fetchingData: false
+                fetchingData: DataFetchType.NOT_FETCHING
             }
         case "LOAD_FILTERS":
             return {
                 ...state,
                 filters: action.payload,
-                fetchingData: false
+                fetchingData: DataFetchType.NOT_FETCHING
             }
         case MemberReducerTypes.FETCHING_DATA:
             return {
                 ...state,
-                fetchingData: true
+                fetchingData: action.payload
             }
         case "persist/REHYDRATE":
             return {
                 ...state,
-                fetchingData: false
+                fetchingData: DataFetchType.NOT_FETCHING,
+                fetchedMembers: false
             }
         default:
             return state
@@ -70,7 +85,7 @@ export default (state = membersInitialState, action) => {
 
 export async function searchMembers(dispatch, token, options = { isSSR: true }, router) {
     try {
-        dispatch({ type: MemberReducerTypes.FETCHING_DATA })
+        dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.MEMBERS })
         const res = await api.members.getAll(token, options, dispatch, router);
         if (res && res.success) {
             dispatch({
@@ -91,6 +106,7 @@ export async function searchMembers(dispatch, token, options = { isSSR: true }, 
  */
 export const lookupMember = async function(dispatch, token, id, router) {
     try {
+        dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.MEMBER})
         const res = await api.members.getMember(id, token, dispatch, router);
         if (res.success && res.body && res.body.length > 0) {
             dispatch({
@@ -109,7 +125,7 @@ export const lookupMember = async function(dispatch, token, id, router) {
 
 export const getFilters = async function(dispatch, token, router) {
     try {
-        dispatch({ type: MemberReducerTypes.FETCHING_DATA })
+        dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.FILTERS })
         const res = await api.members.getFilterOptions(token, dispatch, router);
         if (res.success && res.body) {
             dispatch({ type: MemberReducerTypes.LOAD_FILTERS, payload: res.body })

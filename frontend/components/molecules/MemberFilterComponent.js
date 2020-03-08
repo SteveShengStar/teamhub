@@ -22,7 +22,7 @@ const MemberFilterComponent = ({animRef, filterOptions, updateSearchQuery}) => {
     }, [searchInput]);
     return (
         <SystemComponent ref={animRef}>
-            <Search variant="text" placeholder="Search" value={searchInput} onChange={(e) => updateSearchQuery(e.target.value)}/>
+            <Search variant="text" placeholder="Search" value={searchInput} onChange={(e) => setSearchInput(e.target.value)}/>
             <SystemComponent mt={2} display="flex" flexDirection="row-reverse" display={["none", "none", "flex"]}>
                 {/*<BorderlessButton onClick={toggle}>{onState ? 'Hide Filters' : 'Show Filters'}</BorderlessButton> */}
                 {/*<BorderlessButton mr={5}>Show Sort</BorderlessButton>*/}
