@@ -13,7 +13,8 @@ const Member_Stream = new Schema({
         required: true
     },
     coopStream: {
-        type: Number,
+        type: Map,
+        of: Boolean
     },
     currentSchoolTerm: {
         type: String,
@@ -31,6 +32,16 @@ const Member_TermSchema = new Schema({
         required: true,
         enum: ['Fall', 'Winter', 'Spring']
     },
+});
+
+const Member_ProjectSchema = new Schema({
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+    description: {
+        type: [String]
+    }
 });
 
 const Member_CoopExpSchema = new Schema({
@@ -69,8 +80,7 @@ const Member_NameSchema = new Schema({
         required: true
     },
     display: {
-        type: String,
-        required: true
+        type: String
     },
 });
 
@@ -80,6 +90,10 @@ const Member_Birthday = new Schema({
         required: true
     },
     day: {
+        type: Number,
+        required: true
+    },
+    year: {
         type: Number,
         required: true
     }
@@ -102,6 +116,9 @@ const MemberSchema = new Schema({
         type: Member_NameSchema,
         required: true,
     },
+    program: {
+        type: String
+    },
     bio: {
         type: String
     },
@@ -115,26 +132,21 @@ const MemberSchema = new Schema({
     }],
     joined: {
         type: Member_TermSchema,
-        required: true
     },
     coopExp: {
         type: [Member_CoopExpSchema],
-        required: true
     },
     memberType: {
         type: Schema.Types.ObjectId,
-        required: true,
         ref: 'MemberType'
     },
-    subteam: {
+    subteams: [{
         type: Schema.Types.ObjectId,
         ref: 'Subteam',
-        require: true
-    },
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project',
-    },
+    }],
+    projects: [{
+        type: Member_ProjectSchema
+    }],
     email: {
         type: String,
         required: true,
@@ -143,22 +155,32 @@ const MemberSchema = new Schema({
     stream: {
         type: Member_Stream
     },
-    picture: {
+    imageUrl: {
         type: String
-    },
-    age: {
-        type: Number,
     },
     birthday: {
         type: Member_Birthday
     },
     links: {
         type: [Member_Link]
+    },
+    token: {
+        type: String,
+        select: false
+    },
+    tokenExpiry: {
+        type: Number,
+        select: false
     }
 });
 
 MemberSchema.plugin(uniqueValidator);
 
-const Member = mongoose.model('Member', MemberSchema);
+let Member;
+try {
+    Member = mongoose.connection.model('Member');
+} catch (e) {
+    Member = mongoose.model('Member', MemberSchema);
+}
 
 module.exports = Member;

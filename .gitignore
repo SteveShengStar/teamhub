@@ -15,9 +15,13 @@
 # production
 /build
 
+# circle-ci
+process.yml
+
 # misc
 .DS_Store
 .env*
+.idea
 
 # debug
 npm-debug.log*

@@ -16,6 +16,11 @@ const InterestSchema = new Schema({
 
 InterestSchema.plugin(uniqueValidator);
 
-const Interest = mongoose.model('Interest', InterestSchema);
+let Interest;
+try {
+    Interest = mongoose.connection.model('Interest');
+} catch (e) {
+    Interest = mongoose.model('Interest', InterestSchema);
+}
 
 module.exports = Interest;
