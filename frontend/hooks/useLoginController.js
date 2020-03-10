@@ -9,8 +9,10 @@ import { useSelector } from "react-redux";
 export default (onRender) => {
     const router = useRouter();
     const [ count, setCount ] = useState(0); // Persist bug workaround, lmao should get rid of later
+    console.log("Router: ", router.pathname)
     const [ canRender, setCanRender ] = useState(router.pathname.startsWith("/login"));
     const userState = useSelector(state => state.userState);
+    console.log("User State: ", userState);
     useEffect(() => {
         // get refresh token
         const token = window.localStorage.getItem("refreshToken");
@@ -23,7 +25,7 @@ export default (onRender) => {
         if (count == 0) {
             return;
         }
-        if (!userState.user._id) {
+        if (!userState.user || !userState.user._id) {
             if (router.pathname.router != "/login") router.push("/login");
             return;
         };
