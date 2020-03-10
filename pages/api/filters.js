@@ -1,4 +1,4 @@
-const data = require('../../../../backend/data/index');
+const data = require('../../backend/data/index');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -8,7 +8,7 @@ module.exports = async (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.members.search({ _id: req.query.id });
+                return await data.filters.getAll();
             })));
         }
     } else {

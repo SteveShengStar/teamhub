@@ -2,17 +2,23 @@ import styled from 'styled-components';
 import { SystemButton } from './SystemComponents';
 import { variant, color, space } from 'styled-system';
 
+
 const Button = styled(SystemButton)(
     {
         border: 'none',
         color: props => props.theme.colors.background,
         outline: 'none',
         '&:hover': {
-            opacity: 0.5,
-            transform: 'scale(1.05);'
+            transform: "scale(1.05)",
+        },
+        '@media (hover: none)': {
+            '&:hover': {
+                opacity: 1,
+                transform: "none"
+            }
         },
         '&:active': {
-            opacity: 0.25
+            opacity: 0.5
         },
         transition: 'all 0.2s ease',
         cursor: 'pointer',
@@ -48,6 +54,10 @@ const Button = styled(SystemButton)(
             },
             cancel: {
                 backgroundColor: 'inactive'
+            },
+            white: {
+                backgroundColor: 'white',
+                color: 'black'
             }
         }
     }),

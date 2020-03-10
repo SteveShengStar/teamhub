@@ -17,10 +17,10 @@ import theme from '../frontend/components/theme';
 import Nav from '../frontend/components/molecules/Nav';
 
 const navItems = [
-    {
+    /*{
         name: 'Explore', link: '/'
     },
-    {
+    /*{
         name: 'The Team', link: '/team',
     },
     {
@@ -31,7 +31,7 @@ const navItems = [
     },
     {
         name: 'Account', link: '/account'
-    }
+    }*/
 ];
 
 class MyApp extends App {

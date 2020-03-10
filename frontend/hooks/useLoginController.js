@@ -1,45 +1,36 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+import { useSelector } from "react-redux"
+import api from "../store/api"
+import useRedirect from "./useRedirect"
 import { useRouter } from "next/router"
-import { useSelector } from "react-redux";
+import { UserTypes } from "../store/reducers/userReducer"
 
 /**
- * @param { () => void } onRender
- * @returns { { canRender: boolean } }
+ * @param {*} loginTransition
+ * @param {*} dispatch
  */
-export default (onRender) => {
-    const router = useRouter();
-    const [ count, setCount ] = useState(0); // Persist bug workaround, lmao should get rid of later
-    console.log("Router: ", router.pathname)
-    const [ canRender, setCanRender ] = useState(router.pathname.startsWith("/login"));
-    const userState = useSelector(state => state.userState);
-    console.log("User State: ", userState);
-    useEffect(() => {
-        // get refresh token
-        const token = window.localStorage.getItem("refreshToken");
-        if (!token) {
-            // if there is no refresh we take them to the login page
-            if (router.pathname.router != "/login") router.push("/login");
-            return;
-        }
-        setCount(count + 1);
-        if (count == 0) {
-            return;
-        }
-        if (!userState.user || !userState.user._id) {
-            if (router.pathname.router != "/login") router.push("/login");
-            return;
-        };
-        // if user is logged in check user status
-        //if (router.pathname.router != "/login/onboarding1") router.push("/login/onboarding1")
-    }, [userState]);
+export default (loginTransition, dispatch, route) => {
+    const router = useRouter()
+    const { hydrated, token, user } = useSelector(state => state.userState)
 
     useEffect(() => {
-        if (canRender) {
-            onRender && onRender();
+        if (hydrated && token) {
+            api.auth.loginWithToken(token, dispatch, router).then(user => {
+                dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
+                if (route == "/login") useRedirect(user, router)
+                else loginTransition.show()
+            }).catch(err => {
+                console.error(err)
+                if (route == "/login") loginTransition.show()
+                else useRedirect(user, router)
+            })
+            return;
         }
-    }, [canRender])
-
-    return {
-        canRender
-    }
+        if (hydrated) {
+            if (route == "/login") loginTransition.show()
+            else useRedirect(user, router)
+            return;
+        }
+        loginTransition.show()
+    }, [hydrated])
 }

@@ -1,47 +1,55 @@
-import { useEffect, useState } from "react";
-import { LoginTransitionTypes } from "../components/templates/LoginTransition";
+import { useEffect, useState, useRef } from "react";
+import anime from "animejs"
 
 /**
- * 
+ * Logic to interface with Login Transition component
  * @param { HTMLElement } ref  
  * @param { () => void } onExit 
- * @returns { { hide: () => void, show: () => void, setRef: (ref: HTMLElement) => void, ref: HTMLElement }}
+ * @returns { { visible: boolean, setVisible: (visible: boolean) => void, hide: (onFinish: () => void) => void, show: () => void, ref: HTMLElement }}
  */
-export default function(onExit) {
-    const [ htmlRef, setHTMLRef ] = useState(null);
+export default () => {
+    const htmlRef = useRef(null);
+
+    const [ anim, setAnim ] = useState(false);
+    const [ visible, setVisible ] = useState(true)
 
     useEffect(() => {
-        const handleEventEnd = () => {
-            
-        }
-        if (htmlRef && htmlRef.current) htmlRef.current.addEventListener("transitionend", handleEventEnd);
-        return () => {
-            if (htmlRef && htmlRef.current) {
-                return htmlRef.current.removeEventListener("transitionend", handleEventEnd);
-            }
-        }
-    });
+        if (!visible && anim) hide()
+    }, [visible])
 
-    function hide() {
+    useEffect(() => {
+        if (anim && htmlRef && htmlRef.current) {
+            anime({
+                targets: htmlRef.current,
+                translateX: [
+                    { value: "100vw" },
+                    { value: 0 }
+                ],
+                duration: 500,
+                easing: "easeInOutQuad"
+            })
+        }
+    }, [anim])
+
+    function hide(onFinish) {
         if (htmlRef && htmlRef.current) {
-            htmlRef.current.style.transform = "translateX(100%)";
+            anime({
+                targets: htmlRef.current,
+                translateX: "-110vw",
+                duration: 0
+            }).finished.then(() => {
+                onFinish && onFinish()
+            })
         }
     }
 
-    function show() {
-        if (htmlRef && htmlRef.current) {
-            htmlRef.current.style.transform = "translateX(0)";
-        }
+    const show = () => {
+        if (!anim) setAnim(true)
     }
 
-    /**
-     * @param { HTMLElement } ref
-     */
-    function setRef(ref) {
-        setHTMLRef(ref);
-    }
+    
 
     return {
-        hide, show, setRef, ref: htmlRef
+        visible, setVisible, hide, show, ref: htmlRef
     }
 }

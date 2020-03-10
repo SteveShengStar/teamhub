@@ -34,6 +34,16 @@ const Member_TermSchema = new Schema({
     },
 });
 
+const Member_ProjectSchema = new Schema({
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    },
+    description: {
+        type: [String]
+    }
+});
+
 const Member_CoopExpSchema = new Schema({
     company: {
         type: String,
@@ -70,8 +80,7 @@ const Member_NameSchema = new Schema({
         required: true
     },
     display: {
-        type: String,
-        required: true
+        type: String
     },
 });
 
@@ -81,6 +90,10 @@ const Member_Birthday = new Schema({
         required: true
     },
     day: {
+        type: Number,
+        required: true
+    },
+    year: {
         type: Number,
         required: true
     }
@@ -103,6 +116,9 @@ const MemberSchema = new Schema({
         type: Member_NameSchema,
         required: true,
     },
+    program: {
+        type: String
+    },
     bio: {
         type: String
     },
@@ -124,14 +140,13 @@ const MemberSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'MemberType'
     },
-    subteam: {
+    subteams: [{
         type: Schema.Types.ObjectId,
         ref: 'Subteam',
-    },
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project',
-    },
+    }],
+    projects: [{
+        type: Member_ProjectSchema
+    }],
     email: {
         type: String,
         required: true,
@@ -143,9 +158,6 @@ const MemberSchema = new Schema({
     imageUrl: {
         type: String
     },
-    age: {
-        type: Number,
-    },
     birthday: {
         type: Member_Birthday
     },
@@ -153,7 +165,12 @@ const MemberSchema = new Schema({
         type: [Member_Link]
     },
     token: {
-        type: String
+        type: String,
+        select: false
+    },
+    tokenExpiry: {
+        type: Number,
+        select: false
     }
 });
 

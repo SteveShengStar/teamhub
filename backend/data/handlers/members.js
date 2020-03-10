@@ -41,8 +41,12 @@ members.getAll = async (fields) => {
 };
 
 
-members.search = async (body, fields) => {
+members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
+        const searchByDisplayName = body ? body.displayName : null;
+        if (searchByDisplayName) {
+            delete body.displayName;
+        }
         if (fields) {
             const query = Member.find(body).select(fields);
             if (fields['skills']) {
@@ -60,15 +64,41 @@ members.search = async (body, fields) => {
             if (fields['project']) {
                 query.populate('project');
             }
-            return (await query.exec());
+            if (showToken) {
+                query.select('+token');
+            }
+            let res = (await query.exec());
+            if (searchByDisplayName) {
+                res = res.filter(function (entry) {
+                    return entry.name.display === searchByDisplayName;
+                }).pop();
+            }
+            return res;
         } else {
-            const res = await (Member.find(body)
-                .populate('skills')
-                .populate('interests')
-                .populate('memberType')
-                .populate('subteam')
-                .populate('project')
-                .exec());
+            let res;
+            if (showToken) {
+                res = await (Member.find(body)
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteam')
+                    .populate('project')
+                    .select('+token')
+                    .exec());
+            } else {
+                res = await (Member.find(body)
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteam')
+                    .populate('project')
+                    .exec());
+            }
+            if (searchByDisplayName) {
+                res = res.filter(function (entry) {
+                    return entry.name.display === searchByDisplayName;
+                }).pop();
+            }
             return res;
         }
     });
@@ -79,8 +109,12 @@ members.add = async (memberBody) => {
         memberBody.interests = await util.replaceNamesWithIdsArray(memberBody.interests, interests);
         memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
         memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
-        memberBody.subteam = await util.replaceNameWithId(memberBody.subteam, subteams);
-        memberBody.project = await util.replaceBodyWithId(memberBody.project, projects);
+        memberBody.subteams = await util.replaceNamesWithIdsArray(memberBody.subteams, subteams);
+        if (memberBody.projects) {
+            for (let i = 0; i < memberBody.projects.length; i++) {
+                memberBody.projects[i].project = await util.replaceNameWithId(memberBody.projects[i].project, projects);
+            }
+        }
         return await Member.create(memberBody);
     });
 };
@@ -93,6 +127,15 @@ members.delete = async (body) => {
 
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
+        body.interests ? body.interests = await util.replaceNamesWithIdsArray(body.interests, interests) : null;
+        body.skills ? body.skills = await util.replaceNamesWithIdsArray(body.skills, skills) : null;
+        body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
+        body.subteams ? body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams) : null;
+        if (body.projects) {
+            for (let i = 0; i < body.projects.length; i++) {
+                body.projects[i].project = await util.replaceNameWithId(body.projects[i].project, projects);
+            }
+        }
         return (await Member.update(filter, body).exec());
     });
 };

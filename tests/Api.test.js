@@ -21,8 +21,39 @@ beforeAll(async (done) => {
 
 
 describe('API Integration Testing', () => {
+    it('Gets a list of members - no auth', async (done) => {
+        const response = await request(server)
+            .post('/api/members');
+
+        expect(response.statusCode).toBe(401);
+
+        done();
+    });
+
+    it('Gets a list of members - wrong auth method', async (done) => {
+        const response = await request(server)
+            .post('/api/members')
+            .set('authorization', 'WrongAuthMethod');
+
+        expect(response.statusCode).toBe(401);
+
+        done();
+    });
+
+    it('Gets a list of members - wrong token', async (done) => {
+        const response = await request(server)
+            .post('/api/members')
+            .set('authorization', 'Bearer wrongtoken');
+
+        expect(response.statusCode).toBe(403);
+        done();
+    });
+
     it('Gets a list of members', async (done) => {
-        const response = await request(server).post('/api/members');
+        const response = await request(server)
+            .post('/api/members')
+            .set('authorization', 'Bearer ab1b7e46460e3fccf77c2473a167e51e375ff4ddebfec272a7697164d2cbf792');
+
         const json = response.body;
 
         expect(response.statusCode).toBe(200);
@@ -33,13 +64,16 @@ describe('API Integration Testing', () => {
     });
 
     it('Gets info on a member', async (done) => {
-        const testID = '5e1a1cdd64b10c0008b03fd6';
-        const response = await request(server).get(`/api/members/${testID}/info`);
+        const testID = '5e6326c7f2692f0008fb1dfc';
+        const response = await request(server)
+            .get(`/api/members/${testID}/info`)
+            .set('authorization', 'Bearer ab1b7e46460e3fccf77c2473a167e51e375ff4ddebfec272a7697164d2cbf792');
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);
         // Expect info on only one member returned
         expect(response.body.body).toHaveLength(1);
+        expect(response.body.body[0].email).toBe('michael.p@waterloop.ca');
 
         done();
     });

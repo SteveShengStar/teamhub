@@ -1,3 +1,4 @@
+import { refreshable } from "./baseApi";
 
 export const login = (response) => {
     return fetch('/api/auth/login', {
@@ -8,4 +9,8 @@ export const login = (response) => {
         },
         body: JSON.stringify(response)
     }).then(res => res.json());
+}
+
+export const loginWithToken = (token, dispatch, router) => {
+    return refreshable('/api/auth/check', token, {}, dispatch, router)
 }

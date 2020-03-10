@@ -1,40 +1,20 @@
-import React, { useEffect, useRef } from "react";
-import styled from "styled-components";
-
-export const LoginTransitionTypes = new Proxy({
-    PRE_TRANSITION: "PRE_TRANSITION",
-    POST_TRANSITION: "POST_TRANSITION",
-    SHOWN: "SHOWN"
-}, {
-    set: () => {
-        throw new Error("Can't mutate immutable type LoginTransitionTypes")
-    }
-})
+import React, { useEffect, useRef, useState, useContext } from "react";
+import styled, { ThemeContext } from "styled-components";
+import LoadingModal from "../atoms/LoadingModal";
 
 /**
- * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: () => void, setRef: (ref: HTMLElement) => void }}}
+ * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: (onFinish: () => void) => void}}}
  */
-export default ({children, loginTransition}) => {
-    const ref = useRef(null);
-    useEffect(() => {
-        loginTransition.setRef(ref);
-    }, [ref])
+export default ({children, transitionRef}) => {
 
     return (
-        <Container state={loginTransition.state || LoginTransitionTypes.PRE_TRANSITION} ref={ref}>
+        <Container ref={transitionRef}>
             {children}
         </Container>
     )
 }
 
 const Container = styled.div`
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-
-    transition: all 1s ease;
-
-    transform: translateX(-100%);
+    transition: all 0.5s ease;
+    transform: translateX(110%);
 `;

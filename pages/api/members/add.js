@@ -8,5 +8,8 @@ module.exports = async (req, res) => {
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
             return await data.members.add(req.body);
         })));
+    } else {
+        res.statusCode = 404;
+        res.end();
     }
 };
