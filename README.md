@@ -8,8 +8,8 @@ Clone from GitHub with:
 ```git clone https://www.github.com/waterloop/teamhub.git```
 
 Navigate to `/backend/data/config.template.json`.
+
 Make a copy and rename it to `config.json`.
-Ask Michael Pu (@mchlp) for the database url.
 
 Follow the instructions listed under Setting Up Development Environment
 
