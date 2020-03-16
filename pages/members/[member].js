@@ -34,7 +34,7 @@ const Post = () => {
             
             return
         }
-        lookupMember(dispatch, token, routeId);
+        lookupMember(dispatch, token, routeId, router);
     }, []);
 
     useEffect(() => {

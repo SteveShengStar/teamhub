@@ -1,3 +1,4 @@
+import { refreshable } from "./baseApi";
 
 export const login = (response) => {
     return fetch('/api/auth/login', {
@@ -10,10 +11,6 @@ export const login = (response) => {
     }).then(res => res.json());
 }
 
-export const loginWithToken = (token) => {
-    return fetch('/api/auth/check', {
-        headers: {
-            'authorization': `Bearer ${token}`
-        }
-    }).then(res => res.json());
+export const loginWithToken = (token, dispatch, router) => {
+    return refreshable('/api/auth/check', token, {}, dispatch, router)
 }

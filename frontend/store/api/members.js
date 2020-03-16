@@ -6,7 +6,7 @@ import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
  * @param {*} filterOptions 
  * @returns {Promise<{name: string, subteam: string, role: string, imageUrl: string}[]>} members
  */
-export function getAll(token, options = {isSSR: true}, dispatch) {
+export function getAll(token, options = {isSSR: true}, dispatch, router) {
   let ssr = options.isSSR
   if (options) {
     delete options.isSSR;
@@ -20,7 +20,7 @@ export function getAll(token, options = {isSSR: true}, dispatch) {
       options,
       fields: ["name", "subteams", "memberType", "imageUrl", "stream"]
     })
-  }, dispatch)
+  }, dispatch, router)
 }
 
 /**
@@ -28,8 +28,8 @@ export function getAll(token, options = {isSSR: true}, dispatch) {
  * @param {string} id 
  * @returns {Promise<Member>} members
  */
-export function getMember(id, token, dispatch) {
-  return refreshable(`/api/members/${id}/info`, token, {}, dispatch)
+export function getMember(id, token, dispatch, router) {
+  return refreshable(`/api/members/${id}/info`, token, {}, dispatch, router)
 }
 
 
@@ -39,20 +39,20 @@ export function getMember(id, token, dispatch) {
  * @param {string} token 
  * @param {string} id
  */
-export function update(options, token, id, dispatch) {
+export function update(options, token, id, dispatch, router) {
   return refreshable(`/api/members/${id}/update`, token, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({data: options})
-  }, dispatch)
+  }, dispatch, router)
 }
 
 /**
  * 
  * @param {string} token 
  */
-export function getFilterOptions(token, dispatch) {
-  return refreshable(`/api/filters`, token, {}, dispatch)
+export function getFilterOptions(token, dispatch, router) {
+  return refreshable(`/api/filters`, token, {}, dispatch, router)
 }

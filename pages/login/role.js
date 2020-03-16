@@ -9,6 +9,9 @@ import Button from '../../frontend/components/atoms/Button';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import { getFilters } from "../../frontend/store/reducers/membersReducer"
 import { useRouter } from 'next/router';
+import useLoginTransition from '../../frontend/hooks/useLoginTransition';
+import useLoginController from '../../frontend/hooks/useLoginController';
+import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 
 const termMap = {
@@ -18,7 +21,7 @@ const termMap = {
 }
 
 export default () => {
-    const { user, token } = useSelector(state => state.userState);
+    const { user, token, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
     
@@ -67,13 +70,16 @@ export default () => {
 
     useEffect(() => {
         if (token && !filters.projects) {
-            getFilters(dispatch, token)
+            getFilters(dispatch, token, router)
         }
-    }, [token])
+    }, [hydrated])
+
+    const loginTransition = useLoginTransition()
+    useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
         if (!checkErrors()) return;
-        setShouldHide(true);
+        loginTransition.setVisible(false)
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: selectedProjects.map(project => {
@@ -87,14 +93,14 @@ export default () => {
                 season: termMap[selectedYear[0]],
                 year: parseInt('20' + selectedYear.slice(1))
             }
-        }, token, user._id).then(() => {
+        }, token, user._id, router).then(() => {
             router.push("/login/about");
         })
     }
     return (
         <>
             <PageTemplate myHubHidden={true} title="Onboarding">
-                <LoginTransition shouldHide={shouldHide}>
+                <LoginTransition transitionRef={loginTransition.ref}>
                     <OnboardingRoleCard 
                         subteamOptions={filters.subteams || []}
                         roleOptions={filters.roles || []}
@@ -113,6 +119,7 @@ export default () => {
             <Row>
                 <ContinueButton justifySelf="end" onClick={trySubmit}>Continue</ContinueButton>
             </Row>
+            <LoadingModal visible={!loginTransition.visible} />
         </>
     )
 }

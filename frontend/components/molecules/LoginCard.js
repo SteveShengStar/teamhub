@@ -9,17 +9,17 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../store/reducers/userReducer';
 
-export default ({onFinish, setShouldHide}) => {
+export default ({shouldHide, onFinish, loginRef}) => {
     const dispatch = useDispatch()
     function responseGoogle(response) {
         if (response.error) return;
-        setShouldHide && setShouldHide()
-        userLogin(response, dispatch).then(_ => {
-            onFinish && onFinish();
+        shouldHide && shouldHide();
+        userLogin(response, dispatch).then((user) => {
+            onFinish && onFinish(user);
         })
     }
     return (
-        <LoginCard>
+        <LoginCard ref={loginRef}>
             <SystemComponent m={7}>
                 <Header2 mb={6}>
                     Log In

@@ -11,7 +11,7 @@ import Card from '../frontend/components/atoms/Card';
 import Button from "../frontend/components/atoms/Button";
 import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
-import { searchMembers, lookupMember, getFilters } from '../frontend/store/reducers/membersReducer';
+import { searchMembers, lookupMember, getFilters, DataFetchType } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
@@ -20,17 +20,14 @@ const Home = () => {
     const router = useRouter();
     const theme = useContext(ThemeContext);
 
-    const members = useSelector(state => state.membersState.members)
-    const selectedMember = useSelector(state => state.membersState.selectedMember)
-    const loadedMembers = useSelector(state => state.membersState.loadedMembers)
-    const filters = useSelector(state => state.membersState.filters);
 
     const [ modalVisible, setModalVisible ] = useState(false);
     const memberCardRef = useRef();
 
     const [ searchQuery, setSearchQuery ] = useState({})
 
-    const userState = useSelector(state => state.userState);
+    const { token, hydrated } = useSelector(state => state.userState);
+    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState)
 
     const onSelectMember = (id) => {
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
@@ -44,12 +41,12 @@ const Home = () => {
             })
             return
         }
-        lookupMember(dispatch, userState.token, id);
+        lookupMember(dispatch, token, id, router);
     };
 
     const updateSearchQuery = (input) => {
         if (typeof(input) == "string") {
-            setSearchQuery({...searchQuery, name: input})
+            setSearchQuery({...searchQuery, display: input || undefined})
             return;
         }
         let normalized = {};
@@ -60,18 +57,22 @@ const Home = () => {
                 normalized[newKey] = input[key][0].label
             }
         });
-        setSearchQuery({...normalized, name: searchQuery.name})
+        setSearchQuery({...normalized, display: searchQuery.display })
     };
 
     useEffect(() => {
-        if (userState.token && !filters.projects) {
-            searchMembers(dispatch, userState.token, searchQuery)
+        if (filters.projects && !fetchingData) {
+            searchMembers(dispatch, token, searchQuery, router)
         }
-    }, [searchQuery, userState.token])
+    }, [searchQuery])
 
     useEffect(() => {
-        if (userState.token && !filters.projects) getFilters(dispatch, userState.token);
-    }, [userState.token])
+        if (hydrated && !fetchingData) {
+            getFilters(dispatch, token, router).then(success => {
+                if (success) searchMembers(dispatch, token, searchQuery, router)
+            })
+        }
+    }, [hydrated])
 
     useEffect(() => {
         if (selectedMember._id) {
@@ -83,6 +84,7 @@ const Home = () => {
             })
         }
     }, [selectedMember])
+
     
     return (
         <PageTemplate title="Explore">
@@ -93,7 +95,7 @@ const Home = () => {
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}
                 gridTemplateRows="auto auto"
-                gridTemplateColumns="1fr auto"
+                gridTemplateColumns="auto 1fr"
             >
                 <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery} hide={() => setModalVisible(false)}/>
                 <MembersListCard
@@ -113,7 +115,7 @@ const Home = () => {
                         </Button>
                     </SystemComponent>
                     <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
-                    <MemberListGrid members={members} onSelect={onSelectMember} />
+                    <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
                 </MembersListCard>
                 <MemberCard 
                     animRef={memberCardRef}
@@ -152,7 +154,11 @@ const MembersListCard = styled(Card)`
     }
 
     ${props => props.theme.mediaQueries.smallDesktop} {
-        width: auto;
+        width: 50vw;
+    }
+
+    ${props => props.theme.mediaQueries.desktop} {
+        width: 60vw;
     }
 `
 
@@ -160,7 +166,7 @@ const MemberCard = styled(MemberInfoCard)`
     display: none !important;
     ${props => props.theme.mediaQueries.tablet} {
         display: grid !important;
-        width: 30vw;
+        width: inherit;
         position: relative;
         height: inherit;
         transition: all 0.2s ease-in-out;

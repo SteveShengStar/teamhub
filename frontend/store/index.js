@@ -3,7 +3,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 
 import membersReducer, { membersInitialState } from './reducers/membersReducer';
-import userReducer, { usersInitialState } from './reducers/userReducer';
+import userReducer, { usersInitialState, UserTypes } from './reducers/userReducer';
 
 const persistConfig = {
     key: 'primary',
@@ -25,6 +25,9 @@ const appReducer = combineReducers({
 const rootReducer = (state, action) => {
     if (action.type === 'RESET') {
         state = initInitialState
+    }
+    if (action.type === UserTypes.RECEIVED_LOGIN) {
+        state = { ...state, userState: { ...state.userState, hydrated: true } }
     }
     return appReducer(state, action)
 }
