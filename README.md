@@ -54,6 +54,7 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
   * Design System uses [styled-components](https://www.styled-components.com) and [styled-system](https://styled-system.com)
   * State management will use [Redux](https://redux.js.org) (and possibly [redux-thunk](https://github.com/reduxjs/redux-thunk) for asynchronous redux).
 * Back-end
+  * **For Detailed Documentation on the Backend, see [./backend/README.md](./backend/README.md)**
   * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
   * MongoDB for database
   * [Jest](https://jestjs.io/) for testing
