@@ -6,6 +6,7 @@
 |Header       |Value                |
 |-------------|---------------------|
 |authorization|"Bearer " + authToken|
+
 **Body Parameters**
 |Field              |Description                                                                                                              |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -80,6 +81,7 @@ A copy of the document inserted into the database.
 |Header       |Value                |
 |-------------|---------------------|
 |authorization|"Bearer " + authToken|
+
 **Body Parameters**
 |Field              |Description                                                                                                              |
 |-------------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -94,10 +96,12 @@ A JSON object with the results
 |Header       |Value                |
 |-------------|---------------------|
 |authorization|"Bearer " + authToken|
+
 **URL Parameters**
 |Field|Description |
 |-----|------------|
 |:id  |ID of member|
+
 **Returns**
 A JSON object of the member with the specified ID.
 
@@ -106,10 +110,12 @@ A JSON object of the member with the specified ID.
 |Header       |Value                                                |
 |-------------|-----------------------------------------------------|
 |authorization|"Bearer " + authToken (must match user being deleted)|
+
 **URL Parameters**
 |Field|Description |
 |-----|------------|
 |:id  |ID of member|
+
 **Returns**
 A JSON object with the results
 
@@ -118,14 +124,17 @@ A JSON object with the results
 |Header       |Value                                                |
 |-------------|-----------------------------------------------------|
 |authorization|"Bearer " + authToken (must match user being updated)|
+
 **URL Parameters**
 |Field|Description           |
 |-----|----------------------|
 |id   |ID of member to update|
+
 **Body Parameters**
 |Field|Description                                                            |
 |-----|-----------------------------------------------------------------------|
 |data |JSON object with new field(s), for example: `{"subteam": "Electrical"}`|
+
 **Returns**
 A JSON object with the results
 
@@ -135,6 +144,7 @@ A JSON object with the results
 |Header       |Value                                                |
 |-------------|-----------------------------------------------------|
 |authorization|"Bearer " + authToken (must match user being updated)|
+
 **Returns**
 A JSON object with the result of the check (if the token is valid or not)
 
