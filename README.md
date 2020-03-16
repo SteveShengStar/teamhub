@@ -34,7 +34,7 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 * If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
-1. Install `Node.js` and `MongoDB` on your computer
+1. Install `Node.js` and `MongoDB` locally
 2. Run the script under `/docker/mongodb/docker-entrypoint-initdb.d/import.sh` if you are on Linux system. If you are on Windows or Mac, you may have to modify the command the script slightly.
 3. Run `npm install` in the root directory of this repo to install all othe dependencies
 4. Run `npm run dev` to start the dev environment
