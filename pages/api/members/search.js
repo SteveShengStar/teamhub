@@ -7,6 +7,11 @@ module.exports = async (req, res) => {
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
+            if (!req.body.options) {
+                res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                    throw Error('options field must be specified in body.');
+                })));
+            }
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 let fields = null;
                 if (req.body.fields) {
