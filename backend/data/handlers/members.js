@@ -106,7 +106,7 @@ members.search = async (body, fields, showToken = false) => {
 
 members.add = async (memberBody) => {
     return util.handleWrapper(async () => {
-        replaceBodyWithIds(memberBody);
+        memberBody = await replaceBodyWithIds(memberBody);
         return await Member.create(memberBody);
     });
 };
@@ -119,7 +119,7 @@ members.delete = async (body) => {
 
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
-        replaceBodyWithIds(body);
+        body = await replaceBodyWithIds(body);
         return (await Member.update(filter, body).exec());
     });
 };
@@ -167,9 +167,9 @@ const replaceBodyWithIds = async (body) => {
         }
     } else {
         body.subteams = null;
-
-
     }
+
+    return body;
 };
 
 module.exports = members;
