@@ -52,7 +52,7 @@ describe('API Integration Testing', () => {
     it('Gets a list of members', async (done) => {
         const response = await request(server)
             .post('/api/members')
-            .set('authorization', 'Bearer ab1b7e46460e3fccf77c2473a167e51e375ff4ddebfec272a7697164d2cbf792');
+            .set('authorization', 'Bearer 6d4dbb21aa5501cbf51de8d8958a1b1e436ff40eb693b3a2cb00587d4ef1e544');
 
         const json = response.body;
 
@@ -64,10 +64,10 @@ describe('API Integration Testing', () => {
     });
 
     it('Gets info on a member', async (done) => {
-        const testID = '5e6326c7f2692f0008fb1dfc';
+        const testID = '5e67e69e0b80460008ac5610';
         const response = await request(server)
             .get(`/api/members/${testID}/info`)
-            .set('authorization', 'Bearer ab1b7e46460e3fccf77c2473a167e51e375ff4ddebfec272a7697164d2cbf792');
+            .set('authorization', 'Bearer 6d4dbb21aa5501cbf51de8d8958a1b1e436ff40eb693b3a2cb00587d4ef1e544');
 
         expect(response.statusCode).toBe(200);
         expect(response.body.success).toBe(true);

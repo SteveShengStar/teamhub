@@ -8,8 +8,8 @@ Clone from GitHub with:
 ```git clone https://www.github.com/waterloop/teamhub.git```
 
 Navigate to `/backend/data/config.template.json`.
+
 Make a copy and rename it to `config.json`.
-Ask Michael Pu (@mchlp) for the database url.
 
 Follow the instructions listed under Setting Up Development Environment
 
@@ -33,6 +33,12 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 
 * If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
+### If Installing Docker Doesn't Work
+1. Install `Node.js` and `MongoDB` locally
+2. Run the script under `/docker/mongodb/docker-entrypoint-initdb.d/import.sh` if you are on Linux system. If you are on Windows or Mac, you may have to modify the command the script slightly.
+3. Run `npm install` in the root directory of this repo to install all othe dependencies
+4. Run `npm run dev` to start the dev environment
+
 ## Contributing
 
 1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
@@ -42,8 +48,8 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 5. Add the `wip` label to the Pull Request as well as `[WIP]` to the title of the Pull Request.
 6. Once you are finished, remove the `wip` label and `[WIP]` from the title of the Pull Request, add the `ready-to-merge` label to your Pull Request, and add at least one reviewer.
 7. Check up on your Pull Request and respond to any comments/questions
-8. Once your Pull Request has been reviewed and approved, you may merge it with `staging` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
-9. After testing, the `staging` branch will then be merged with `master` and deployed to production by site maintainers.
+8. Once your Pull Request has been reviewed and approved, you may merge it with `dev` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
+9. After testing, the `dev` branch will then be merged with `master` and deployed to production by site maintainers.
 
 ## Technologies used
 
@@ -54,6 +60,7 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
   * Design System uses [styled-components](https://www.styled-components.com) and [styled-system](https://styled-system.com)
   * State management will use [Redux](https://redux.js.org) (and possibly [redux-thunk](https://github.com/reduxjs/redux-thunk) for asynchronous redux).
 * Back-end
+  * **For Detailed Documentation on the Backend, see [./backend/README.md](./backend/README.md)**
   * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
   * MongoDB for database
   * [Jest](https://jestjs.io/) for testing
