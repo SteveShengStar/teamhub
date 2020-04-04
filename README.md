@@ -63,3 +63,35 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 7. Check up on your Pull Request and respond to any comments/questions
 8. Once your Pull Request has been reviewed and approved, you may merge it with `staging` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
 9. After testing, the `staging` branch will then be merged with `master` and deployed to production by site maintainers.
+
+## Documentation
+
+### Front-end
+
+1) Overview of front-end
+2) [Design System](#design-system)
+3) State management and API integrations
+4) Custom Hooks
+5) Notes
+
+#### Overview
+
+Front-endOrganization:
+
+      ├── pages
+      ...
+      ├── frontend
+         ├── components
+         ├── hooks
+         ├── store
+
+#### Design system
+
+1) Overview of the design system
+2) Components design system
+   1) Atoms
+   2) Molecules
+   3) Organisms
+   4) Templates
+   5) Pages
+3) Updating the design system
