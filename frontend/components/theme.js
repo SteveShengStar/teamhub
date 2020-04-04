@@ -94,7 +94,7 @@ const theme = {
         alertAction: alertRed,
         foreground: black,
         background: white,
-        greys,
+        grays,
         messagesBackground: messagesBlue,
         clickUp: clickUpPurple,
         software: softwareMagenta,
