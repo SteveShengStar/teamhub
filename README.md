@@ -2,15 +2,18 @@
 
 [![Actions Status](https://github.com/waterloop/teamhub/workflows/CI/badge.svg)](https://github.com/waterloop/teamhub/actions)
 
-View [design mockups here](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/).
+[Adobe XD Designs](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/)
 
 ## Table of Contents
 
-1. Getting Started
-   1. Installation
-   2. Setting up your Development Environment
-2. Trouble Shooting
-3. Contributing
+- [TeamHub Project](#teamhub-project)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Setting up your Development Environment](#setting-up-your-development-environment)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributing](#contributing)
+  - [Documentation](#documentation)
 
 ## Getting Started
 
@@ -37,14 +40,13 @@ Here are the steps to run locally:
 6. Or, to skip steps 5 & 6, run `npm run docker` to start the docker server and start the project
 7. To stop the docker containers, run `docker-compose stop`
 
-
 To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
 
 ## Troubleshooting
 
-* To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+- To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
 
-* If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
+- If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
 1. Install `Node.js` and `MongoDB` locally
@@ -66,32 +68,3 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 
 ## Documentation
 
-### Front-end
-
-1) Overview of front-end
-2) [Design System](#design-system)
-3) State management and API integrations
-4) Custom Hooks
-5) Notes
-
-#### Overview
-
-Front-endOrganization:
-
-      ├── pages
-      ...
-      ├── frontend
-         ├── components
-         ├── hooks
-         ├── store
-
-#### Design system
-
-1) Overview of the design system
-2) Components design system
-   1) Atoms
-   2) Molecules
-   3) Organisms
-   4) Templates
-   5) Pages
-3) Updating the design system
