@@ -1,10 +1,10 @@
-# Behind the Design System
+# Atomic Design & The Design System
 
 The purpose of this document is to outline how exactly Team Hub uses atomic design, and how it affects the way we build our user interface in Team Hub.
 
 ## Table of Contents
 
-- [Behind the Design System](#behind-the-design-system)
+- [Atomic Design & The Design System](#atomic-design--the-design-system)
   - [Table of Contents](#table-of-contents)
   - [The Model](#the-model)
     - [DNA and Theme](#dna-and-theme)
