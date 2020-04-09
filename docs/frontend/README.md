@@ -21,11 +21,14 @@ Use this primarily as a reference when you're building out front-end code.
       - [SystemSpan](#systemspan)
       - [Other System Components](#other-system-components)
       - [Body](#body)
+      - [Title](#title)
+      - [Subtitle](#subtitle)
       - [Header 1](#header-1)
       - [Header 2](#header-2)
       - [Header 3](#header-3)
       - [Header 4](#header-4)
       - [Header 5](#header-5)
+      - [Link](#link)
     - [Molecules](#molecules)
     - [Organisms](#organisms)
     - [Templates](#templates)
@@ -174,6 +177,36 @@ In `/front-end/components/atoms/Body.js`. View [source](../../frontend/component
 <Body variant="big">Now this body of text has a font-size of 16px</Body>
 ```
 
+#### Title
+
+In `/front-end/components/atoms/Title.js`. View [source](../../frontend/components/atoms/Title.js).
+
+<em>Default Properties</em>
+
+| CSS Property  | Value |
+|---------------|:----------------------|
+| margin-top    | 0px                   |
+| margin-bottom | 0px                   |
+| font-family   | "title"               |
+| font-weight   | "black"               |
+| font-size     | "title"               |
+| color         | "foreground"          |
+
+#### Subtitle
+
+In `/front-end/components/atoms/Subtitle.js`. View [source](../../frontend/components/atoms/Subtitle.js).
+
+<em>Default Properties</em>
+
+| CSS Property  | Value |
+|---------------|:----------------------|
+| margin-top    | 0px                   |
+| margin-bottom | 0px                   |
+| font-family   | "title"               |
+| font-weight   | "regular"             |
+| font-size     | "subtitle"            |
+| color         | "foreground"          |
+
 #### Header 1
 
 In `/front-end/components/atoms/Header1.js`. View [source](../../frontend/components/atoms/Header1.js).
@@ -243,6 +276,23 @@ In `/front-end/components/atoms/Header5.js`. View [source](../../frontend/compon
 | margin-bottom | 0px                   |
 | font-family   | "body"                |
 | font-size     | "header5"             |
+
+
+#### Link
+
+In `/front-end/components/atoms/Link.js`. View [source](../../frontend/components/atoms/Link.js).
+
+<em>Default Properties</em>
+
+| CSS Property  | Value                 |
+|---------------|:----------------------|
+| text-decoration    | "none"                   |
+| cursor | "pointer"                   |
+| transition   | "all 0.2s ease"                |
+| opacity      | 1.0             |
+| hover:opacity | 0.5 |
+| active:opacity | 0.25 |
+
 
 ### Molecules
 
