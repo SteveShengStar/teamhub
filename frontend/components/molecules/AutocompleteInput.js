@@ -1,4 +1,4 @@
-import {useRef, useState} from 'react';
+import {useState} from 'react';
 import styled from 'styled-components';
 import SuggestionBox from '../atoms/SuggestionBox';
 import theme from '../theme';
@@ -91,7 +91,6 @@ const AutocompleteInput = ({title,
                                 placeholder,
                                 value,
                                 handleInputChange}) => {
-    const suggestionBox = useRef(null);
     const [suggestionVisible, setSuggestionVisible] = useState(true);
 
     const handleKeyDown = (evt) => {
@@ -106,16 +105,13 @@ const AutocompleteInput = ({title,
     }
 
     const handleSelect = () => {
-        console.log("Handle Select Called.");
         const newListItem = value.trim();
         if (newListItem && !listOfSelected.includes(newListItem)) {
             updateList(listOfSelected.concat(newListItem));
         }
         handleInputChange('');
     }
-    
-    console.log(suggestionBox.current);
-    
+        
     return (
         <SystemComponent>
             <SystemComponent>
@@ -131,7 +127,6 @@ const AutocompleteInput = ({title,
                     visible={suggestionVisible}
                     value={value} 
                     handleClick={handleSelect}
-                    ref={suggestionBox}
                 />
                 <CustomInput 
                     variant="text" 
