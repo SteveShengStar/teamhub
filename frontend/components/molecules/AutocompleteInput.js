@@ -34,12 +34,11 @@ const CrossContainer = styled(SystemComponent)`
     
 
     &:hover {
-        background-color: #888888;
-        color: white;
-
         ${CrossIcon} {
-            color: white;
+            color: ${props => props.theme.colors.alertAction};
         }
+
+        background-color: ${props => props.theme.colors.greys[2]};
     }
 `;
 
