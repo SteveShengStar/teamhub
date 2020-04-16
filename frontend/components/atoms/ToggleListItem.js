@@ -10,7 +10,13 @@ const CustomButton = styled(Button)`
 
     &:hover {
         /* TODO: Deactivate these effects for now. Think about what to do for this later */
-        opacity: 1;
+        /* TODO: Think about using LESS or SASS to make transitions more smooth */
+        /* https://www.freecodecamp.org/forum/t/is-there-a-way-to-calculate-the-width-needed-to-get-to-the-end-of-the-parent-element-in-a-css-transition/184506*/
+        
+        &::after {
+            margin-left: 15px;
+            content: "✔";
+        }
         transform: none;
     }
     

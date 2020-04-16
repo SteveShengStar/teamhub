@@ -63,16 +63,12 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                 <SystemComponent mr>
                     <Header5>Which Subteams are you in ?</Header5>
                     <SystemComponent display='grid' 
-                        gridTemplateColumns='1fr 1fr'
+                        gridTemplateColumns='1fr'
                         gridRowGap={3}
                     >
                         {
                             selectedSubteams.map((subteam, i) => 
-                                <SystemComponent 
-                                    key={subteam}   
-                                    gridRow={(i+1).toString().concat(' / span 1')}
-                                    gridColumn="1 / 2"
-                                >
+                                <SystemComponent key={subteam}>
                                     <ToggleListItem 
                                         id={subteam}
                                         variant={subteamThemeMapping[subteam]}
@@ -92,11 +88,7 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                         }
                         {
                             nonMemberSubteams.map((subteam, i) => 
-                                <SystemComponent 
-                                    key={subteam}  
-                                    gridRow={(i+1).toString().concat(' / span 1')}
-                                    gridColumn="2 / 3"
-                                >
+                                <SystemComponent key={subteam}>
                                     <ToggleListItem 
                                         id={subteam}
                                         variant="cancel"
@@ -114,7 +106,7 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                 </SystemComponent>  
                 <SystemComponent>
                     <AutocompleteInput 
-                        title="What Projects are you Working on?"
+                        title="What Projects are you Working on ?"
                         listOfSelected={selectedProjects}
                         updateList={(projList) => setSelectedProjects(projList)}
                         placeholder="Add Project"   
