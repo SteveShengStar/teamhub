@@ -1,3 +1,4 @@
+import {useRef, useState} from 'react';
 import styled from 'styled-components';
 import SuggestionBox from '../atoms/SuggestionBox';
 import theme from '../theme';
@@ -91,6 +92,8 @@ const AutocompleteInput = ({title,
                                 placeholder,
                                 value,
                                 handleInputChange}) => {
+    const suggestionBox = useRef(null);
+    const [suggestionVisible, setSuggestionVisible] = useState(true);
 
     const handleKeyDown = (evt) => {
         // If tab or enter are pressed, add item to the selected items list.
@@ -104,12 +107,15 @@ const AutocompleteInput = ({title,
     }
 
     const handleSelect = () => {
+        console.log("Handle Select Called.");
         const newListItem = value.trim();
         if (newListItem && !listOfSelected.includes(newListItem)) {
             updateList(listOfSelected.concat(newListItem));
         }
         handleInputChange('');
     }
+    
+    console.log(suggestionBox.current);
     
     return (
         <SystemComponent>
@@ -121,13 +127,24 @@ const AutocompleteInput = ({title,
                 handleDeselect={handleDeselect}
             />
             <SystemComponent position="relative">
-                <SuggestionBox p={theme.space[4]} position="absolute" value={value} handleClick={handleSelect}/>
+                <SuggestionBox p={theme.space[4]} 
+                    position="absolute" 
+                    visible={suggestionVisible}
+                    value={value} 
+                    handleClick={handleSelect}
+                    ref={suggestionBox}
+                />
                 <CustomInput 
                     variant="text" 
                     placeholder={placeholder}
                     value={value}
                     onChange={(evt) => handleInputChange(evt.target.value)}
                     onKeyDown={handleKeyDown}
+                    onFocus={() => {setSuggestionVisible(true);}}
+                    onBlur={() => {
+                        handleSelect(); 
+                        setSuggestionVisible(false);
+                    }}
                 />
             </SystemComponent>
         </SystemComponent>
