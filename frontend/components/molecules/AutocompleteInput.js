@@ -3,7 +3,7 @@ import SuggestionBox from '../atoms/SuggestionBox';
 import theme from '../theme';
 
 import Header5 from '../atoms/Header5';
-import {SystemComponent} from '../atoms/SystemComponents';
+import {SystemComponent, SystemSpan} from '../atoms/SystemComponents';
 import Input from '../atoms/Input';
 import {filter} from 'lodash';
 import PropTypes from 'prop-types';
@@ -15,17 +15,31 @@ const CustomInput = styled(Input)`
     width: 100%;
 `;
 
-const CrossIcon = styled(SystemComponent)`
+
+const CrossIcon = styled(SystemSpan)`
+    display: inline-block;
+    vertical-align: middle;
+`;
+
+const CrossContainer = styled(SystemComponent)`
     text-align: center;    
     cursor: pointer;
     width: 30px;
+    -webkit-border-top-right-radius: inherit;
+    -webkit-border-bottom-right-radius: inherit;
+    -moz-border-radius-topright: inherit;
+    -moz-border-radius-bottomright: inherit;
     border-bottom-right-radius: inherit;
     border-top-right-radius: inherit;
     
 
     &:hover {
         background-color: #888888;
-        color: ${props => props.theme.colors.background}
+        color: white;
+
+        ${CrossIcon} {
+            color: white;
+        }
     }
 `;
 
@@ -38,17 +52,16 @@ const ProjectListItem = ({projName, handleDeselect}) => {
             mr={4}
             mb={2}
             ml={0}
-            pt={1}
+            paddingY={0}
             pr={0}
-            pb={1}
             pl={4}
             borderRadius={theme.radii[2]}
             backgroundColor={theme.colors.listBackgroundBlue}
         >
-            <SystemComponent pr={1}>{projName}</SystemComponent>
-            <CrossIcon onClick={() => handleDeselect(projName)}>
-                <span className="fas fa fa-times"></span>
-            </CrossIcon>
+            <SystemComponent pr={1} paddingY={1}>{projName}</SystemComponent>
+            <CrossContainer onClick={() => handleDeselect(projName)}>
+                <CrossIcon><span className="fas fa fa-times"></span></CrossIcon>
+            </CrossContainer>
         </SystemComponent>
     )
 }
@@ -80,7 +93,8 @@ const AutocompleteInput = ({title,
                                 handleInputChange}) => {
 
     const handleKeyDown = (evt) => {
-        if (evt.keyCode === 13)
+        // If tab or enter are pressed, add item to the selected items list.
+        if (evt.keyCode === 13 || evt.keyCode === 9)
             handleSelect();
     }
 
