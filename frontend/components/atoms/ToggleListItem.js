@@ -3,6 +3,15 @@ import Button from './Button';
 import { variant } from 'styled-system';
 
 
+const subteamThemes = {
+    0: "software",
+    1: "electrical",
+    2: "mechanical",
+    3: "exec",
+    4: "infrastructure",
+    5: "admin"
+};
+
 // TODO: consider making this inherit from SystemButton --> decouples these 2 atoms
 const CustomButton = styled(Button)`
     padding-top: 2px;
@@ -17,6 +26,7 @@ const CustomButton = styled(Button)`
             margin-left: 15px;
             content: "✔";
         }
+        opacity: 1;
         transform: none;
     }
     
@@ -25,9 +35,12 @@ const CustomButton = styled(Button)`
         ${props => props.selected && 'content: "✔";'}
     }
 `;
+
 // TODO: use proptypes to make this take only text
-const ToggleListItem = ({children, id, variant, selected, onSelect}) => {
+const ToggleListItem = ({children, id, selected, onSelect}) => {
     
+    const variant = selected ? subteamThemes[id] : "cancel";
+
     return (
         <CustomButton variant={variant}
             selected={selected}
@@ -37,5 +50,4 @@ const ToggleListItem = ({children, id, variant, selected, onSelect}) => {
         </CustomButton>
     )
 }
-
 export default ToggleListItem;

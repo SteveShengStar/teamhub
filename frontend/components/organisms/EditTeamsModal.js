@@ -20,32 +20,37 @@ const subteamMapping = {
     4: "infrastructure",
     5: "admin"
 };
-const subteamThemeMapping = {
-    0: "software",
-    1: "electrical",
-    2: "mechanical",
-    3: "exec",
-    4: "infrastructure",
-    5: "admin"
-};
 
 const EditTeamsModal = ({visible, handleCloseModal}) => {
-    const [selectedSubteams, setSelectedSubteams] = useState([0, 1]);
+
+    const persistedSelectedTeams = [0, 1];
+    let persistedNonSelectedteams = filter(Object.keys(subteamMapping), 
+        teamId => persistedSelectedTeams.includes(parseInt(teamId, 10)) === false
+    );
+    persistedNonSelectedteams = persistedNonSelectedteams.map(teamId => parseInt(teamId, 10));
+
+    const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
     const [project, setProject] = useState('');
-    const [selectedProjects, setSelectedProjects] = useState(['Teamhub', 'Motor Control'])
+    const [selectedProjects, setSelectedProjects] = useState(['Teamhub', 'Motor Control']);
     const [roleDescription, setRoleDescription] = useState('');
     
-    let nonMemberSubteams = filter(Object.keys(subteamMapping), 
-        subteamId => selectedSubteams.includes(parseInt(subteamId, 10)) === false
-    );
-    nonMemberSubteams = nonMemberSubteams.map(subteamId => parseInt(subteamId, 10));
-
+    
     const handleSave = () => {
-
+        /* TODO: implement this */
     }
 
     const handleInputChange = (newProject) => {
         setProject(newProject);
+    }
+
+    const toggleSelectItem = (teamId) => {
+        if (localSelectedTeams.includes(teamId)) {
+            setLocalSelectedTeams(
+                filter(localSelectedTeams, i => i != teamId)
+            );       
+        } else {
+            setLocalSelectedTeams(localSelectedTeams.concat(teamId));
+        }
     }
 
     return (
@@ -67,37 +72,27 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                         gridRowGap={3}
                     >
                         {
-                            selectedSubteams.map((subteam, i) => 
-                                <SystemComponent key={subteam}>
+                            persistedSelectedTeams.map((team) => 
+                                <SystemComponent key={team}>
                                     <ToggleListItem 
-                                        id={subteam}
-                                        variant={subteamThemeMapping[subteam]}
-                                        selected={true}
-                                        onSelect={(subteamId) => {
-                                            setSelectedSubteams(
-                                                filter(selectedSubteams, 
-                                                    e => e != subteamId
-                                                )
-                                            );
-                                        }}
+                                        id={team}
+                                        selected={localSelectedTeams.includes(team)}
+                                        onSelect={toggleSelectItem}
                                     >
-                                        {subteamMapping[subteam]}
+                                        {subteamMapping[team]}
                                     </ToggleListItem>
                                 </SystemComponent>
                             )
                         }
                         {
-                            nonMemberSubteams.map((subteam, i) => 
-                                <SystemComponent key={subteam}>
+                            persistedNonSelectedteams.map((team) => 
+                                <SystemComponent key={team}>
                                     <ToggleListItem 
-                                        id={subteam}
-                                        variant="cancel"
-                                        selected={false}
-                                        onSelect={(subteamId) => {
-                                            setSelectedSubteams(selectedSubteams.concat(subteamId));
-                                        }}
+                                        id={team}
+                                        selected={localSelectedTeams.includes(team)}
+                                        onSelect={toggleSelectItem}
                                     >
-                                        {subteamMapping[subteam]}
+                                        {subteamMapping[team]}
                                     </ToggleListItem>
                                 </SystemComponent>
                             )
