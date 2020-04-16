@@ -16,7 +16,17 @@ const CustomInput = styled(Input)`
 `;
 
 const CrossIcon = styled(SystemComponent)`
+    text-align: center;    
     cursor: pointer;
+    width: 30px;
+    border-bottom-right-radius: inherit;
+    border-top-right-radius: inherit;
+    
+
+    &:hover {
+        background-color: #888888;
+        color: ${props => props.theme.colors.background}
+    }
 `;
 
 const ProjectListItem = ({projName, handleDeselect}) => {
@@ -29,14 +39,16 @@ const ProjectListItem = ({projName, handleDeselect}) => {
             mb={2}
             ml={0}
             pt={1}
-            pr={4}  
+            pr={0}
             pb={1}
             pl={4}
             borderRadius={theme.radii[2]}
             backgroundColor={theme.colors.listBackgroundBlue}
         >
-            <SystemComponent mr={3}>{projName}</SystemComponent>
-            <CrossIcon onClick={() => handleDeselect(projName)}><span className="fas fa fa-times"></span></CrossIcon>
+            <SystemComponent pr={1}>{projName}</SystemComponent>
+            <CrossIcon onClick={() => handleDeselect(projName)}>
+                <span className="fas fa fa-times"></span>
+            </CrossIcon>
         </SystemComponent>
     )
 }
