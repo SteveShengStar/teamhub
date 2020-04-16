@@ -43,12 +43,9 @@ const SettingsDivSubsection = ({type,
                                 labelValues,
                                 labelStyleVariants,
                                 children}) => {
-    //console.log(theme.colors[subteams[1]]);
-
     // TODO: revise this condition later
     // TODO: update the keys later
     // TODO: make sure labelValues and labelStylingVariants have same length
-    console.log(labelValues);
     let sectionBody;
     switch(type) {
         case 'normal':

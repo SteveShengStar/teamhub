@@ -67,7 +67,6 @@ auth.login = async (tokenObj) => {
             audience: authConfig['client_id'],
         });
         const payload = ticket.getPayload();
-        console.log(payload);
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {

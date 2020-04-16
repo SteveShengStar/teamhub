@@ -56,8 +56,6 @@ const EditLinksModal = ({visible, handleCloseModal}) => {
             allowedHosts = 
                 allowedHosts.concat(allowedHosts.map(host => 'www.'.concat(host)));
         }
-        console.log(allowedHosts)
-
         if (!isURL(fieldValue, {require_host: true, 
                                 allow_underscores: true,
                                 host_whitelist: allowedHosts})) {
