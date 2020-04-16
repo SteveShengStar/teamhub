@@ -17,18 +17,26 @@ const HoverBox = styled(SystemComponent)`
     opacity: 0.9;
     cursor: pointer;
 `;
-const SuggestionBox = ({value, handleClick}) => {
-    // TODO: is this the best way to check that there is no children ?
-    if (value) {
-        return (
-            <HoverBox onClick={handleClick}>
-                <SystemSpan opacity={1}>{value}</SystemSpan>
-            </HoverBox>
-        )
-    } else {
-        return <></>
+
+class SuggestionBox extends React.Component {
+    constructor(props) {
+        super(props);
     }
-};
+
+    render() {
+        const {value, visible, handleClick} = this.props;
+
+        if (value && visible) {
+            return (
+                <HoverBox onClick={handleClick}>
+                    <SystemSpan opacity={1}>{value}</SystemSpan>
+                </HoverBox>
+            );
+        } else {
+            return <></>;
+        }
+    }
+}
 
 SuggestionBox.propTypes = {
     value: PropTypes.string
