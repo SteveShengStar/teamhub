@@ -23,16 +23,16 @@ const CustomButton = styled(Button)`
         /* https://www.freecodecamp.org/forum/t/is-there-a-way-to-calculate-the-width-needed-to-get-to-the-end-of-the-parent-element-in-a-css-transition/184506*/
         
         &::after {
-            margin-left: 15px;
             content: "✔";
+            margin-left: ${props => props.selected ? '5px' : '10px'};
         }
         opacity: 1;
         transform: none;
     }
     
     &::after {
-        ${props => props.selected && 'margin-left: 15px;'}
         ${props => props.selected && 'content: "✔";'}
+        margin-left: 5px;
     }
 `;
 
