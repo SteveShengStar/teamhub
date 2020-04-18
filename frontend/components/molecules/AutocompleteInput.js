@@ -1,13 +1,15 @@
 import {useState} from 'react';
 import styled from 'styled-components';
-import SuggestionBox from '../atoms/SuggestionBox';
-import theme from '../theme';
-
-import Header5 from '../atoms/Header5';
-import {SystemComponent, SystemSpan} from '../atoms/SystemComponents';
-import Input from '../atoms/Input';
 import {filter} from 'lodash';
 import PropTypes from 'prop-types';
+import theme from '../theme';
+
+import SuggestionBox from '../atoms/SuggestionBox';
+
+import Input from '../atoms/Input';
+import Header5 from '../atoms/Header5';
+import {SystemComponent} from '../atoms/SystemComponents';
+import ListItemContainer from '../atoms/ListItemContainer';
 
 
 const CustomInput = styled(Input)`
@@ -15,56 +17,6 @@ const CustomInput = styled(Input)`
     height: 34px;
     width: 100%;
 `;
-
-
-const CrossIcon = styled(SystemSpan)`
-    display: inline-block;
-    vertical-align: middle;
-`;
-
-const CrossContainer = styled(SystemComponent)`
-    text-align: center;    
-    cursor: pointer;
-    width: 30px;
-    -webkit-border-top-right-radius: inherit;
-    -webkit-border-bottom-right-radius: inherit;
-    -moz-border-radius-topright: inherit;
-    -moz-border-radius-bottomright: inherit;
-    border-bottom-right-radius: inherit;
-    border-top-right-radius: inherit;
-    
-
-    &:hover {
-        ${CrossIcon} {
-            color: ${props => props.theme.colors.alertAction};
-        }
-
-        background-color: ${props => props.theme.colors.greys[2]};
-    }
-`;
-
-const ProjectListItem = ({projName, handleDeselect}) => {
-    return (
-        <SystemComponent 
-            display='flex' 
-            flexDirection='row'
-            mt={0}
-            mr={4}
-            mb={2}
-            ml={0}
-            paddingY={0}
-            pr={0}
-            pl={4}
-            borderRadius={theme.radii[2]}
-            backgroundColor={theme.colors.listBackgroundBlue}
-        >
-            <SystemComponent pr={1} paddingY={1}>{projName}</SystemComponent>
-            <CrossContainer onClick={() => handleDeselect(projName)}>
-                <CrossIcon><span className="fas fa fa-times"></span></CrossIcon>
-            </CrossContainer>
-        </SystemComponent>
-    )
-}
 
 const HorizontalList = ({listItems, handleDeselect}) => {
     return(
@@ -76,15 +28,15 @@ const HorizontalList = ({listItems, handleDeselect}) => {
                 mt={1}
                 mb={2}
             >
-                {listItems.map(proj => 
-                    <ProjectListItem projName={proj} handleDeselect={handleDeselect}/>
+                {listItems.map(projName => 
+                    <ListItemContainer itemName={projName} handleDeselect={handleDeselect}/>
                 )}
             </SystemComponent>
             )
     )
 }
 
-// TODO: Make Autocomplete Work
+// TODO: Load suggestions from backend.
 const AutocompleteInput = ({title,
                                 listOfSelected,
                                 updateList,
