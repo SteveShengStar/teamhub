@@ -2,12 +2,12 @@ import styled, { ThemeContext } from 'styled-components';
 import {SystemSpan, SystemComponent} from './SystemComponents';
 import { useContext } from 'react';
 
-const CrossIcon = styled(SystemSpan)`
+export const CrossIcon = styled(SystemSpan)`
     display: inline-block;
     vertical-align: middle;
 `;
 
-const Wrapper = styled(SystemComponent)`
+const CrossIconWrapper = styled(SystemComponent)`
     text-align: center;    
     cursor: pointer;
     width: 30px;
@@ -46,10 +46,10 @@ const SelectedItemContainer = ({itemName, handleDeselect}) => {
             backgroundColor={theme.colors.listBackgroundBlue}
         >
             <SystemComponent pr={1} paddingY={1}>{itemName}</SystemComponent>
-            <Wrapper onClick={() => handleDeselect(itemName)}>
+            <CrossIconWrapper onClick={() => handleDeselect(itemName)}>
                 <CrossIcon><span className="fas fa fa-times"></span></CrossIcon>
-            </Wrapper>
+            </CrossIconWrapper>
         </SystemComponent>
-    )
-}
+    );
+};
 export default SelectedItemContainer;

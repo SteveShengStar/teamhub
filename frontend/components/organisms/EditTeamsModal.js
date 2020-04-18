@@ -76,11 +76,10 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                                 <SystemComponent key={team}>
                                     <ToggleListItem 
                                         id={team}
+                                        text={subteamMapping[team]}
                                         selected={localSelectedTeams.includes(team)}
                                         onSelect={toggleSelectItem}
-                                    >
-                                        {subteamMapping[team]}
-                                    </ToggleListItem>
+                                    />
                                 </SystemComponent>
                             )
                         }
@@ -89,11 +88,10 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                                 <SystemComponent key={team}>
                                     <ToggleListItem 
                                         id={team}
+                                        text={subteamMapping[team]}
                                         selected={localSelectedTeams.includes(team)}
                                         onSelect={toggleSelectItem}
-                                    >
-                                        {subteamMapping[team]}
-                                    </ToggleListItem>
+                                    />
                                 </SystemComponent>
                             )
                         }
