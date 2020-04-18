@@ -7,7 +7,7 @@ const CrossIcon = styled(SystemSpan)`
     vertical-align: middle;
 `;
 
-const CrossContainer = styled(SystemComponent)`
+const Wrapper = styled(SystemComponent)`
     text-align: center;    
     cursor: pointer;
     width: 30px;
@@ -28,7 +28,7 @@ const CrossContainer = styled(SystemComponent)`
     }
 `;
 
-const ListItemContainer = ({itemName, handleDeselect}) => {
+const SelectedItemContainer = ({itemName, handleDeselect}) => {
     const theme = useContext(ThemeContext);
 
     return (
@@ -46,10 +46,10 @@ const ListItemContainer = ({itemName, handleDeselect}) => {
             backgroundColor={theme.colors.listBackgroundBlue}
         >
             <SystemComponent pr={1} paddingY={1}>{itemName}</SystemComponent>
-            <CrossContainer onClick={() => handleDeselect(itemName)}>
+            <Wrapper onClick={() => handleDeselect(itemName)}>
                 <CrossIcon><span className="fas fa fa-times"></span></CrossIcon>
-            </CrossContainer>
+            </Wrapper>
         </SystemComponent>
     )
 }
-export default ListItemContainer;
+export default SelectedItemContainer;

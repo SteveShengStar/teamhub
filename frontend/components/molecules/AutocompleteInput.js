@@ -5,11 +5,10 @@ import PropTypes from 'prop-types';
 import theme from '../theme';
 
 import SuggestionBox from '../atoms/SuggestionBox';
-
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import {SystemComponent} from '../atoms/SystemComponents';
-import ListItemContainer from '../atoms/ListItemContainer';
+import SelectedItemContainer from '../atoms/SelectedItemContainer';
 
 
 const CustomInput = styled(Input)`
@@ -29,7 +28,7 @@ const HorizontalList = ({listItems, handleDeselect}) => {
                 mb={2}
             >
                 {listItems.map(projName => 
-                    <ListItemContainer itemName={projName} handleDeselect={handleDeselect}/>
+                    <SelectedItemContainer itemName={projName} handleDeselect={handleDeselect}/>
                 )}
             </SystemComponent>
             )
