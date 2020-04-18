@@ -151,7 +151,9 @@ const Home = () => {
                                 setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
                             }}
                         >
-                            <ProfileSummary />
+                            <SystemComponent mb={2}>
+                                <ProfileSummary />
+                            </SystemComponent>
                             <SettingsDivSubsection headerText='My Skills'
                                 type="list"
                                 isLabelListSection={true}
