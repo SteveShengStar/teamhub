@@ -26,15 +26,18 @@ const CrossIconWrapper = styled(SystemComponent)`
     border-bottom-right-radius: inherit;
     border-top-right-radius: inherit;
 
+    border-style: solid;
+    border-width: 2px;
+
     background-color: #FFFFFF;
     color: #000000;
 `;
 
 // TODO: consider making this inherit from SystemButton --> decouples these 2 atoms
 const CustomToggle = styled(Button)`
-    padding-right: ${props => props.selected ? '2px' : '15px'};
-    padding-bottom: 2px;
-    padding-top: 2px;
+    padding-right: ${props => props.selected ? '0' : '15px'};
+    padding-bottom: 0;
+    padding-top: 0;
     display: flex;
 
     &:hover {
@@ -48,6 +51,8 @@ const CustomToggle = styled(Button)`
         ${props => !props.selected && `
             &::after {
                 content: "✔";
+                padding-top: 3px;
+                padding-bottom: 3px;
                 margin-left: 10px;
             }
         `}
@@ -71,16 +76,16 @@ const ToggleListItem = ({text, id, selected, onSelect}) => {
             selected={selected}
             onClick={() => onSelect(id)}
         >
-            <SystemComponent color="#ffffff">{text}</SystemComponent>
+            <SystemComponent paddingY="3px" color="#ffffff">{text}</SystemComponent>
             {selected && 
-                <>
-                    <SystemComponent pl={2} pr={3} color="#ffffff">&#10004;</SystemComponent>
-                    <CrossIconWrapper>
-                        <CrossIcon>
-                            <span className="fas fa fa-times"></span>
-                        </CrossIcon>
-                    </CrossIconWrapper>
-                </>
+                <SystemComponent pl={2} pr={3} paddingY="3px" color="#ffffff">&#10004;</SystemComponent>
+            }
+            {selected && 
+                <CrossIconWrapper borderColor={variant}>
+                    <CrossIcon>
+                        <span className="fas fa fa-times"></span>
+                    </CrossIcon>
+                </CrossIconWrapper>
             }
         </CustomToggle>
     )
