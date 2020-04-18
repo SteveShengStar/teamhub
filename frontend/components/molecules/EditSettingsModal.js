@@ -12,7 +12,8 @@ const CustomContentContainer = styled(ContentContainer)`
     box-sizing: border-box;
     width: 86vw;
     min-width: 300px;
-    max-height: 80vh;
+    max-height: 90vh;
+    overflow: auto;
     min-height: 30vh;
 
     padding: 25px;
@@ -44,7 +45,7 @@ const EditSettingsModal = ({className, children, visible, title, handleCloseModa
                         {title}
                     </Header3>
                 </SystemComponent>
-                <SystemComponent height='calc(100vh - 272px)' overflowY="auto">
+                <SystemComponent overflowY="auto">
                     {children}
                 </SystemComponent>
                 <SystemComponent display='flex' 
