@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/router";
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
 import {ACTIVE_MODAL} from '../frontend/components/constants';
@@ -12,31 +14,21 @@ import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSel
 import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
 
 import member from '../frontend/mockdata/member';
-import {lowerCase} from 'lodash';
+import {lowerCase, capitalize} from 'lodash';
 
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import theme from '../frontend/components/theme';
+import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 
-const altText = [
-    "Website link",
-    "Linkedin Profile link",
-    "Github Profile link",
-    "Facebook Profile link"
-]
+const altText = {
+    "website": "Personal Website",
+    "linkedin": "Linkedin Profile",
+    "github": "Github Profile",
+    "facebook": "Facebook Profile"
+}
 
-const skills = member.skills;
-const subteams = member.subteams;
-const interests = member.interests;
-const projects = member.projects;
-const bio = member.bio;
 const roleDescription = member.roleDescription;
-
-const externalLinks = [member.facebook, member.github, member.linkedin, member.website];
-const externalLinkLabels = ["Facebook",
-                            "Github",
-                            "LinkedIn",
-                            "Personal Website"];
 
 const SettingsDivBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
@@ -103,13 +95,36 @@ const NonUnderlinedLink = styled(SystemLink)`
     }
 `;
 
+
 const Home = () => {
     const [ activeModal, setActiveModal ] = useState(false);
+    const [ isLoaded, setIsLoaded ] = useState(false);
+    const { hydrated, token, user } = useSelector(state => state.userState);
+
+    const router = useRouter();
+    const dispatch = useDispatch();
 
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
     }
 
+    useEffect(() => {
+        if (hydrated && !isLoaded) {
+            // TODO: store just the user id in local storage ?
+            getProfileInfo(dispatch, token, user._id, router);
+            if (!isLoaded) setIsLoaded(true);
+        }
+    }, [isLoaded, hydrated]);
+
+    // TODO: Make sure that user can only get to this page if logged in already.
+    console.log(user)
+    const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
+    const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
+    // TODO: check this later
+    const subteams = (isLoaded && user.subteams) ? user.subteams.map(s => s.name) : [];
+    const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
+    const links = user.links ? user.links : [];
+    
     return (
         <PageTemplate>
             <>
@@ -152,7 +167,23 @@ const Home = () => {
                             }}
                         >
                             <SystemComponent mb={2}>
-                                <ProfileSummary />
+                                {isLoaded && user ? 
+                                    (
+                                        <ProfileSummary 
+                                            isLoaded={isLoaded}
+                                            firstname={user.name.first}
+                                            lastname={user.name.last}
+                                            birthday={user.birthday}
+                                            program={user.program}
+                                            schoolterm={user.stream.currentSchoolTerm}
+                                            email={user.email}
+                                        />
+                                    ) : (
+                                        <ProfileSummary 
+                                            isLoaded={isLoaded}
+                                        />
+                                    )
+                                }
                             </SystemComponent>
                             <SettingsDivSubsection headerText='My Skills'
                                 type="list"
@@ -168,7 +199,7 @@ const Home = () => {
                                 type="normal"
                                 isLabelListSection={false}
                             >
-                                {bio}
+                                {user.bio}
                             </SettingsDivSubsection>
                         </SettingsDiv>
 
@@ -178,13 +209,14 @@ const Home = () => {
                             }}
                         >
                             <ThreeColumnGrid>
-                                {externalLinks.map((url, i) =>
+                                {
+                                    links.map((url, i) =>
                                     <> 
                                         <SystemComponent gridColumn="1 / 2" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                         >
                                             <Header5>
-                                                {externalLinkLabels[i]}
+                                                {capitalize(url.type)}
                                             </Header5>
                                         </SystemComponent>
                                         <SystemComponent 
@@ -192,12 +224,13 @@ const Home = () => {
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            <NonUnderlinedLink href={url} alt={altText[i]}>
-                                                {url}
+                                            <NonUnderlinedLink href={url.link} alt={altText[url.type]} target="_blank">
+                                                {url.link}
                                             </NonUnderlinedLink>
                                         </SystemComponent>
                                     </>
-                                )}
+                                    )
+                                }
                             </ThreeColumnGrid>
                         </SettingsDiv>
                     </Card>

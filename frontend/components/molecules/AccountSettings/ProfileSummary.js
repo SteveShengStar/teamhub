@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
-import member from '../../../mockdata/member';
 
 import theme from '../../theme';
 
@@ -103,36 +102,6 @@ const Grid = styled(SystemComponent)`
     }
 `;
 
-let birthday = member.birthday ? new Date(2019, member.birthday.month, member.birthday.day) : new Date();
-birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-
-const userInformation = {
-    firstName: {
-        label: 'First Name',
-        value: member.name.first
-    },
-    lastName: {
-        label: "Last Name",
-        value: member.name.last
-    },
-    birthDay: {
-        label: "Birthday",
-        value: birthday
-    },
-    program: {
-        label: "Program",
-        value: member.program
-    },
-    term: {
-        label: "Term",
-        value: member.currentSchoolTerm
-    },
-    email: {
-        label: "Email",
-        value: member.email
-    }
-};
-
 // TODO: using styled component may be better
 // because I never pass parameters that actually configure properties of this container.
 const SettingsHorizontalFlexbox = ({ children, leftChildWidth }) => {
@@ -147,7 +116,43 @@ const SettingsHorizontalFlexbox = ({ children, leftChildWidth }) => {
 };
 
 // TODO: insert icons to the left of the labels
-const ProfileSummary = () => {
+const ProfileSummary = ({isLoaded = false, 
+                        firstname = "", 
+                        lastname = "", 
+                        birthday = undefined, 
+                        program = "", 
+                        schoolterm = "", 
+                        email = ""}) => {
+
+    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
+    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+
+    const userInformation = {
+        firstName: {
+            label: 'First Name',
+            value: isLoaded ? firstname : '' 
+        },
+        lastName: {
+            label: "Last Name",
+            value: isLoaded ? lastname : ''
+        },
+        birthDay: {
+            label: "Birthday",
+            value: birthday
+        },
+        program: {
+            label: "Program",
+            value: isLoaded ? program : ''
+        },
+        term: {
+            label: "Term",
+            value: isLoaded ? schoolterm : ''
+        },
+        email: {
+            label: "Email",
+            value: isLoaded ? email : ''
+        }
+    };
 
     return (
         <SettingsHorizontalFlexbox leftChildWidth={140}>

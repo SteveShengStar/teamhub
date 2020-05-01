@@ -2,7 +2,8 @@ import api from "../api";
 
 export const UserTypes = new Proxy({
     RECEIVED_LOGIN: "RECEIVED_LOGIN",
-    FAILED_LOGIN: "FAILED_LOGIN"
+    FAILED_LOGIN: "FAILED_LOGIN",
+    UPDATE_INFO: "UPDATE_INFO"
 }, {
     set: () => {
         throw new Error("Can't mutate type UserTypes")
@@ -19,6 +20,11 @@ export const usersInitialState = {
 
 const userReducer = (state = usersInitialState, action) => {
     switch (action.type) {
+        case UserTypes.UPDATE_INFO:
+            return {
+                ...state,
+                user: action.payload
+            };
         case UserTypes.RECEIVED_LOGIN:
             return {
                 ...state,
@@ -89,5 +95,17 @@ export const updateUser = async (dispatch, options, token, id, router) => {
         throw new Error(err)
     }
 }
+
+
+export const getProfileInfo = async function(dispatch, token, id, router) {
+    try {
+        const user = await api.members.getMember(id, token, dispatch, router);
+        dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
+        return user.body[0];
+    } catch(err) {
+        console.log(`Error: Failed to return profile data for user with id: ${id} `, err);
+    }
+}
+
 
 export default userReducer;
