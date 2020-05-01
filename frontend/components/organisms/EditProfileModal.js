@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
 import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
@@ -11,6 +12,22 @@ import Header5 from '../atoms/Header5';
 import {isEmail} from 'validator';
 import theme from '../theme';
 
+const schoolTermOpts = [
+    {value: '1A', label: '1A'},
+    {value: '1B', label: '1B'},
+    {value: '2A', label: '2A'},
+    {value: '2B', label: '2B'},
+    {value: '3A', label: '3A'},
+    {value: '3B', label: '3B'},
+    {value: '4A', label: '4A'},
+    {value: '4B', label: '4B'},
+    {value: '0', label: 'Unspecified'}
+];
+const coopSeqOpts = [
+    {value: '4', label: '4 Stream'}, // TODO: Verify these values
+    {value: '8', label: '8 Stream'},
+    {value: '0', label: 'other'}
+];
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -63,25 +80,46 @@ const SelectSegment = ({title,
 }
 
 const validProgramPattern = /^[A-Za-z,'-\s]*$/;
-const EditProfileModal = ({visible, handleCloseModal}) => {
+const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
+    const { token, user } = useSelector(state => state.userState);
+    
+    let birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
+    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+
     const [formValues, setFormValues] = useState({
-        firstName: "",
-        lastName: "",
-        birthDate: "",
-        email: "",
-        program: "",
-        term: "",
-        sequence: "",
+        firstName: dataLoaded ? user.name.first : "",
+        lastName: dataLoaded ? user.name.last : "",
+        birthDate: birthday,
+        email: dataLoaded ? user.email : "",
+        program: dataLoaded ? user.program : "",
+        term: dataLoaded ? user.stream.currentSchoolTerm : "",
+        sequence: "",                           // TODO: eliminate this later.
         interest: "",
         skill: ""
     });
-    const [interests, setInterests] = useState([]);
-    const [skills, setSkills] = useState([]);
+    const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
+    const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
     const [hasError, setHasError] = useState({ // TODO: Think about different locales later
         firstName: false,
         email: false,
         program: false
     });
+
+    useEffect(() => {
+        setFormValues({
+            ...formValues, 
+            firstName: dataLoaded ? user.name.first : "",
+            lastName: dataLoaded ? user.name.last : "",
+            birthDate: birthday,
+            email: dataLoaded ? user.email : "",
+            program: dataLoaded ? user.program : "",
+            term: dataLoaded ? user.stream.currentSchoolTerm : "",
+            sequence: "", // TODO: eliminate this later.
+        });
+
+        setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
+        setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
+    }, [dataLoaded]);
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
@@ -102,7 +140,12 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
         }
         setFormValues({...formValues, [name]: value});
     }
-    
+
+    let schoolTerm = schoolTermOpts.find(opt => opt.value === formValues['term']);
+    if (!schoolTerm) schoolTerm = formValues['term'];
+    let coopSeq = coopSeqOpts.find(opt => opt.value === formValues['sequence']);
+    if (!coopSeq) coopSeq = formValues['sequence'];
+
     return (
         <EditSettingsModal 
             visible={visible} 
@@ -151,7 +194,8 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
                         error={hasError['email']}
                         errorText="Please Enter a valid Email Address" />
                 </SystemComponent>
-                <SelectSegment title="Academic Program"
+                <SelectSegment 
+                    title="Academic Program"
                     name="program"
                     value={formValues['program']}
                     options={[
@@ -164,30 +208,18 @@ const EditProfileModal = ({visible, handleCloseModal}) => {
                     error={hasError['program']}
                     errorText={"Please Enter Valid Program Name. All letters and these special characters { - ' , } are allowed."}
                 />
-                <SelectSegment title="School Term"
+                <SelectSegment 
+                    title="School Term"
                     name="term"
-                    value={formValues['term']}
-                    options={[
-                        {value: '1a', label: '1A'},
-                        {value: '1b', label: '1B'},
-                        {value: '2a', label: '2A'},
-                        {value: '2b', label: '2B'},
-                        {value: '3a', label: '3A'},
-                        {value: '3b', label: '3B'},
-                        {value: '4a', label: '4A'},
-                        {value: '4b', label: '4B'},
-                        {value: '0', label: 'Other'}
-                    ]}
+                    value={schoolTerm}
+                    options={schoolTermOpts}
                     handleChange={handleInputChange}
                 />
-                <SelectSegment title="Work-Study Sequence"
+                <SelectSegment 
+                    title="Work-Study Sequence"
                     name="sequence"
-                    value={formValues['sequence']}
-                    options={[
-                        {value: '4', label: '4 Stream'}, // TODO: Verify these values
-                        {value: '8', label: '8 Stream'},
-                        {value: '0', label: 'other'}
-                    ]}
+                    value={coopSeq}
+                    options={coopSeqOpts}
                     handleChange={handleInputChange}
                 />
             </SystemComponent>

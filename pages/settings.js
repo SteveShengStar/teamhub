@@ -51,7 +51,7 @@ const SettingsDiv = ({children, title, onEditClicked}) => {
             </SettingsDivBody>
         </>
     );
-}
+};
 
 const SideNavContainer = styled(SystemComponent)`
     box-sizing: border-box;
@@ -131,6 +131,7 @@ const Home = () => {
                 <SettingsModalSelector  
                     activeModal={activeModal}
                     handleCloseModal={handleCloseModal}
+                    isLoaded={isLoaded}
                 />
                 <SystemComponent display="flex" overflow="hidden">
                     <SideNavContainer>
