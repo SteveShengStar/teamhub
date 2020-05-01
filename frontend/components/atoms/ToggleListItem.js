@@ -4,16 +4,8 @@ import { variant } from 'styled-system';
 import {SystemComponent} from './SystemComponents';
 import Button from './Button';
 import {CrossIcon} from './SelectedItemContainer';
+import {lowerCase} from 'lodash';
 
-
-const subteamThemes = {
-    0: "software",
-    1: "electrical",
-    2: "mechanical",
-    3: "exec",
-    4: "infrastructure",
-    5: "admin"
-};
 
 const CrossIconWrapper = styled(SystemComponent)`
     text-align: center;    
@@ -69,7 +61,7 @@ const CustomToggle = styled(Button)`
 // TODO: use proptypes to make this take only text
 const ToggleListItem = ({text, id, selected, onSelect}) => {
     
-    const variant = selected ? subteamThemes[id] : "cancel";
+    const variant = selected ? lowerCase(id) : "cancel";
 
     return (
         <CustomToggle variant={variant}

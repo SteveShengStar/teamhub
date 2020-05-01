@@ -1,4 +1,6 @@
 import {useState} from 'react';
+import {useSelector} from 'react-redux';
+
 import styled from 'styled-components';
 import AutocompleteInput from '../molecules/AutocompleteInput';
 import {SystemComponent} from '../atoms/SystemComponents';
@@ -10,28 +12,27 @@ import EditSettingsModal from '../molecules/EditSettingsModal';
 
 import {filter} from 'lodash';
 
-
 // Subteam ID to String Mapping
-const subteamMapping = {
-    0: "software",
-    1: "electrical",
-    2: "mechanical",
-    3: "executive",
-    4: "infrastructure",
-    5: "admin"
+const subteamDisplayNames = {
+    "Software": "software",
+    "Electrical": "electrical",
+    "Mechanical": "mechanical",
+    "Exec": "executive",
+    "Infrastructure": "infrastructure",
+    "Admin": "admin"
 };
 
-const EditTeamsModal = ({visible, handleCloseModal}) => {
+const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
+    const { token, user } = useSelector(state => state.userState);
 
-    const persistedSelectedTeams = [0, 1];
-    let persistedNonSelectedteams = filter(Object.keys(subteamMapping), 
-        teamId => persistedSelectedTeams.includes(parseInt(teamId, 10)) === false
+    const persistedSelectedTeams = dataLoaded && user.subteams ? user.subteams.map(s => s.name) : [];
+    let persistedNonSelectedteams = filter(Object.keys(subteamDisplayNames), 
+        team => persistedSelectedTeams.includes(team) === false
     );
-    persistedNonSelectedteams = persistedNonSelectedteams.map(teamId => parseInt(teamId, 10));
 
     const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
     const [project, setProject] = useState('');
-    const [selectedProjects, setSelectedProjects] = useState(['Teamhub', 'Motor Control']);
+    const [selectedProjects, setSelectedProjects] = useState(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
     const [roleDescription, setRoleDescription] = useState('');
     
     
@@ -43,13 +44,13 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
         setProject(newProject);
     }
 
-    const toggleSelectItem = (teamId) => {
-        if (localSelectedTeams.includes(teamId)) {
+    const toggleSelectItem = (team) => {
+        if (localSelectedTeams.includes(team)) {
             setLocalSelectedTeams(
-                filter(localSelectedTeams, i => i != teamId)
+                filter(localSelectedTeams, i => i != team)
             );       
         } else {
-            setLocalSelectedTeams(localSelectedTeams.concat(teamId));
+            setLocalSelectedTeams(localSelectedTeams.concat(team));
         }
     }
 
@@ -76,7 +77,7 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                                 <SystemComponent key={team}>
                                     <ToggleListItem 
                                         id={team}
-                                        text={subteamMapping[team]}
+                                        text={subteamDisplayNames[team]}
                                         selected={localSelectedTeams.includes(team)}
                                         onSelect={toggleSelectItem}
                                     />
@@ -88,7 +89,7 @@ const EditTeamsModal = ({visible, handleCloseModal}) => {
                                 <SystemComponent key={team}>
                                     <ToggleListItem 
                                         id={team}
-                                        text={subteamMapping[team]}
+                                        text={subteamDisplayNames[team]}
                                         selected={localSelectedTeams.includes(team)}
                                         onSelect={toggleSelectItem}
                                     />
