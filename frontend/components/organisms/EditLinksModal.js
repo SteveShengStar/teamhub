@@ -1,4 +1,5 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
 
@@ -34,13 +35,22 @@ const URLField = ({label, name, placeholder, value, onHandleChange, error, error
     )
 }
 
-const EditLinksModal = ({visible, handleCloseModal}) => {
-    
+const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
+    const { token, user } = useSelector(state => state.userState);
+
+    const facebookUrl = dataLoaded && user.links && user.links.find(l => l.type === "facebook")
+                            ? user.links.find(l => l.type === "facebook").link : '';
+    const linkedInUrl = dataLoaded && user.links && user.links.find(l => l.type === "linkedin")
+                            ? user.links.find(l => l.type === "linkedin").link : '';
+    const githubUrl = dataLoaded && user.links && user.links.find(l => l.type === "github")
+                            ? user.links.find(l => l.type === "github").link : '';
+    const websiteUrl = dataLoaded && user.links && user.links.find(l => l.type === "website")
+                            ? user.links.find(l => l.type === "website").link : '';
     const [formValues, setFormValues] = useState({
-        facebookUrl: '',
-        linkedInUrl: '',
-        githubUrl: '',
-        websiteUrl: ''
+        facebookUrl,
+        linkedInUrl,
+        githubUrl,
+        websiteUrl
     });
     const [hasError, setHasError] = useState({
         facebookUrl: false,
@@ -48,6 +58,15 @@ const EditLinksModal = ({visible, handleCloseModal}) => {
         githubUrl: false,
         websiteUrl: false
     });
+
+    useEffect(() => {
+        setFormValues({
+            facebookUrl,
+            linkedInUrl,
+            githubUrl,
+            websiteUrl
+        })
+    }, [dataLoaded])
 
     const validateUrl = (errorList, fieldName, fieldValue, allowedHosts = false) => {
         if(!fieldValue) return;
