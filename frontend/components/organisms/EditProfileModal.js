@@ -106,20 +106,28 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     });
 
     useEffect(() => {
-        setFormValues({
-            ...formValues, 
-            firstName: dataLoaded ? user.name.first : "",
-            lastName: dataLoaded ? user.name.last : "",
-            birthDate: birthday,
-            email: dataLoaded ? user.email : "",
-            program: dataLoaded ? user.program : "",
-            term: dataLoaded ? user.stream.currentSchoolTerm : "",
-            sequence: "", // TODO: eliminate this later.
-        });
+        if (visible) {
+            setFormValues({
+                ...formValues, 
+                firstName: dataLoaded ? user.name.first : "",
+                lastName: dataLoaded ? user.name.last : "",
+                birthDate: birthday,
+                email: dataLoaded ? user.email : "",
+                program: dataLoaded ? user.program : "",
+                term: dataLoaded ? user.stream.currentSchoolTerm : "",
+                sequence: "", // TODO: eliminate this later.
+            });
 
-        setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
-        setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
-    }, [dataLoaded]);
+            setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
+            setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
+
+            setHasError({
+                firstName: false,
+                email: false,
+                program: false
+            });
+        }
+    }, [dataLoaded, visible]);
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};

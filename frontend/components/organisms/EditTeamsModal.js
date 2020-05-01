@@ -36,10 +36,12 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     const [roleDescription, setRoleDescription] = useState('');
     
     useEffect(() => {
-        setLocalSelectedTeams(persistedSelectedTeams);
-        setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
-        setRoleDescription('');
-    }, [dataLoaded]);
+        if (visible) {
+            setLocalSelectedTeams(persistedSelectedTeams);
+            setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
+            setRoleDescription('');
+        }
+    }, [dataLoaded, visible]);
 
     const handleSave = () => {
         /* TODO: implement this */

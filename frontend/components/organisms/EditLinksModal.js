@@ -60,13 +60,22 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
     });
 
     useEffect(() => {
-        setFormValues({
-            facebookUrl,
-            linkedInUrl,
-            githubUrl,
-            websiteUrl
-        })
-    }, [dataLoaded])
+        if (visible) {
+            setFormValues({
+                facebookUrl,
+                linkedInUrl,
+                githubUrl,
+                websiteUrl
+            });
+
+            setHasError({
+                facebookUrl: false,
+                linkedInUrl: false,
+                githubUrl: false,
+                websiteUrl: false
+            });
+        }
+    }, [dataLoaded, visible])
 
     const validateUrl = (errorList, fieldName, fieldValue, allowedHosts = false) => {
         if(!fieldValue) return;
