@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
 
 import styled from 'styled-components';
@@ -35,7 +35,12 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     const [selectedProjects, setSelectedProjects] = useState(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
     const [roleDescription, setRoleDescription] = useState('');
     
-    
+    useEffect(() => {
+        setLocalSelectedTeams(persistedSelectedTeams);
+        setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
+        setRoleDescription('');
+    }, [dataLoaded]);
+
     const handleSave = () => {
         /* TODO: implement this */
     }
