@@ -1,7 +1,9 @@
 import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import { useRouter } from "next/router";
+import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
+import { updateUser } from "../../store/reducers/userReducer";
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -36,6 +38,8 @@ const URLField = ({label, name, placeholder, value, onHandleChange, error, error
 }
 
 const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const { token, user } = useSelector(state => state.userState);
 
     const facebookUrl = dataLoaded && user.links && user.links.find(l => l.type === "facebook")
@@ -103,6 +107,19 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         validateUrl(errors, 'websiteUrl', formValues['websiteUrl']);
 
         setHasError(errors);
+
+        if (!Object.values(errors).includes(true)) {
+            updateUser(dispatch, {
+                "links": [
+                    {"type": "facebook", "link": formValues['facebookUrl']},
+                    {"type": "github", "link": formValues['githubUrl']},
+                    {"type": "website", "link": formValues['websiteUrl']},
+                    {"type": "linkedin", "link": formValues['linkedInUrl']}
+                ]
+            }, token, user._id, router, false);
+
+            handleCloseModal();
+        }
     }
 
     const handleChange = (name, value) => {

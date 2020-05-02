@@ -23,7 +23,10 @@ const userReducer = (state = usersInitialState, action) => {
         case UserTypes.UPDATE_INFO:
             return {
                 ...state,
-                user: action.payload
+                user: {
+                    ...user,
+                    ...action.payload
+                }
             };
         case UserTypes.RECEIVED_LOGIN:
             return {
@@ -79,13 +82,16 @@ export const userLogin = async (response, dispatch) => {
  * @param {string} token 
  * @param {string} id 
  */
-export const updateUser = async (dispatch, options, token, id, router) => {
+export const updateUser = async (dispatch, options, token, id, router, signUp = true) => {
     try {
         const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
             const user = await api.members.getMember(id, token, dispatch, router);
             if (user && user.success) {
-                dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
+                if (signUp)
+                    dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
+                else
+                    dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] })
                 return user.body[0];
             }
         }

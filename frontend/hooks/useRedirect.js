@@ -14,7 +14,7 @@ export default (user, router) => {
         if (router.pathname != "/login/name") router.push("/login/name")
         return;
     }
-    if (user.subteams.length === 0 || !user.memberType || !user.projects.length === 0 || !user.joined) {
+    if (!user.subteams || (user.subteams && user.subteams.length === 0) || !user.memberType || (!user.projects) || (user.projects && user.projects.length === 0) || !user.joined) {
         if (router.pathname != "/login/role") router.push("/login/role");
         return;
     }
