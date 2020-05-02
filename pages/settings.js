@@ -124,7 +124,7 @@ const Home = () => {
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(s => s.name) : [];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const links = user.links ? user.links : [];
-    
+
     return (
         <PageTemplate>
             <>

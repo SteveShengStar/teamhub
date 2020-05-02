@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
 import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
+import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
 import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
@@ -9,7 +10,6 @@ import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 
-import {isEmail} from 'validator';
 import theme from '../theme';
 
 const schoolTermOpts = [
@@ -81,6 +81,8 @@ const SelectSegment = ({title,
 
 const validProgramPattern = /^[A-Za-z,'-\s]*$/;
 const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
+    const router = useRouter();
+    const dispatch = useDispatch();
     const { token, user } = useSelector(state => state.userState);
     
     let birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
@@ -89,8 +91,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded ? user.name.first : "",
         lastName: dataLoaded ? user.name.last : "",
+        display: dataLoaded ? user.name.display : "",
         birthDate: birthday,
-        email: dataLoaded ? user.email : "",
         program: dataLoaded ? user.program : "",
         term: dataLoaded ? user.stream.currentSchoolTerm : "",
         sequence: "",                           // TODO: eliminate this later.
@@ -101,7 +103,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
     const [hasError, setHasError] = useState({ // TODO: Think about different locales later
         firstName: false,
-        email: false,
         program: false
     });
 
@@ -111,8 +112,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 ...formValues, 
                 firstName: dataLoaded ? user.name.first : "",
                 lastName: dataLoaded ? user.name.last : "",
+                display: dataLoaded ? user.name.display : "",
                 birthDate: birthday,
-                email: dataLoaded ? user.email : "",
                 program: dataLoaded ? user.program : "",
                 term: dataLoaded ? user.stream.currentSchoolTerm : "",
                 sequence: "", // TODO: eliminate this later.
@@ -123,7 +124,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
             setHasError({
                 firstName: false,
-                email: false,
                 program: false
             });
         }
@@ -134,12 +134,21 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         if (!formValues['firstName']) {
             updatedErrorList['firstName'] = true;
         }
-        updatedErrorList['email'] = !isEmail(formValues['email']);
         updatedErrorList['program'] = 
             !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
 
         setHasError(updatedErrorList);
+
+        if (!Object.values(updatedErrorList).includes(true)) {
+            updateUser(dispatch, {
+                name: {
+                    ...user.name,
+                    first: formValues.firstName,
+                    last: formValues.lastName,
+                }
+            }, token, user._id, router, false);
+        }
     } 
 
     const handleInputChange = (name, value) => {
@@ -186,21 +195,19 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 </SystemComponent>
                 <SystemComponent>
                     <InputSegment
+                        label="Display Name" 
+                        name="display"
+                        placeholder="Display Name" 
+                        value={formValues['display']}
+                        onHandleChange={handleInputChange} />
+                </SystemComponent>
+                <SystemComponent>
+                    <InputSegment
                         label="Birth Date" 
                         name="birthDate"
                         placeholder="Birth Date" 
                         value={formValues['birthDate']}
                         onHandleChange={handleInputChange} />
-                </SystemComponent>
-                <SystemComponent>
-                    <InputSegment
-                        label="Email" 
-                        name="email"
-                        placeholder="Email" 
-                        value={formValues['email']}
-                        onHandleChange={handleInputChange} 
-                        error={hasError['email']}
-                        errorText="Please Enter a valid Email Address" />
                 </SystemComponent>
                 <SelectSegment 
                     title="Academic Program"
