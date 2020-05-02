@@ -36,7 +36,7 @@ const CustomInput = styled(Input)`
 `;
 
 // TODO: make into a molecule
-const InputSegment = ({label, name, placeholder, value, onHandleChange, error = false, errorText = ""}) => {
+const InputSegment = ({label, name, placeholder, value, handleChange, error = false, errorText = ""}) => {
     return (
         <>
             <Header5>{label}</Header5>
@@ -45,12 +45,72 @@ const InputSegment = ({label, name, placeholder, value, onHandleChange, error = 
                 placeholder={placeholder}
                 variant="text"
                 value={value}
-                onChange={(evt) => onHandleChange(name, evt.target.value)} 
+                onChange={(evt) => handleChange(name, evt.target.value)}
             />
             {error && <SystemComponent color={theme.colors.alertAction}>{errorText}</SystemComponent>}
         </>
     )
 }
+
+const DateInputSegment = ({label, name, value, handleChange, error = false, errorText = ""}) => {
+    
+    const handleDateChange = (datePart, datePartValue) => {
+        if (!datePartValue) datePartValue = "";
+        if (datePartValue.match(/^[0-9]*$/)) {
+            let fragmentedDate = value.split('-');
+            
+            switch(datePart) {
+                case 'year':
+                    if (datePartValue.length <= 4) fragmentedDate[0] = datePartValue;
+                    break;
+                case 'month':
+                    if (datePartValue.length <= 2) fragmentedDate[1] = datePartValue;
+                    break;
+                case 'day':
+                    if (datePartValue.length <= 2) fragmentedDate[2] = datePartValue;
+                    break;
+            }
+            handleChange(name, fragmentedDate.join('-'));
+        }
+    }
+    
+    return (
+        <>
+            <Header5>{label}</Header5>
+            <SystemComponent display="grid" gridTemplateColumns='1fr 1fr 2fr'>
+                <SystemComponent gridColumn="1 / span 1">
+                    <CustomInput 
+                        placeholder="MM"
+                        maxlength="2"
+                        variant="text"
+                        value={value.split('-')[1]}
+                        onChange={(evt) => handleDateChange('month', evt.target.value) }
+                    />
+                </SystemComponent>
+                <SystemComponent gridColumn="2 / span 1">
+                    <CustomInput 
+                        placeholder="DD"
+                        maxlength="2"
+                        variant="text"
+                        value={value.split('-')[2]}
+                        onChange={(evt) => handleDateChange('day', evt.target.value)} 
+                    />
+                </SystemComponent>
+                <SystemComponent gridColumn="3 / span 1">
+                    <CustomInput 
+                        placeholder="YYYY"
+                        maxlength="4"
+                        variant="text"
+                        value={value.split('-')[0]}
+                        onChange={(evt) => handleDateChange('year', evt.target.value)} 
+                    />
+                </SystemComponent>
+            </SystemComponent>
+            {error && <SystemComponent color={theme.colors.alertAction}>{errorText}</SystemComponent>}
+        </>
+    )
+};
+
 const SelectSegment = ({title,
     name,
     handleChange,
@@ -85,14 +145,14 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const dispatch = useDispatch();
     const { token, user } = useSelector(state => state.userState);
     
-    let birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
-    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
+    //let birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
+    //birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded ? user.name.first : "",
         lastName: dataLoaded ? user.name.last : "",
         display: dataLoaded ? user.name.display : "",
-        birthDate: birthday,
+        birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
         program: dataLoaded ? user.program : "",
         term: dataLoaded ? user.stream.currentSchoolTerm : "",
         sequence: "",                           // TODO: eliminate this later.
@@ -103,7 +163,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
     const [hasError, setHasError] = useState({ // TODO: Think about different locales later
         firstName: false,
-        program: false
+        program: false,
+        birthDate: false
     });
 
     useEffect(() => {
@@ -113,7 +174,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 firstName: dataLoaded ? user.name.first : "",
                 lastName: dataLoaded ? user.name.last : "",
                 display: dataLoaded ? user.name.display : "",
-                birthDate: birthday,
+                birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
                 program: dataLoaded ? user.program : "",
                 term: dataLoaded ? user.stream.currentSchoolTerm : "",
                 sequence: "", // TODO: eliminate this later.
@@ -124,7 +185,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
             setHasError({
                 firstName: false,
-                program: false
+                program: false,
+                birthDate: false
             });
         }
     }, [dataLoaded, visible]);
@@ -181,7 +243,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         name="firstName"
                         placeholder="First Name" 
                         value={formValues['firstName']}
-                        onHandleChange={handleInputChange}
+                        handleChange={handleInputChange}
                         error={hasError['firstName']}
                         errorText="Please enter your First Name." />
                 </SystemComponent>
@@ -191,7 +253,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         name="lastName"
                         placeholder="Last Name" 
                         value={formValues['lastName']}
-                        onHandleChange={handleInputChange} />
+                        handleChange={handleInputChange} />
                 </SystemComponent>
                 <SystemComponent>
                     <InputSegment
@@ -199,15 +261,16 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         name="display"
                         placeholder="Display Name" 
                         value={formValues['display']}
-                        onHandleChange={handleInputChange} />
+                        handleChange={handleInputChange} />
                 </SystemComponent>
                 <SystemComponent>
-                    <InputSegment
+                    <DateInputSegment
                         label="Birth Date" 
                         name="birthDate"
-                        placeholder="Birth Date" 
                         value={formValues['birthDate']}
-                        onHandleChange={handleInputChange} />
+                        handleChange={handleInputChange}
+                        error={hasError['birthDate']}
+                        errorText="Please Enter a Valid Date." />
                 </SystemComponent>
                 <SelectSegment 
                     title="Academic Program"
@@ -221,7 +284,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     handleChange={handleInputChange}
                     allowCustomInput={true}
                     error={hasError['program']}
-                    errorText={"Please Enter Valid Program Name. All letters and these special characters { - ' , } are allowed."}
+                    errorText="Please Enter Valid Program Name. All letters and these special characters { - ' , } are allowed."
                 />
                 <SelectSegment 
                     title="School Term"
