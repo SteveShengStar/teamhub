@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { port } from '../../../config';
-import useRedirect from '../../hooks/useRedirect';
+import useShouldRedirect from '../../hooks/useShouldRedirect';
 
 export const getBaseApi = (isSSR = false) => isSSR ? `http://localhost:${port}/api` : `/api` ;
 
@@ -40,6 +40,6 @@ export const refreshable = (endpoint, token, options, dispatch, router) => {
         .then(res => res.json())
         .catch(err => {
             dispatch({ type: "RESET" });
-            useRedirect({}, router)
+            useShouldRedirect({}, router)
         })
 }
