@@ -120,6 +120,7 @@ members.delete = async (body) => {
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
+        console.log(body)
         return (await Member.update(filter, body).exec());
     });
 };
@@ -146,7 +147,7 @@ const replaceBodyWithIds = async (body) => {
     }
 
     if (body.subteams) {
-        if (Array.isArray(body.skills)) {
+        if (Array.isArray(body.subteams)) {
             body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams);
         } else {
             throw Error('subteams field must be empty or an array.');
