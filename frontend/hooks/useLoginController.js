@@ -33,6 +33,5 @@ export default (loginTransition, dispatch, route) => {
             }
             return;
         }
-        loginTransition.show()
     }, [hydrated])
 }

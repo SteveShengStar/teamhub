@@ -4,7 +4,6 @@
  */
 export default (user, router) => {
     // if user is logged in check user status
-    console.log(router.pathname, user)
     if (!user || !user._id) {
         if (router.pathname != "/login") {
             router.push("/login")
