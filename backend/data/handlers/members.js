@@ -1,9 +1,3 @@
-const Member = require('../schema/Member');
-const skills = require('./skills');
-const interests = require('./interests');
-const memberTypes = require('./memberTypes');
-const projects = require('./projects');
-const subteams = require('./subteams');
 const util = require('./util');
 
 const members = {};
@@ -145,7 +139,7 @@ const replaceBodyWithIds = async (body) => {
     if (body.subteams) {
         if (Array.isArray(body.subteams)) {
             body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams);
-        } else {            
+        } else {
             throw Error('subteams field must be empty or an array.');
         }
     }

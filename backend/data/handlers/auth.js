@@ -1,7 +1,6 @@
 const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
-const members = require('./members');
 const crypto = require('crypto');
 
 const auth = {};

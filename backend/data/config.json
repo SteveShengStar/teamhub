@@ -1,3 +1,8 @@
 {
-  "url": "mongodb://teamhub_mongodb/teamhub"
+  "db": {
+    "host": "teamhub_mysql",
+    "user": "root",
+    "password": "password",
+    "database": "teamhub"
+  }
 }

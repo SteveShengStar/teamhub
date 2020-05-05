@@ -1,25 +1,21 @@
 version: "2.1"
 
 services:
-  teamhub:
-    image: teamhub
-    container_name: teamhub_nodejs
-    build: .
-    volumes:
-      - .:/usr/src/app
+  teamhub_adminer:
+    image: adminer
+    container_name: teamhub_adminer
+    ports:
+      - 8081:8080
+
+  teamhub_mysql:
+    image: mysql
+    container_name: teamhub_mysql
     environment:
-      NODE_ENV: development
-    ports:
-      - 3000:3000
-    links:
-      - database
-    depends_on:
-      - database
-    tty: true
-  database:
-    image: mongo
-    container_name: teamhub_mongodb
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: '%'
     volumes:
-      - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
-      - 27017:27017
+      - 3306:3306

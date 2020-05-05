@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mysql = require('mysql');
 
 let config = {};
 
@@ -6,7 +6,7 @@ if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
 } else if (process.env.TEAMHUB_ENV === 'production') {
-    config.url = process.env.MONGO_URL;
+    config = require('./config.json');
 } else {
     config = require('./config.json');
 }
@@ -22,24 +22,14 @@ data.initIfNotStarted = async () => {
 };
 
 data.init = async () => {
-    if (!config.url) {
-        throw new Error('No URL found in config.');
-    }
-
-    await mongoose.connect(config.url, {
-        useCreateIndex: true,
-        useUnifiedTopology: true,
-        useNewUrlParser: true
-    });
-
-    data.connected = true;
-
+    data.mysql = mysql.createConnection(config.db);
+    mysql.connect();
     console.log(`Connected to: ${config.url}`);
 };
 
 data.close = async () => {
     data.connected = false;
-    await mongoose.disconnect();
+    mysql.end();
 };
 
 data.util = require('./handlers/util');
