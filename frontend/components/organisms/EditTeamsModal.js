@@ -1,14 +1,17 @@
 import {useState, useEffect} from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 import styled from 'styled-components';
 import AutocompleteInput from '../molecules/AutocompleteInput';
 import {SystemComponent} from '../atoms/SystemComponents';
 import TextArea from '../atoms/TextArea';
+import { useRouter } from "next/router";
 
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
+
+import { updateUser } from "../../store/reducers/userReducer";
 
 import {filter} from 'lodash';
 
@@ -24,6 +27,8 @@ const subteamDisplayNames = {
 
 const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { token, user } = useSelector(state => state.userState);
+    const router = useRouter();
+    const dispatch = useDispatch();
 
     const persistedSelectedTeams = dataLoaded && user.subteams ? user.subteams.map(s => s.name) : [];
     let persistedNonSelectedteams = filter(Object.keys(subteamDisplayNames), 
@@ -44,7 +49,11 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [dataLoaded, visible]);
 
     const handleSave = () => {
-        /* TODO: implement this */
+        updateUser(dispatch, {
+            "projects": selectedProjects.map(p => { return {"name": p, "description": p}}),
+            "subteams": localSelectedTeams.map(t => { return {"name": t, "description": t}}),
+        }, token, user._id, router, false);
+        handleCloseModal();
     }
 
     const handleInputChange = (newProject) => {
