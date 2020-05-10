@@ -19,7 +19,7 @@ const CrossIconWrapper = styled(SystemComponent)`
     border-top-right-radius: inherit;
 
     border-style: solid;
-    border-width: 2px;
+    border-width: 3px;
 
     background-color: #FFFFFF;
     color: #000000;
