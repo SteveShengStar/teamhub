@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
+import {SCHOOL_TERM_OPTS, COOP_SEQ_OPTS, PROGRAM_OPTS} from '../../organisms/EditProfileModal';
 
 import theme from '../../theme';
 
@@ -123,8 +124,7 @@ const ProfileSummary = ({isLoaded = false,
                         program = "", 
                         schoolterm = "", 
                         email = ""}) => {
-
-    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
+    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month - 1, birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const userInformation = {
@@ -142,11 +142,11 @@ const ProfileSummary = ({isLoaded = false,
         },
         program: {
             label: "Program",
-            value: isLoaded ? program : ''
+            value: (isLoaded && PROGRAM_OPTS.find(opt => opt.value === program)) ? PROGRAM_OPTS.find(p => p.value === program).label : ''
         },
         term: {
             label: "Term",
-            value: isLoaded ? schoolterm : ''
+            value: (isLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm)) ? SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm).label : ''
         },
         email: {
             label: "Email",

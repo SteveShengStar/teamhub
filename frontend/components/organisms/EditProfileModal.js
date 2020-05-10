@@ -9,10 +9,12 @@ import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
+import { updateUser } from "../../store/reducers/userReducer";
 
+import isBefore from 'validator/lib/isBefore';
 import theme from '../theme';
 
-const schoolTermOpts = [
+export const SCHOOL_TERM_OPTS = [
     {value: '1A', label: '1A'},
     {value: '1B', label: '1B'},
     {value: '2A', label: '2A'},
@@ -23,11 +25,16 @@ const schoolTermOpts = [
     {value: '4B', label: '4B'},
     {value: '0', label: 'Unspecified'}
 ];
-const coopSeqOpts = [
+export const COOP_SEQ_OPTS = [
     {value: '4', label: '4 Stream'}, // TODO: Verify these values
     {value: '8', label: '8 Stream'},
     {value: '0', label: 'other'}
 ];
+export const PROGRAM_OPTS = [
+    {value: 'eng', label: 'Engineering'},
+    {value: 'cs', label: 'Computer Science'},
+    {value: 'math', label: 'Math'}
+]
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -153,8 +160,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         lastName: dataLoaded ? user.name.last : "",
         display: dataLoaded ? user.name.display : "",
         birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
-        program: dataLoaded ? user.program : "",
-        term: dataLoaded ? user.stream.currentSchoolTerm : "",
+        program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
+        term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         sequence: "",                           // TODO: eliminate this later.
         interest: "",
         skill: ""
@@ -175,8 +182,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 lastName: dataLoaded ? user.name.last : "",
                 display: dataLoaded ? user.name.display : "",
                 birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
-                program: dataLoaded ? user.program : "",
-                term: dataLoaded ? user.stream.currentSchoolTerm : "",
+                program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
+                term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
                 sequence: "", // TODO: eliminate this later.
             });
 
@@ -200,17 +207,32 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
 
+        if ( !isBefore(formValues['birthDate'], Date(Date.now())) ) updatedErrorList['birthDate'] = true;
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
             updateUser(dispatch, {
-                name: {
-                    ...user.name,
-                    first: formValues.firstName,
-                    last: formValues.lastName,
-                }
+                "name": {
+                    "first": formValues.firstName,
+                    "last": formValues.lastName,
+                    "display": formValues.display
+                },
+                "birthday": {
+                    "year": formValues.birthDate.split("-")[0],
+                    "month": formValues.birthDate.split("-")[1],
+                    "day": formValues.birthDate.split("-")[2]
+                },
+                "program": formValues.program.value,
+                "interests": interests,
+                "skills": skills,
+                "stream": {
+                    ...user.stream,
+                    "currentSchoolTerm": formValues.term.value, 
+                }                 // TODO: change stream field later
             }, token, user._id, router, false);
+            handleCloseModal();
         }
+        
     } 
 
     const handleInputChange = (name, value) => {
@@ -220,9 +242,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setFormValues({...formValues, [name]: value});
     }
 
-    let schoolTerm = schoolTermOpts.find(opt => opt.value === formValues['term']);
+    let schoolTerm = SCHOOL_TERM_OPTS.find(opt => opt.value === formValues['term']);
     if (!schoolTerm) schoolTerm = formValues['term'];
-    let coopSeq = coopSeqOpts.find(opt => opt.value === formValues['sequence']);
+    let coopSeq = COOP_SEQ_OPTS.find(opt => opt.value === formValues['sequence']);
     if (!coopSeq) coopSeq = formValues['sequence'];
 
     return (
@@ -270,34 +292,30 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         value={formValues['birthDate']}
                         handleChange={handleInputChange}
                         error={hasError['birthDate']}
-                        errorText="Please Enter a Valid Date." />
+                        errorText="Birth date must be earlier than today." />
                 </SystemComponent>
                 <SelectSegment 
                     title="Academic Program"
                     name="program"
                     value={formValues['program']}
-                    options={[
-                        {value: 'eng', label: 'Engineering'},
-                        {value: 'cs', label: 'Computer Science'},
-                        {value: 'math', label: 'Math'}
-                    ]}
+                    options={PROGRAM_OPTS}
                     handleChange={handleInputChange}
                     allowCustomInput={true}
                     error={hasError['program']}
-                    errorText="Please Enter Valid Program Name. All letters and these special characters { - ' , } are allowed."
+                    errorText="Please enter valid Program Name. Special characters allowed: - ' ,"
                 />
                 <SelectSegment 
                     title="School Term"
                     name="term"
                     value={schoolTerm}
-                    options={schoolTermOpts}
+                    options={SCHOOL_TERM_OPTS}
                     handleChange={handleInputChange}
                 />
                 <SelectSegment 
                     title="Work-Study Sequence"
                     name="sequence"
                     value={coopSeq}
-                    options={coopSeqOpts}
+                    options={COOP_SEQ_OPTS}
                     handleChange={handleInputChange}
                 />
             </SystemComponent>

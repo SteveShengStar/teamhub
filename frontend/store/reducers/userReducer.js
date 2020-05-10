@@ -23,10 +23,7 @@ const userReducer = (state = usersInitialState, action) => {
         case UserTypes.UPDATE_INFO:
             return {
                 ...state,
-                user: {
-                    ...user,
-                    ...action.payload
-                }
+                user: action.payload
             };
         case UserTypes.RECEIVED_LOGIN:
             return {
@@ -84,6 +81,8 @@ export const userLogin = async (response, dispatch) => {
  */
 export const updateUser = async (dispatch, options, token, id, router, signUp = true) => {
     try {
+        console.log("Options");
+        console.log(options);
         const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
             const user = await api.members.getMember(id, token, dispatch, router);
@@ -106,6 +105,8 @@ export const updateUser = async (dispatch, options, token, id, router, signUp = 
 export const getProfileInfo = async function(dispatch, token, id, router) {
     try {
         const user = await api.members.getMember(id, token, dispatch, router);
+        console.log("Inside Profile Info");
+        console.log(user);
         dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
         return user.body[0];
     } catch(err) {
