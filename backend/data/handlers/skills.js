@@ -1,4 +1,3 @@
-const Skill = require('../schema/Skill');
 const util = require('./util');
 
 const skills = {};

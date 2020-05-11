@@ -2,8 +2,27 @@ const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
 const crypto = require('crypto');
+const members = require('./members');
+const db = require('../db');
 
 const auth = {};
+
+const generateToken = async (member_id) => {
+    const token = crypto.randomBytes(32).toString('hex').substr(0, 32);
+    const created = Date.now();
+    const expiry = created + (1000 * 60 * 60 * 24 * 7);
+    const createdDate = new Date(created);
+    const expiryDate = new Date(expiry);
+    const tokenSql = 'INSERT INTO token SET ?';
+    const tokenSqlData = {
+        token,
+        member_id,
+        expiry: expiryDate,
+        created: createdDate
+    };
+    await db.query(tokenSql, tokenSqlData);
+    return [token, expiry];
+};
 
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
@@ -20,13 +39,15 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const authToken = authHeader.split(' ')[1];
-    const searchRes = await members.search({ token: authToken });
-    if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
+    const tokenSql = 'SELECT * from token WHERE token=? AND expiry > CURRENT_TIMESTAMP';
+    const tokenRes = await db.query(tokenSql, authToken);
+    if (tokenRes > 0) {
+        return await members.search({ id: tokenRes[0].member_id });
+    } else {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
     }
-    return searchRes[0];
 };
 
 auth.checkSpecificUser = async (authHeader, userId, res) => {
@@ -44,18 +65,15 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
         return false;
     }
     const authToken = authHeader.split(' ')[1];
-    const searchRes = await members.search({ token: authToken });
-    if (!searchRes || searchRes.length == 0 || searchRes[0].id != userId) {
+    const tokenSql = 'SELECT * from token WHERE token=? AND member_id=? AND expiry > CURRENT_TIMESTAMP';
+    const tokenRes = await db.query(tokenSql, authToken);
+    if (tokenRes > 0) {
+        return true;
+    } else {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
     }
-    if (searchRes[0].tokenExpiry >= Date.now()) {
-        res.statusCode = 403;
-        res.end('Token expired.');
-        return false;
-    }
-    return true;
 };
 
 auth.login = async (tokenObj) => {
@@ -66,32 +84,34 @@ auth.login = async (tokenObj) => {
             audience: authConfig['client_id'],
         });
         const payload = ticket.getPayload();
-        console.log(payload);
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
             const searchRes = await members.search({ email: payload['email'] });
             if (!searchRes || searchRes.length === 0) {
-                const token = crypto.randomBytes(32).toString('hex');
-                const res = await members.add({
+                const memberBody = {
                     name: {
                         first: payload['given_name'],
                         last: payload['family_name']
                     },
                     email: payload['email'],
                     imageUrl: payload['picture'],
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
-                });
-                return [res];
+                };
+                const memberId = (await members.add(memberBody)).id;
+                const [token, tokenExpiry] = await generateToken(memberId);
+                memberBody.token = token;
+                memberBody.tokenExpiry = tokenExpiry;
+                return [memberBody];
             } else {
-                const token = crypto.randomBytes(64).toString('hex');
-                await members.updateMember({ email: payload['email'] }, {
+                const memberId = searchRes[0].id;
+                await members.updateMember(memberId, {
                     imageUrl: payload['picture'],
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
-                return await members.search({ email: payload['email'] }, false, true);
+                const memberBody = (await members.search({ id: memberId }))[0];
+                const [token, tokenExpiry] = await generateToken(memberId);
+                memberBody.token = token;
+                memberBody.tokenExpiry = tokenExpiry;
+                return [memberBody];
             }
         }
     });

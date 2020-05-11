@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
             }
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.members.updateMember({ _id: req.query.id }, req.body.data);
+                return await data.members.updateMember(req.query.id, req.body.data);
             })));
         }
     } else {

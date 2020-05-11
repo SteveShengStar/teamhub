@@ -1,4 +1,3 @@
-const Interest = require('../schema/Interest');
 const util = require('./util');
 
 const interests = {};

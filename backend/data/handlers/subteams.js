@@ -1,4 +1,3 @@
-const Subteam = require('../schema/Subteam');
 const util = require('./util');
 
 const subteam = {};

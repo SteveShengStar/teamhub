@@ -9,7 +9,8 @@ services:
 
   teamhub_mysql:
     image: mysql
-    container_name: teamhub_mysql
+    container_name:
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_USER: root
       MYSQL_PASSWORD: password

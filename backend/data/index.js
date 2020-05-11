@@ -1,4 +1,4 @@
-const mysql = require('mysql');
+const db = require('./db');
 
 let config = {};
 
@@ -13,23 +13,18 @@ if (process.env.TEAMHUB_ENV === 'testing') {
 
 const data = {};
 
-data.connected = false;
-
 data.initIfNotStarted = async () => {
-    if (!data.connected) {
-        await data.init();
+    if (!db.connected) {
+        await db.init(config.db);
     }
 };
 
 data.init = async () => {
-    data.mysql = mysql.createConnection(config.db);
-    mysql.connect();
-    console.log(`Connected to: ${config.url}`);
+    await db.init(config.db);
 };
 
 data.close = async () => {
-    data.connected = false;
-    mysql.end();
+    await db.close();
 };
 
 data.util = require('./handlers/util');

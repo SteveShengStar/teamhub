@@ -1,4 +1,3 @@
-const MemberType = require('../schema/MemberType');
 const util = require('./util');
 
 const memberType = {};

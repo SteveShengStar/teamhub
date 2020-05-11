@@ -1,9 +1,3 @@
-const Member = require('../schema/Member');
-const Project = require('../schema/Project');
-const Subteam = require('../schema/Subteam');
-const Interest = require('../schema/Interest');
-const Skill = require('../schema/Skill');
-const MemberType = require("../schema/MemberType");
 const util = require('./util');
 
 const filters = {};

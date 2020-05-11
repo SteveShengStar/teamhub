@@ -105,20 +105,6 @@ A JSON object with the results
 **Returns**
 A JSON object of the member with the specified ID.
 
-### `DELETE /members/:id/remove`
-**Request Headers**
-|Header       |Value                                                |
-|-------------|-----------------------------------------------------|
-|authorization|"Bearer " + authToken (must match user being deleted)|
-
-**URL Parameters**
-|Field|Description |
-|-----|------------|
-|:id  |ID of member|
-
-**Returns**
-A JSON object with the results
-
 ### `PUT /members/:id/update`
 **Request Headers**
 |Header       |Value                                                |
@@ -162,7 +148,6 @@ A JSON object of the document of the user with its authToken
 - skills
 - interests
 - joined
-- coopExp
 - memberType
 - subteams
 - projects

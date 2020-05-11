@@ -1,4 +1,15 @@
+const db = require('../db');
 const util = {};
+
+util.selectOrInsertIfNotExists = async (tableName, field, value) => {
+    const res = await db.query('SELECT * FROM ?? WHERE ??=?', [tableName, field, value]);
+    if (res.length > 0) {
+        return res[0].id;
+    } else {
+        const insertRes = await db.query('INSERT INTO ?? SET ??=?', [tableName, field, value]);
+        return insertRes.insertId;
+    }
+};
 
 /**
  * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
