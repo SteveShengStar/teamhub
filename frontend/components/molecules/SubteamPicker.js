@@ -10,7 +10,7 @@ export default ({options, selected, updateSelected}) => {
                     return (
                         <SubteamButton 
                             key={i}
-                            variant={(selected && selected.find(index => index == i) != undefined) ? subteam.name.toLowerCase() : 'white'}
+                            variant={(selected && selected.find(index => index == i) != undefined) ? subteam.name.toLowerCase() : 'lightGrey'}
                             onClick={() => {
                                 updateSelected && updateSelected(i)
                             }}
@@ -37,4 +37,9 @@ const Container = styled.div`
 
 const SubteamButton = styled(Button)`
     padding: 10px 20px;
+    :hover {
+        transform: scale(1);
+        ${props => props.variant == 'lightGrey' && `background-color: ${props.theme.colors.greys[1]};`}
+        ${props => props.variant != 'lightGrey' && `opacity: 0.8;`}
+    }
 `

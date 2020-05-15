@@ -90,7 +90,7 @@ const Home = () => {
         <PageTemplate title="Explore">
             <SystemComponent
                 position="relative"
-                overflow={["auto", "auto", "hidden"]}
+                overflow={["auto", "auto", "visible"]}
                 overflowX={"hidden"}
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}

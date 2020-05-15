@@ -10,17 +10,18 @@ const Card = styled(SystemComponent)`
     }
     ${space}
 
-    background-color: rgba(240,240,240,0.9);
+    /*background-color: rgba(240,240,240,0.9);*/
+    background-color: ${props => props.theme.colors.background};
 
-    @supports ((-webkit-backdrop-filter: blur(13px)) or (backdrop-filter: blur(13px))) {
+    /*@supports ((-webkit-backdrop-filter: blur(13px)) or (backdrop-filter: blur(13px))) {
         backdrop-filter: blur(13px);
         background-color: rgba(255,255,255,0.37);
-    }
+    }*/
 `;
 
 Card.defaultProps = {
     borderRadius: 'default',
-    boxShadow: 'default',
+    //boxShadow: 'default',
 };
 
 export default Card;
