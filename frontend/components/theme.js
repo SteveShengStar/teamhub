@@ -3,7 +3,7 @@
  */
 const white = '#FFFFFF';
 const greys = [
-    '#F5F5F5', // light
+    '#F1F1F1', // light
     '#D6D6D6', // light gray
     '#B4B4B4', // grayed text
     '#888888', // gray
