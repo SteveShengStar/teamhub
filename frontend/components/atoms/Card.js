@@ -9,7 +9,7 @@ const Card = styled(SystemComponent)`
         padding: ${props => props.theme.space.cardPadding}px;
     }
     ${space}
-
+    border: 1px solid ${props => props.theme.colors.greys[1]};
     /*background-color: rgba(240,240,240,0.9);*/
     background-color: ${props => props.theme.colors.background};
 
