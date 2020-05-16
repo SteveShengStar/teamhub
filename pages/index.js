@@ -105,7 +105,7 @@ const Home = () => {
                     position={["relative", "relative", "relative"]}
                     memberData={selectedMember}
                 >
-                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start">
+                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start" pb={10}>
                         <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                         <Button 
                             display={"block"}
