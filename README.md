@@ -37,7 +37,7 @@ Here are the steps to run locally:
 3. Go to the root directory and run `docker build ./docker -t teamhub` or `npm run build:docker`
 4. To start the server, simply go to the root directory and run `docker-compose up -d`
 5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
-6. Or, to skip steps 5 & 6, run `npm run docker` to start the docker server and start the project
+6. To start the **web app in development, run `npm run dev` inside the docker container (from following Step 5)**
 7. To stop the docker containers, run `docker-compose stop`
 
 To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
@@ -63,8 +63,8 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 5. Add the `wip` label to the Pull Request as well as `[WIP]` to the title of the Pull Request.
 6. Once you are finished, remove the `wip` label and `[WIP]` from the title of the Pull Request, add the `ready-to-merge` label to your Pull Request, and add at least one reviewer.
 7. Check up on your Pull Request and respond to any comments/questions
-8. Once your Pull Request has been reviewed and approved, you may merge it with `staging` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
-9. After testing, the `staging` branch will then be merged with `master` and deployed to production by site maintainers.
+8. Once your Pull Request has been reviewed and approved, you may merge it with `dev` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
+9. After testing, the `dev` branch will then be merged with `master` and deployed to production by site maintainers.
 
 ## Documentation
 

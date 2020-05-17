@@ -1,7 +1,15 @@
 const data = require('../../../backend/data/index');
+const Cors = require('cors');
+
+
+const cors = Cors({
+    methods: ['POST', 'HEAD']
+});
+
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
+    await data.util.runCORSMiddlewareHelper(req, res, cors);
     if (req.method === 'POST') {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
