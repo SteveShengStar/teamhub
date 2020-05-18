@@ -6,7 +6,9 @@
     "dev": "nodemon ./server.js",
     "build": "next build",
     "build:docker": "docker build ./docker -t teamhub",
-    "docker:dev": "docker-compose up -d && docker exec -it teamhub_nodejs /bin/sh",
+    "start:docker": "docker-compose up -d",
+    "dev:docker": "docker exec -it teamhub_nodejs npm run dev",
+    "docker": "npm run start:docker && npm run dev:docker",
     "start": "next start",
     "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest"
   },
@@ -20,6 +22,7 @@
     "animejs": "^3.1.0",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "eslint-plugin-react": "^7.16.0",
     "express": "^4.17.1",
     "googleapis": "^44.0.0",

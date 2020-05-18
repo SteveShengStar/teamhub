@@ -7,7 +7,8 @@ Title.defaultProps = {
     fontSize: 'title',
     fontWeight: 'black',
     color: 'foreground',
-    my: 0
+    mt: 0,
+    mb: 0
 };
 
 export default Title;

@@ -106,15 +106,7 @@ members.search = async (body, fields, showToken = false) => {
 
 members.add = async (memberBody) => {
     return util.handleWrapper(async () => {
-        memberBody.interests = await util.replaceNamesWithIdsArray(memberBody.interests, interests);
-        memberBody.skills = await util.replaceNamesWithIdsArray(memberBody.skills, skills);
-        memberBody.memberType = await util.replaceNameWithId(memberBody.memberType, memberTypes);
-        memberBody.subteams = await util.replaceNamesWithIdsArray(memberBody.subteams, subteams);
-        if (memberBody.projects) {
-            for (let i = 0; i < memberBody.projects.length; i++) {
-                memberBody.projects[i].project = await util.replaceNameWithId(memberBody.projects[i].project, projects);
-            }
-        }
+        memberBody = await replaceBodyWithIds(memberBody);
         return await Member.create(memberBody);
     });
 };
@@ -127,17 +119,50 @@ members.delete = async (body) => {
 
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
-        body.interests ? body.interests = await util.replaceNamesWithIdsArray(body.interests, interests) : null;
-        body.skills ? body.skills = await util.replaceNamesWithIdsArray(body.skills, skills) : null;
-        body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
-        body.subteams ? body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams) : null;
-        if (body.projects) {
+        body = await replaceBodyWithIds(body);
+        console.log(body);
+        return (await Member.update(filter, body).exec());
+    });
+};
+
+const replaceBodyWithIds = async (body) => {
+    if (body.interests) {
+        if (Array.isArray(body.interests)) {
+            body.interests = await util.replaceNamesWithIdsArray(body.interests, interests);
+        } else {
+            throw Error('interests field must be empty or an array.');
+        }
+    }
+
+    if (body.skills) {
+        if (Array.isArray(body.skills)) {
+            body.skills = await util.replaceNamesWithIdsArray(body.skills, skills);
+        } else {
+            throw Error('skills field must be empty or an array.');
+        }
+    }
+
+    if (body.subteams) {
+        if (Array.isArray(body.subteams)) {
+            body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams);
+        } else {            
+            throw Error('subteams field must be empty or an array.');
+        }
+    }
+
+    body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
+
+    if (body.projects) {
+        if (Array.isArray(body.projects)) {
             for (let i = 0; i < body.projects.length; i++) {
                 body.projects[i].project = await util.replaceNameWithId(body.projects[i].project, projects);
             }
+        } else {
+            throw Error('projects field must be empty or an array.');
         }
-        return (await Member.update(filter, body).exec());
-    });
+    }
+
+    return body;
 };
 
 module.exports = members;

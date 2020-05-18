@@ -6,6 +6,7 @@ Subtitle.defaultProps = {
     fontFamily: 'title',
     fontSize: 'subtitle',
     fontWeight: 'regular',
+    color: "foreground",
     mt: 0,
     mb: 0
 };
