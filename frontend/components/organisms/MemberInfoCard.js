@@ -173,7 +173,7 @@ const PersonalCard = styled(SystemComponent)`
 const MemberSubtitle = styled(Header4)`
     font-size: ${props => props.theme.fontSizes.smallTitle};
     margin-bottom: ${props => 0.5 * props.theme.space.cardMargin}px;
-    color: ${props => props.theme.colors.grays[3]};
+    color: ${props => props.theme.colors.greys[3]};
 `;
 
 const InlineItemRow = styled(SystemComponent)`

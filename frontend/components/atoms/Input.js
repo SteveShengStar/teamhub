@@ -21,7 +21,7 @@ const Input = styled(SystemInput)(
                     borderColor: 'action' 
                 },
                 '&::placeholder': {
-                    color: 'grays.2'
+                    color: 'greys.2'
                 },
                 fontSize: 1
             }

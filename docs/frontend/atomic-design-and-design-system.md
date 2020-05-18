@@ -105,7 +105,7 @@ There isn't much logic present in molecules. They simply take in props to render
 const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream}) => {
     return (
         <GridLayout 
-            backgroundColor="grays.0"
+            backgroundColor="greys.0"
             borderRadius="small"
             height={36} 
             onClick={onClick}

@@ -157,7 +157,7 @@ const TextBox = styled.textarea`
   outline: none;
   transition: all 0.2s ease;
   margin: 10px 0 0;
-  border: 1px solid ${props => props.theme.colors.grays[2]};
+  border: 1px solid ${props => props.theme.colors.greys[2]};
   &:focus {
     border: 1px solid ${props => props.theme.colors.action};
   }

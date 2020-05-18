@@ -4,10 +4,10 @@
 const white = '#FFFFFF';
 const greys = [
     '#F1F1F1', // light
-    '#D6D6D6', // light gray
-    '#B4B4B4', // grayed text
-    '#888888', // gray
-    '#333333' // dark gray
+    '#D6D6D6', // light grey
+    '#B4B4B4', // greyed text
+    '#888888', // grey
+    '#333333' // dark grey
 ];
 const black = '#131313';
 const primaryBlue = '#2C8DFF';
@@ -94,7 +94,7 @@ const theme = {
         alertAction: alertRed,
         foreground: black,
         background: white,
-        grays,
+        greys,
         messagesBackground: messagesBlue,
         clickUp: clickUpPurple,
         software: softwareMagenta,

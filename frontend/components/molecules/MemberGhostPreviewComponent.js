@@ -15,7 +15,7 @@ const RowFlexLayout = styled(SystemComponent)`
 const MemberGhostPreviewComponent = ({visible}) => {
     return (
         <GridLayout 
-            backgroundColor="grays.0" 
+            backgroundColor="greys.0" 
             borderRadius="small" 
             height={36} 
             isVisible={visible}
@@ -30,13 +30,13 @@ const MemberGhostPreviewComponent = ({visible}) => {
             />
 
             <RowFlexLayout>
-                <AnimatingBlank width={"50%"} height={"90%"} backgroundColor="grays.1" origin="left">&nbsp;</AnimatingBlank>
-                <AnimatingBlank width={"15%"} height={"90%"} backgroundColor="grays.1" origin="right"></AnimatingBlank>
+                <AnimatingBlank width={"50%"} height={"90%"} backgroundColor="greys.1" origin="left">&nbsp;</AnimatingBlank>
+                <AnimatingBlank width={"15%"} height={"90%"} backgroundColor="greys.1" origin="right"></AnimatingBlank>
             </RowFlexLayout>
 
             <RowFlexLayout gridRow="2/3" gridColumn="2/3">
-                <AnimatingBlank width={"30%"} height={"90%"} backgroundColor="grays.1" origin="left"></AnimatingBlank>
-                <AnimatingBlank width={"10%"} height={"90%"} backgroundColor="grays.1" origin="right"></AnimatingBlank>
+                <AnimatingBlank width={"30%"} height={"90%"} backgroundColor="greys.1" origin="left"></AnimatingBlank>
+                <AnimatingBlank width={"10%"} height={"90%"} backgroundColor="greys.1" origin="right"></AnimatingBlank>
             </RowFlexLayout>
             <Dot isOnStream={false}/>
 

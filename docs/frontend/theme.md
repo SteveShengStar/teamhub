@@ -16,7 +16,7 @@ Transitions property can only be used inside of styled-components.
 
 ## Colors
 
-Each key references a color as a string, grays are an array of strings so an index between 0 - 4 needs to specified for the color gray.
+Each key references a color as a string, greys are an array of strings so an index between 0 - 4 needs to specified for the color grey.
 
 ### Sample Usage
 
@@ -35,11 +35,11 @@ const MyComponent = styled.div`
 | alertAction        | ![#](https://placehold.it/25/F44848/000000?text=+) #F44848 | Alert action color | For actions that need extra attention or consideration | Rarely |
 | foreground         | ![#](https://placehold.it/25/131313/000000?text=+) #131313 | Foreground Color | Color used in foreground (aka text) | Frequent |
 | background         | ![#](https://placehold.it/25/FFFFFF/000000?text=+) #FFFFFF | Background Color | Color used in background | Frequent |
-| grays.0            | ![#](https://placehold.it/25/F5F5F5/000000?text=+) #F5F5F5 | Super Light Gray Color | Primarily a UI accent on top of white to make it more aesthetically pleasing | Rarely |
-| grays.1            | ![#](https://placehold.it/25/D6D6D6/000000?text=+) #D6D6D6 | Light Gray Color | Whenever a light gray is needed | Sparingly |
-| grays.2            | ![#](https://placehold.it/25/B4B4B4/000000?text=+) #B4B4B4 | Text Gray Color | For disabled or secondary text | Sparingly |
-| grays.3            | ![#](https://placehold.it/25/888888/000000?text=+) #888888 | Just Gray Color | Whenever gray is needed | Sparingly |
-| grays.4            | ![#](https://placehold.it/25/333333/000000?text=+) #333333 | Super Dark Gray Color | Primarily a UI accent on top of white to make it more aesthetically pleasing | Sparingly |
+| greys.0            | ![#](https://placehold.it/25/F5F5F5/000000?text=+) #F5F5F5 | Super Light Grey Color | Primarily a UI accent on top of white to make it more aesthetically pleasing | Rarely |
+| greys.1            | ![#](https://placehold.it/25/D6D6D6/000000?text=+) #D6D6D6 | Light Grey Color | Whenever a light grey is needed | Sparingly |
+| greys.2            | ![#](https://placehold.it/25/B4B4B4/000000?text=+) #B4B4B4 | Text Grey Color | For disabled or secondary text | Sparingly |
+| greys.3            | ![#](https://placehold.it/25/888888/000000?text=+) #888888 | Just Grey Color | Whenever grey is needed | Sparingly |
+| greys.4            | ![#](https://placehold.it/25/333333/000000?text=+) #333333 | Super Dark Grey Color | Primarily a UI accent on top of white to make it more aesthetically pleasing | Sparingly |
 | messagesBackground | ![#](https://placehold.it/25/1C9FFF/000000?text=+) #1C9FFF | Message Dialog Color | Color used in messaging boxes | Rarely |
 | clickUp            | ![#](https://placehold.it/25/7B68EE/000000?text=+) #7B68EE | ClickUp Color | Primary color indicating ClickUp | Rarely |
 | software           | ![#](https://placehold.it/25/DF39F5/000000?text=+) #DF39F5 | Software Team Color | Primary color indicating software subteam | Sparingly |
