@@ -2,7 +2,22 @@
 
 [![Actions Status](https://github.com/waterloop/teamhub/workflows/CI/badge.svg)](https://github.com/waterloop/teamhub/actions)
 
-## Installation
+[Adobe XD Designs](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/)
+
+## Table of Contents
+
+- [TeamHub Project](#teamhub-project)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Installation](#installation)
+    - [Setting up your Development Environment](#setting-up-your-development-environment)
+  - [Troubleshooting](#troubleshooting)
+  - [Contributing](#contributing)
+  - [Documentation](#documentation)
+
+## Getting Started
+
+### Installation
 
 Clone from GitHub with:
 ```git clone https://www.github.com/waterloop/teamhub.git```
@@ -13,26 +28,25 @@ Make a copy and rename it to `config.json`.
 
 Follow the instructions listed under Setting Up Development Environment
 
-## Setting up Development Environment
+### Setting up your Development Environment
 
 Here are the steps to run locally:
 
 1. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
-3. Go to the root directory and run `docker build ./docker -t teamhub`
+3. Go to the root directory and run `docker build ./docker -t teamhub` or `npm run build:docker`
 4. To start the server, simply go to the root directory and run `docker-compose up -d`
 5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
 6. To start the **web app in development, run `npm run dev` inside the docker container (from following Step 5)**
 7. To stop the docker containers, run `docker-compose stop`
 
-
 To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
 
-### Troubleshooting
+## Troubleshooting
 
-* To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+- To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
 
-* If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
+- If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
 1. Install `Node.js` and `MongoDB` locally
@@ -52,18 +66,5 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 8. Once your Pull Request has been reviewed and approved, you may merge it with `dev` if it has not been done so already by the reviewer. When merging a pull request, use the `Create a merge commit` option.
 9. After testing, the `dev` branch will then be merged with `master` and deployed to production by site maintainers.
 
-## Technologies used
+## Documentation
 
-* Based on [NextJS](https://nextjs.org) framework (Server-Side Rendered React).
-* [Typescript](www.typescriptlang.org) setup (not being used at the moment)
-* Front-End
-  * [React](https://reactjs.org)
-  * Design System uses [styled-components](https://www.styled-components.com) and [styled-system](https://styled-system.com)
-  * State management will use [Redux](https://redux.js.org) (and possibly [redux-thunk](https://github.com/reduxjs/redux-thunk) for asynchronous redux).
-* Back-end
-  * **For Detailed Documentation on the Backend, see [./backend/README.md](./backend/README.md)**
-  * RESTful API created using ([ExpressJS](https://expressjs.com)? serving NextJS?)
-  * MongoDB for database
-  * [Jest](https://jestjs.io/) for testing
-
-Link to [mockup](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/)

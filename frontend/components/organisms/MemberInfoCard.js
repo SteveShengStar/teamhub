@@ -36,19 +36,23 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
     return (
         <InfoCard className={className} ref={animRef}>
-            <Header3 mb={3}>Member</Header3>
+            <Header3 mb={3} ml={20} mt={20}>Member</Header3>
             <Button 
                 alignSelf="start"
                 justifySelf="end"
                 onClick={onClose}
                 gridColumn={2/3}
+                mr={20}
+                mt={20}
             >
                 Close
             </Button>
 
             <ContentContainer>
                 <LeftColumn>
-                    <Header2 fontSize="smallTitle">{memberData.name ? `${memberData.name.display || (memberData.name.first + " " + memberData.name.last)}` : ''} </Header2>
+                    <Header2 fontSize="smallTitle">
+                        {memberData.name ? `${memberData.name.display || (memberData.name.first + " " + memberData.name.last)}` : ''} 
+                    </Header2>
                     {
                         memberData.subteams ? (
                             <MemberSubtitle>
@@ -154,19 +158,20 @@ const InfoCard = styled(Card)`
     ${props => props.theme.mediaQueries.tablet} {
         max-width: 800px;
         width: auto;
+        padding: 0;
     }
 `;
 
 const PersonalCard = styled(SystemComponent)`
-    background-color: ${props => props.theme.colors.background};
+    background-color: ${props => props.theme.colors.greys[0]};
     border-radius: ${props => props.theme.radii.default}px;
-    box-shadow: ${props => props.theme.shadows.default};
+    box-shadow: ${props => props.theme.shadows.dark};
     overflow: hidden;
     max-width: 400px;
 `;
 
 const MemberSubtitle = styled(Header4)`
-    fontSize: smallTitle;
+    font-size: ${props => props.theme.fontSizes.smallTitle};
     margin-bottom: ${props => 0.5 * props.theme.space.cardMargin}px;
     color: ${props => props.theme.colors.greys[3]};
 `;
@@ -187,6 +192,7 @@ const ContentContainer = styled.div`
         display: grid;
         grid-template-rows: 1fr;
         grid-template-columns: minmax(60%, auto) minmax(100px, 200px);
+        padding: 10px 20px 20px;
     }
 `
 

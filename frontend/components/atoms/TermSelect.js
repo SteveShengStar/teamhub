@@ -6,7 +6,7 @@ const TermSelect = styled(SystemComponent)({
   cursor: "pointer",
   textAlign: "center",
   color: props => props.theme.colors.foreground,
-  backgroundColor: props => props.theme.colors.background,
+  backgroundColor: props => props.theme.colors.greys[0],
   borderRadius: 3,
   "&:hover": {
     opacity: 0.5,

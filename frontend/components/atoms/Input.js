@@ -8,13 +8,13 @@ const Input = styled(SystemInput)(
             text: {
                 px: 3,
                 py: '8px',
-                borderColor: 'greys.2',
+                borderColor: 'greys.3',
                 borderWidth: 1,
                 borderStyle: 'solid',
                 transition: 'all 0.2s ease',
                 borderRadius: 'small',
                 '&:hover': {
-                    borderColor: 'greys.3'
+                    borderColor: 'greys.4'
                 },
                 '&:focus': {
                     outline: 'none',
