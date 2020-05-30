@@ -19,18 +19,16 @@ Here are the steps to run locally:
 
 1. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
-3. Go to the root directory and run `docker build ./docker -t teamhub`
-4. To start the server, simply go to the root directory and run `docker-compose up -d`
-5. To run a command in the docker container, for example `npm run test`, run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press <kbd>Ctrl</kbd> + <kbd>C</kbd>.
-6. To start the **web app in development, run `npm run dev` inside the docker container (from following Step 5)**
-7. To stop the docker containers, run `docker-compose stop`
+3. To start the database server, simply go to the root directory and run `docker-compose up -d`
+4. To start the **web app in development, run `npm run dev` at the root directory of the project**
+5. You can access the local database running in the docker container by going to `localhost:8081` and using the database credentials in `/backend/data/config.json` to login.
+6. To stop the docker containers, run `docker-compose stop`
 
 
-To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
+To run tests locally, use the command `npm run test` to ensure there were no breaking changes (see step 5 above).
 
 ### Troubleshooting
 
-* To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
 
 * If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
