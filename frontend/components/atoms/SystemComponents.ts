@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 import { grid, color, space, layout, typography, flexbox, compose, shadow, border, position, system } from 'styled-system';
 
-const transition = system({
+// TODO(kevin) remove any cast
+const transition = (system as any)({
     prop: 'transition',
     cssProperty: 'transition',
     scale: 'transitions'
@@ -38,12 +39,12 @@ export const SystemSvg = styled.svg(composition);
 
 SystemComponent.defaultProps = themeDefaultProps;
 SystemSpan.defaultProps = themeDefaultProps;
-SystemHeader.H1.defaultProps = { ...themeDefaultProps, fontWeight: 'black' };
-SystemHeader.H2.defaultProps = { ...themeDefaultProps, fontWeight: 'black' };
-SystemHeader.H3.defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
-SystemHeader.H4.defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
-SystemHeader.H5.defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
-SystemHeader.H6.defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
+(SystemHeader.H1 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'black' };
+(SystemHeader.H2 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'black' };
+(SystemHeader.H3 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
+(SystemHeader.H4 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
+(SystemHeader.H5 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
+(SystemHeader.H6 as any).defaultProps = { ...themeDefaultProps, fontWeight: 'bold' };
 SystemBody.defaultProps = themeDefaultProps;
 
 SystemLink.defaultProps = { ...themeDefaultProps, color: 'action' };

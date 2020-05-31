@@ -9,24 +9,37 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../store/reducers/userReducer';
 
-export default ({shouldHide, onFinish, loginRef}) => {
+interface ILoginCardProps {
+    shouldHide: () => void;
+    // TODO(kevin) remove any
+    onFinish: (user: any) => void;
+}
+
+// TODO(kevin clean up any casts)
+const SystemComponentAsAny = SystemComponent as any
+const Header2AsAny = Header2 as any
+const Header4AsAny = Header4 as any
+
+export const LoginCard: React.FC<ILoginCardProps> = ({shouldHide, onFinish}) => {
     const dispatch = useDispatch()
-    function responseGoogle(response) {
+    // TODO(kevin) remove any
+    function responseGoogle(response: any) {
         if (response.error) return;
         shouldHide && shouldHide();
         userLogin(response, dispatch).then((user) => {
             onFinish && onFinish(user);
         })
     }
+
     return (
-        <LoginCard ref={loginRef}>
-            <SystemComponent m={7}>
-                <Header2 mb={6}>
+        <StyledLoginCard>
+            <SystemComponentAsAny m={7}>
+                <Header2AsAny mb={6}>
                     Log In
-                </Header2>
-                <Header4 mb={3}>
+                </Header2AsAny>
+                <Header4AsAny mb={3}>
                     Login with your Waterloop Email
-                </Header4>
+                </Header4AsAny>
                 <GoogleLogin
                     style={{ fontFamily: 'Nunito Sans' }}
                     clientId="404915833701-5kvp9td9jonstfsola74atmkjct4h00d.apps.googleusercontent.com"
@@ -35,12 +48,12 @@ export default ({shouldHide, onFinish, loginRef}) => {
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
                 />
-            </SystemComponent>
-        </LoginCard>
+            </SystemComponentAsAny>
+        </StyledLoginCard>
     );
 };
 
-const LoginCard = styled(Card)`
+const StyledLoginCard = styled(Card)`
     position: relative;
     
     ${props => props.theme.mediaQueries.smallDesktop} {

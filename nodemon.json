@@ -1,6 +1,7 @@
 {
+    "exec": "ts-node --project tsconfig.server.json server.ts",
     "verbose": true,
     "ignore": ["node_modules", ".next"],
-    "watch": ["/pages", "/frontend", "/backend", "server.js"],
-    "ext": "js json"
+    "watch": ["/pages", "/frontend", "/backend", "server.ts"],
+    "ext": "ts tsx js json"
 }

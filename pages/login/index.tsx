@@ -1,17 +1,18 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
-import Login from '../../frontend/components/molecules/LoginCard';
+import { LoginCard } from '../../frontend/components/molecules/LoginCard';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
-import api from '../../frontend/store/api';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { UserTypes } from '../../frontend/store/reducers/userReducer';
 import useRedirect from '../../frontend/hooks/useRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 import { ThemeContext } from 'styled-components';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
+// TODO(kevin) remove any cast
+const PageTemplateAsAny = PageTemplate as any
 
 
 export default () => {
@@ -23,9 +24,10 @@ export default () => {
 
     return (
         <>
-            <PageTemplate myHubHidden={true}>
-                <LoginTransition transitionRef={loginTransition.ref}>
-                    <Login 
+            <PageTemplateAsAny myHubHidden={true}>
+                { /* TODO(kevin) fix any cast */ }
+                <LoginTransition transitionRef={loginTransition.ref as any}>
+                    <LoginCard 
                         shouldHide={() => {
                             loginTransition.setVisible(false)
                         }} 
@@ -35,7 +37,7 @@ export default () => {
                         }} 
                     />
                 </LoginTransition>
-            </PageTemplate>
+            </PageTemplateAsAny>
             <LoadingModal visible={!loginTransition.visible} color={theme.colors.black}/>
         </>
     )

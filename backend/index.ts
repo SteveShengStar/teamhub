@@ -1,6 +1,7 @@
 import express from 'express';
-const router = express.Router();
-const members = require('./api/members');
+import { members } from './api/members'
+
+export const router = express.Router();
 
 router.get('/', (req, res) => {
     res.status(200).send('TeamHub Backend API.');
@@ -8,4 +9,3 @@ router.get('/', (req, res) => {
 
 router.use('/members', members);
 
-module.exports = router;

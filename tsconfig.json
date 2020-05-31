@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "module": "esnext",
     "jsx": "preserve",
-    "strict": true,
+    "strict": false, // TODO(kevin): change strict to true
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": [
@@ -24,6 +24,6 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx", "server.js"
   ]
 }

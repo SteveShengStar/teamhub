@@ -2,7 +2,8 @@ import styled from 'styled-components';
 import { SystemHeader } from './SystemComponents';
 
 const Header2 = styled(SystemHeader.H2)``;
-Header2.defaultProps = {
+// TODO(kevin) remove any cast
+(Header2 as any).defaultProps = {
     fontFamily: 'body',
     fontSize: 'header2',
     mb: 0,
