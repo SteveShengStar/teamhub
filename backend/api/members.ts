@@ -1,11 +1,10 @@
-const express = require('express');
-const members = express.Router();
+import express from 'express';
+export const members = express.Router();
 
 members.post('/', async (req, res, next) => {
     try {
         //const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         console.log('req1!');
-        console.log(x);
         const authStatus = true;
         // if (authStatus) {
         //     res.setHeader('Content-Type', 'application/json');
@@ -26,5 +25,3 @@ members.post('/', async (req, res, next) => {
         return next(err);
     }
 });
-
-module.exports = members;

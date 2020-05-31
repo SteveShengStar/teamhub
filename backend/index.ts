@@ -1,8 +1,8 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const members = require('./api/members');
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
     res.status(200).send('TeamHub Backend API.');
 });
 
