@@ -13,16 +13,17 @@ const GridLayout = styled(SystemComponent)`
     grid-template-columns: auto 1fr 20px;
     grid-column-gap: ${props => props.theme.space[4]}px;
     padding: ${props => props.theme.space[3]}px;
-    box-shadow: ${props => props.theme.shadows.default};
+    /*box-shadow: ${props => props.theme.shadows.default};*/
     cursor: pointer;
     transition: ${props => props.theme.transitions.default};
     &:hover {
         transform: scale(1.01);
-        background-color: white;
-        box-shadow: ${props => props.theme.shadows.default};
+        /*background-color: white; */
+        background-color: ${props => props.theme.colors.greys[1]};
+        /*box-shadow: ${props => props.theme.shadows.default};*/
     }
     &:active {
-        box-shadow: ${props => props.theme.shadows.dark};
+        /*box-shadow: ${props => props.theme.shadows.dark};*/
         transform: scale(1.025);
     }
 `;
@@ -45,7 +46,7 @@ const RowFlexLayout = styled(SystemComponent)`
 const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream}) => {
     return (
         <GridLayout 
-            backgroundColor="greys.0" 
+            backgroundColor="greys.0"
             borderRadius="small" 
             height={36} 
             onClick={onClick}

@@ -90,7 +90,7 @@ const Home = () => {
         <PageTemplate title="Explore">
             <SystemComponent
                 position="relative"
-                overflow={["auto", "auto", "hidden"]}
+                overflow={["auto", "auto", "visible"]}
                 overflowX={"hidden"}
                 gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
                 display={["block", "block", "grid"]}
@@ -105,7 +105,7 @@ const Home = () => {
                     position={["relative", "relative", "relative"]}
                     memberData={selectedMember}
                 >
-                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start">
+                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start" pb={10}>
                         <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                         <Button 
                             display={"block"}

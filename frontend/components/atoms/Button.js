@@ -58,6 +58,10 @@ const Button = styled(SystemButton)(
             white: {
                 backgroundColor: 'white',
                 color: 'black'
+            },
+            lightGrey: {
+                backgroundColor: 'greys.0',
+                color: 'black'
             }
         }
     }),
