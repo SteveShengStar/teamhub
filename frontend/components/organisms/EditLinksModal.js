@@ -56,7 +56,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         githubUrl,
         websiteUrl
     });
-    const [hasError, setHasError] = useState({
+    const [hasError, setErrors] = useState({
         facebookUrl: false,
         linkedInUrl: false,
         githubUrl: false,
@@ -72,7 +72,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                 websiteUrl
             });
 
-            setHasError({
+            setErrors({
                 facebookUrl: false,
                 linkedInUrl: false,
                 githubUrl: false,
@@ -84,10 +84,6 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
     const validateUrl = (errorList, fieldName, fieldValue, allowedHosts = false) => {
         if(!fieldValue) return;
 
-        if (allowedHosts) {
-            allowedHosts = 
-                allowedHosts.concat(allowedHosts.map(host => 'www.'.concat(host)));
-        }
         if (!isURL(fieldValue, {require_host: true, 
                                 allow_underscores: true,
                                 host_whitelist: allowedHosts})) {
@@ -101,20 +97,33 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         evt.preventDefault();
 
         const errors = {...hasError};
-        validateUrl(errors, 'facebookUrl', formValues['facebookUrl'], ['facebook.com']);
-        validateUrl(errors, 'githubUrl', formValues['githubUrl'], ['github.com']);
-        validateUrl(errors, 'linkedInUrl', formValues['linkedInUrl'], ['linkedin.com']);
-        validateUrl(errors, 'websiteUrl', formValues['websiteUrl']);
 
-        setHasError(errors);
+        let facebookUrl = formValues['facebookUrl'].trim();
+        let githubUrl = formValues['githubUrl'].trim();
+        let linkedInUrl = formValues['linkedInUrl'].trim();
+        let websiteUrl = formValues['websiteUrl'].trim();
 
-        if (!Object.values(errors).includes(true)) {
+        validateUrl(errors, 'facebookUrl', facebookUrl, ['www.facebook.com']);
+        validateUrl(errors, 'githubUrl', githubUrl, ['www.github.com']);
+        validateUrl(errors, 'linkedInUrl', linkedInUrl, ['www.linkedin.com']);
+        validateUrl(errors, 'websiteUrl', websiteUrl);
+
+        setErrors(errors);
+
+        let dataIsValid = !Object.values(errors).includes(true);
+
+        if (dataIsValid) {
+            facebookUrl = (!facebookUrl || facebookUrl.slice(0, 4) === "http") ? facebookUrl : "https://".concat(facebookUrl);
+            githubUrl = (!githubUrl || githubUrl.slice(0, 4) === "http") ? githubUrl : "https://".concat(githubUrl);
+            linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
+            websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
+
             updateUser(dispatch, {
                 "links": [
-                    {"type": "facebook", "link": formValues['facebookUrl']},
-                    {"type": "github", "link": formValues['githubUrl']},
-                    {"type": "website", "link": formValues['websiteUrl']},
-                    {"type": "linkedin", "link": formValues['linkedInUrl']}
+                    {"type": "facebook", "link": facebookUrl},
+                    {"type": "github", "link": githubUrl},
+                    {"type": "website", "link": websiteUrl},
+                    {"type": "linkedin", "link": linkedInUrl}
                 ]
             }, token, user._id, router, false);
 
@@ -123,15 +132,15 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
     }
 
     const handleChange = (name, value) => {
-        setHasError({
+        setErrors({
             ...hasError,
             [name]: false
-        })
+        });
         
         setFormValues({
             ...formValues,
             [name]: value
-        })
+        });
     }
 
     return (
