@@ -6,18 +6,20 @@ import {SystemComponent} from '../../atoms/SystemComponents';
 import { useContext } from 'react';
 import { ThemeContext } from "styled-components";
 
-const EditableSectionHeader = ({title, handleEditClicked}) => {
+const EditableSectionHeader = ({title, handleEditClicked, sectionRef}) => {
     const theme = useContext(ThemeContext);
     
     return (
         <SystemComponent display='flex' justifyContent='flex-start' flexDirection='row'>
-            <SystemComponent style={{ transformOrigin: 'left' }} 
+            <SystemComponent 
+                style={{ transformOrigin: 'left' }} 
                 mr={theme.space.editableHeaderMargin}
+                ref={sectionRef}
             >
                 <Header3>{title}</Header3>
             </SystemComponent>
             <LargeButton handleClick={handleEditClicked} variant="primary">Edit</LargeButton>
         </SystemComponent>
     )
-}
+};
 export default EditableSectionHeader;

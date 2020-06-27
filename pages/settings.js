@@ -12,62 +12,30 @@ import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivS
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
 import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
+import SideNav from '../frontend/components/molecules/AccountSettings/SideNav.js';
 
 import member from '../frontend/mockdata/member';
 import {lowerCase, capitalize} from 'lodash';
 
-
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import theme from '../frontend/components/theme';
 import {getProfileInfo} from '../frontend/store/reducers/userReducer';
+
 
 const altText = {
     "website": "Personal Website",
     "linkedin": "Linkedin Profile",
     "github": "Github Profile",
     "facebook": "Facebook Profile"
-}
+};
 
-const roleDescription = member.roleDescription;
+const refIds = ["teams_resp", "profile_info", "ext_links"];
 
 const SettingsDivBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
     display: grid;
     grid-row-gap: ${theme.space[3]}px;
     margin-bottom: ${theme.space[5]}px;
-`;
-
-// TODO: Delete this component
-const NonEditableTextArea = styled(SystemComponent)`
-    width: 100%;
-`;
-
-const SettingsDiv = ({children, title, onEditClicked}) => {
-    return (
-        <>
-            <EditableSectionHeader title={title} handleEditClicked={onEditClicked}/>
-            <SettingsDivBody>
-                {children}
-            </SettingsDivBody>
-        </>
-    );
-};
-
-const SideNavContainer = styled(SystemComponent)`
-    box-sizing: border-box;
-    display: none;
-
-    width: 360px;
-    padding-right: 25px;
-
-    ${theme.mediaQueries.tablet} {
-        display: block;
-    }
-`;
-
-const SideNavMenu = styled(Card)`
-    box-sizing: border-box;
-    width: "100%";
 `;
 
 // TODO: Add images to make this 3 columns
@@ -95,6 +63,24 @@ const NonUnderlinedLink = styled(SystemLink)`
     }
 `;
 
+const SettingsDiv = ({children, title, onEditClicked, refId}) => {
+    let headerNode = React.createRef();
+    //if (headerNode.current) headerNode.current.id = "#" + refId;
+    console.log(headerNode);
+
+    return (
+        <>
+            <EditableSectionHeader 
+                title={title} 
+                handleEditClicked={onEditClicked} 
+                sectionRef={el => headerNode = el}
+            />
+            <SettingsDivBody>
+                {children}
+            </SettingsDivBody>
+        </>
+    );
+};
 
 const Home = () => {
     const [ activeModal, setActiveModal ] = useState(false);
@@ -123,7 +109,9 @@ const Home = () => {
     // TODO: check this later
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(s => s.name) : [];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
+    const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
+    //console.log(links)
 
     return (
         <PageTemplate>
@@ -134,11 +122,13 @@ const Home = () => {
                     isLoaded={isLoaded}
                 />
                 <SystemComponent display="flex" overflow="hidden">
-                    <SideNavContainer>
-                        <SideNavMenu></SideNavMenu>
-                    </SideNavContainer>
-                    <Card overflow="auto" width={['90vw', '85vw', '100%']} flexGrow={1}>
-                        <SettingsDiv title="Teams &amp; Responsibilities" 
+                    <SideNav 
+                        labels={["Teams & Responsibilities", "Profile Information", "External Accounts"]}
+                        refIds={refIds}  
+                    />
+                    <Card overflow="auto" flexGrow={1}>
+                        <SettingsDiv title="Teams &amp; Responsibilities"
+                            refId={refIds[0]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
                             }
@@ -155,14 +145,15 @@ const Home = () => {
                                 labelValues={projects}
                             />
                             <SettingsDivSubsection headerText='What do I do on Teamhub ?' type='normal'>
-                                <NonEditableTextArea>
+                                <SystemComponent width="100%">
                                     {roleDescription} 
-                                </NonEditableTextArea>
+                                </SystemComponent>
                             </SettingsDivSubsection>
                         </SettingsDiv>
 
 
                         <SettingsDiv title="Profile Information"
+                            refId={refIds[1]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
                             }}
@@ -204,7 +195,8 @@ const Home = () => {
                             </SettingsDivSubsection>
                         </SettingsDiv>
 
-                        <SettingsDiv title="Edit External Accounts"
+                        <SettingsDiv title="External Accounts"
+                            refId={refIds[2]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS); 
                             }}
