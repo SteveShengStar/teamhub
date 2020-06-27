@@ -22,13 +22,6 @@ import theme from '../frontend/components/theme';
 import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 
 
-const altText = {
-    "website": "Personal Website",
-    "linkedin": "Linkedin Profile",
-    "github": "Github Profile",
-    "facebook": "Facebook Profile"
-};
-
 const refIds = ["teams_resp", "profile_info", "ext_links"];
 
 const SettingsDivBody = styled(SystemComponent)`
@@ -102,8 +95,7 @@ const Home = () => {
         }
     }, [isLoaded, hydrated]);
 
-    // TODO: Make sure that user can only get to this page if logged in already.
-    console.log(user)
+    // TODO: Make sure that user can only get to this page if logged in already
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
     // TODO: check this later
@@ -112,6 +104,15 @@ const Home = () => {
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
     //console.log(links)
+    //console.log(links.find(link => link.type === "website"));
+
+    const accountTypes = ["website", 'linkedin', 'github', 'facebook'];
+    const altText = {
+        "website": "Personal Website",
+        "linkedin": "Linkedin Profile",
+        "github": "Github Profile",
+        "facebook": "Facebook Profile"
+    };
 
     return (
         <PageTemplate>
@@ -203,13 +204,13 @@ const Home = () => {
                         >
                             <ThreeColumnGrid>
                                 {
-                                    links.map((url, i) =>
+                                    accountTypes.map((acctType, i) =>
                                     <> 
                                         <SystemComponent gridColumn="1 / 2" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                         >
                                             <Header5>
-                                                {capitalize(url.type)}
+                                                {capitalize(acctType)}
                                             </Header5>
                                         </SystemComponent>
                                         <SystemComponent 
@@ -217,8 +218,8 @@ const Home = () => {
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            <NonUnderlinedLink href={url.link} alt={altText[url.type]} target="_blank">
-                                                {url.link}
+                                            <NonUnderlinedLink href={links.find(link => link.type === acctType) ? links.find(link => link.type === acctType).link : ""} alt={altText[acctType]} target="_blank">
+                                                {links.find(link => link.type === acctType) ? links.find(link => link.type === acctType).link : ""}
                                             </NonUnderlinedLink>
                                         </SystemComponent>
                                     </>
