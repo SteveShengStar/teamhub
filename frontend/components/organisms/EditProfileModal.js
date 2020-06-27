@@ -5,7 +5,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
-import AutocompleteInput from '../molecules/AutocompleteInput'; // TODO: rename
+import MultiSelectInput from '../molecules/MultiSelectInput'; // TODO: rename
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -324,24 +324,26 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 gridAutoRows='minmax(70px, auto)'
             >
                 <SystemComponent pb={4}>
-                    <AutocompleteInput
+                    <MultiSelectInput
                         title="Skills"
-                        placeholder="Add Skills"
                         listOfSelected={skills}
                         updateList={setSkills}
                         value={formValues['skill']}
                         handleInputChange={(value) => handleInputChange('skill', value)}
+                        options={[ { value: 'java', label: 'Java' },
+                            { value: 'autocad', label: 'AutoCAD' }]}
                     />
                 </SystemComponent>
                 
                 <SystemComponent>
-                    <AutocompleteInput
+                    <MultiSelectInput
                         title="Interests"
-                        placeholder="Add Interests"
                         listOfSelected={interests}
                         updateList={setInterests}
                         value={formValues['interest']}
                         handleInputChange={(value) => handleInputChange('interest', value)}
+                        options={[ { value: 'wa', label: 'Watch Anime' },
+                            { value: 'sdc', label: 'Self-Driving Cars' }]}
                     />
                 </SystemComponent>
             </SystemComponent>

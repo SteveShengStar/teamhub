@@ -10,6 +10,7 @@ import Header5 from '../atoms/Header5';
 import {SystemComponent} from '../atoms/SystemComponents';
 import SelectedItemContainer from '../atoms/SelectedItemContainer';
 
+import Creatable from 'react-select/creatable';
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -36,12 +37,12 @@ const HorizontalList = ({listItems, handleDeselect}) => {
 }
 
 // TODO: Load suggestions from backend.
-const AutocompleteInput = ({title,
+const MultiSelectInput = ({title,
                                 listOfSelected,
                                 updateList,
-                                placeholder,
                                 value,
-                                handleInputChange}) => {
+                                handleInputChange,
+                                options}) => {
     const [suggestionVisible, setSuggestionVisible] = useState(true);
 
     const handleKeyDown = (evt) => {
@@ -68,37 +69,21 @@ const AutocompleteInput = ({title,
             <SystemComponent>
                 <Header5>{title}</Header5>
             </SystemComponent>
-            <HorizontalList
-                listItems={listOfSelected}
-                handleDeselect={handleDeselect}
-            />
             <SystemComponent position="relative">
-                <SuggestionBox p={theme.space[4]} 
-                    position="absolute" 
-                    visible={suggestionVisible}
-                    value={value} 
-                    handleClick={handleSelect}
-                />
-                <CustomInput 
-                    variant="text" 
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={(evt) => handleInputChange(evt.target.value)}
-                    onKeyDown={handleKeyDown}
-                    onFocus={() => {setSuggestionVisible(true);}}
-                    onBlur={() => {
-                        handleSelect(); 
-                        setSuggestionVisible(false);
-                    }}
+                <Creatable
+                    isClearable
+                    isMulti
+                    handleInputChange={e => handleInputChange(e.value)}
+                    options={options}
                 />
             </SystemComponent>
         </SystemComponent>
     );
 }
 
-AutocompleteInput.propTypes = {
+MultiSelectInput.propTypes = {
     value: PropTypes.string
 };
 
-export default AutocompleteInput;
+export default MultiSelectInput;
 

@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import Creatable from 'react-select/creatable';
 
 import styled from 'styled-components';
-import AutocompleteInput from '../molecules/AutocompleteInput';
+import MultiSelectInput from '../molecules/MultiSelectInput';
 import {SystemComponent} from '../atoms/SystemComponents';
 import TextArea from '../atoms/TextArea';
 import { useRouter } from "next/router";
@@ -115,13 +116,14 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                     </SystemComponent>
                 </SystemComponent>  
                 <SystemComponent>
-                    <AutocompleteInput 
+                    <MultiSelectInput 
                         title="What Projects are you Working on ?"
                         listOfSelected={selectedProjects}
                         updateList={(projList) => setSelectedProjects(projList)}
-                        placeholder="Add Project"   
                         value={project}
                         handleInputChange={handleInputChange}
+                        options={[ { value: 'bms', label: 'Battery Management' },
+                            { value: 'th', label: 'Team Hub' }]}
                     />
                 </SystemComponent>
                 <SystemComponent>

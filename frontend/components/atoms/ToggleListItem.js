@@ -20,6 +20,7 @@ const CrossIconWrapper = styled(SystemComponent)`
 
     border-style: solid;
     border-width: 3px;
+    margin-left: 10px;
 
     background-color: #FFFFFF;
     color: #000000;
@@ -27,9 +28,9 @@ const CrossIconWrapper = styled(SystemComponent)`
 
 // TODO: consider making this inherit from SystemButton --> decouples these 2 atoms
 const CustomToggle = styled(Button)`
-    padding-right: ${props => props.selected ? '0' : '15px'};
     padding-bottom: 0;
     padding-top: 0;
+    ${props => props.selected && `padding-right: 0;`}
     display: flex;
 
     &:hover {
@@ -69,9 +70,6 @@ const ToggleListItem = ({text, id, selected, onSelect}) => {
             onClick={() => onSelect(id)}
         >
             <SystemComponent paddingY="3px" color="#ffffff">{text}</SystemComponent>
-            {selected && 
-                <SystemComponent pl={2} pr={3} paddingY="3px" color="#ffffff">&#10004;</SystemComponent>
-            }
             {selected && 
                 <CrossIconWrapper borderColor={variant}>
                     <CrossIcon>
