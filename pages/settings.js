@@ -56,6 +56,16 @@ const NonUnderlinedLink = styled(SystemLink)`
     }
 `;
 
+const AddDataPrompt = styled(SystemLink)`
+    text-decoration: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+        cursor: pointer; 
+        opacity: 0.7;
+    }
+`;
+
 const SettingsDiv = ({children, title, onEditClicked, refId}) => {
     let headerNode = React.createRef();
     //if (headerNode.current) headerNode.current.id = "#" + refId;
@@ -218,13 +228,22 @@ const Home = () => {
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            <NonUnderlinedLink href={links.find(link => link.type === acctType) ? links.find(link => link.type === acctType).link : ""} alt={altText[acctType]} target="_blank">
-                                                {links.find(link => link.type === acctType) ? links.find(link => link.type === acctType).link : ""}
-                                            </NonUnderlinedLink>
+                                            {(links.find(link => link.type === acctType) && (links.find(link => link.type === acctType).link.length > 0)) ? (
+                                                <NonUnderlinedLink 
+                                                    href={links.find(link => link.type === acctType).link} 
+                                                    alt={altText[acctType]} 
+                                                    target="_blank"
+                                                >
+                                                    {links.find(link => link.type === acctType).link}
+                                                </NonUnderlinedLink>
+                                            ) : (
+                                                <AddDataPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
+                                                    {"[ Add an Account ]"}
+                                                </AddDataPrompt>
+                                            )}
                                         </SystemComponent>
                                     </>
-                                    )
-                                }
+                                )}
                             </ThreeColumnGrid>
                         </SettingsDiv>
                     </Card>
