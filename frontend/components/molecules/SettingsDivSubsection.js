@@ -63,7 +63,7 @@ const SettingsDivSubsection = ({type,
         default:
             sectionBody = labelValues.map((labelValue, i) =>  (
                 <ListItemWrapper key={i}
-                    variant="background"
+                    variant="lightgrey"
                     label={startCase(labelValue)}
                     isLink={false}
                 />
