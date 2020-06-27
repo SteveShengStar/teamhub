@@ -159,7 +159,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <URLField
                         label="Personal Website"
                         name="websiteUrl"
-                        placeholder="Search" 
+                        placeholder="Enter Website Link ..." 
                         value={formValues["websiteUrl"]}
                         error={hasError['websiteUrl']}
                         errorText={"Please Enter Valid Url."}
@@ -170,7 +170,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <URLField
                         label="Github"
                         name="githubUrl"
-                        placeholder="Search" 
+                        placeholder="Enter Github Link ..." 
                         value={formValues["githubUrl"]}
                         error={hasError['githubUrl']}
                         errorText={"Please Enter Valid Github Profile Url."}
@@ -181,7 +181,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <URLField
                         label="LinkedIn"
                         name="linkedInUrl"
-                        placeholder="Search"
+                        placeholder="Enter LinkedIn Link ..."
                         value={formValues["linkedInUrl"]}
                         error={hasError['linkedInUrl']} 
                         errorText={"Please Enter Valid LinkedIn Profile Url."}
@@ -192,7 +192,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <URLField
                         label="Facebook"
                         name="facebookUrl"
-                        placeholder="Search" 
+                        placeholder="Enter Facebook Link ..." 
                         value={formValues["facebookUrl"]}
                         error={hasError.facebookUrl}
                         errorText={"Please Enter Valid Facebook Profile Url."}
