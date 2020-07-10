@@ -8,11 +8,10 @@ import Card from '../frontend/components/atoms/Card';
 import Header5 from '../frontend/components/atoms/Header5';
 
 import {SystemComponent, SystemLink} from '../frontend/components/atoms/SystemComponents';
-import SettingsDivSubsection from '../frontend/components/molecules/SettingsDivSubsection';
+import SettingsSubsection from '../frontend/components/molecules/SettingsSubsection';
 import ProfileSummary from '../frontend/components/molecules/AccountSettings/ProfileSummary';
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
 import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
-import SideNav from '../frontend/components/molecules/AccountSettings/SideNav.js';
 
 import member from '../frontend/mockdata/member';
 import {lowerCase, capitalize} from 'lodash';
@@ -24,7 +23,7 @@ import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 
 const refIds = ["teams_resp", "profile_info", "ext_links"];
 
-const SettingsDivBody = styled(SystemComponent)`
+const SettingsComponentBody = styled(SystemComponent)`
     padding-left: ${theme.space.settingsSubsectionPadding}px;
     display: grid;
     grid-row-gap: ${theme.space[3]}px;
@@ -66,21 +65,24 @@ const AddDataPrompt = styled(SystemLink)`
     }
 `;
 
-const SettingsDiv = ({children, title, onEditClicked, refId}) => {
-    let headerNode = React.createRef();
-    //if (headerNode.current) headerNode.current.id = "#" + refId;
-    console.log(headerNode);
+const SettingsContainer = styled(Card)`
+    box-sizing: border-box;
+    overflow-y: auto;
+    max-width: 768px;
+    width: 100%;
+`;
 
+const SettingsComponent = ({children, title, onEditClicked, refId}) => {
     return (
         <>
             <EditableSectionHeader 
                 title={title} 
                 handleEditClicked={onEditClicked} 
-                sectionRef={el => headerNode = el}
+                refId={refId}
             />
-            <SettingsDivBody>
+            <SettingsComponentBody>
                 {children}
-            </SettingsDivBody>
+            </SettingsComponentBody>
         </>
     );
 };
@@ -113,8 +115,6 @@ const Home = () => {
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
-    //console.log(links)
-    //console.log(links.find(link => link.type === "website"));
 
     const accountTypes = ["website", 'linkedin', 'github', 'facebook'];
     const altText = {
@@ -133,37 +133,33 @@ const Home = () => {
                     isLoaded={isLoaded}
                 />
                 <SystemComponent display="flex" overflow="hidden">
-                    <SideNav 
-                        labels={["Teams & Responsibilities", "Profile Information", "External Accounts"]}
-                        refIds={refIds}  
-                    />
-                    <Card overflow="auto" flexGrow={1}>
-                        <SettingsDiv title="Teams &amp; Responsibilities"
+                    <SettingsContainer>
+                        <SettingsComponent title="Teams &amp; Responsibilities"
                             refId={refIds[0]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
                             }
                         }>
-                            <SettingsDivSubsection headerText='My Subteams'
+                            <SettingsSubsection headerText='My Subteams'
                                 type='anchorlist'
                                 isLabelListSection={true}
                                 labelValues={subteams}
                                 labelStyleVariants={subteams.map(subteam => lowerCase(subteam))}
                             />
-                            <SettingsDivSubsection headerText='My Projects'
+                            <SettingsSubsection headerText='My Projects'
                                 type='list'
                                 isLabelListSection={true}
                                 labelValues={projects}
                             />
-                            <SettingsDivSubsection headerText='What do I do on Teamhub ?' type='normal'>
+                            <SettingsSubsection headerText='What do I do on Teamhub ?' type='normal'>
                                 <SystemComponent width="100%">
                                     {roleDescription} 
                                 </SystemComponent>
-                            </SettingsDivSubsection>
-                        </SettingsDiv>
+                            </SettingsSubsection>
+                        </SettingsComponent>
 
 
-                        <SettingsDiv title="Profile Information"
+                        <SettingsComponent title="Profile Information"
                             refId={refIds[1]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
@@ -188,25 +184,25 @@ const Home = () => {
                                     )
                                 }
                             </SystemComponent>
-                            <SettingsDivSubsection headerText='My Skills'
+                            <SettingsSubsection headerText='My Skills'
                                 type="list"
                                 isLabelListSection={true}
                                 labelValues={skills}
                             />
-                            <SettingsDivSubsection headerText='My Interests'
+                            <SettingsSubsection headerText='My Interests'
                                 type="list"
                                 isLabelListSection={true}
                                 labelValues={interests}
                             />
-                            <SettingsDivSubsection headerText='Short Bio'
+                            <SettingsSubsection headerText='Short Bio'
                                 type="normal"
                                 isLabelListSection={false}
                             >
                                 {user.bio}
-                            </SettingsDivSubsection>
-                        </SettingsDiv>
+                            </SettingsSubsection>
+                        </SettingsComponent>
 
-                        <SettingsDiv title="External Accounts"
+                        <SettingsComponent title="External Accounts"
                             refId={refIds[2]}
                             onEditClicked={() => {
                                 setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS); 
@@ -245,8 +241,8 @@ const Home = () => {
                                     </>
                                 )}
                             </ThreeColumnGrid>
-                        </SettingsDiv>
-                    </Card>
+                        </SettingsComponent>
+                    </SettingsContainer>
                 </SystemComponent>
             </>
         </PageTemplate>

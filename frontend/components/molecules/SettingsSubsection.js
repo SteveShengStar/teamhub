@@ -9,10 +9,6 @@ import {SystemComponent} from '../atoms/SystemComponents';
 
 import theme from '../theme'; // TODO: use props=>theme instead of importing
 
-const CustomHeading = styled(Header4)`
-    font-size: 16.5px;
-`;
-
 const BoxedListItem_C = styled(BoxedListItem)`
     margin-right: ${theme.space[5]}px;
     margin-bottom: ${theme.space[2]}px;
@@ -38,7 +34,7 @@ const ListItemWrapper = ({variant, label, isLink}) => (
 );
 
 
-const SettingsDivSubsection = ({type,
+const SettingsSubsection = ({type,
                                 headerText, 
                                 labelValues,
                                 labelStyleVariants,
@@ -74,7 +70,7 @@ const SettingsDivSubsection = ({type,
         <SystemComponent>
             {headerText &&  
                 <SystemComponent mb={1}>
-                    <CustomHeading>{headerText}</CustomHeading>
+                    <Header4 fontSize="16.5px">{headerText}</Header4>
                 </SystemComponent>
             }
             <SystemComponent display="flex" flexWrap="wrap">
@@ -83,4 +79,4 @@ const SettingsDivSubsection = ({type,
         </SystemComponent>
     );
 }
-export default SettingsDivSubsection;
+export default SettingsSubsection;

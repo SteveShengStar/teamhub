@@ -6,7 +6,7 @@ import {SystemComponent} from '../../atoms/SystemComponents';
 import { useContext } from 'react';
 import { ThemeContext } from "styled-components";
 
-const EditableSectionHeader = ({title, handleEditClicked, sectionRef}) => {
+const EditableSectionHeader = ({title, handleEditClicked, refId}) => {
     const theme = useContext(ThemeContext);
     
     return (
@@ -14,7 +14,7 @@ const EditableSectionHeader = ({title, handleEditClicked, sectionRef}) => {
             <SystemComponent 
                 style={{ transformOrigin: 'left' }} 
                 mr={theme.space.editableHeaderMargin}
-                ref={sectionRef}
+                id={"#".concat(refId)}
             >
                 <Header3>{title}</Header3>
             </SystemComponent>

@@ -27,13 +27,13 @@ const Grid = styled(SystemComponent)`
 
     @media screen and (min-width: 420px) {
         & table {
-            width: 360px;
+            width: 380px;
         }
     }
 
     ${theme.mediaQueries.mobile} {
         & table {
-            width: 320px;
+            width: 340px;
             margin-top: ${props => props.theme.space[0]}px;
             position: static;
         }
@@ -45,69 +45,13 @@ const Grid = styled(SystemComponent)`
         grid-template-columns: ${props => props.leftColumnWidth} auto;
         grid-template-rows: ${props => props.leftColumnWidth};
     }
-    @media screen and (min-width: 690px) {
-        & table {
-            width: 390px;
-        }
-    }
-    ${theme.mediaQueries.tablet} {
-        width: 54vw;
-        & .avatarContainer {
-            text-align: center;
-        }
-        & table {
-            margin-top: ${props => props.theme.space[3]}px;
-        }
-
-        grid-template-columns: 100%;
-        grid-template-rows: ${props => props.leftColumnWidth} ${props => props.leftColumnWidth};
-    }
-    @media screen and (min-width: 935px) {
-        width: inherit;
-        & .avatarContainer {
-            text-align: left;
-        }
-        & table {
-            width: 340px;
-            margin-top: ${props => props.theme.space[0]}px;
-        }
-
-        grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: ${props => props.leftColumnWidth};
-    }
-    @media screen and (min-width: 1015px) {
-        & table {
-            width: 390px;
-        }
-    }
-    ${theme.mediaQueries.desktop} {
-        & table {
-            width: 320px;
-        }
-    }
-    @media screen and (min-width: 1270px) {
-        justify-items: left;
-        & table {
-            margin-left: ${props => props.theme.space[5]}px;
-        }
-    }
-    @media screen and (min-width: 1320px) {
-        & table {
-            width: 360px;
-        }
-    }
-    @media screen and (min-width: 1400px) {
-        & table {
-            width: 390px;
-        }
-    }
 `;
 
 // TODO: using styled component may be better
 // because I never pass parameters that actually configure properties of this container.
-const SettingsHorizontalFlexbox = ({ children, leftChildWidth }) => {
+const AvatarWrapperComponent = ({ children }) => {
     return (
-        <Grid leftColumnWidth={leftChildWidth + "px"}>
+        <Grid leftColumnWidth="140px">
             <SystemComponent className="avatarContainer">
                 {children[0]}
             </SystemComponent>
@@ -127,6 +71,7 @@ const ProfileSummary = ({isLoaded = false,
     birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month - 1, birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
+    const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-birthday-cake', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
     const userInformation = {
         firstName: {
             label: 'First Name',
@@ -155,7 +100,7 @@ const ProfileSummary = ({isLoaded = false,
     };
 
     return (
-        <SettingsHorizontalFlexbox leftChildWidth={140}>
+        <AvatarWrapperComponent>
             <Image
                 height='100%'
                 src={imageUrl || "/static/default-headshot.png"}
@@ -166,7 +111,7 @@ const ProfileSummary = ({isLoaded = false,
                     <tbody>
                         {Object.values(userInformation).map((fieldInfo, i) =>
                             <tr key={i}>
-                                <td></td>
+                                <td className={"fa " + faClassnames[i]}></td>
                                 <td><Header5>{fieldInfo.label}</Header5></td>
                                 <td style={{textAlign: 'right'}}>{fieldInfo.value}</td>
                             </tr>
@@ -174,7 +119,7 @@ const ProfileSummary = ({isLoaded = false,
                     </tbody>
                 </table>
             </SystemComponent>
-        </SettingsHorizontalFlexbox>
+        </AvatarWrapperComponent>
     );
 }
 export default ProfileSummary;
