@@ -54,6 +54,7 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
             "projects": selectedProjects.map(p => { return {"name": p, "description": p}}),
             "subteams": localSelectedTeams.map(t => { return {"name": t, "description": t}}),
         }, token, user._id, router, false);
+        console.log(selectedProjects.map(p => { return {"name": p, "description": p}}))
         handleCloseModal();
     }
 

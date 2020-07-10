@@ -200,13 +200,14 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
+
         if (!formValues['firstName']) {
             updatedErrorList['firstName'] = true;
         }
         updatedErrorList['program'] = 
             !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
-
+        console.log(formValues['birthDate'])
         if ( !isBefore(formValues['birthDate'], Date(Date.now())) ) updatedErrorList['birthDate'] = true;
         setHasError(updatedErrorList);
 
@@ -292,7 +293,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         value={formValues['birthDate']}
                         handleChange={handleInputChange}
                         error={hasError['birthDate']}
-                        errorText="Birth date must be earlier than today." />
+                        errorText="Birthdate must be valid and earlier than today." />
                 </SystemComponent>
                 <SelectSegment 
                     title="Academic Program"
@@ -351,5 +352,4 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         </EditSettingsModal>
     );
 }
-// TODO: for skills section, allow suggestions to pop up.
 export default EditProfileModal;
