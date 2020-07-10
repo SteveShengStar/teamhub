@@ -24,26 +24,20 @@ import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 const refIds = ["teams_resp", "profile_info", "ext_links"];
 
 const SettingsComponentBody = styled(SystemComponent)`
-    padding-left: ${theme.space.settingsSubsectionPadding}px;
+    padding-left: ${props => props.theme.space.settingsSubsectionPadding}px;
     display: grid;
-    grid-row-gap: ${theme.space[3]}px;
-    margin-bottom: ${theme.space[5]}px;
+    grid-row-gap: ${props => props.theme.space[3]}px;
+    margin-bottom: ${props => props.theme.space[5]}px;
 `;
 
 // TODO: Add images to make this 3 columns
 const ThreeColumnGrid = styled(SystemComponent)`
     display: grid;
-    grid-template-columns: 150px auto;
+    grid-template-columns: 20px 150px auto;
     grid-auto-rows: minmax(30px, auto);
 
     ${theme.mediaQueries.mobile} {
-        grid-template-columns: 150px 350px;
-    }
-    ${theme.mediaQueries.tablet} {
-        grid-template-columns: 150px auto;
-    }
-    @media screen and (min-width: 935px) {
-        grid-template-columns: 150px 300px;
+        grid-template-columns: 20px 150px 350px;
     }
 `;
 
@@ -55,7 +49,7 @@ const NonUnderlinedLink = styled(SystemLink)`
     }
 `;
 
-const AddDataPrompt = styled(SystemLink)`
+const AddInfoPrompt = styled(SystemLink)`
     text-decoration: none;
     transition: all 0.2s ease;
 
@@ -116,6 +110,8 @@ const Home = () => {
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
 
+    
+    const linkLabelIcons = ['fa-globe', 'fa-linkedin', 'fa-github', 'fa-facebook-square'] // CSS Class names of font-awesome icons
     const accountTypes = ["website", 'linkedin', 'github', 'facebook'];
     const altText = {
         "website": "Personal Website",
@@ -212,7 +208,8 @@ const Home = () => {
                                 {
                                     accountTypes.map((acctType, i) =>
                                     <> 
-                                        <SystemComponent gridColumn="1 / 2" 
+                                        <SystemComponent gridColumn="1 / 2"><i className={"fa " + linkLabelIcons[i]}/></SystemComponent>
+                                        <SystemComponent gridColumn="2 / 3" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                         >
                                             <Header5>
@@ -220,11 +217,12 @@ const Home = () => {
                                             </Header5>
                                         </SystemComponent>
                                         <SystemComponent 
-                                            gridColumn="2 / 3" 
+                                            gridColumn="3 / 4" 
                                             gridRow={(i+1).toString().concat(" / span 1")}
                                             textAlign="right"
                                         >
-                                            {(links.find(link => link.type === acctType) && (links.find(link => link.type === acctType).link.length > 0)) ? (
+                                            {(links.find(link => link.type === acctType) && 
+                                                (links.find(link => link.type === acctType).link.length > 0)) ? (
                                                 <NonUnderlinedLink 
                                                     href={links.find(link => link.type === acctType).link} 
                                                     alt={altText[acctType]} 
@@ -233,9 +231,9 @@ const Home = () => {
                                                     {links.find(link => link.type === acctType).link}
                                                 </NonUnderlinedLink>
                                             ) : (
-                                                <AddDataPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
+                                                <AddInfoPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
                                                     {"[ Add an Account ]"}
-                                                </AddDataPrompt>
+                                                </AddInfoPrompt>
                                             )}
                                         </SystemComponent>
                                     </>
