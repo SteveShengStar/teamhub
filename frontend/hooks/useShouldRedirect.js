@@ -2,7 +2,7 @@
  * @param {*} user
  * @param {*} router
  */
-export default (user, router) => {
+const useShouldRedirect = (user, router) => {
     // if user is logged in check user status
     if (!user || !user._id) {
         if (router.pathname != "/login") {
@@ -39,3 +39,4 @@ export default (user, router) => {
     }
     return false
 }
+export default useShouldRedirect;

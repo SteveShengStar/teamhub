@@ -20,7 +20,7 @@ const termMap = {
     "W": "Winter"
 }
 
-export default () => {
+const Role = () => {
     const { user, token, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
@@ -75,11 +75,27 @@ export default () => {
     }, [hydrated])
 
     const loginTransition = useLoginTransition()
+    // console.log("Select Subteams")
+    // console.log(selectedSubteams)
+    // console.log("Filters")
+    // console.log(filters.subteams)
+    console.log("Select Subteams")
+    console.log(selectedSubteams.map(index => filters.subteams[index].name))
+    console.log("Filters")
+    console.log(selectedProjects.map(project => {
+        return {
+            project: project[0],
+            description: project[1]
+        }
+    }));
     useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
+        console.log("******* Reached here 1 *******")
         if (!checkErrors()) return;
-        loginTransition.setVisible(false)
+        console.log("******* Reached here 2 *******")
+        loginTransition.setVisible(false);
+        console.log("******* Reached here 3 *******")
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: selectedProjects.map(project => {
@@ -95,7 +111,10 @@ export default () => {
             }
         }, token, user._id, router).then(() => {
             router.push("/login/about");
+        }).catch((e) => {
+            console.log(e);
         })
+        console.log("******* Reached here 4 *******");
     }
     return (
         <>
@@ -123,6 +142,7 @@ export default () => {
         </>
     )
 }
+export default Role;
 
 const Row = styled.div`
     position: fixed;

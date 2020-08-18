@@ -68,6 +68,7 @@ const Home = () => {
 
     useEffect(() => {
         if (hydrated && !fetchingData) {
+            console.log("Before Search Members.")
             getFilters(dispatch, token, router).then(success => {
                 if (success) searchMembers(dispatch, token, searchQuery, router)
             })

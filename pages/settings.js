@@ -105,7 +105,10 @@ const Home = () => {
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
     // TODO: check this later
+    
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(s => s.name) : [];
+    console.log("Subteams")
+    console.log(subteams)
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];

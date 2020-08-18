@@ -15,7 +15,7 @@ const terms = {
     "W": "Winter"
 }
 
-export default ({
+const OnboardingRoleCard = ({
     selectedProjects, 
     selectedSubteams, 
     setSelectedProjects, 
@@ -114,6 +114,7 @@ export default ({
         </>
     )
 }
+export default OnboardingRoleCard;
 
 const FormTitleHeader = styled(Header4)`
     margin: 25px 0 3px 0;

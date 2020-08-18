@@ -33,7 +33,7 @@ export const membersInitialState = {
     fetchingData: DataFetchType.NOT_FETCHING,
     fetchedMembers: false
 }
-export default (state = membersInitialState, action) => {
+const membersReducer = (state = membersInitialState, action) => {
     switch (action.type) {
         case "SET_ALL_MEMBERS":
             return {
@@ -82,6 +82,7 @@ export default (state = membersInitialState, action) => {
             return state
     }
 }
+export default membersReducer;
 
 export async function searchMembers(dispatch, token, options = { isSSR: true }, router) {
     try {

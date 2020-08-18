@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-export default () => {
+const Name = () => {
     const router = useRouter()
     const { user, token,tempDisplayName } = useSelector(state => state.userState)
     const dispatch = useDispatch();
@@ -41,3 +41,4 @@ export default () => {
         </>
     )
 };
+export default Name;

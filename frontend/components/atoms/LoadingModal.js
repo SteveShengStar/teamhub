@@ -2,7 +2,7 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import Card from "./Card";
 
-export default ({visible, color}) => {
+const LoadingModal = ({visible, color}) => {
     return (
         <Container visible={visible}>
             <Spinner>
@@ -13,6 +13,7 @@ export default ({visible, color}) => {
         </Container>
     )
 }
+export default LoadingModal;
 
 const Spinner = styled.div`
   margin: 100px auto 0;

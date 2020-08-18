@@ -7,7 +7,7 @@ import Header4 from '../atoms/Header4';
 import Card from '../atoms/Card';
 import Input from '../atoms/Input';
 
-export default ({submit, nameInput, setNameInput}) => (
+const LoginNameCard = ({submit, nameInput, setNameInput}) => (
     <ICard>
         <div
             style={{
@@ -58,6 +58,7 @@ export default ({submit, nameInput, setNameInput}) => (
         </div>
     </ICard>
 );
+export default LoginNameCard;
 
 const CustomInput = styled(Input)`
   background-color: transparent;
