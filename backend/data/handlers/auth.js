@@ -21,6 +21,12 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const authToken = authHeader.split(' ')[1];
+    if (!authToken) {
+        res.statusCode = 401;
+        res.setHeader('WWW-Authenticate', 'Bearer');
+        res.end('No bearer token found.');
+        return false;
+    }
     const searchRes = await members.search({ token: authToken });
     if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
         res.statusCode = 403;
