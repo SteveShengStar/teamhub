@@ -8,7 +8,7 @@ console.log(`Found env: ${process.env.TEAMHUB_ENV}`);
 
 if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
-    config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.tests.json')));
+    config.url = process.env.MONGO_URL;
 } else if (process.env.TEAMHUB_ENV === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
