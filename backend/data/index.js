@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const fs = require('fs')
+const fs = require('fs');
 
 let config = {};
 
