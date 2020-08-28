@@ -14,7 +14,7 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const authType = authHeader.split(' ')[0];
-    if (authType !== 'Bearer' || !auth) {
+    if (authType !== 'Bearer') {
         res.statusCode = 401;
         res.setHeader('WWW-Authenticate', 'Bearer');
         res.end('No bearer token found.');
