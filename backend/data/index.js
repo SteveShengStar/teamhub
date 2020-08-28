@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const fs = require('fs')
 
 let config = {};
 
@@ -6,11 +7,11 @@ console.log(`Found env: ${process.env.TEAMHUB_ENV}`);
 
 if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
-    config = require('./config.tests.json');
+    config = JSON.parse(fs.readFileSync('./config.tests.json'));
 } else if (process.env.TEAMHUB_ENV === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
-    config = require('./config.json');
+    config = JSON.parse(fs.readFileSync('./config.json'));
 }
 
 const data = {};
