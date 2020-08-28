@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 let config = {};
 
+console.log(`Found env: ${process.env.TEAMHUB_ENV}`);
+
 if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
     config = require('./config.tests.json');
@@ -29,7 +31,7 @@ data.init = async () => {
     await mongoose.connect(config.url, {
         useCreateIndex: true,
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
     });
 
     data.connected = true;
