@@ -6,6 +6,11 @@ const crypto = require('crypto');
 
 const auth = {};
 
+/**
+ * authHeader: authentication token provided by the client
+ * 
+ * return: information of the user that corresponds to the input token
+ */
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
         res.statusCode = 401;
@@ -30,6 +35,12 @@ auth.checkAnyUser = async (authHeader, res) => {
     return searchRes[0];
 };
 
+/**
+ * authHeader: authentication token provided by the client
+ * userId: ID of the user who is attempting to access a secure endpoint or log in
+ * 
+ * return: true only if authentication was successful.
+ */
 auth.checkSpecificUser = async (authHeader, userId, res) => {
     if (!authHeader) {
         res.statusCode = 401;

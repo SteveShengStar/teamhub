@@ -8,6 +8,9 @@ const util = require('./util');
 
 const members = {};
 
+/**
+ * Return all members (and their associated information) from the database.
+ */
 members.getAll = async (fields) => {
     return util.handleWrapper(async () => {
         if (fields) {
@@ -40,7 +43,12 @@ members.getAll = async (fields) => {
     });
 };
 
-
+/** 
+ * Input arguments
+ * body: Filters (ie. specific subteam, specific name, specific email) used to select certain member(s)
+ * 
+ * Return all members (and their associated information) that match the criteria specified in body.
+ */
 members.search = async (body, fields, showToken = false) => {
     return util.handleWrapper(async () => {
         const searchByDisplayName = body ? body.displayName : null;
