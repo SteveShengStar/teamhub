@@ -18,7 +18,7 @@ export default () => {
     const theme = useContext(ThemeContext);
     const router = useRouter();
     const dispatch = useDispatch()
-    const loginTransition = useLoginTransition()
+    const loginTransition = useLoginTransition()   // The animation that will play when moving to the next page of the signup form
     useLoginController(loginTransition, dispatch, router.pathname)
 
     return (
