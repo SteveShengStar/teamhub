@@ -24,7 +24,7 @@ export default ({
     selectedRole, setSelectedRole,
     submit, subteamOptions, roleOptions
 }) => {
-    const options = ["F16", "W17", "S17", "F17", "W18", "S18", "F18", "W19", "S19", "F19", "W20", "S20"]
+    const options = ["F16", "W17", "S17", "F17", "W18", "S18", "F18", "W19", "S19", "F19", "W20", "S20", "F20"]
         .map(val => {
             const term = terms[val[0]];
             const year = '20' + val.slice(1);
