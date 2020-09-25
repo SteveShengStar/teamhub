@@ -4,40 +4,17 @@ import Header3 from "../frontend/components/atoms/Header3";
 import Header4 from "../frontend/components/atoms/Header4";
 import PageTemplate from "../frontend/components/templates/PageTemplate";
 import SwitchButton from "../frontend/components/atoms/SwitchButton";
+import { SystemComponent } from "../frontend/components/atoms/SystemComponents";
+import theme from "../frontend/components/theme";
 
-const data = [
-  {
-    title: "Choose projects you want to work on",
-    body: "Add yourself to a project here.",
-    completed: false
-  },
-  {
-    title: "Complete WHMIS safety training",
-    body: (
-      <ol>
-        <li>
-          Log in to <a href="http://learn.uwaterloo.ca">learn.uwaterloo.ca</a>
-        </li>
-        <li>
-          On the homepage, click on <strong>Self-Registration</strong>
-        </li>
-        <li>
-          Enrol in <strong>WHMIS</strong> training course
-        </li>
-        <li>Upload your certificate</li>
-      </ol>
-    ),
-    completed: false
-  }
-];
+import data from "./data";
 
-const TodoCard = ({ checked, onToggleCheck, title, children }) => {
-  console.log(onToggleCheck);
+const TodoCard = ({ isSelected, onToggleCheck, title, children }) => {
   return (
     <Card style={{ marginBottom: 15 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header4>{title}</Header4>
-        <input type="checkbox" checked={checked} onclick={onToggleCheck} />
+        <input type="checkbox" checked={isSelected} onChange={onToggleCheck} />
       </div>
       {children}
     </Card>
@@ -52,37 +29,58 @@ const TodoList = () => {
     setShowPending(!showPending);
   };
 
-  const handleToggleCheck = () => {
-    console.log("checked");
-    // setTodos([...todos, { ...todos[index], completed: !todos[index].completed }]);
-    // console.log(todos);
+  const handleToggleCheck = (index) => {
+    setTodos([
+      ...todos.slice(0, index),
+      {
+        ...todos[index],
+        completed: !todos[index].completed
+      },
+      ...todos.slice(index + 1)
+    ]);
   };
 
   return (
     <PageTemplate>
-      <div style={{ width: "50%", margin: "0 auto" }}>
-        <Header3>My Tasks</Header3>
-        <div style={{ maxWidth: 500, paddingBottom: 25 }}>
+      <>
+        <SystemComponent
+          display="flex-column"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          pb={10}
+          width="50%"
+        >
+          <Header3>My Tasks</Header3>
           <SwitchButton
             textLeft="Pending"
             textRight="Completed"
             selected={showPending}
             onToggle={handleButtonToggle}
           />
-        </div>
-        {todos
-          .filter(({ completed }) => completed != showPending)
-          .map((item, key) => (
-            <TodoCard
-              key={key}
-              checked={item.completed}
-              title={item.title}
-              onToggleCheck={handleToggleCheck}
-            >
-              {item.body}
-            </TodoCard>
-          ))}
-      </div>
+        </SystemComponent>
+        <SystemComponent
+          display="flex-column"
+          height="50vh"
+          justifyContent="flex-start"
+          overflowY="scroll"
+          overflowX="hidden"
+          padding="20px"
+          border={`solid 3px ${theme.colors.greys[3]}`}
+        >
+          {todos
+            .filter(({ completed }) => completed != showPending)
+            .map((item) => (
+              <TodoCard
+                key={item.key}
+                isSelected={item.completed}
+                title={item.title}
+                onToggleCheck={() => handleToggleCheck(item.key)}
+              >
+                {item.body}
+              </TodoCard>
+            ))}
+        </SystemComponent>
+      </>
     </PageTemplate>
   );
 };
