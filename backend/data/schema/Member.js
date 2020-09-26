@@ -19,7 +19,7 @@ const Member_Stream = new Schema({
     currentSchoolTerm: {
         type: String,
         required: true
-    }
+    },
 });
 
 const Member_TermSchema = new Schema({
