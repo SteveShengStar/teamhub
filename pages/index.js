@@ -51,6 +51,12 @@ const Home = () => {
             })
             return
         }
+
+        // Add id to array of selected members
+        if (isSelectionEnabled) {
+            setSelectedMembers([...selectedMembers, id]);
+        }
+
         lookupMember(dispatch, token, id, router);
     };
 
@@ -100,9 +106,30 @@ const Home = () => {
         }
     }, [selectedMember])
 
-    
+    const [selectedMembers, setSelectedMembers] = useState([]);
+    const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
+
+    // useEffect(() => {
+    //     console.log(selectedMembers);
+    // }, [selectedMembers]);
+
+    const generateGroupEmail = () => {
+        const emails = [];
+
+        // Get the email of each user
+        selectedMembers.forEach(id => {
+            const email = members.find(({ _id }) => _id === id).email;
+            if(email) emails.push(email);
+        });
+
+        console.log(emails);
+    }
+
     return (
         <PageTemplate title="Explore">
+            <>
+            <Button onClick={() => setIsSelectionEnabled(true)} height="50px" width="100px">Group Email</Button>
+            <Button onClick={generateGroupEmail} height="50px" width="100px">Send Email</Button>
             <SystemComponent
                 position="relative"
                 overflow={["auto", "auto", "visible"]}
@@ -150,6 +177,7 @@ const Home = () => {
                     }}
                 />
             </SystemComponent>
+            </>
         </PageTemplate>
     );
 };
