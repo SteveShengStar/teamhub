@@ -37,25 +37,15 @@ const ListItemWrapper = ({variant, label, isLink}) => (
 const SettingsSubsection = ({type,
                                 headerText, 
                                 labelValues,
-                                labelStyleVariants,
                                 children}) => {
-    // TODO: revise this condition later
+
     // TODO: update the keys later
-    // TODO: make sure labelValues and labelStylingVariants have same length
     let sectionBody;
     switch(type) {
         case 'normal':
             sectionBody = children;
             break;
-        case 'anchorlist':
-            sectionBody = labelValues.map((labelValue, i) => (
-                    <ListItemWrapper key={i}
-                        variant={labelStyleVariants[i]} 
-                        label={startCase(labelValue)}
-                        isLink={true}
-                    />
-                ));
-            break;
+        case 'list':
         default:
             sectionBody = labelValues.map((labelValue, i) =>  (
                 <ListItemWrapper key={i}

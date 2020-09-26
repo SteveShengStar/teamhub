@@ -102,16 +102,16 @@ const Home = () => {
     }, [isLoaded, hydrated]);
 
     // TODO: Make sure that user can only get to this page if logged in already
+    // TODO: check this later
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
-    // TODO: check this later
+    const subteams = user.subteams && user.subteams.map(value => subteams.find(subteam => subteam._id == value));
     
-    const subteams = (isLoaded && user.subteams) ? user.subteams.map(s => s.name) : [];
-    console.log("Subteams")
-    console.log(subteams)
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
+    console.log("Subteams")
+    console.log(subteams)
 
     
     const linkLabelIcons = ['fa-globe', 'fa-linkedin', 'fa-github', 'fa-facebook-square'] // CSS Class names of font-awesome icons
@@ -140,10 +140,9 @@ const Home = () => {
                             }
                         }>
                             <SettingsSubsection headerText='My Subteams'
-                                type='anchorlist'
+                                type='list'
                                 isLabelListSection={true}
                                 labelValues={subteams}
-                                labelStyleVariants={subteams.map(subteam => lowerCase(subteam))}
                             />
                             <SettingsSubsection headerText='My Projects'
                                 type='list'

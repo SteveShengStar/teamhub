@@ -26,8 +26,8 @@ export const DataFetchType = new Proxy({
 
 
 export const membersInitialState = {
-    members: [],
-    selectedMember: {},
+    members: [],                    // Bare minimum information displayed on the member-preview list components
+    selectedMember: {},             // 
     loadedMembers: {},
     filters: {},
     fetchingData: DataFetchType.NOT_FETCHING,
