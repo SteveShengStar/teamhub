@@ -21,10 +21,14 @@ export default () => {
     useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
+        // If user did not specify a nameInput, display error.
         if (!nameInput) {
             window.alert("No name entered!")
         }
         loginTransition.setVisible(false)
+
+        
+        // Persist the newly entered user information to the database
         updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
             useRedirect(user, router)
         })

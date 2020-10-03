@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/waterloop/teamhub/workflows/CI/badge.svg)](https://github.com/waterloop/teamhub/actions)
 
-[Adobe XD Designs](https://xd.adobe.com/view/7509d6a3-f62b-44a7-595b-0250db05ffcc-0338/)
+[Adobe XD Wireframes](https://docs.google.com/document/d/1yDFDckhPNuz4jlZWigfjXOWjwTWLsb8ll4V4M-vw15E/edit)
 
 ## Table of Contents
 
@@ -55,10 +55,14 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 4. Run `npm run dev` to start the dev environment
 
 ## Contributing
+1. Ask the team lead to be added to the JIRA space
+https://waterloop.atlassian.net/jira/software/c/projects/HUB/issues
+2. Once added, browse through the list of open issues on JIRA. You can assign yourself to any issue and begin working on it.
+3. Create a new branch and work on the issue on that branch. Ask the team lead about which branch you should branch out from.
 
-1. Take a look under [Issues](https://github.com/waterloop/teamhub/issues) for ones you want to work on.
-2. Assign yourself to the issue to let others know you are working on it.
-3. Create a new branch and work on the issue on that branch.
+Use the following branch naming convention:
+{first_name}{last_initial}/{descriptive_branch_name}
+
 4. Create a [Pull Request](https://github.com/waterloop/teamhub/pulls) for merging the new branch (this should be done when you start working on the issue) so that others may see your progress
 5. Add the `wip` label to the Pull Request as well as `[WIP]` to the title of the Pull Request.
 6. Once you are finished, remove the `wip` label and `[WIP]` from the title of the Pull Request, add the `ready-to-merge` label to your Pull Request, and add at least one reviewer.
@@ -68,3 +72,4 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 
 ## Documentation
 
+https://docs.google.com/document/d/10TdYNHSy5nAID4gu48gxqB8-lJWQHVfyYjl5rlyP6HU/edit

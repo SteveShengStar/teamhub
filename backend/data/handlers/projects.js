@@ -4,6 +4,10 @@ const util = require('./util');
 
 const projects = {};
 
+
+/**
+ * Return all projects stored in the database.
+ */
 projects.getAll = async () => {
     return util.handleWrapper(async () => {
         return (await (Project.find({}).exec()));
@@ -11,6 +15,11 @@ projects.getAll = async () => {
 
 };
 
+/**
+ * body: the filter to apply when retrieving project records from the database 
+ * 
+ * Return only the projects that satisfy the filter criteria (body)
+ */
 projects.search = async (body) => {
     return util.handleWrapper(async () => {
         return (await (Project.find(body).exec()));
@@ -18,6 +27,13 @@ projects.search = async (body) => {
 
 };
 
+
+/**
+ * body: the filter to apply when retrieving project records from the database 
+ * 
+ * Return only the projects that satisfy the filter criteria (body).
+ * If no such records exist, then create a new database entry.
+ */
 projects.findOrCreate = async (body) => {
     return util.handleWrapper(async () => {
         body.subteams = (await (util.replaceNamesWithIdsArray(body.subteams, subteams)));
