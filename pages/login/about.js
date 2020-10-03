@@ -39,10 +39,12 @@ const About = () => {
   useLoginController(loginTransition, dispatch, router.pathname);
 
   function trySubmit() {
+    // If user did not specify a program, display error.
     if (!program) {
       alert("No program selected!");
       return;
     }
+    // If user did not specify a coop sequence, display error.
     if (Object.keys(coopSequence).length == 0) {
       alert("Coop sequence is 0!");
       return;
@@ -55,7 +57,10 @@ const About = () => {
       alert("No term is picked");
       return;
     }
-    loginTransition.setVisible(false)
+
+    // After passing all form-validation/error checks, transition to the next page
+    loginTransition.setVisible(false);
+    // TODO: Is this needed ? Why is store being updated if this is client-side routing ?
     updateUser(dispatch, {
       birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,

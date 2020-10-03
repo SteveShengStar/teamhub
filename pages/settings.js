@@ -95,23 +95,27 @@ const Home = () => {
 
     useEffect(() => {
         if (hydrated && !isLoaded) {
-            // TODO: store just the user id in local storage ?
+            // TODO: Here I just want to retrieve the user information. 
+            // TODO: there are many things I can eliminate from the store.
+            // That way, I can get rid of the isLoaded variable. 
+            // The only slide of state I really need to store is the subteams list, that's it for now.
             getProfileInfo(dispatch, token, user._id, router);
             if (!isLoaded) setIsLoaded(true);
         }
     }, [isLoaded, hydrated]);
 
-    // TODO: Make sure that user can only get to this page if logged in already
-    // TODO: check this later
+
+    // TODO: check this later.
+    // All the user's profile information defaults to empty array if data is not loaded yet.
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
-    const subteams = user.subteams && user.subteams.map(value => subteams.find(subteam => subteam._id == value));
-    
+    const subteams = (isLoaded && user.subteams) ? user.subteams.map(value => subteams.find(subteam => subteam._id == value)) : [];
+    //const subteams = ["soft", "hard"];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
-    console.log("Subteams")
-    console.log(subteams)
+    // console.log("Subteams");
+    // console.log(subteams);
 
     
     const linkLabelIcons = ['fa-globe', 'fa-linkedin', 'fa-github', 'fa-facebook-square'] // CSS Class names of font-awesome icons
@@ -149,7 +153,7 @@ const Home = () => {
                                 isLabelListSection={true}
                                 labelValues={projects}
                             />
-                            <SettingsSubsection headerText='What do I do on Teamhub ?' type='normal'>
+                            <SettingsSubsection headerText='My role on Teamhub' type='normal'>
                                 <SystemComponent width="100%">
                                     {roleDescription} 
                                 </SystemComponent>
