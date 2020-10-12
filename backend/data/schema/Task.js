@@ -39,3 +39,4 @@ try {
 }
 
 module.exports = Task;
+exports.TaskSchema = TaskSchema;

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const task = require('./Task');
 
 const Schema = mongoose.Schema;
 
@@ -11,6 +12,9 @@ const SubteamSchema = new Schema({
     },
     description: {
         type: String
+    }, 
+    tasks: {
+        type: [task.TaskSchema]
     }
 });
 

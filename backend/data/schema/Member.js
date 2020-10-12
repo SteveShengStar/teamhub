@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const task = require('./Task');
 
 const Schema = mongoose.Schema;
 
@@ -171,6 +172,9 @@ const MemberSchema = new Schema({
     tokenExpiry: {
         type: Number,
         select: false
+    },
+    tasks: {
+        type: [task.TaskSchema]
     }
 });
 
