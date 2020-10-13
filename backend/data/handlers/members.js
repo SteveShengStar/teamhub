@@ -24,11 +24,11 @@ members.getAll = async (fields) => {
             if (fields['memberType']) {
                 query.populate('memberType');
             }
-            if (fields['subteam']) {
-                query.populate('subteam');
+            if (fields['subteams']) {
+                query.populate('subteams');
             }
-            if (fields['project']) {
-                query.populate('project');
+            if (fields['projects']) {
+                query.populate('projects');
             }
             return (await query.exec());
         } else {
@@ -36,8 +36,8 @@ members.getAll = async (fields) => {
                 .populate('skills')
                 .populate('interests')
                 .populate('memberType')
-                .populate('subteam')
-                .populate('project')
+                .populate('subteams')
+                .populate('projects')
                 .exec()));
         }
     });
@@ -66,11 +66,11 @@ members.search = async (body, fields, showToken = false) => {
             if (fields['memberType']) {
                 query.populate('memberType');
             }
-            if (fields['subteam']) {
-                query.populate('subteam');
+            if (fields['subteams']) {
+                query.populate('subteams');
             }
-            if (fields['project']) {
-                query.populate('project');
+            if (fields['projects']) {
+                query.populate('projects');
             }
             if (showToken) {
                 query.select('+token');
@@ -89,8 +89,8 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteam')
-                    .populate('project')
+                    .populate('subteams')
+                    .populate('projects')
                     .select('+token')
                     .exec());
             } else {
@@ -98,8 +98,8 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteam')
-                    .populate('project')
+                    .populate('subteams')
+                    .populate('projects')
                     .exec());
             }
             if (searchByDisplayName) {
@@ -128,6 +128,8 @@ members.delete = async (body) => {
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
+        console.log("Body in the Update Member: ");
+        console.log(body);
         return (await Member.update(filter, body).exec());
     });
 };
@@ -167,8 +169,6 @@ const replaceBodyWithIds = async (body) => {
         } else {
             throw Error('projects field must be empty or an array.');
         }
-    } else {
-        body.subteams = null;
     }
 
     return body;

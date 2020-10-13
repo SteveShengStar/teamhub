@@ -82,13 +82,15 @@ const SettingsComponent = ({children, title, onEditClicked, refId}) => {
 };
 
 const Home = () => {
-    const [ activeModal, setActiveModal ] = useState(false);
-    const [ isLoaded, setIsLoaded ] = useState(false);
-    const { hydrated, token, user } = useSelector(state => state.userState);
-
     const router = useRouter();
     const dispatch = useDispatch();
 
+    const [ activeModal, setActiveModal ] = useState(false);
+    const [ isLoaded, setIsLoaded ] = useState(false);
+    const { hydrated, token, user } = useSelector(state => state.userState);
+    //const { listOfSubteams } = useSelector(state => state.membersState.filters);
+
+    
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
     }
@@ -109,13 +111,10 @@ const Home = () => {
     // All the user's profile information defaults to empty array if data is not loaded yet.
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
-    const subteams = (isLoaded && user.subteams) ? user.subteams.map(value => subteams.find(subteam => subteam._id == value)) : [];
-    //const subteams = ["soft", "hard"];
+    const subteams = (isLoaded && user.subteams) ? user.subteams.map(subteam => subteam.name) : [];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
-    // console.log("Subteams");
-    // console.log(subteams);
 
     
     const linkLabelIcons = ['fa-globe', 'fa-linkedin', 'fa-github', 'fa-facebook-square'] // CSS Class names of font-awesome icons

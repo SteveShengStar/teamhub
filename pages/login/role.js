@@ -75,27 +75,11 @@ const Role = () => {
     }, [hydrated])
 
     const loginTransition = useLoginTransition()
-    // console.log("Select Subteams")
-    // console.log(selectedSubteams)
-    // console.log("Filters")
-    // console.log(filters.subteams)
-    console.log("Select Subteams")
-    console.log(selectedSubteams.map(index => filters.subteams[index].name))
-    console.log("Filters")
-    console.log(selectedProjects.map(project => {
-        return {
-            project: project[0],
-            description: project[1]
-        }
-    }));
     useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
-        console.log("******* Reached here 1 *******")
         if (!checkErrors()) return;
-        console.log("******* Reached here 2 *******")
         loginTransition.setVisible(false);
-        console.log("******* Reached here 3 *******")
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: selectedProjects.map(project => {
@@ -114,7 +98,6 @@ const Role = () => {
         }).catch((e) => {
             console.log(e);
         })
-        console.log("******* Reached here 4 *******");
     }
     return (
         <>

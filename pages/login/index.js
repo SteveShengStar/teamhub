@@ -19,9 +19,7 @@ export default () => {
     const router = useRouter();
     const dispatch = useDispatch()
     const loginTransition = useLoginTransition()
-    console.log("Before Login Controller");
     useLoginController(loginTransition, dispatch, router.pathname)
-    console.log("After Login Controller");
 
     return (
         <>

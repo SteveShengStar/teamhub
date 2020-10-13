@@ -35,10 +35,6 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     let persistedNonSelectedteams = filter(Object.keys(subteamDisplayNames), 
         team => persistedSelectedTeams.includes(team) === false
     );
-    console.log("Persisted Selected Teams");
-    console.log(persistedSelectedTeams);
-    console.log("Non Selected Teams");
-    console.log(persistedNonSelectedteams);
 
     const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
     const [project, setProject] = useState('');
@@ -58,7 +54,6 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
             "projects": selectedProjects.map(p => { return {"name": p, "description": p}}),
             "subteams": localSelectedTeams.map(t => { return {"name": t, "description": t}}),
         }, token, user._id, router, false);
-        console.log(selectedProjects.map(p => { return {"name": p, "description": p}}))
         handleCloseModal();
     }
 

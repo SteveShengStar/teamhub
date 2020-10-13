@@ -32,7 +32,7 @@ const userReducer = (state = usersInitialState, action) => {
                 ...(action.token && { token: action.token }),
                 ...(action.display && {tempDisplayName: action.display })
             };
-        case UserTypes.FAILED_LOGIN:
+        case UserTypes.FAILED_LOGIN: // TODO: look at what this behaviour will lead to
             return {
                 ...state,
                 token: "",
@@ -81,13 +81,16 @@ export const userLogin = async (response, dispatch) => {
  */
 export const updateUser = async (dispatch, options, token, id, router, signUp = true) => {
     try {
+        //console.log("Options: ");
+        //console.log(options);
+        // TODO: think about just doing the post request only. RN, we need a secnd. request becuase first request has missing fields.
         const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
             const user = await api.members.getMember(id, token, dispatch, router);
             if (user && user.success) {
+                //console.log("User: ");
+                //console.log(user);
                 if (signUp) {
-                    console.log("User Body");
-                    console.log(user.body[0]);
                     dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
                 }
                 else
@@ -106,6 +109,9 @@ export const updateUser = async (dispatch, options, token, id, router, signUp = 
 export const getProfileInfo = async function(dispatch, token, id, router) {
     try {
         const user = await api.members.getMember(id, token, dispatch, router);
+        console.log("User: ");
+        console.log(user);
+        // TODO: potentially eliminate this store update afterwards.
         dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
         return user.body[0];
     } catch(err) {

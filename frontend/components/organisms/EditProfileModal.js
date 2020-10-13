@@ -162,9 +162,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
-        sequence: "",                           // TODO: eliminate this later.
-        interest: "",
-        skill: ""
+        sequence: ""                           // TODO: eliminate this later.
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
@@ -175,28 +173,26 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     });
 
     useEffect(() => {
-        if (visible) {
-            setFormValues({
-                ...formValues, 
-                firstName: dataLoaded ? user.name.first : "",
-                lastName: dataLoaded ? user.name.last : "",
-                display: dataLoaded ? user.name.display : "",
-                birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
-                program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-                term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
-                sequence: "", // TODO: eliminate this later.
-            });
+        setFormValues({
+            ...formValues, 
+            firstName: dataLoaded ? user.name.first : "",
+            lastName: dataLoaded ? user.name.last : "",
+            display: dataLoaded ? user.name.display : "",
+            birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
+            program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
+            term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+            sequence: "", // TODO: eliminate this later.
+        });
 
-            setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
-            setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
+        setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
+        setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
 
-            setHasError({
-                firstName: false,
-                program: false,
-                birthDate: false
-            });
-        }
-    }, [dataLoaded, visible]);
+        setHasError({
+            firstName: false,
+            program: false,
+            birthDate: false
+        });
+    }, [dataLoaded]);
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
@@ -207,23 +203,22 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         updatedErrorList['program'] = 
             !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
-        console.log(formValues['birthDate'])
         if ( !isBefore(formValues['birthDate'], Date(Date.now())) ) updatedErrorList['birthDate'] = true;
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
             updateUser(dispatch, {
                 "name": {
-                    "first": formValues.firstName,
-                    "last": formValues.lastName,
-                    "display": formValues.display
+                    "first": formValues.firstName.trim(),
+                    "last": formValues.lastName.trim(),
+                    "display": formValues.display.trim()
                 },
                 "birthday": {
                     "year": formValues.birthDate.split("-")[0],
                     "month": formValues.birthDate.split("-")[1],
                     "day": formValues.birthDate.split("-")[2]
                 },
-                "program": formValues.program.value,
+                "program": formValues.program.value.trim(),
                 "interests": interests,
                 "skills": skills,
                 "stream": {
@@ -233,8 +228,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             }, token, user._id, router, false);
             handleCloseModal();
         }
-        
-    } 
+    }
+    console.log("Skills: ");
+    console.log(skills);
 
     const handleInputChange = (name, value) => {
         if (hasError[name]) {
@@ -327,24 +323,20 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 <SystemComponent pb={4}>
                     <MultiSelectInput
                         title="Skills"
-                        listOfSelected={skills}
-                        updateList={setSkills}
-                        value={formValues['skill']}
-                        handleInputChange={(value) => handleInputChange('skill', value)}
-                        options={[ { value: 'java', label: 'Java' },
-                            { value: 'autocad', label: 'AutoCAD' }]}
+                        setSelectedItems={setSkills}
+                        options={skills.map(skill => 
+                            ({value: skill.toLowerCase(), label: skill}))
+                        }
                     />
                 </SystemComponent>
                 
                 <SystemComponent>
                     <MultiSelectInput
                         title="Interests"
-                        listOfSelected={interests}
-                        updateList={setInterests}
-                        value={formValues['interest']}
-                        handleInputChange={(value) => handleInputChange('interest', value)}
-                        options={[ { value: 'wa', label: 'Watch Anime' },
-                            { value: 'sdc', label: 'Self-Driving Cars' }]}
+                        setSelectedItems={setInterests}
+                        options={interests.map(interest => 
+                            ({value: interest.value, label: interest.label})
+                        )}
                     />
                 </SystemComponent>
             </SystemComponent>

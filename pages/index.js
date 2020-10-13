@@ -71,7 +71,6 @@ const Home = () => {
     };
 
     useEffect(() => {
-        console.log(searchQuery);
         if (filters.projects && !fetchingData) {
             // TODO: Must fix.
             // Update the list of members based on the search bar's query
@@ -82,7 +81,6 @@ const Home = () => {
 
     useEffect(() => {
         if (hydrated && !fetchingData) {
-            console.log("Before Search Members.")
             getFilters(dispatch, token, router).then(success => {
                 if (success) searchMembers(dispatch, token, searchQuery, router)
             })

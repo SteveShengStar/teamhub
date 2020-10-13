@@ -35,7 +35,6 @@ For example,
       },
       "email": "test.t@waterloop.ca",
       "imageUrl": "https://example.com",
-      "coopExp": [],
       "projects": [
         {
           "description": [
@@ -133,7 +132,7 @@ A JSON object with the results
 **Body Parameters**
 |Field|Description                                                            |
 |-----|-----------------------------------------------------------------------|
-|data |JSON object with new field(s), for example: `{"subteam": "Electrical"}`|
+|data |JSON object with new field(s), for example: `{"subteams": ["Electrical"]}`|
 
 **Returns**
 A JSON object with the results
