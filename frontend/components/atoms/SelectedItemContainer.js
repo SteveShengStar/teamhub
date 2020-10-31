@@ -17,6 +17,7 @@ const CrossIconWrapper = styled(SystemComponent)`
     -moz-border-radius-bottomright: inherit;
     border-bottom-right-radius: inherit;
     border-top-right-radius: inherit;
+    background-color: ${props => props.theme.colors.white};
 
 
     &:hover {
@@ -24,7 +25,7 @@ const CrossIconWrapper = styled(SystemComponent)`
             color: ${props => props.theme.colors.alertAction};
         }
 
-        background-color: ${props => props.theme.colors.greys[2]};
+        background-color: ${props => props.theme.colors.inactive};
     }
 `;
 

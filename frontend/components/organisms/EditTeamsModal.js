@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import Creatable from 'react-select/creatable';
 
 import styled from 'styled-components';
 import MultiSelectInput from '../molecules/MultiSelectInput';
@@ -13,8 +12,7 @@ import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
 import { updateUser } from "../../store/reducers/userReducer";
-
-import {filter} from 'lodash';
+import {filter, capitalize} from 'lodash';
 
 // Subteam ID to String Mapping
 const subteamDisplayNames = {
@@ -37,28 +35,21 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     );
 
     const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
-    const [project, setProject] = useState('');
     const [selectedProjects, setSelectedProjects] = useState(dataLoaded && user.projects ? user.projects.map(p => p.name) : []);
-    const [roleDescription, setRoleDescription] = useState('');
     
     useEffect(() => {
         if (visible) {
             setLocalSelectedTeams(persistedSelectedTeams);
             setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.name) : []);
-            setRoleDescription('');
         }
     }, [dataLoaded, visible]);
 
     const handleSave = () => {
         updateUser(dispatch, {
-            "projects": selectedProjects.map(p => { return {"name": p}}),
-            "subteams": localSelectedTeams.map(t => { return {"name": t, "description": t}}),
+            "projects": selectedProjects,
+            "subteams": localSelectedTeams,
         }, token, user._id, router, false);
         handleCloseModal();
-    }
-
-    const handleInputChange = (newProject) => {
-        setProject(newProject);
     }
 
     const toggleSelectItem = (team) => {
@@ -83,7 +74,7 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                 gridAutoRows='minmax(70px, auto)'
                 gridRowGap={4}
             >
-                <SystemComponent mr>
+                <SystemComponent>
                     <Header5>Which Subteams are you in ?</Header5>
                     <SystemComponent display='grid' 
                         gridTemplateColumns='1fr'
@@ -118,17 +109,11 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                 <SystemComponent>
                     <MultiSelectInput 
                         title="What Projects are you Working on ?"
-                        listOfSelected={selectedProjects}
-                        updateList={(projList) => setSelectedProjects(projList)}
-                        value={project}
-                        handleInputChange={handleInputChange}
-                        options={[ { value: 'bms', label: 'Battery Management' },
-                            { value: 'th', label: 'Team Hub' }]}
+                        setSelectedItems={setSelectedProjects}
+                        options={selectedProjects.map(project => 
+                            ({value: project, label: capitalize(project)})
+                        )}
                     />
-                </SystemComponent>
-                <SystemComponent>
-                    <Header5>What do you do on Waterloop ?</Header5>  
-                    <TextArea value={roleDescription} onChange={(evt) => {setRoleDescription(evt.target.value)}} />
                 </SystemComponent>
             </SystemComponent>            
         </EditSettingsModal>
@@ -136,5 +121,4 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
 }
 export default EditTeamsModal;
 
-// TODO: Maximum length for role description
 // Give suggestions for Projects -- Fetch from backend

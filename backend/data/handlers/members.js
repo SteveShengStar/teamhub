@@ -162,8 +162,6 @@ const replaceBodyWithIds = async (body) => {
     body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
 
     if (body.projects) {
-        // console.log("Projects");
-        // console.log(body.projects);
         if (Array.isArray(body.projects)) {
             for (let i = 0; i < body.projects.length; i++) {
                 body.projects[i] = await util.replaceNameWithId(body.projects[i], projects);

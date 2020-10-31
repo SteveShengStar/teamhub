@@ -17,7 +17,6 @@ import member from '../frontend/mockdata/member';
 import {lowerCase, capitalize} from 'lodash';
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
-import theme from '../frontend/components/theme';
 import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 
 
@@ -36,7 +35,7 @@ const ThreeColumnGrid = styled(SystemComponent)`
     grid-template-columns: 20px 150px auto;
     grid-auto-rows: minmax(30px, auto);
 
-    ${theme.mediaQueries.mobile} {
+    ${props => props.theme.mediaQueries.mobile} {
         grid-template-columns: 20px 150px 350px;
     }
 `;
@@ -88,8 +87,6 @@ const Home = () => {
     const [ activeModal, setActiveModal ] = useState(false);
     const [ isLoaded, setIsLoaded ] = useState(false);
     const { hydrated, token, user } = useSelector(state => state.userState);
-    //const { listOfSubteams } = useSelector(state => state.membersState.filters);
-
     
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
@@ -152,13 +149,7 @@ const Home = () => {
                                 isLabelListSection={true}
                                 labelValues={projects}
                             />
-                            <SettingsSubsection headerText='My role on Teamhub' type='normal'>
-                                <SystemComponent width="100%">
-                                    {roleDescription} 
-                                </SystemComponent>
-                            </SettingsSubsection>
                         </SettingsComponent>
-
 
                         <SettingsComponent title="Profile Information"
                             refId={refIds[1]}
