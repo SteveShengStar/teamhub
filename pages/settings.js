@@ -110,7 +110,7 @@ const Home = () => {
     // TODO: check this later.
     // All the user's profile information defaults to empty array if data is not loaded yet.
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
-    const projects = (isLoaded && user.projects) ? user.projects.map(p => p.description[0]) : [];
+    const projects = (isLoaded && user.projects) ? user.projects.map(p => p.name) : [];
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(subteam => subteam.name) : [];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
     const roleDescription = member.roleDescription;

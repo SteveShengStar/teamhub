@@ -81,15 +81,11 @@ export const userLogin = async (response, dispatch) => {
  */
 export const updateUser = async (dispatch, options, token, id, router, signUp = true) => {
     try {
-        //console.log("Options: ");
-        //console.log(options);
         // TODO: think about just doing the post request only. RN, we need a secnd. request becuase first request has missing fields.
         const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
             const user = await api.members.getMember(id, token, dispatch, router);
             if (user && user.success) {
-                //console.log("User: ");
-                //console.log(user);
                 if (signUp) {
                     dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
                 }

@@ -38,20 +38,20 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
 
     const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
     const [project, setProject] = useState('');
-    const [selectedProjects, setSelectedProjects] = useState(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
+    const [selectedProjects, setSelectedProjects] = useState(dataLoaded && user.projects ? user.projects.map(p => p.name) : []);
     const [roleDescription, setRoleDescription] = useState('');
     
     useEffect(() => {
         if (visible) {
             setLocalSelectedTeams(persistedSelectedTeams);
-            setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.description[0]) : []);
+            setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.name) : []);
             setRoleDescription('');
         }
     }, [dataLoaded, visible]);
 
     const handleSave = () => {
         updateUser(dispatch, {
-            "projects": selectedProjects.map(p => { return {"name": p, "description": p}}),
+            "projects": selectedProjects.map(p => { return {"name": p}}),
             "subteams": localSelectedTeams.map(t => { return {"name": t, "description": t}}),
         }, token, user._id, router, false);
         handleCloseModal();

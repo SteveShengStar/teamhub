@@ -162,9 +162,11 @@ const replaceBodyWithIds = async (body) => {
     body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
 
     if (body.projects) {
+        // console.log("Projects");
+        // console.log(body.projects);
         if (Array.isArray(body.projects)) {
             for (let i = 0; i < body.projects.length; i++) {
-                body.projects[i].project = await util.replaceNameWithId(body.projects[i].project, projects);
+                body.projects[i] = await util.replaceNameWithId(body.projects[i], projects);
             }
         } else {
             throw Error('projects field must be empty or an array.');

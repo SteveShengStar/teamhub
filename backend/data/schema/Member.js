@@ -34,16 +34,6 @@ const Member_TermSchema = new Schema({
     },
 });
 
-const Member_ProjectSchema = new Schema({
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project'
-    },
-    description: {
-        type: [String]
-    }
-});
-
 const Member_NameSchema = new Schema({
     first: {
         type: String,
@@ -116,7 +106,8 @@ const MemberSchema = new Schema({
         ref: 'Subteam',
     }],
     projects: [{
-        type: Member_ProjectSchema
+        type: Schema.Types.ObjectId,
+        ref: 'Project',
     }],
     email: {
         type: String,

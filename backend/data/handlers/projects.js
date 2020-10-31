@@ -36,10 +36,8 @@ projects.search = async (body) => {
  */
 projects.findOrCreate = async (body) => {
     return util.handleWrapper(async () => {
-        body.subteams = (await (util.replaceNamesWithIdsArray(body.subteams, subteams)));
         return (await util.findOrCreate(Project, body));
     });
-
 };
 
 module.exports = projects;

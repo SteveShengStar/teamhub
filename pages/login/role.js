@@ -25,16 +25,15 @@ const Role = () => {
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
     
-    const [ shouldHide, setShouldHide ] = useState(false);
-
     const [ selectedSubteams, setSelectedSubteams ] = useState(user && user.subteams && filters.subteams ? user.subteams.map(subteam => {
         const found = filters.subteams.findIndex(st => st._id == subteam)
         return found >= 0 ? found : 0
     }) : []);
     const [ selectedProjects, setSelectedProjects ] = useState(user && user.projects && filters.projects ? user.projects.map(project => {
-        const found = filters.projects.find(proj => proj._id == project.project)
-        return [found && found.name || "", project.description];
+        const found = filters.projects.find(proj => proj._id == project)
+        return [found && found.name || ""];
     }) : []);
+
     const [ selectedYear, setSelectedYear ] = useState(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
     const [ selectedRole, setSelectedRole ] = useState(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     const dispatch = useDispatch();
@@ -45,9 +44,10 @@ const Role = () => {
             return found >= 0 ? found : 0
         }) : []);
         setSelectedProjects(user && user.projects && filters.projects ? user.projects.map(project => {
-            const found = filters.projects.find(proj => proj._id == project.project)
-            return [found && found.name || "", project.description];
+            const found = filters.projects.find(proj => proj._id == project)
+            return [found && found.name || ""];
         }) : []);
+
         setSelectedYear(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
         setSelectedRole(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     }, [filters])
@@ -79,15 +79,11 @@ const Role = () => {
 
     const trySubmit = () => {
         if (!checkErrors()) return;
+    
         loginTransition.setVisible(false);
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
-            projects: selectedProjects.map(project => {
-                return {
-                    project: project[0],
-                    description: project[1]
-                }
-            }),
+            projects: selectedProjects,
             memberType: selectedRole.label,
             joined: {
                 season: termMap[selectedYear[0]],
