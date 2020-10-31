@@ -174,7 +174,12 @@ const MemberSchema = new Schema({
         select: false
     },
     tasks: {
-        type: [task.TaskSchema]
+        type: [task.TaskSchema],
+        status: {
+            type: String,
+            required: true,
+            enum: ["urgent", "pending", "done"]
+        }
     }
 });
 
