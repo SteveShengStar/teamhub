@@ -130,7 +130,7 @@ const Home = () => {
                         </Button>
                     </SystemComponent>
                     <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
-                    <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
+                    <MemberListGrid memberData={selectedMember} members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
                 </MembersListCard>
                 <MemberCard 
                     animRef={memberCardRef}
