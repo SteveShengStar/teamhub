@@ -28,7 +28,7 @@
     "googleapis": "^44.0.0",
     "mongoose": "^5.7.5",
     "mongoose-unique-validator": "^2.0.3",
-    "next": "9.0.7",
+    "next": "9.3.2",
     "next-redux-wrapper": "^4.0.1",
     "nodemon": "^1.19.3",
     "now": "^16.6.0",
