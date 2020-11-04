@@ -136,13 +136,23 @@ const MemberSchema = new Schema({
         select: false
     },
     tasks: {
-        type: [task.TaskSchema],
-        status: {
-            type: String,
-            required: true,
-            enum: ["urgent", "pending", "done"]
-        }
-    }
+        done: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Task'
+        }],
+        pending: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Task'
+        }],
+        urgent: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Task'
+        }],
+        irrelevant: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Task'
+        }],
+    },
 });
 
 MemberSchema.plugin(uniqueValidator);
