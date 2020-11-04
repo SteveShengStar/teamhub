@@ -35,42 +35,6 @@ const Member_TermSchema = new Schema({
     },
 });
 
-const Member_ProjectSchema = new Schema({
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project'
-    },
-    description: {
-        type: [String]
-    }
-});
-
-const Member_CoopExpSchema = new Schema({
-    company: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true
-    },
-    location: new Schema({
-        city: {
-            type: String,
-            required: true
-        },
-        region: {
-            type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
-        },
-    }),
-    term: Member_TermSchema
-});
-
 const Member_NameSchema = new Schema({
     first: {
         type: String,
@@ -134,9 +98,6 @@ const MemberSchema = new Schema({
     joined: {
         type: Member_TermSchema,
     },
-    coopExp: {
-        type: [Member_CoopExpSchema],
-    },
     memberType: {
         type: Schema.Types.ObjectId,
         ref: 'MemberType'
@@ -146,7 +107,8 @@ const MemberSchema = new Schema({
         ref: 'Subteam',
     }],
     projects: [{
-        type: Member_ProjectSchema
+        type: Schema.Types.ObjectId,
+        ref: 'Project',
     }],
     email: {
         type: String,

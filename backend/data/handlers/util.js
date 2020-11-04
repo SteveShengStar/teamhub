@@ -57,7 +57,7 @@ util.handleWrapper = async (func) => {
 /**
  * Returns an object to be returned by an API endpoint with the success status and the data from a function call
  */
-util.resWrapper = async (func) => {
+util.resWrapper =  async (func) => {
     try {
         const body = (await func());
         return ({
@@ -71,21 +71,6 @@ util.resWrapper = async (func) => {
             error: error.toString()
         });
     }
-};
-
-/**
- * Handler for CORS middleware
- */
-util.runCORSMiddlewareHelper = (req, res, fn) => {
-    return new Promise((resolve, reject) => {
-        fn(req, res, result => {
-            if (result instanceof Error) {
-                return reject(result);
-            }
-
-            return resolve(result);
-        });
-    });
 };
 
 module.exports = util;

@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/frontend/styles/fontawesome/*
 
 # testing
 /coverage
@@ -22,6 +23,7 @@ process.yml
 .DS_Store
 .env*
 .idea
+
 
 # debug
 npm-debug.log*

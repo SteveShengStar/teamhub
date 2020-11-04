@@ -2,7 +2,7 @@ import React from "react"
 import styled from "styled-components"
 import Button from "../atoms/Button";
 
-export default ({options, selected, updateSelected}) => {
+const SubteamPicker = ({options, selected, updateSelected}) => {
     return (
         <Container>
             {
@@ -23,6 +23,7 @@ export default ({options, selected, updateSelected}) => {
         </Container>
     )
 }
+export default SubteamPicker;
 
 const Container = styled.div`
     display: grid;

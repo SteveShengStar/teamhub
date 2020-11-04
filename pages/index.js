@@ -71,7 +71,6 @@ const Home = () => {
     };
 
     useEffect(() => {
-        console.log(searchQuery);
         if (filters.projects && !fetchingData) {
             // TODO: Must fix.
             // Update the list of members based on the search bar's query

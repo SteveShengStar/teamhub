@@ -27,6 +27,7 @@ auth.checkAnyUser = async (authHeader, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
+    // TODO: test what happens when token expires
     if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
         res.statusCode = 403;
         res.end('Token forbidden.');
@@ -78,7 +79,6 @@ auth.login = async (tokenObj) => {
             audience: authConfig['client_id'],
         });
         const payload = ticket.getPayload();
-        console.log(payload);
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {

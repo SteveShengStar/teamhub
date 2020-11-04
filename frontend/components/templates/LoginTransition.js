@@ -5,7 +5,7 @@ import LoadingModal from "../atoms/LoadingModal";
 /**
  * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: (onFinish: () => void) => void}}}
  */
-export default ({children, transitionRef}) => {
+const LoginTransition = ({children, transitionRef}) => {
 
     return (
         <Container ref={transitionRef}>
@@ -13,6 +13,7 @@ export default ({children, transitionRef}) => {
         </Container>
     )
 }
+export default LoginTransition;
 
 const Container = styled.div`
     transition: all 0.5s ease;
