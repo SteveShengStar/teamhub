@@ -17,17 +17,11 @@ import { useSelector } from 'react-redux';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
-    const { subteams, projects } = useSelector(state => state.membersState.filters);
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-    console.log("Member data:");
-    console.log(memberData);
-    console.log("Subteams")
-    console.log(subteams)
-    console.log("Projects")
-    console.log(projects)
+
     const memberSubteams = memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams.map(st => st.name) : [];
     const memberProjects = memberData.projects && memberData.projects.length > 0 ? memberData.projects.map(prj => prj.name) : [];
-    const subteam = memberSubteams && memberSubteams.length > 0 && memberSubteams[0].name ? memberSubteams[0].name : "";
+    const subteam = memberSubteams && memberSubteams.length > 0 ? memberSubteams[0] : "";
 
     const terms = ["W", "F", "S"];
     const date = new Date();
