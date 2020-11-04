@@ -50,6 +50,7 @@ members.getAll = async (fields) => {
  * Return all members (and their associated information) that match the criteria specified in body.
  */
 members.search = async (body, fields, showToken = false) => {
+    console.log(body);
     return util.handleWrapper(async () => {
         const searchByDisplayName = body ? body.displayName : null;
         if (searchByDisplayName) {
