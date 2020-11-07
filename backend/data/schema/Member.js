@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
-const task = require('./Task');
 
 const Schema = mongoose.Schema;
 
@@ -75,6 +74,18 @@ const Member_Link = new Schema({
     },
 });
 
+const Member_Task = new Schema({
+    task: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Task'
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['pending', 'complete', 'irrelevant']
+    },
+});
 
 const MemberSchema = new Schema({
     name: {
@@ -136,22 +147,7 @@ const MemberSchema = new Schema({
         select: false
     },
     tasks: {
-        done: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Task'
-        }],
-        pending: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Task'
-        }],
-        urgent: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Task'
-        }],
-        irrelevant: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Task'
-        }],
+        type: [Member_Task]
     },
 });
 

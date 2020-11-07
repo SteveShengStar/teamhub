@@ -1,34 +1,28 @@
 const Task = require('../schema/Task');
+const Member = require('../schema/Member');
 const util = require('./util');
 
 const task = {};
+var ObjectID = require('mongodb').ObjectID;
 
 /**
  * Return all tasks stored in the database.
  */
-task.getAll = async () => {
+task.get = async (userId) => {
     return util.handleWrapper(async () => {
-        return (await Task.find({}).exec());
-    });
+        const query = Member.find({_id: new ObjectID(userId)})
+                            .select("tasks")
+                            .populate("tasks");
 
+        return (await query.exec());
+    });
 };
+
 
 /**
  * body: the filter to apply when retrieving task records from the database 
  * 
- * Return only the tasks that satisfy the filter criteria (body)
- */
-task.search = async (body) => {
-    return util.handleWrapper(async () => {
-        return (await (Task.find(body).exec()));
-    });
-
-};
-
-/**
- * body: the filter to apply when retrieving subteam records from the database 
- * 
- * Return only the task that satisfies the filter criteria (body).
+ * Return only the tasks that satisfy the filter criteria (body).
  * If no such records exist, then create a new database entry.
  */
 task.findOrCreate = async (body) => {
