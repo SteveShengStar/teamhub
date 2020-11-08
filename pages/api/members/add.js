@@ -17,6 +17,7 @@ module.exports = async (req, res) => {
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 throw Error('body must be present in request.');
             })));
+            return;
         }
 
         res.statusCode = 200;
