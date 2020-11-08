@@ -132,6 +132,13 @@ members.updateMember = async (filter, body) => {
     });
 };
 
+members.updateTask = async (filter, body) => {
+    return util.handleWrapper(async () => {
+        body = await replaceBodyWithIds(body);
+        return (await Member.updateOne(filter, body).exec());
+    });
+};
+
 const replaceBodyWithIds = async (body) => {
     if (body.interests) {
         if (Array.isArray(body.interests)) {
