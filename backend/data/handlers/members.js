@@ -128,7 +128,7 @@ members.delete = async (body) => {
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
-        return (await Member.update(filter, body).exec());
+        return (await Member.updateOne(filter, body).exec());
     });
 };
 

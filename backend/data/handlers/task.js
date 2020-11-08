@@ -27,10 +27,7 @@ task.get = async (userId) => {
  */
 task.add = async (body) => {
     return util.handleWrapper(async () => {
-        body = await replaceBodyWithIds(body);
-        console.log("Body in the Update Member: ");
-        console.log(body);
-        return (await Task.create(Task, body));
+        return (await Task.create(body));
     });
 };
 

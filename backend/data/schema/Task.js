@@ -11,16 +11,19 @@ const DocumentLinksSchema  = new Schema({
 });
 
 const TaskSchema  = new Schema({
-    title: String,
-    description: {
+    title: {
         type: String,
-        required: true 
+        required: true,
+    },
+    description: {
+        type: String
     },
     searchBarPlaceholderTexts: [String],
     documentLinks: [DocumentLinksSchema],
     subteams: [{
         type: Schema.Types.ObjectId,
         ref: 'Subteam',
+        required: true,
     }],
 });
 

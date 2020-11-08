@@ -10,12 +10,24 @@ util.checkIsEmptyBody = async (body) => {
 /**
  * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
  */
-util.replaceNamesWithIdsArray = async (values, handler) => {
+util.replaceNamesWithIdsArray = async (values, handler, createRecordIfNotFound = true) => {
     if (!values) return values;
     const ids = [];
-    for (const value of values) {
-        const id = (await handler.findOrCreate({ name: value })).id;
-        ids.push(id);
+    if (createRecordIfNotFound) {
+        for (const value of values) {
+            const id = (await handler.findOrCreate({ name: value })).id;
+            ids.push(id);
+        }
+    } else {
+        for (const value of values) {
+            let subteams = await handler.search({ name: value });
+            // If the subteam cannot be found, simply skip it.
+            // For now, ignore subteams that could not be found in the database
+            if (subteams && subteams.length === 1) {
+                const id = subteams[0].id;
+                ids.push(id);
+            }
+        }
     }
     return ids;
 };

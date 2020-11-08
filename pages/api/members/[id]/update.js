@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
                     throw Error('id URL param must be specified.');
                 })));
             }
-            if (data.util.checkIsEmptyBody(req.body)) {
+            if (await data.util.checkIsEmptyBody(req.body)) {
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('body must be present in request.');
