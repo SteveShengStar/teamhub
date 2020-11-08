@@ -15,6 +15,8 @@ import { searchMembers, lookupMember, getFilters, DataFetchType } from '../front
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
+import { getUserId, startGroupConversation } from "./api/slack";
+
 const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -36,7 +38,6 @@ const Home = () => {
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
 
-      
       if (isSelectionEnabled) {
           const index = selectedMembers.indexOf(id);
           if(index == -1) {
@@ -116,7 +117,7 @@ const Home = () => {
     const [selectedMembers, setSelectedMembers] = useState([]);
     const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
 
-    const generateGroupEmail = () => {
+    const getEmails = () => {
         const emails = [];
 
         // Get the email of each user
@@ -125,10 +126,30 @@ const Home = () => {
             if(email) emails.push(email);
         });
 
+        return emails;
+    }
+
+    const generateGroupEmail = () => {
+        const emails = getEmails();
+
         // Generate Gmail mailto link
         const concatenatedEmails = emails.join(';'); 
         const link = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${concatenatedEmails}`;
         window.open(link);
+    }
+
+    const generateSlackGroup = async () => {
+      const emails = getEmails();
+      const slackIds = [];
+
+      for(const email of emails) {
+        const slackId = await getUserId(email);
+        slackIds.push(slackId);
+      }
+      
+      const slackIdsStr = slackIds.join();
+      await startGroupConversation(slackIdsStr);
+      window.open("slack://");
     }
 
     return (
@@ -143,12 +164,22 @@ const Home = () => {
             gridTemplateColumns="auto 1fr"
           >
             {isSelectionEnabled ? (
-            <Button onClick={generateGroupEmail} height="50px" width="100px">
-                Send Email
-            </Button>
+            <SystemComponent
+              display="flex"
+              flexDirection="row"
+              width="25%"
+              justifyContent="space-between"
+            >
+              <Button onClick={generateGroupEmail} height="50px" width="100px">
+                  Send Email
+              </Button>
+              <Button onClick={generateSlackGroup} height="50px" width="100px">
+                  Send Slack Message
+              </Button>
+            </SystemComponent>
             ) : (
             <Button onClick={() => setIsSelectionEnabled(true)} height="50px" width="100px">
-              Group Email
+              Group Tasks
             </Button>
             )}
             <MembersFilterModal

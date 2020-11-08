@@ -6,7 +6,7 @@ const web = new WebClient(process.env.SLACK_TOKEN);
 const getAllUsers = async () => {
   try {
     const users = await web.users.list({
-      limit: 3 // change later
+      limit: 3 // Can be modified
     });
     return users;
   } catch (error) {
@@ -14,7 +14,7 @@ const getAllUsers = async () => {
   }
 }
 
-const getUser = async (email = "lucas.b@waterloop.ca") => {
+const getUser = async (email) => {
   try {
     const user = await web.users.lookupByEmail({
       email: email
@@ -25,27 +25,17 @@ const getUser = async (email = "lucas.b@waterloop.ca") => {
   }
 };
 
-const getUserId = async (email = "lucas.b@waterloop.ca") => {
+export const getUserId = async (email) => {
   const user = await getUser(email);
   return user.user.id;
 }
 
-const startGroupConversation = async () => {
+export const startGroupConversation = async (users) => {
   try {
     return await web.conversations.open({
-      users: "U01ARJNKHLK,U6BKF3Z6E,U01BBSQFJ01"
+      users: users
     })
   } catch(error) {
     console.log(error);
   }
 }
-
-// (async () => {
-//   console.log(await getUserId("darryl.w@waterloop.ca"));
-// })();
-
-(async () => {
-  console.log(await startGroupConversation());
-})();
-
-

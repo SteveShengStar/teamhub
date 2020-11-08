@@ -22,13 +22,6 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
         return selectedMembers.includes(member._id);
     }
 
-    // useEffect(() => {
-    //     console.log("members");
-    //     console.log(members);
-    //     console.log("Selected");
-    //     console.log(selectedMembers);
-    // }, [members, selectedMembers]);
-
     return (
         <>
             <GhostLoader>
