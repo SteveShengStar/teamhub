@@ -1,6 +1,4 @@
 const data = require('../../../backend/data/index');
-const Cors = require('cors');
-
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();

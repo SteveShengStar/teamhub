@@ -105,8 +105,6 @@ export const updateUser = async (dispatch, options, token, id, router, signUp = 
 export const getProfileInfo = async function(dispatch, token, id, router) {
     try {
         const user = await api.members.getMember(id, token, dispatch, router);
-        console.log("User: ");
-        console.log(user);
         // TODO: potentially eliminate this store update afterwards.
         dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
         return user.body[0];

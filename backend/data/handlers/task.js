@@ -25,9 +25,12 @@ task.get = async (userId) => {
  * Return only the tasks that satisfy the filter criteria (body).
  * If no such records exist, then create a new database entry.
  */
-task.findOrCreate = async (body) => {
+task.add = async (body) => {
     return util.handleWrapper(async () => {
-        return (await util.findOrCreate(Task, body));
+        body = await replaceBodyWithIds(body);
+        console.log("Body in the Update Member: ");
+        console.log(body);
+        return (await Task.create(Task, body));
     });
 };
 

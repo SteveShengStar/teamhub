@@ -50,7 +50,6 @@ members.getAll = async (fields) => {
  * Return all members (and their associated information) that match the criteria specified in body.
  */
 members.search = async (body, fields, showToken = false) => {
-    console.log(body);
     return util.handleWrapper(async () => {
         const searchByDisplayName = body ? body.displayName : null;
         if (searchByDisplayName) {
@@ -129,8 +128,6 @@ members.delete = async (body) => {
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
-        console.log("Body in the Update Member: ");
-        console.log(body);
         return (await Member.update(filter, body).exec());
     });
 };

@@ -229,8 +229,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             handleCloseModal();
         }
     }
-    console.log("Skills: ");
-    console.log(skills);
 
     const handleInputChange = (name, value) => {
         if (hasError[name]) {

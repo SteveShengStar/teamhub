@@ -1,6 +1,13 @@
 const util = {};
 
 /**
+ * check if body is empty
+ */
+util.checkIsEmptyBody = async (body) => {
+    return (!body || Object.keys(body).length === 0);
+}
+
+/**
  * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
  */
 util.replaceNamesWithIdsArray = async (values, handler) => {

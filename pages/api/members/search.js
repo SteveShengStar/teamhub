@@ -6,12 +6,20 @@ module.exports = async (req, res) => {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
-            res.statusCode = 200;
+
+            if (data.util.checkIsEmptyBody(req.body)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                    throw Error('body must be present in request.');
+                })));
+            }
             if (!req.body.options) {
+                res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('options field must be specified in body.');
                 })));
             }
+            res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 let fields = null;
                 if (req.body.fields) {
