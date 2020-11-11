@@ -112,6 +112,22 @@ members.search = async (body, fields, showToken = false) => {
     });
 };
 
+/**
+ * Assign a task to all members
+ * 
+ * body: the details describing the new task
+ */
+members.assignTaskToAllMembers = async (newTask) => {
+    return util.handleWrapper(async () => {
+        return await Member.updateMany({}, { $push: { tasks: newTask }});
+    });
+}
+
+/**
+ * Add a new member to the database
+ * 
+ * memberBody: details describing the new member
+ */
 members.add = async (memberBody) => {
     return util.handleWrapper(async () => {
         memberBody = await replaceBodyWithIds(memberBody);
@@ -119,12 +135,20 @@ members.add = async (memberBody) => {
     });
 };
 
+/**
+ * Delete members from the database
+ * 
+ * body: details that describe the members to be deleted
+ */
 members.delete = async (body) => {
     return util.handleWrapper(async () => {
         return (await Member.deleteMany(body).exec());
     });
 };
 
+/**
+ * Update data for a single member only
+ */
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
@@ -132,12 +156,18 @@ members.updateMember = async (filter, body) => {
     });
 };
 
-members.updateTask = async (filter, body) => {
+/**
+ * Update the status of a task for a single member
+ * 
+ * { _id: req.query.id, "tasks._id": req.body.taskId}, {status: req.body.status}
+ */
+members.updateTaskStatus = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
-        return (await Member.updateOne(filter, body).exec());
+        return (await Member.updateOne(filter, {$set : {body}}).exec());
     });
 };
+
 
 const replaceBodyWithIds = async (body) => {
     if (body.interests) {

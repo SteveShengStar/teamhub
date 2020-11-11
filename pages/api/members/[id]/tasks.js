@@ -7,9 +7,18 @@ module.exports = async (req, res) => {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
+
+            if (!req.query.id) {
+                res.statusCode = 400;
+                res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                    throw Error('URL params must contain user id.');
+                })));
+                return;
+            }
+            
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.task.get(req.body.id);
+                return await data.task.get(req.query.id);
             })));
         }
     } else {

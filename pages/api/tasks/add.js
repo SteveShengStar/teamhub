@@ -2,12 +2,12 @@ const data = require('../../../backend/data/index');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    
+
     if (req.method === 'POST') {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
-            
+
             let payload = req.body;
             if (await data.util.checkIsEmptyBody(payload)) {
                 res.statusCode = 400;
@@ -33,9 +33,20 @@ module.exports = async (req, res) => {
                 payload.subteams = await data.util.replaceNamesWithIdsArray(payload.subteams, data.subteams, false);
             }
 
+
             res.statusCode = 200;
-            res.end(JSON.stringify(await data.util.resWrapper(async () => {
+            // Add the New Task to the tasks collection (tasks table)
+            let taskData = await data.util.resWrapper(async () => {
                 return await data.task.add(payload);
+            });
+            if (taskData.success === false) {
+                res.end(JSON.stringify(taskData));
+                return;
+            }
+            
+            // Assign this new task to everybody, with a "pending" status
+            res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                return await data.members.assignTaskToAllMembers({ taskId: taskData.id, status: "pending" });
             })));
         }
     } else {

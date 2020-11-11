@@ -12,6 +12,7 @@ module.exports = async (req, res) => {
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('id URL param must be specified.');
                 })));
+                return;
             }
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
