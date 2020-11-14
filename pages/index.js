@@ -16,6 +16,7 @@ import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
 import { getUserId, startGroupConversation } from "./api/slack";
+import { constants } from "../constants";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -148,8 +149,8 @@ const Home = () => {
       }
       
       const slackIdsStr = slackIds.join();
-      await startGroupConversation(slackIdsStr);
-      window.open("slack://");
+      const { channel } = await startGroupConversation(slackIdsStr);
+      window.open(`slack://channel?team=${constants.TEAM_ID}&id=${channel.id}`);
     }
 
     return (

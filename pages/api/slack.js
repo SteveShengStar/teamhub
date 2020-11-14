@@ -1,7 +1,9 @@
-const { WebClient } = require("@slack/web-api");
+import { WebClient } from "@slack/web-api";
+import { constants } from "../../constants";
 
 // Create a new instance of the WebClient class with the token read from your environment variable
-const web = new WebClient(process.env.SLACK_TOKEN);
+// const web = new WebClient(process.env.REACT_APP_SLACK_KEY);
+const web = new WebClient(constants.SLACK_KEY);
 
 const getAllUsers = async () => {
   try {

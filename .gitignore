@@ -22,6 +22,7 @@ process.yml
 .DS_Store
 .env*
 .idea
+constants.js
 
 # debug
 npm-debug.log*
