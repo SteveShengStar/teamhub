@@ -33,8 +33,11 @@ const Home = () => {
     // token: user authentication token. 
     // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
     const { token, hydrated } = useSelector(state => state.userState);
-    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState)
-
+    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
+    
+    // Group selection 
+    const [selectedMembers, setSelectedMembers] = useState([]);
+    const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
 
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
@@ -46,7 +49,8 @@ const Home = () => {
             setSelectedMembers([...selectedMembers, id]); 
           } else {
             // Remove id from selected members
-            setSelectedMembers([...selectedMembers.splice(index, 1)]);
+            selectedMembers.splice(index, 1);
+            setSelectedMembers([...selectedMembers]);
           }
       }
  
@@ -114,9 +118,6 @@ const Home = () => {
             })
         }
     }, [selectedMember])
-
-    const [selectedMembers, setSelectedMembers] = useState([]);
-    const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
 
     const getEmails = () => {
         const emails = [];
