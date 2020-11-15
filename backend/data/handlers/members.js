@@ -159,15 +159,19 @@ members.updateMember = async (filter, body) => {
 /**
  * Update the status of a task for a single member
  * 
- * { _id: req.query.id, "tasks._id": req.body.taskId}, {status: req.body.status}
+ * filter: selection criteria for the record to update -- Example) { _id: req.query.id, 
+ *                                                                   "tasks": {
+                                                                        "$elemMatch": {
+                                                                            "_id": req.body.taskId
+                                                                        }
+                                                                    }}, 
+ * body: contains the new status of the task           -- Exapmle) {"tasks.$.status": req.body.status}
  */
 members.updateTaskStatus = async (filter, body) => {
     return util.handleWrapper(async () => {
-        body = await replaceBodyWithIds(body);
-        return (await Member.updateOne(filter, {$set : {body}}).exec());
+        return (await Member.updateOne(filter, {"$set" : body}, { runValidators: true }).exec());
     });
 };
-
 
 const replaceBodyWithIds = async (body) => {
     if (body.interests) {

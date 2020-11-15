@@ -36,11 +36,16 @@ module.exports = async (req, res) => {
                 return;
             }
 
-            console.log("Console");
             res.statusCode = 200;
-            // Update the completion status of the task: 'pending', 'complete', 'irrelevant'
+            // Update the completion status of the task: {'pending', 'complete', or 'irrelevant'}
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.members.updateTaskStatus({ _id: req.query.id}, {"tasks.$.status": req.body.status});
+                return await data.members.updateTaskStatus({ _id: req.query.id,
+                                                            "tasks": {
+                                                                "$elemMatch": {
+                                                                    "_id": req.body.taskId
+                                                                }
+                                                            }}, 
+                                                            {"tasks.$.status": req.body.status});
             })));
         }
     } else {
