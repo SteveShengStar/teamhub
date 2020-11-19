@@ -12,7 +12,7 @@ task.get = async (userId) => {
     return util.handleWrapper(async () => {
         const query = Member.find({_id: new ObjectID(userId)})
                             .select("tasks")
-                            .populate("tasks");
+                            .deepPopulate('tasks.taskId');
 
         return (await query.exec());
     });

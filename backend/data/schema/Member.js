@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
@@ -152,6 +153,7 @@ const MemberSchema = new Schema({
 });
 
 MemberSchema.plugin(uniqueValidator);
+MemberSchema.plugin(deepPopulate);
 
 let Member;
 try {

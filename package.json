@@ -28,6 +28,7 @@
     "googleapis": "^44.0.0",
     "mongodb": "^3.6.2",
     "mongoose": "^5.7.5",
+    "mongoose-deep-populate": "^3.2.0",
     "mongoose-unique-validator": "^2.0.3",
     "next": "^9.5.5",
     "next-redux-wrapper": "^4.0.1",

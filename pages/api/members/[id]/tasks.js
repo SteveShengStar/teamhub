@@ -1,4 +1,4 @@
-const data = require('../../../backend/data/index');
+const data = require('../../../../backend/data/index');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
