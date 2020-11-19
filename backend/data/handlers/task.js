@@ -6,11 +6,17 @@ const task = {};
 var ObjectID = require('mongodb').ObjectID;
 
 /**
- * Return all tasks stored in the database.
+ * Return tasks stored in the database.
+ * 
+ * userId: id of the user
+ * status: status of the task: 'pending', 'complete', or 'irrelavent'
  */
-task.get = async (userId) => {
+task.get = async (userId, status) => {
     return util.handleWrapper(async () => {
-        const query = Member.find({_id: new ObjectID(userId)})
+
+        const filter = status ? {_id: new ObjectID(userId), "tasks.status": status} : {_id: new ObjectID(userId)};
+
+        const query = Member.find(filter)
                             .select("tasks")
                             .deepPopulate('tasks.taskId');
 

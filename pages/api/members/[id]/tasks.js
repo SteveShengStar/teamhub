@@ -15,10 +15,12 @@ module.exports = async (req, res) => {
                 })));
                 return;
             }
+
+            const status = req.body && req.body.taskStatus ? req.body.taskStatus : null;
             
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.task.get(req.query.id);
+                return await data.task.get(req.query.id, status);
             })));
         }
     } else {
