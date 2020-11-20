@@ -20,7 +20,7 @@ const TaskSchema  = new Schema({
     },
     searchBarPlaceholderTexts: [String],
     documentLinks: [DocumentLinksSchema],
-    subteams: [{
+    subteams: [{    // TODO: remove this array later
         type: Schema.Types.ObjectId,
         ref: 'Subteam',
         required: true,

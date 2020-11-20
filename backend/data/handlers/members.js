@@ -72,6 +72,9 @@ members.search = async (body, fields, showToken = false) => {
             if (fields['projects']) {
                 query.populate('projects');
             }
+            if (fields['tasks']) {
+                query.populate('tasks');
+            }
             if (showToken) {
                 query.select('+token');
             }
@@ -115,11 +118,12 @@ members.search = async (body, fields, showToken = false) => {
 /**
  * Assign a task to all members
  * 
+ * filter: selection criteria for the member to assign the task to
  * body: the details describing the new task
  */
-members.assignTaskToAllMembers = async (newTask) => {
+members.assignTaskToAllMembers = async (filter, newTask) => {
     return util.handleWrapper(async () => {
-        return await Member.updateMany({}, { $push: { tasks: newTask }});
+        return await Member.updateMany( filter, { $push: { tasks: newTask }} );
     });
 }
 

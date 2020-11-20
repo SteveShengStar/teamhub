@@ -37,4 +37,17 @@ subteam.findOrCreate = async (body) => {
     });
 };
 
+/**
+ * Make certain Subteams reference the new task that was created
+ * 
+ * subteams: the subteams that will reference the new task
+ * newTask: the new task's ID
+ */
+
+subteam.addTaskReference = async (subteams, newTaskID) => {
+    return util.handleWrapper(async () => {
+        return (await Subteam.updateMany( {_id: {$in: subteams}}, { $push: { tasks: newTaskID }} ));
+    });
+};
+
 module.exports = subteam;

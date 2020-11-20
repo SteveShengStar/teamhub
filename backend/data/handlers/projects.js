@@ -1,5 +1,4 @@
 const Project = require('../schema/Project');
-const subteams = require('./subteams');
 const util = require('./util');
 
 const projects = {};
