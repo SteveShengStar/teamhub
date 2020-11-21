@@ -1,9 +1,19 @@
 const Task = require('../schema/Task');
 const Member = require('../schema/Member');
 const util = require('./util');
+const ObjectID = require('mongodb').ObjectID;
 
 const task = {};
-var ObjectID = require('mongodb').ObjectID;
+
+/**
+ * Return all tasks stored in the database.
+ */
+task.getAll = async () => {
+    return util.handleWrapper(async () => {
+        return (await Task.find({}).exec());
+    });
+}
+
 
 /**
  * Return tasks stored in the database.

@@ -47,7 +47,6 @@ module.exports = async (req, res) => {
                     documentLinks: documentLinks
                 });
             const taskID = new ObjectID(queryResponse._id);
-            console.log(taskID);
             //console.log(queryResponse)
 
 
@@ -84,7 +83,7 @@ module.exports = async (req, res) => {
                 //console.log("Relevant Members");
                 //console.log(relevantMemberIDs);
                 
-                return await data.members.assignTaskToAllMembers( {_id: {$in: relevantMemberIDs}}, { taskId: taskID.valueOf(), status: "pending" });
+                return await data.members.assignTaskToAllMembers( {_id: {$in: relevantMemberIDs}}, { taskId: taskID.toString(), status: "pending" });
             })));
         }
     } else {
