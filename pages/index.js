@@ -32,7 +32,7 @@ const Home = () => {
     
     // token: user authentication token. 
     // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
-    const { token, hydrated } = useSelector(state => state.userState);
+    const { token, hydrated, user } = useSelector(state => state.userState);
     const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
     
     // Group selection 
@@ -42,7 +42,7 @@ const Home = () => {
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
 
-      if (isSelectionEnabled) {
+      if (isSelectionEnabled && id !== user._id) {
           const index = selectedMembers.indexOf(id);
           if(index == -1) {
             // Add id to selected members
@@ -133,9 +133,10 @@ const Home = () => {
 
     const generateGroupEmail = () => {
         const emails = getEmails();
+        const filteredEmails = emails.filter((email) => email !== user.email);
 
         // Generate Gmail mailto link
-        const concatenatedEmails = emails.join(';'); 
+        const concatenatedEmails = filteredEmails.join(';'); 
         const link = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${concatenatedEmails}`;
         window.open(link);
     }
@@ -154,93 +155,105 @@ const Home = () => {
       window.open(`slack://channel?team=${constants.TEAM_ID}&id=${channel.id}`);
     }
 
+    const cancelGroupSelection = () => {
+      setIsSelectionEnabled(false);
+      setSelectedMembers([]);
+    }
+
+    const enableGroupSelection = () => {
+      setIsSelectionEnabled(true);
+      setSelectedMembers([user._id]);
+    }
+
     return (
       <PageTemplate title="Explore">
-          <SystemComponent
-            position="relative"
-            overflow={["auto", "auto", "auto", "visible"]}
-            overflowX={"hidden"}
-            gridGap={["cardMarginSmall", "cardMarginSmall", "cardMarginSmall", "cardMargin"]}
-            display={["block", "block", "block", "grid"]}
-            gridTemplateRows="auto auto"
-            gridTemplateColumns="auto 1fr"
+        <SystemComponent
+          position="relative"
+          overflow={["auto", "auto", "auto", "visible"]}
+          overflowX={"hidden"}
+          gridGap={["cardMarginSmall", "cardMarginSmall", "cardMarginSmall", "cardMargin"]}
+          display={["block", "block", "block", "grid"]}
+          gridTemplateRows="auto auto"
+          gridTemplateColumns="auto 1fr"
+        >
+          <MembersFilterModal
+            visible={modalVisible}
+            filters={filters}
+            updateSearchQuery={updateSearchQuery}
+            hide={() => setModalVisible(false)}
+          />
+          <MembersListCard
+            display="grid"
+            gridTemplateColumns="1fr"
+            gridTemplateRows="auto auto 1fr"
+            gridRow={"1/3"}
+            overflowY={["auto", "auto", "scroll"]}
+            overflowX="hidden"
+            position={["relative", "relative", "relative"]}
+            memberData={selectedMember}
           >
-            {isSelectionEnabled ? (
             <SystemComponent
               display="flex"
-              flexDirection="row"
-              width="25%"
               justifyContent="space-between"
+              alignItems="flex-start"
+              pb={10}
             >
-              <Button onClick={generateGroupEmail} height="50px" width="100px">
-                  Send Email
-              </Button>
-              <Button onClick={generateSlackGroup} height="50px" width="100px">
-                  Send Slack Message
-              </Button>
-            </SystemComponent>
-            ) : (
-            <Button onClick={() => setIsSelectionEnabled(true)} height="50px" width="100px">
-              Group Tasks
-            </Button>
-            )}
-            <MembersFilterModal
-              visible={modalVisible}
-              filters={filters}
-              updateSearchQuery={updateSearchQuery}
-              hide={() => setModalVisible(false)}
-            />
-            <MembersListCard
-              display="grid"
-              gridTemplateColumns="1fr"
-              gridTemplateRows="auto auto 1fr"
-              gridRow={"1/3"}
-              overflowY={["auto", "auto", "scroll"]}
-              overflowX="hidden"
-              position={["relative", "relative", "relative"]}
-              memberData={selectedMember}
-            >
+              <Header3 style={{ transformOrigin: "left" }}>Members</Header3>
               <SystemComponent
                 display="flex"
                 justifyContent="space-between"
                 alignItems="flex-start"
-                pb={10}
+                width={isSelectionEnabled ? "475px" : "225px"}
               >
-                <Header3 style={{ transformOrigin: "left" }}>Members</Header3>
-                <Button display={"block"} onClick={() => setModalVisible(!modalVisible)}>
+                {isSelectionEnabled ? (
+                  <>
+                    <OptionButton onClick={generateGroupEmail}>
+                      Email
+                    </OptionButton>
+                    <OptionButton onClick={generateSlackGroup}>
+                      Slack DM
+                    </OptionButton>
+                    <CancelButton onClick={cancelGroupSelection}>
+                      Cancel
+                    </CancelButton>
+                  </>
+                ) : (
+                  <OptionButton onClick={enableGroupSelection}>
+                    Select
+                  </OptionButton>
+                )}
+                <OptionButton onClick={() => setModalVisible(!modalVisible)}>
                   Edit Filters
-                </Button>
+                </OptionButton>
               </SystemComponent>
-              <MemberFilterComponent
-                filterOptions={filters}
-                updateSearchQuery={updateSearchQuery}
-              />
-              <MemberListGrid
-                members={members}
-                onSelect={onSelectMember}
-                fetchedMembers={fetchedMembers}
-                selectedMembers={selectedMembers}
-              />
-            </MembersListCard>
-            <MemberCard
-              animRef={memberCardRef}
-              memberData={selectedMember}
-              onClose={() => {
-                anime({
-                  // Make the member profile card slide out of view
-                  targets: memberCardRef.current,
-                  translateX: "110%",
-                  easing: "easeOutQuad",
-                  duration: 200
-                }).finished.then(() => {
-                  dispatch({
-                    type: "SET_SELECTED_MEMBER",
-                    payload: {}
-                  });
-                });
-              }}
+            </SystemComponent>
+            <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery} />
+            <MemberListGrid
+              members={members}
+              onSelect={onSelectMember}
+              fetchedMembers={fetchedMembers}
+              selectedMembers={selectedMembers}
             />
-          </SystemComponent>
+          </MembersListCard>
+          <MemberCard
+            animRef={memberCardRef}
+            memberData={selectedMember}
+            onClose={() => {
+              anime({
+                // Make the member profile card slide out of view
+                targets: memberCardRef.current,
+                translateX: "110%",
+                easing: "easeOutQuad",
+                duration: 200
+              }).finished.then(() => {
+                dispatch({
+                  type: "SET_SELECTED_MEMBER",
+                  payload: {}
+                });
+              });
+            }}
+          />
+        </SystemComponent>
       </PageTemplate>
     );
 };
@@ -279,4 +292,13 @@ const MemberCard = styled(MemberInfoCard)`
         transform: translateX(110%);
         grid-row: 1/3;
     }
+`;
+
+const OptionButton = styled(Button)`
+  display: block;
+  width: 100px;
+`;
+
+const CancelButton = styled(OptionButton)`
+  background-color: ${({ theme }) => theme.colors.alertAction};
 `;
