@@ -15,12 +15,13 @@ subteam.getAll = async () => {
 
 /**
  * body: the filter to apply when retrieving subteam records from the database 
+ * fields: fields to return
  * 
  * Return only the subteams that satisfy the filter criteria (body)
  */
-subteam.search = async (body) => {
+subteam.search = async (body, fields = {}) => {
     return util.handleWrapper(async () => {
-        return (await (Subteam.find(body).exec()));
+        return (await (Subteam.find(body).select(fields).exec()));
     });
 
 };

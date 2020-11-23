@@ -8,12 +8,16 @@ module.exports = async (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                let fields = null;
-                if (req.body.fields) {
-                    fields = {};
-                    for (const field of req.body.fields) {
-                        fields[field] = 1;
-                    }
+                let basis;
+                if (!req.body.fields) {
+                    basis = ["name", "program", "bio", "skills", "interests", "joined", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "birthday", "links", "token", "tokenExpiry"]
+                } else {
+                    basis = req.body.fields;
+                }
+
+                let fields = {};
+                for (const field of basis) {
+                    fields[field] = 1;
                 }
                 return await data.members.getAll(fields);
             })));

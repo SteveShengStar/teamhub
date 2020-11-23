@@ -1,6 +1,5 @@
 const data = require('../../../backend/data/index');
-const ObjectID = require('mongodb').ObjectID;
-import {uniq, union, intersection} from 'lodash';
+import {union, intersection} from 'lodash';
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -26,19 +25,17 @@ module.exports = async (req, res) => {
             }
 
             // Get tasks that are relevant to the new member based on subteam(s) they are part of
-            let relevantTaskIDs = [];
+            let relevantTaskIDs;
             if (payload.subteams.length === 0) {
                 // If the user selected no subteams, then they will only be assigned tasks that are considered mandatory of all subteams
-                relevantTaskIDs =   intersection(...( (await data.subteams.search({}))
+                relevantTaskIDs =   intersection(...( (await data.subteams.search({}, {tasks: 1}))
                                                     .map(st => st.tasks.map(taskID => taskID.toString())) )
                                                 );
             } else {
                 // If subteam(s) are specified, then choose only the tasks that are relevant to the chosen subteams
-                relevantTaskIDs =   union(...( (await data.subteams.search({ name: {$in: payload.subteams }}))
+                relevantTaskIDs =   union(...( (await data.subteams.search({ name: {$in: payload.subteams }}, {tasks: 1}))
                                             .map(st => st.tasks.map(taskID => taskID.toString())) )
                                         );
-                //console.log(relevantTaskIDs.map(id => typeof id));
-                //return;
             }
 
             console.log("relevantTaskIDs");

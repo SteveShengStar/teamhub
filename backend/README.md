@@ -132,7 +132,48 @@ A JSON object with the results
 **Body Parameters**
 |Field|Description                                                            |
 |-----|-----------------------------------------------------------------------|
-|data |JSON object with new field(s), for example: `{"subteams": ["Electrical"]}`|
+|data |JSON object with new field(s), see example below: |
+
+{
+	"data": {
+		"skills": ["C++", "PCB Design"],
+		"interests": ["Self-Driving Cars"],
+		"subteams": ["Electrical"],
+		"projects": ["Embedded", "Battery Management],
+		"name": {
+			"display": "DisplayName",
+			"first": "FirstName",
+			"last": "LastName"
+		},
+		"email": "steven.x@waterloop.ca",
+		"imageUrl": "https://example.com",
+		"joined": {
+			"season": "Fall",
+			"year": 2019
+		},
+		"memberType": "Member",
+		"bio": "Here is my bio.",
+		"birthday": {
+			"month": 15,
+			"day": 11,
+			"year": 2001
+		},
+		"program": "Software Engineering",
+		"stream": {
+			"coopStream": {
+				"F19": true,
+				"W20": true,
+				"F20": true,
+				"S21": true,
+				"W22": true,
+				"F22": true,
+				"S23": true,
+				"W24": true
+			},
+			"currentSchoolTerm": "1B"
+		}
+	}
+}
 
 **Returns**
 A JSON object with the results

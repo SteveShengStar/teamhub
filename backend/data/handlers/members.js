@@ -11,7 +11,7 @@ const members = {};
 /**
  * Return all members (and their associated information) from the database.
  */
-members.getAll = async (fields) => {
+members.getAll = async (fields, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
         if (fields) {
             const query = Member.find({}).select(fields);
@@ -25,18 +25,27 @@ members.getAll = async (fields) => {
                 query.populate('memberType');
             }
             if (fields['subteams']) {
-                query.populate('subteams');
+                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
             }
             if (fields['projects']) {
                 query.populate('projects');
             }
             return (await query.exec());
         } else {
+            if (!returnSubteamTaskList) {
+                return (await (Member.find({})
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
+                    .populate('projects')
+                    .exec()));
+            }
             return (await (Member.find({})
                 .populate('skills')
                 .populate('interests')
                 .populate('memberType')
-                .populate('subteams')
+                .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                 .populate('projects')
                 .exec()));
         }
@@ -49,7 +58,7 @@ members.getAll = async (fields) => {
  * 
  * Return all members (and their associated information) that match the criteria specified in body.
  */
-members.search = async (body, fields, showToken = false) => {
+members.search = async (body, fields, showToken = false, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
         const searchByDisplayName = body ? body.displayName : null;
         if (searchByDisplayName) {
@@ -67,7 +76,7 @@ members.search = async (body, fields, showToken = false) => {
                 query.populate('memberType');
             }
             if (fields['subteams']) {
-                query.populate('subteams');
+                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
             }
             if (fields['projects']) {
                 query.populate('projects');
@@ -92,7 +101,7 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteams')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
                     .select('+token')
                     .exec());
@@ -101,7 +110,7 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteams')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
                     .exec());
             }

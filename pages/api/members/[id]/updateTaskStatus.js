@@ -42,7 +42,7 @@ module.exports = async (req, res) => {
                 return await data.members.updateTaskStatus({ _id: req.query.id,
                                                             "tasks": {
                                                                 "$elemMatch": {
-                                                                    "_id": req.body.taskId
+                                                                    "taskId": req.body.taskId
                                                                 }
                                                             }}, 
                                                             {"tasks.$.status": req.body.status});
