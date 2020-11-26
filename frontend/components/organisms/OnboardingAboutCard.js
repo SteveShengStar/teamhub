@@ -33,7 +33,7 @@ const programs = ["Computer Science", "Mathematics", "Mechanical Engineering",
 
 const terms = ["F19", "W20", "S20", "F20", "W21", "S21", "F21", "W22", "S22", "F22", "W23", "S23", "F23", "W24", "S24", "F24"]
 
-export default ({values, setValues, submit}) => {
+const OnboardingAboutCard = ({values, setValues, submit}) => {
   const { interests, skills, years } = useSelector(state => state.membersState.filters)
     return (
       <CustomCard>
@@ -138,6 +138,7 @@ export default ({values, setValues, submit}) => {
       </CustomCard>
     )
 };
+export default OnboardingAboutCard;
 
 const SelectableTerms = styled(TermSelect)`
   background-color: ${props => props.selected ? props.theme.colors.software : props.theme.colors.white};

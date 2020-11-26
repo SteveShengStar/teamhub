@@ -15,12 +15,13 @@ subteam.getAll = async () => {
 
 /**
  * body: the filter to apply when retrieving subteam records from the database 
+ * fields: fields to return
  * 
  * Return only the subteams that satisfy the filter criteria (body)
  */
-subteam.search = async (body) => {
+subteam.search = async (body, fields = {}) => {
     return util.handleWrapper(async () => {
-        return (await (Subteam.find(body).exec()));
+        return (await (Subteam.find(body).select(fields).exec()));
     });
 
 };
@@ -34,6 +35,19 @@ subteam.search = async (body) => {
 subteam.findOrCreate = async (body) => {
     return util.handleWrapper(async () => {
         return (await util.findOrCreate(Subteam, body));
+    });
+};
+
+/**
+ * Make certain Subteams reference the new task that was created
+ * 
+ * subteams: the subteams that will reference the new task
+ * newTask: the new task's ID
+ */
+
+subteam.addTaskReference = async (subteams, newTaskID) => {
+    return util.handleWrapper(async () => {
+        return (await Subteam.updateMany( {_id: {$in: subteams}}, { $push: { tasks: newTaskID }} ));
     });
 };
 

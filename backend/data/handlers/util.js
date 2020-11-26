@@ -1,14 +1,33 @@
 const util = {};
 
 /**
+ * check if body is empty
+ */
+util.checkIsEmptyBody = async (body) => {
+    return (!body || Object.keys(body).length === 0);
+}
+
+/**
  * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
  */
-util.replaceNamesWithIdsArray = async (values, handler) => {
+util.replaceNamesWithIdsArray = async (values, handler, createRecordIfNotFound = true) => {
     if (!values) return values;
     const ids = [];
-    for (const value of values) {
-        const id = (await handler.findOrCreate({ name: value })).id;
-        ids.push(id);
+    if (createRecordIfNotFound) {
+        for (const value of values) {
+            const id = (await handler.findOrCreate({ name: value })).id;
+            ids.push(id);
+        }
+    } else {
+        for (const value of values) {
+            let subteams = await handler.search({ name: value });
+            // If the subteam cannot be found, simply skip it.
+            // For now, ignore subteams that could not be found in the database
+            if (subteams && subteams.length === 1) {
+                const id = subteams[0].id;
+                ids.push(id);
+            }
+        }
     }
     return ids;
 };
@@ -57,7 +76,7 @@ util.handleWrapper = async (func) => {
 /**
  * Returns an object to be returned by an API endpoint with the success status and the data from a function call
  */
-util.resWrapper = async (func) => {
+util.resWrapper =  async (func) => {
     try {
         const body = (await func());
         return ({
@@ -71,21 +90,6 @@ util.resWrapper = async (func) => {
             error: error.toString()
         });
     }
-};
-
-/**
- * Handler for CORS middleware
- */
-util.runCORSMiddlewareHelper = (req, res, fn) => {
-    return new Promise((resolve, reject) => {
-        fn(req, res, result => {
-            if (result instanceof Error) {
-                return reject(result);
-            }
-
-            return resolve(result);
-        });
-    });
 };
 
 module.exports = util;

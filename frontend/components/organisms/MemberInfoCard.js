@@ -17,18 +17,11 @@ import { useSelector } from 'react-redux';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
-    const { subteams, projects } = useSelector(state => state.membersState.filters);
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-    const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const memberSubteams = memberData.subteams && memberData.subteams.map(value => subteams.find(subteam => subteam._id == value));
-    const memberProjects = memberData.projects && memberData.projects.map(project => {
-        const value = projects.find(val => val._id == project.project );
-        return {
-            name: value ? value.name : "",
-            descriptions: project.description
-        }
-    });
-    const subteam = memberSubteams && memberSubteams.length > 0 && memberSubteams[0].name ? memberSubteams[0].name : "";
+
+    const memberSubteams = memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams.map(st => st.name) : [];
+    const memberProjects = memberData.projects && memberData.projects.length > 0 ? memberData.projects.map(prj => prj.name) : [];
+    const subteam = memberSubteams && memberSubteams.length > 0 ? memberSubteams[0] : "";
 
     const terms = ["W", "F", "S"];
     const date = new Date();
@@ -57,7 +50,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         memberData.subteams ? (
                             <MemberSubtitle>
                                 { memberData && memberData.memberType && memberData.memberType.name || "Member" } on <BorderlessButton variant={ subteam && subteam.toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
-                                    { subteam}
+                                    {subteam}
                                 </BorderlessButton> team
                             </MemberSubtitle>
                         )
@@ -70,7 +63,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <Header5 mb={1}>Subteams</Header5>
                         <SubteamsContainer>
                             {
-                                memberSubteams.map((subteam, i) => <Button key={i} variant={subteam.name.toLowerCase()}>{subteam.name}</Button>)
+                                memberSubteams.map((subteam, i) => <Button key={i} variant={subteam.toLowerCase()}>{subteam}</Button>)
                             }
                         </SubteamsContainer>
                     </>}
@@ -79,15 +72,17 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <Header5 mb={1}>Projects</Header5>
                         <div css="display: flex; flex-direction: column;">
                             {
-                                memberProjects && memberProjects.map((project, i) => {
+                                memberProjects && memberProjects.length > 1 && memberProjects.slice(0, -1).map((project, i) => {
                                     return (
                                         <div key={i}>
-                                            {project.name + ((project.descriptions && project.descriptions.length > 0) ?
-                                                    " | " + project.descriptions.join(" • ") : "")
-                                            }
+                                            <span>{project}</span> <span>{' • '}</span>
                                         </div>
-                                    )
+                                    );
                                 })
+                            }
+                            {
+                                memberProjects && memberProjects.length > 0 
+                                && <div>{memberProjects[memberProjects.length - 1]}</div>
                             }
                         </div>
                     </>}

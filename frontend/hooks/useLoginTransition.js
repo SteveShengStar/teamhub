@@ -7,7 +7,7 @@ import anime from "animejs"
  * @param { () => void } onExit 
  * @returns { { visible: boolean, setVisible: (visible: boolean) => void, hide: (onFinish: () => void) => void, show: () => void, ref: HTMLElement }}
  */
-export default () => {
+const useLoginTransition = () => {
     const htmlRef = useRef(null);
 
     const [ anim, setAnim ] = useState(false);
@@ -53,3 +53,4 @@ export default () => {
         visible, setVisible, hide, show, ref: htmlRef
     }
 }
+export default useLoginTransition;

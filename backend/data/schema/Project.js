@@ -7,12 +7,7 @@ const ProjectSchema = new Schema({
     name: {
         type: String,
         required: true,
-    },
-    subteams: [{
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Subteam',
-    }],
+    }
 });
 
 ProjectSchema.plugin(uniqueValidator);

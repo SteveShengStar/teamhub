@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
+/frontend/styles/fontawesome/*
 
 # testing
 /coverage
@@ -23,6 +24,7 @@ process.yml
 .env*
 .idea
 constants.js
+
 
 # debug
 npm-debug.log*

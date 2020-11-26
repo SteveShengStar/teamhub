@@ -9,7 +9,7 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../store/reducers/userReducer';
 
-export default ({shouldHide, onFinish, loginRef}) => {
+const Login = ({shouldHide, onFinish, loginRef}) => {
     const dispatch = useDispatch()
     function responseGoogle(response) {
         if (response.error) return;
@@ -39,6 +39,7 @@ export default ({shouldHide, onFinish, loginRef}) => {
         </LoginCard>
     );
 };
+export default Login;
 
 const LoginCard = styled(Card)`
     position: relative;

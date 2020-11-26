@@ -25,7 +25,6 @@ const testMemberData1 = {
         'year': 2019,
         'season': 'Fall'
     },
-    'coopExp': [],
     'memberType': 'Newbie',
     'subteams': [
         'Software',
