@@ -36,7 +36,7 @@ module.exports = async (req, res) => {
 
                 // If the user changes their list of affiliated subteams, update their tasks accordintly
                 let payload = req.body.data;
-                if (payload.subteams) { 
+                /*if (payload.subteams) { 
                     const currentSubteamIDs = (await data.members.search({ _id: req.query.id }, {subteams: 1}))[0].subteams.map(st => st._id.toString());
                     // Translate the subteam names into subteam IDs
                     const newSubteamIDs = (await data.subteams.search( {name: payload.subteams }, {_id: 1})).map(st => st._id.toString());
@@ -86,7 +86,7 @@ module.exports = async (req, res) => {
                     //await data.members.updateMember({ _id: req.query.id, tasks: {$all: [ {$elemMatch: {"taskId": new ObjectID("5fb73d030e6264002db1073c"), "status": "irrelevant"}} ] }}, { $set: {"tasks.$.status" : "pending"}} );
                     await data.members.updateMember({ _id: req.query.id, $or: taskIDsToActivate.map(t => {return {"tasks._id": taskIDsToActivate}}) }, 
                                                     { $set: {"tasks.$.status" : "pending"}} );
-                }
+                }*/
 
                 return await data.members.updateMember({ _id: req.query.id }, payload);
             })));
