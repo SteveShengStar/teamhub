@@ -8,10 +8,10 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { useRouter } from 'next/router';
-import useRedirect from '../../frontend/hooks/useRedirect';
+import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-export default () => {
+const Name = () => {
     const router = useRouter()
     const { user, token,tempDisplayName } = useSelector(state => state.userState)
     const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default () => {
         
         // Persist the newly entered user information to the database
         updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
-            useRedirect(user, router)
+            useShouldRedirect(user, router)
         })
     }
 
@@ -45,3 +45,4 @@ export default () => {
         </>
     )
 };
+export default Name;

@@ -11,7 +11,7 @@ const members = {};
 /**
  * Return all members (and their associated information) from the database.
  */
-members.getAll = async (fields) => {
+members.getAll = async (fields, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
         if (fields) {
             const query = Member.find({}).select(fields);
@@ -24,20 +24,29 @@ members.getAll = async (fields) => {
             if (fields['memberType']) {
                 query.populate('memberType');
             }
-            if (fields['subteam']) {
-                query.populate('subteam');
+            if (fields['subteams']) {
+                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
             }
-            if (fields['project']) {
-                query.populate('project');
+            if (fields['projects']) {
+                query.populate('projects');
             }
             return (await query.exec());
         } else {
+            if (!returnSubteamTaskList) {
+                return (await (Member.find({})
+                    .populate('skills')
+                    .populate('interests')
+                    .populate('memberType')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
+                    .populate('projects')
+                    .exec()));
+            }
             return (await (Member.find({})
                 .populate('skills')
                 .populate('interests')
                 .populate('memberType')
-                .populate('subteam')
-                .populate('project')
+                .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
+                .populate('projects')
                 .exec()));
         }
     });
@@ -49,7 +58,7 @@ members.getAll = async (fields) => {
  * 
  * Return all members (and their associated information) that match the criteria specified in body.
  */
-members.search = async (body, fields, showToken = false) => {
+members.search = async (body, fields, showToken = false, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
         const searchByDisplayName = body ? body.displayName : null;
         if (searchByDisplayName) {
@@ -66,11 +75,14 @@ members.search = async (body, fields, showToken = false) => {
             if (fields['memberType']) {
                 query.populate('memberType');
             }
-            if (fields['subteam']) {
-                query.populate('subteam');
+            if (fields['subteams']) {
+                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
             }
-            if (fields['project']) {
-                query.populate('project');
+            if (fields['projects']) {
+                query.populate('projects');
+            }
+            if (fields['tasks']) {
+                query.populate('tasks');
             }
             if (showToken) {
                 query.select('+token');
@@ -89,8 +101,8 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteam')
-                    .populate('project')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
+                    .populate('projects')
                     .select('+token')
                     .exec());
             } else {
@@ -98,8 +110,8 @@ members.search = async (body, fields, showToken = false) => {
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
-                    .populate('subteam')
-                    .populate('project')
+                    .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
+                    .populate('projects')
                     .exec());
             }
             if (searchByDisplayName) {
@@ -112,6 +124,23 @@ members.search = async (body, fields, showToken = false) => {
     });
 };
 
+/**
+ * Assign a task to all members
+ * 
+ * filter: selection criteria for the member to assign the task to
+ * body: the details describing the new task
+ */
+members.assignTaskToAllMembers = async (filter, newTask) => {
+    return util.handleWrapper(async () => {
+        return await Member.updateMany( filter, { $push: { tasks: newTask }} );
+    });
+}
+
+/**
+ * Add a new member to the database
+ * 
+ * memberBody: details describing the new member
+ */
 members.add = async (memberBody) => {
     return util.handleWrapper(async () => {
         memberBody = await replaceBodyWithIds(memberBody);
@@ -119,17 +148,41 @@ members.add = async (memberBody) => {
     });
 };
 
+/**
+ * Delete members from the database
+ * 
+ * body: details that describe the members to be deleted
+ */
 members.delete = async (body) => {
     return util.handleWrapper(async () => {
         return (await Member.deleteMany(body).exec());
     });
 };
 
+/**
+ * Update data for a single member only
+ */
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
-        console.log(body);
-        return (await Member.update(filter, body).exec());
+        return (await Member.updateOne(filter, body).exec());
+    });
+};
+
+/**
+ * Update the status of a task for a single member
+ * 
+ * filter: selection criteria for the record to update -- Example) { _id: req.query.id, 
+ *                                                                   "tasks": {
+                                                                        "$elemMatch": {
+                                                                            "_id": req.body.taskId
+                                                                        }
+                                                                    }}, 
+ * body: contains the new status of the task           -- Exapmle) {"tasks.$.status": req.body.status}
+ */
+members.updateTaskStatus = async (filter, body) => {
+    return util.handleWrapper(async () => {
+        return (await Member.updateOne(filter, {"$set" : body}, { runValidators: true }).exec());
     });
 };
 
@@ -153,7 +206,7 @@ const replaceBodyWithIds = async (body) => {
     if (body.subteams) {
         if (Array.isArray(body.subteams)) {
             body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams);
-        } else {            
+        } else {
             throw Error('subteams field must be empty or an array.');
         }
     }
@@ -163,7 +216,7 @@ const replaceBodyWithIds = async (body) => {
     if (body.projects) {
         if (Array.isArray(body.projects)) {
             for (let i = 0; i < body.projects.length; i++) {
-                body.projects[i].project = await util.replaceNameWithId(body.projects[i].project, projects);
+                body.projects[i] = await util.replaceNameWithId(body.projects[i], projects);
             }
         } else {
             throw Error('projects field must be empty or an array.');

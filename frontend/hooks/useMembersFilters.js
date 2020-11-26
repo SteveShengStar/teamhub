@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default (options) => {
+const useMembersFilters = (options) => {
     const asObj = {};
     const names = Object.keys(options);
     names.forEach(value => asObj[value] = []);
@@ -21,3 +21,4 @@ export default (options) => {
         handleFilterChange,
     }
 }
+export default useMembersFilters;

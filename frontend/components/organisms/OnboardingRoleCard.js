@@ -15,7 +15,7 @@ const terms = {
     "W": "Winter"
 }
 
-export default ({
+const OnboardingRoleCard = ({
     selectedProjects, 
     selectedSubteams, 
     setSelectedProjects, 
@@ -80,33 +80,13 @@ export default ({
                                 isMulti
                                 options={projects ? projects.map(project => ({value: project.name, label: project.name})) : []}
                                 onChange={items => {
-                                    const difference = items ? items.filter(item => !selectedProjects.find(proj => proj[0] == item.value)).map(item => [item.value, []]) : [];
-                                    const intersection = selectedProjects.filter(project => items && items.find(it => it.value == project[0]))
+                                    const difference = items ? items.filter(item => !selectedProjects.find(proj => proj == item.value)).map(item => item.value) : [];
+                                    const intersection = selectedProjects.filter(project => items && items.find(it => it.value == project))
                                     setSelectedProjects([...intersection, ...difference])
                                 }}
-                                value={selectedProjects.map(item => ({value: item[0], label: item[0]}))}
+                                value={selectedProjects.map(item => ({value: item, label: item}))}
                             />
                         </SystemComponent>
-                        
-                        {
-                            selectedProjects.map((project, i) => {
-                                return (
-                                    <SystemComponent key={i}>
-                                        <FormTitleHeader>What do you do on {project[0]}?</FormTitleHeader>
-                                        <CreatableSelect 
-                                            isMulti
-                                            onChange={value => {
-                                                setSelectedProjects(selectedProjects.map((proj, index) => {
-                                                    if (i == index) return [proj[0], value ? value.map(val => val.label) : []];
-                                                    return proj;
-                                                }))
-                                            }}
-                                            value={selectedProjects[i][1].map(val => ({value: val, label: val}))}
-                                        />
-                                    </SystemComponent>
-                                )
-                            })
-                        }
                     </FlexColumn>
                     <ContinueButton onClick={submit}>Continue</ContinueButton>
                 </div>
@@ -114,6 +94,7 @@ export default ({
         </>
     )
 }
+export default OnboardingRoleCard;
 
 const FormTitleHeader = styled(Header4)`
     margin: 25px 0 3px 0;

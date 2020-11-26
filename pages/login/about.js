@@ -13,7 +13,7 @@ import useLoginController from "../../frontend/hooks/useLoginController";
 import LoadingModal from "../../frontend/components/atoms/LoadingModal";
 import { getFilters } from "../../frontend/store/reducers/membersReducer";
 
-export default () => {
+const About = () => {
   const { user, token, hydrated } = useSelector(state => state.userState);
   const { filters } = useSelector(state => state.membersState);
   const [birthday, setBirthday] = useState(user && user.birthday ? [user.birthday.month || 0, user.birthday.day || 1, user.birthday.year || 2000] : [0,1,2000]);
@@ -29,10 +29,10 @@ export default () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (token && !filters.projects) {
-        getFilters(dispatch, token, router)
-    }
-}, [hydrated])
+      if (token && !filters.projects) {
+          getFilters(dispatch, token, router)
+      }
+  }, [hydrated])
 
 
   const loginTransition = useLoginTransition()
@@ -94,6 +94,7 @@ export default () => {
     </>
   )
 };
+export default About;
 
 const Row = styled.div`
     position: fixed;

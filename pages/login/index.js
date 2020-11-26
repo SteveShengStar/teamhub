@@ -8,7 +8,7 @@ import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import api from '../../frontend/store/api';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { UserTypes } from '../../frontend/store/reducers/userReducer';
-import useRedirect from '../../frontend/hooks/useRedirect';
+import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 import { ThemeContext } from 'styled-components';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
@@ -18,7 +18,7 @@ export default () => {
     const theme = useContext(ThemeContext);
     const router = useRouter();
     const dispatch = useDispatch()
-    const loginTransition = useLoginTransition()   // The animation that will play when moving to the next page of the signup form
+    const loginTransition = useLoginTransition()
     useLoginController(loginTransition, dispatch, router.pathname)
 
     return (
@@ -31,7 +31,7 @@ export default () => {
                         }} 
                         onFinish={(user) => {
                             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
-                            useRedirect(user, router)
+                            useShouldRedirect(user, router)
                         }} 
                     />
                 </LoginTransition>

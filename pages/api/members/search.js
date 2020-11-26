@@ -1,25 +1,27 @@
 const data = require('../../../backend/data/index.js');
-const Cors = require('cors');
-
-
-const cors = Cors({
-    methods: ['POST', 'HEAD']
-});
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    await data.util.runCORSMiddlewareHelper(req, res, cors);
-
     if (req.method === 'POST') {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
-            res.statusCode = 200;
+
+            if (await data.util.checkIsEmptyBody(req.body)) {
+                res.statusCode = 400;
+                res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                    throw Error('body must be present in request.');
+                })));
+                return;
+            }
             if (!req.body.options) {
+                res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('options field must be specified in body.');
                 })));
+                return;
             }
+            res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 let fields = null;
                 if (req.body.fields) {

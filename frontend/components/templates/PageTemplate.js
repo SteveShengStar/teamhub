@@ -44,6 +44,7 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
           overflow={["auto", "auto", "visible"]}
           alignItems={"stretch"}
           bg="greys.0"
+          overflow="hidden"
         >
           {/*myHubHidden ? null : <MyHub />*/}
           <PageTemplateGridLayout

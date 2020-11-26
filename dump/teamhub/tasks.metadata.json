@@ -1,0 +1,5 @@
+{   
+    "title": "Roster",
+    "description": "Add yourself to the Roster",
+    "subteams": [ObjectId("5e62f488f0a94e3bb2b4863d"), ObjectId("5e62f41ef0a94e3bb2b48638"), ObjectId("5e62f428f0a94e3bb2b48639"), ObjectId("5e62f42ef0a94e3bb2b4863a")]
+}

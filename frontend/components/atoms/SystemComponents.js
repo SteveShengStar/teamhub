@@ -33,6 +33,7 @@ export const SystemButton = styled.button(composition);
 export const SystemImage = styled.img(composition);
 export const SystemLabel = styled.label(composition);
 export const SystemInput = styled.input(composition);
+export const SystemTextArea = styled.textarea(composition);
 export const SystemNav = styled.nav(composition);
 export const SystemSvg = styled.svg(composition);
 
