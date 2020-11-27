@@ -165,6 +165,10 @@ members.delete = async (body) => {
 members.updateMember = async (filter, body) => {
     return util.handleWrapper(async () => {
         body = await replaceBodyWithIds(body);
+        console.log("Body")
+        console.log(body);
+        console.log("Filter")
+        console.log(filter);
         return (await Member.updateOne(filter, body).exec());
     });
 };
