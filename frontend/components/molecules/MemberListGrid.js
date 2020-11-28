@@ -14,6 +14,16 @@ import { useSelector } from 'react-redux';
 
 const terms = ["W", "S", "F"]
 
+const MembersListHeader = (props) => {
+    const {text, ...styleProps} = props;
+
+    return (
+        <Header4 {...styleProps}>
+            {text}
+        </Header4>
+    );
+}
+
 const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetchedMembers}) => {
     const { subteams } = useSelector(state => state.membersState.filters);
     const memberSubteams = memberData.subteams && memberData.subteams.map(value => subteams.find(subteam => subteam._id == value));
@@ -68,10 +78,13 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
 
                     <br/><br/>
 
-                    <Header4 mb={3} ml={20} mt={20}>
-                        Team Members -
-                    </Header4>
-                
+                    <MembersListHeader 
+                        text="Team Members"
+                        mb={3} 
+                        ml={20} 
+                        mt={20}
+                    />
+                    
                     {
                         members && members.map((member, i) => 
                         // (
