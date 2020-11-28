@@ -162,15 +162,26 @@ members.delete = async (body) => {
 /**
  * Update data for a single member only
  */
-members.updateMember = async (filter, body) => {
-    return util.handleWrapper(async () => {
-        body = await replaceBodyWithIds(body);
-        console.log("Body")
-        console.log(body);
-        console.log("Filter")
-        console.log(filter);
-        return (await Member.updateOne(filter, body).exec());
-    });
+members.updateMember = async (filter, body, options) => {
+    if (options) {
+        return util.handleWrapper(async () => {
+            body = await replaceBodyWithIds(body);
+            console.log("Body")
+            console.log(body);
+            console.log("Filter")
+            console.log(filter);
+            return (await Member.updateOne(filter, body, options).exec());
+        });
+    } else {
+        return util.handleWrapper(async () => {
+            body = await replaceBodyWithIds(body);
+            console.log("Body")
+            console.log(body);
+            console.log("Filter")
+            console.log(filter);
+            return (await Member.updateOne(filter, body).exec());
+        });
+    }
 };
 
 /**
