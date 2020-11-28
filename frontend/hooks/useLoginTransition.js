@@ -27,9 +27,9 @@ const useLoginTransition = () => {
                 ],
                 duration: 500,
                 easing: "easeInOutQuad"
-            })
+            });
         }
-    }, [anim])
+    }, [anim]);
 
     function hide(onFinish) {
         if (htmlRef && htmlRef.current) {
@@ -39,15 +39,13 @@ const useLoginTransition = () => {
                 duration: 0
             }).finished.then(() => {
                 onFinish && onFinish()
-            })
+            });
         }
     }
 
     const show = () => {
         if (!anim) setAnim(true)
     }
-
-    
 
     return {
         visible, setVisible, hide, show, ref: htmlRef
