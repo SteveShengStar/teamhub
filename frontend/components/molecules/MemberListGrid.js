@@ -15,9 +15,7 @@ const MembersListHeader = (props) => {
 
     return (
         <SystemComponent {...styleProps}>
-            <Header4>
-                {text}
-            </Header4>
+            <Header4>{text}</Header4>
         </SystemComponent>
     );
 }
@@ -37,11 +35,12 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
         <>
             <GhostLoader>
                 <Container className={className}>
+
                     <MembersListHeader 
-                        text={`Team Leads - ${memberSubteams == null ? "" : memberSubteams[0].name}`}
-                        mb={3} 
+                        text="Your Team Leads"
+                        mb={2} 
                         ml={0} 
-                        mt={3}
+                        mt={2}
                     />
                     {fetchedMembers ? (
                         <SystemComponent
@@ -50,10 +49,10 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
                             gridAutoRows="min-content"
                             alignItems="start"
                             gridGap={4}
-                            overflowY="auto"
                         >
                         {
-                            members && members.map((member, i) => 
+                            members && members.filter(member => member.memberType && ((member.memberType.name === "Subteam Lead") || (member.memberType.name === "Technical Director")))
+                                .map((member, i) => 
                                 <MemberPreviewComponent 
                                     key={i}
                                     name={`${member.name.display || member.name.first + " " + member.name.last}`}
@@ -68,7 +67,7 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
                         }
                         </SystemComponent>
                         ) : (
-                        <SystemComponent
+                        <SystemComponent        // Ghost loading overlay component
                             display="grid"
                             gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
                             gridAutoRows="min-content"
@@ -77,12 +76,60 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
                             ref={animRef}
                         >
                             {
-                                [...Array(18)].map((_, i) =>
+                                [...Array(3)].map((_, i) =>
                                     <MemberGhostPreviewComponent key={i} visible={!fetchedMembers}/>
                                 )
                             }
                         </SystemComponent>
                     )}
+
+                    <MembersListHeader 
+                        text="Your Teammates"
+                        mb={2} 
+                        ml={0} 
+                        mt={4}
+                    />
+                    {fetchedMembers ? (
+                        <SystemComponent
+                            display="grid"
+                            gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+                            gridAutoRows="min-content"
+                            alignItems="start"
+                            gridGap={4}
+                        >
+                        {
+                            members && members.filter(member => !member.memberType || member.memberType.name === "Member")
+                                .map((member, i) => 
+                                <MemberPreviewComponent 
+                                    key={i}
+                                    name={`${member.name.display || member.name.first + " " + member.name.last}`}
+                                    subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
+                                    role={member.memberType ? member.memberType.name : ''}
+                                    term={member.stream && member.stream.currentSchoolTerm || ""}
+                                    isOnStream={member.stream && member.stream.coopStream[code]}
+                                    onClick={() => onSelect(member._id)}
+                                    imageUrl={member.imageUrl} 
+                                />
+                            )
+                        }
+                        </SystemComponent>
+                        ) : (  
+                        <SystemComponent    // Ghost loading overlay component
+                            display="grid"
+                            gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+                            gridAutoRows="min-content"
+                            alignItems="start"
+                            gridGap={4}
+                            ref={animRef}
+                        >
+                            {
+                                [...Array(12)].map((_, i) =>
+                                    <MemberGhostPreviewComponent key={i} visible={!fetchedMembers}/>
+                                )
+                            }
+                        </SystemComponent>
+                    )}
+
                 </Container>
             </GhostLoader>
         </>
