@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path')
 
 let config = {};
 
+console.log(`Found env: ${process.env.TEAMHUB_ENV}`);
+
 if (process.env.TEAMHUB_ENV === 'testing') {
     // Different connection string required for unit tests
-    config = require('./config.tests.json');
+    config.url = process.env.MONGO_URL;
 } else if (process.env.TEAMHUB_ENV === 'production') {
     config.url = process.env.MONGO_URL;
 } else {
-    config = require('./config.json');
+    config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.json')));
 }
 
 const data = {};
@@ -29,7 +33,7 @@ data.init = async () => {
     await mongoose.connect(config.url, {
         useCreateIndex: true,
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
     });
 
     data.connected = true;
