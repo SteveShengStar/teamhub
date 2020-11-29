@@ -121,7 +121,6 @@ const FlexColumn = styled(SystemComponent)`
     display: flex;
     flex-direction: column;
     ${props => props.theme.mediaQueries.tablet} {
-        overflow: scroll;
         padding: 0 0 20px 0;
     }
 `
