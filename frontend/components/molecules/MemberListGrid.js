@@ -36,10 +36,7 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
     return (
         <>
             <GhostLoader>
-                <Container
-                    overflowY={["auto", "auto", "scroll"]}
-                    className={className}
-                >
+                <Container className={className}>
                     <MembersListHeader 
                         text={`Team Leads - ${memberSubteams == null ? "" : memberSubteams[0].name}`}
                         mb={3} 
@@ -53,6 +50,7 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
                             gridAutoRows="min-content"
                             alignItems="start"
                             gridGap={4}
+                            overflowY="auto"
                         >
                         {
                             members && members.map((member, i) => 
@@ -76,9 +74,8 @@ const MemberListGrid = ({memberData, members, onSelect, className, animRef, fetc
                             gridAutoRows="min-content"
                             alignItems="start"
                             gridGap={4}
-                            overflowY={["auto", "auto", "scroll"]} 
                             ref={animRef}
-                            >
+                        >
                             {
                                 [...Array(18)].map((_, i) =>
                                     <MemberGhostPreviewComponent key={i} visible={!fetchedMembers}/>

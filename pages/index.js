@@ -26,16 +26,15 @@ const Home = () => {
     const [ searchQuery, setSearchQuery ] = useState({})
     const memberCardRef = useRef();
 
-    
-    // token: user authentication token. 
+    // token:    user authentication token. 
     // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
-    const { token, hydrated } = useSelector(state => state.userState);
+    const { token, hydrated, user: {subteams} } = useSelector(state => state.userState);
     const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState)
 
+  
 
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
-
         // If browser width is narrow (tablet/mobile phone), transition to a new url which shows the member's profile
         // If browser width is wide (laptop/PC), display the member's profile on the same page (use the same url)
         if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
@@ -71,21 +70,12 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (filters.projects && !fetchingData) {
-            // TODO: Must fix.
-            // Update the list of members based on the search bar's query
-            searchMembers(dispatch, token, searchQuery, router)
-        }
-    }, [searchQuery])   /* searchQuery: Object containing the text in the search bar
-                                        {display: [text-in-search-bar]} */
-
-    useEffect(() => {
         if (hydrated && !fetchingData) {
             getFilters(dispatch, token, router).then(success => {
-                if (success) searchMembers(dispatch, token, searchQuery, router)
-            })
+                if (success) searchMembers(dispatch, token, {subteams: {"$in": subteams.map(st => st._id)}}, router)
+            });
         }
-    }, [hydrated])      /* hydrated: set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
+    }, [hydrated]);      /* hydrated: set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
 
     useEffect(() => {
         if (selectedMember._id) {
@@ -97,9 +87,17 @@ const Home = () => {
                 duration: 200
             })
         }
-    }, [selectedMember])
+    }, [selectedMember]);
 
-    
+    // TODO: Must fix.
+    // Update the list of members based on the search bar's query
+    /*useEffect(() => {
+        if (filters.projects && !fetchingData) {
+            searchMembers(dispatch, token, searchQuery, router)
+        }
+    }, [searchQuery])*/   /* searchQuery: Object containing the text in the search bar
+                                        {display: [text-in-search-bar]} */
+
     return (
         <PageTemplate title="Explore">
             <SystemComponent
@@ -114,7 +112,7 @@ const Home = () => {
                 <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery} hide={() => setModalVisible(false)}/>
                 <MembersListCard
                     display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
-                    overflowY={["auto", "auto", "scroll"]}
+                    overflowY="auto"
                     overflowX="hidden"
                     position={["relative", "relative", "relative"]}
                     memberData={selectedMember}
