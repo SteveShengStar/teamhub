@@ -70,14 +70,13 @@ const Home = () => {
         setSearchQuery({...normalized, display: searchQuery.display })
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (filters.projects && !fetchingData) {
             // TODO: Must fix.
             // Update the list of members based on the search bar's query
             searchMembers(dispatch, token, searchQuery, router)
         }
-    }, [searchQuery])   /* searchQuery: Object containing the text in the search bar
-                                        {display: [text-in-search-bar]} */
+    }, [searchQuery])*/
 
     useEffect(() => {
         if (hydrated && !fetchingData) {

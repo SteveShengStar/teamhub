@@ -1,12 +1,12 @@
 const data = require('../../../../backend/data/index');
 const ObjectID = require('mongodb').ObjectID;
 import {difference, intersection, union} from 'lodash';
-import { SSL_OP_TLS_BLOCK_PADDING_BUG } from 'constants';
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'PUT') {
-        const authStatus = true;//await data.auth.checkSpecificUser(req.headers['authorization'], req.query.id, res);
+        //const authStatus = await data.auth.checkSpecificUser(req.headers['authorization'], req.query.id, res);
+        const authStatus = true;
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 
@@ -62,7 +62,6 @@ module.exports = async (req, res) => {
                         const irrelevantTasks = irrelevantTaskIDs.map(t => { return {taskId: t, status: 'irrelevant'}});
 
                         await data.members.updateMember({ _id: req.query.id }, {$push: {tasks: tasksForJoiningSubteams.concat(irrelevantTasks)}});
-                        return;
                     } else {
                         // Logic for existing users
                         const subteamsToLeave = difference(currentSubteamIDs, newSubteamIDs); 
@@ -94,27 +93,26 @@ module.exports = async (req, res) => {
                         const taskIDsToDeactivate = difference( difference(tasksForLeavingSubteams, tasksForStayingSubteams), taskIDsToActivate );
                         
 
-
                         // console.log(tasksForStayingSubteams);
                         // console.log(tasksForLeavingSubteams);
+                        // console.log("Tasks to Exclude");
+                        // console.log(taskIDsToDeactivate);
 
-                        console.log("Tasks to Exclude");
-                        console.log(taskIDsToDeactivate);
-                        await data.members.updateMember({ _id: req.query.id, "tasks.taskId": {$in: taskIDsToDeactivate} }, 
-                                                        { $set: {"tasks.$.status" : "irrelevant"}} );
 
                         // For subteams that user is entering into, set the previously "irrelevant" tasks to "pending" status
-                        
-                        console.log("Teams newly joined");
-                        console.log(tasksForJoiningSubteams);
+                        await data.members.updateMember({ _id: req.query.id, "tasks.taskId": {$in: taskIDsToDeactivate} }, 
+                                                        { $set: {'tasks.$[t].status' : "irrelevant"}},
+                                                        { arrayFilters: [{ "t.taskId": {  $in: taskIDsToDeactivate.map(t => new ObjectID(t)) } }] } );
 
-                        console.log("Tasks to Activate");
-                        console.log(taskIDsToActivate);
-                        //await data.members.updateMember({ _id: req.query.id, tasks: {$all: [ {$elemMatch: {"taskId": new ObjectID("5fb73d030e6264002db1073c"), "status": "irrelevant"}} ] }}, { $set: {"tasks.$.status" : "pending"}} );
-                        await data.members.updateMember({ _id: req.query.id }, 
+                        
+                        // console.log("Teams newly joined");
+                        // console.log(tasksForJoiningSubteams);
+                        // console.log("Tasks to Activate");
+                        // console.log(taskIDsToActivate);
+                        await data.members.updateMember({ _id: req.query.id, "tasks.taskId": {$in: taskIDsToActivate} }, 
                                                         { $set: {'tasks.$[t].status' : "pending"}},
                                                         { arrayFilters: [{ "t.taskId": {  $in: taskIDsToActivate.map(t => new ObjectID(t)) } }] } );
-                        console.log("Done");
+                        //console.log("Done");
                     }
                 }
 
