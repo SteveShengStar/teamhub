@@ -18,7 +18,7 @@ export function getAll(token, options = {isSSR: true}, dispatch, router) {
     },
     body: JSON.stringify({
       options,
-      fields: ["name", "subteams", "memberType", "imageUrl", "stream"]
+      fields: ["name", "subteams", "memberType", "imageUrl", "stream", "email"]
     })
   }, dispatch, router)
 }

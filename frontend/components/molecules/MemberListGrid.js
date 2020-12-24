@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
 
 import { SystemComponent } from '../atoms/SystemComponents';
@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 
 const terms = ["W", "S", "F"]
 
-const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers}) => {
+const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, selectedMembers}) => {
     const { subteams } = useSelector(state => state.membersState.filters);
     const normalizedSubteams = subteams && subteams.reduce((accum, subteam) => {
         return { ...accum, [subteam._id]: subteam }
@@ -17,6 +17,11 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers})
 
     const date = new Date();
     const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
+
+    const isMemberSelected = (member) => {
+        return selectedMembers.includes(member._id);
+    }
+
     return (
         <>
             <GhostLoader>
@@ -40,6 +45,7 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers})
                                 isOnStream={member.stream && member.stream.coopStream[code]}
                                 onClick={() => onSelect(member._id)}
                                 imageUrl={member.imageUrl}
+                                isSelected={isMemberSelected(member)}
                             />
                         )
                     }

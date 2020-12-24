@@ -15,6 +15,9 @@ import { searchMembers, lookupMember, getFilters, DataFetchType } from '../front
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
+import { getUserId, startGroupConversation } from "./api/slack";
+import { constants } from "../constants";
+
 const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -29,29 +32,45 @@ const Home = () => {
     
     // token: user authentication token. 
     // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
-    const { token, hydrated } = useSelector(state => state.userState);
-    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState)
-
+    const { token, hydrated, user } = useSelector(state => state.userState);
+    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
+    
+    // Group selection 
+    const [selectedMembers, setSelectedMembers] = useState([]);
+    const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
 
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
 
-        // If browser width is narrow (tablet/mobile phone), transition to a new url which shows the member's profile
-        // If browser width is wide (laptop/PC), display the member's profile on the same page (use the same url)
-        if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
-            router.push(`/members/${id}`);
-            return
-        }
-        if (loadedMembers[id]) {
-            // As soon as the member identified by "id" is set as the selected member in the Redux store, 
-            // then the profile of that member (identified by "id") is displayed on the website
-            dispatch({
-                type: "SET_SELECTED_MEMBER",
-                payload: loadedMembers[id]
-            })
-            return
-        }
-        lookupMember(dispatch, token, id, router);
+      if (isSelectionEnabled && id !== user._id) {
+          const index = selectedMembers.indexOf(id);
+          if(index == -1) {
+            // Add id to selected members
+            setSelectedMembers([...selectedMembers, id]); 
+          } else {
+            // Remove id from selected members
+            selectedMembers.splice(index, 1);
+            setSelectedMembers([...selectedMembers]);
+          }
+      }
+ 
+      // If browser width is narrow (tablet/mobile phone), transition to a new url which shows the member's profile
+      // If browser width is wide (laptop/PC), display the member's profile on the same page (use the same url)
+      if (window.innerWidth < theme.breakpoints[1].slice(0, -2)) {
+        router.push(`/members/${id}`);
+        return;
+      }
+      if (loadedMembers[id]) {
+        // As soon as the member identified by "id" is set as the selected member in the Redux store,
+        // then the profile of that member (identified by "id") is displayed on the website
+        dispatch({
+          type: "SET_SELECTED_MEMBER",
+          payload: loadedMembers[id]
+        });
+        return;
+      }
+
+      lookupMember(dispatch, token, id, router);
     };
 
     const updateSearchQuery = (input) => {
@@ -98,57 +117,142 @@ const Home = () => {
         }
     }, [selectedMember])
 
-    
+    const getEmails = () => {
+        const emails = [];
+
+        // Get the email of each user
+        selectedMembers.forEach(id => {
+            const email = members.find(({ _id }) => _id === id).email;
+            if(email) emails.push(email);
+        });
+
+        return emails;
+    }
+
+    const generateGroupEmail = () => {
+        const emails = getEmails();
+        const filteredEmails = emails.filter((email) => email !== user.email);
+
+        // Generate Gmail mailto link
+        const concatenatedEmails = filteredEmails.join(';'); 
+        const link = `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${concatenatedEmails}`;
+        window.open(link);
+    }
+
+    const generateSlackGroup = async () => {
+      const emails = getEmails();
+      const slackIds = [];
+
+      for(const email of emails) {
+        const slackId = await getUserId(email);
+        slackIds.push(slackId);
+      }
+      
+      const slackIdsStr = slackIds.join();
+      const { channel } = await startGroupConversation(slackIdsStr);
+      window.open(`slack://channel?team=${constants.TEAM_ID}&id=${channel.id}`);
+    }
+
+    const cancelGroupSelection = () => {
+      setIsSelectionEnabled(false);
+      setSelectedMembers([]);
+    }
+
+    const enableGroupSelection = () => {
+      setIsSelectionEnabled(true);
+      setSelectedMembers([user._id]);
+    }
+
     return (
-        <PageTemplate title="Explore">
+      <PageTemplate title="Explore">
+        <SystemComponent
+          position="relative"
+          overflow={["auto", "auto", "auto", "visible"]}
+          overflowX={"hidden"}
+          gridGap={["cardMarginSmall", "cardMarginSmall", "cardMarginSmall", "cardMargin"]}
+          display={["block", "block", "block", "grid"]}
+          gridTemplateRows="auto auto"
+          gridTemplateColumns="auto 1fr"
+        >
+          <MembersFilterModal
+            visible={modalVisible}
+            filters={filters}
+            updateSearchQuery={updateSearchQuery}
+            hide={() => setModalVisible(false)}
+          />
+          <MembersListCard
+            display="grid"
+            gridTemplateColumns="1fr"
+            gridTemplateRows="auto auto 1fr"
+            gridRow={"1/3"}
+            overflowY={["auto", "auto", "scroll"]}
+            overflowX="hidden"
+            position={["relative", "relative", "relative"]}
+            memberData={selectedMember}
+          >
             <SystemComponent
-                position="relative"
-                overflow={["auto", "auto", "visible"]}
-                overflowX={"hidden"}
-                gridGap={["cardMarginSmall", "cardMarginSmall", "cardMargin"]}
-                display={["block", "block", "grid"]}
-                gridTemplateRows="auto auto"
-                gridTemplateColumns="auto 1fr"
+              display="flex"
+              justifyContent="space-between"
+              alignItems="flex-start"
+              pb={10}
             >
-                <MembersFilterModal visible={modalVisible} filters={filters} updateSearchQuery={updateSearchQuery} hide={() => setModalVisible(false)}/>
-                <MembersListCard
-                    display="grid" gridTemplateColumns="1fr" gridTemplateRows="auto auto 1fr" gridRow={"1/3"}
-                    overflowY={["auto", "auto", "scroll"]}
-                    overflowX="hidden"
-                    position={["relative", "relative", "relative"]}
-                    memberData={selectedMember}
-                >
-                    <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start" pb={10}>
-                        <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
-                        <Button 
-                            display={"block"}
-                            onClick={() => setModalVisible(!modalVisible)}
-                        >
-                            Edit Filters
-                        </Button>
-                    </SystemComponent>
-                    <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
-                    <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
-                </MembersListCard>
-                <MemberCard 
-                    animRef={memberCardRef}
-                    memberData={selectedMember}
-                    onClose={() => {
-                        anime({ // Make the member profile card slide out of view
-                            targets: memberCardRef.current,
-                            translateX: "110%",
-                            easing: "easeOutQuad",
-                            duration: 200
-                        }).finished.then(() => {
-                            dispatch({
-                                type: "SET_SELECTED_MEMBER",
-                                payload: {}
-                            })
-                        })
-                    }}
-                />
+              <Header3 style={{ transformOrigin: "left" }}>Members</Header3>
+              <SystemComponent
+                display="flex"
+                justifyContent="space-between"
+                alignItems="flex-start"
+                width={isSelectionEnabled ? "475px" : "225px"}
+              >
+                {isSelectionEnabled ? (
+                  <>
+                    <OptionButton onClick={generateGroupEmail}>
+                      Email
+                    </OptionButton>
+                    <OptionButton onClick={generateSlackGroup}>
+                      Slack DM
+                    </OptionButton>
+                    <CancelButton onClick={cancelGroupSelection}>
+                      Cancel
+                    </CancelButton>
+                  </>
+                ) : (
+                  <OptionButton onClick={enableGroupSelection}>
+                    Select
+                  </OptionButton>
+                )}
+                <OptionButton onClick={() => setModalVisible(!modalVisible)}>
+                  Edit Filters
+                </OptionButton>
+              </SystemComponent>
             </SystemComponent>
-        </PageTemplate>
+            <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery} />
+            <MemberListGrid
+              members={members}
+              onSelect={onSelectMember}
+              fetchedMembers={fetchedMembers}
+              selectedMembers={selectedMembers}
+            />
+          </MembersListCard>
+          <MemberCard
+            animRef={memberCardRef}
+            memberData={selectedMember}
+            onClose={() => {
+              anime({
+                // Make the member profile card slide out of view
+                targets: memberCardRef.current,
+                translateX: "110%",
+                easing: "easeOutQuad",
+                duration: 200
+              }).finished.then(() => {
+                dispatch({
+                  type: "SET_SELECTED_MEMBER",
+                  payload: {}
+                });
+              });
+            }}
+          />
+        </SystemComponent>
+      </PageTemplate>
     );
 };
 
@@ -186,4 +290,13 @@ const MemberCard = styled(MemberInfoCard)`
         transform: translateX(110%);
         grid-row: 1/3;
     }
+`;
+
+const OptionButton = styled(Button)`
+  display: block;
+  width: 100px;
+`;
+
+const CancelButton = styled(OptionButton)`
+  background-color: ${({ theme }) => theme.colors.alertAction};
 `;
