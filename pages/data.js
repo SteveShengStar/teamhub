@@ -26,6 +26,26 @@ const data = [
   },
   {
     key: 2,
+    title: "Explore Google Drive",
+    body: (
+      <ol>
+        <li>
+          Visit <a href="http://wloop.ca/drive">wloop.ca/drive</a>
+        </li>
+        <li>Read through these documents as the term progresses</li>
+      </ol>
+    ),
+    docItems: ["New Member Onboarding Manual", "BMS Design Documentation"],
+    completed: false
+  },
+  {
+    key: 3,
+    title: "Get access to Github",
+    body: "github",
+    completed: false
+  },
+  {
+    key: 4,
     title: "Stay connected with us",
     body: (
       <div>
@@ -58,11 +78,12 @@ const data = [
     completed: false
   },
   {
-    key: 3,
+    key: 5,
     title: "Read the GSuite documment",
     body: (
       <div>
         Link here: <a href="http://wloop.ca/gsuite">GSuite</a>
+        <br></br>
         You’re responsible for knowing all of it, so ask @emrys if you have any questions.
       </div>
     ),
