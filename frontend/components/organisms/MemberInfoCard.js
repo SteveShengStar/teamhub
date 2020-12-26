@@ -13,7 +13,6 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
-import { useSelector } from 'react-redux';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
@@ -29,17 +28,16 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
     return (
         <InfoCard className={className} ref={animRef}>
-            <Header3 mb={3} ml={20} mt={20}>Member</Header3>
-            <Button 
-                alignSelf="start"
-                justifySelf="end"
-                onClick={onClose}
-                gridColumn={2/3}
-                mr={20}
-                mt={20}
-            >
-                Close
-            </Button>
+            <SystemComponent pl={[0, 0, 20]} pr={[0, 0, 20]} pt={[0, 0, 20]} pb={0} display="flex" justifyContent="space-between" gridColumn="1/-1">
+                <Header3>Member</Header3>
+                <Button 
+                    alignSelf="start"
+                    justifySelf="end"
+                    onClick={onClose}
+                >
+                    Close
+                </Button>
+            </SystemComponent>
 
             <ContentContainer>
                 <LeftColumn>
@@ -136,7 +134,6 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
         </InfoCard>
     );
 };
-
 export default MemberInfoCard;
 
 /**

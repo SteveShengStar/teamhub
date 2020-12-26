@@ -25,8 +25,6 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
       </Head>
       <Image
         variant="background"
-        //src="/static/background.png"
-        //alt="background"
         position="fixed"
         left={0}
         right={0}
@@ -41,10 +39,10 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
           left={0}
           right={0}
           bottom={0}
-          overflow={["auto", "auto", "visible"]}
           alignItems={"stretch"}
           bg="greys.0"
-          overflow="hidden"
+          overflowX="hidden"
+          overflowY="auto"
         >
           {/*myHubHidden ? null : <MyHub />*/}
           <PageTemplateGridLayout

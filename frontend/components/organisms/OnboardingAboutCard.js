@@ -31,7 +31,7 @@ const programs = ["Computer Science", "Mathematics", "Mechanical Engineering",
 "Electrical Engineering", "Software Engineering", "Computer Engineering", "Mechatronics Engineering", "Systems Design Engineering",
 "Management Engineering", "Physics", "AFM", "CFM"]
 
-const terms = ["F19", "W20", "S20", "F20", "W21", "S21", "F21", "W22", "S22", "F22", "W23", "S23", "F23", "W24", "S24", "F24"]
+const terms = ["W21", "S21", "F21"]
 
 const OnboardingAboutCard = ({values, setValues, submit}) => {
   const { interests, skills, years } = useSelector(state => state.membersState.filters)

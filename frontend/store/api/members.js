@@ -7,7 +7,6 @@ import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
  * @returns {Promise<{name: string, subteam: string, role: string, imageUrl: string}[]>} members
  */
 export function getAll(token, options = {isSSR: true}, dispatch, router) {
-  let ssr = options.isSSR
   if (options) {
     delete options.isSSR;
   }
@@ -18,7 +17,7 @@ export function getAll(token, options = {isSSR: true}, dispatch, router) {
     },
     body: JSON.stringify({
       options,
-      fields: ["name", "subteams", "memberType", "imageUrl", "stream", "email"]
+      fields: ["name", "subteams", "memberType", "imageUrl", "stream"],
     })
   }, dispatch, router)
 }
