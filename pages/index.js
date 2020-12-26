@@ -170,8 +170,8 @@ const Home = () => {
       <PageTemplate title="Explore">
         <SystemComponent
           position="relative"
-          overflowY={["auto", "auto", "auto", "visible"]}
-          overflowX={"hidden"}
+          overflowY="hidden"
+          overflowX="hidden"
           gridGap={["cardMarginSmall", "cardMarginSmall", "cardMarginSmall", "cardMargin"]}
           display={["block", "block", "grid", "grid"]}
           gridTemplateRows="auto auto"
@@ -256,6 +256,7 @@ const MembersListCard = styled(Card)`
         height: auto;
         transform: none;
         width: 300px;
+        padding: 20px;
     }
 
     ${props => props.theme.mediaQueries.smallDesktop} {
@@ -277,6 +278,7 @@ const MemberCard = styled(MemberInfoCard)`
         transition: all 0.2s ease-in-out;
         transform: translateX(110%);
         grid-row: 1/3;
+        overflow-y: auto;
     }
 `;
 
