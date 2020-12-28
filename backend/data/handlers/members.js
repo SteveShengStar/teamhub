@@ -166,20 +166,29 @@ members.updateMember = async (filter, body, options) => {
     if (options) {
         return util.handleWrapper(async () => {
             body = await replaceBodyWithIds(body);
-            console.log("Body")
-            console.log(body);
-            console.log("Filter")
-            console.log(filter);
             return (await Member.updateOne(filter, body, options).exec());
         });
     } else {
         return util.handleWrapper(async () => {
             body = await replaceBodyWithIds(body);
-            console.log("Body")
-            console.log(body);
-            console.log("Filter")
-            console.log(filter);
             return (await Member.updateOne(filter, body).exec());
+        });
+    }
+};
+
+/**
+ * Update data for all members
+ */
+members.updateAllMembers = async (body, options) => {
+    if (options) {
+        return util.handleWrapper(async () => {
+            body = await replaceBodyWithIds(body);
+            return (await Member.updateMany({}, body, options).exec());
+        });
+    } else {
+        return util.handleWrapper(async () => {
+            body = await replaceBodyWithIds(body);
+            return (await Member.updateMany({}, body).exec());
         });
     }
 };

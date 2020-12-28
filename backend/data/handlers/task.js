@@ -23,7 +23,6 @@ task.getAll = async () => {
  */
 task.get = async (userId, status) => {
     return util.handleWrapper(async () => {
-
         const filter = status ? {_id: new ObjectID(userId), "tasks.status": status} : {_id: new ObjectID(userId)};
 
         const query = Member.find(filter)
@@ -44,6 +43,19 @@ task.get = async (userId, status) => {
 task.add = async (body) => {
     return util.handleWrapper(async () => {
         return (await Task.create(body));
+    });
+};
+
+
+/**
+ * Delete a task from the Tasks collection/table
+ * 
+ * taskId: ID of the task to remove
+ */
+task.delete = async (taskId) => {
+    return util.handleWrapper(async () => {
+        const query = Task.remove({ _id: taskId});
+        return (await query.exec());
     });
 };
 

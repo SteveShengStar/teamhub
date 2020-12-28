@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import Login from '../../frontend/components/molecules/LoginCard';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
-import api from '../../frontend/store/api';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { UserTypes } from '../../frontend/store/reducers/userReducer';
 import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';

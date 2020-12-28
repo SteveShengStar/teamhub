@@ -5,8 +5,7 @@ import {difference, intersection, union} from 'lodash';
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'PUT') {
-        //const authStatus = await data.auth.checkSpecificUser(req.headers['authorization'], req.query.id, res);
-        const authStatus = true;
+        const authStatus = await data.auth.checkSpecificUser(req.headers['authorization'], req.query.id, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 
@@ -46,9 +45,9 @@ module.exports = async (req, res) => {
                     const numTasks = (await data.members.search({ _id: req.query.id }))[0].tasks.length;
                     console.log(numTasks);
 
-                    // Logic for brand new user
-                    // Allot tasks for the new user
                     if (numTasks === 0) {
+                        // Logic for brand new user
+                        // Allocate tasks for the new user
                         const allTaskIDs = (await data.task.getAll()).map(t => t._id.toString());
                         const taskIDsForJoiningSubteams = union(
                             ...((await data.subteams.search({_id: newSubteamIDs}, {tasks: 1}))

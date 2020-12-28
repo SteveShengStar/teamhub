@@ -29,11 +29,8 @@ const useLoginController = (loginTransition, dispatch, route) => {
             })
             return;
         }
-        if (hydrated) {
-            if (!useShouldRedirect(user,router)) {
-                loginTransition.show()
-            }
-            return;
+        if (route && route === '/login') {
+            loginTransition.show();
         }
     }, [hydrated])
 }

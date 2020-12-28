@@ -116,7 +116,7 @@ const Home = () => {
                 translateX: 0,
                 easing: "easeOutQuad",
                 duration: 200
-            })
+            });
         }
     }, [selectedMember]);
 

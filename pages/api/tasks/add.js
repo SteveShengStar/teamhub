@@ -1,4 +1,5 @@
 const data = require('../../../backend/data/index');
+import {difference} from 'lodash';
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = async (req, res) => {
@@ -29,15 +30,6 @@ module.exports = async (req, res) => {
                 return;
             }
 
-            /*if (!payload.subteams) {
-                // If no subteams field is provided, then associate the task with every subteam
-                let teams = await data.subteams.getAll();
-                payload.subteams = teams.map(st => st.id);
-            } else {
-                payload.subteams = await data.util.replaceNamesWithIdsArray(payload.subteams, data.subteams, false);
-            }*/
-
-
             // Add the New Task to the Tasks Collection (Tasks Table)
             let queryResponse = 
                 await data.task.add({
@@ -47,14 +39,12 @@ module.exports = async (req, res) => {
                     documentLinks: documentLinks
                 });
             const taskID = new ObjectID(queryResponse._id);
-            //console.log(queryResponse)
 
 
             // If no subteams are specified in the payload, then associate the new task with every subteam
             const subteamIDs = subteams ? subteams : (await data.subteams.getAll()).map(team => team.id);
             // Update the subteams table/collection so that relevant subteams are now referencing the new task
             queryResponse = await data.subteams.addTaskReference(subteamIDs, taskID);
-            //console.log(queryResponse);
 
             
             res.statusCode = 200;
@@ -66,13 +56,6 @@ module.exports = async (req, res) => {
                 const relevantMemberIDs = allMembers.filter( member => {
                     const memberSubteamIDs = member.subteams.map(st => st.id);
 
-                    /*console.log("memberSubteamIDs");
-                    if (memberSubteamIDs && memberSubteamIDs.length) 
-                        console.log(typeof memberSubteamIDs[0]);
-                    
-                    console.log("subteamIDs");
-                    if (subteamIDs && subteamIDs.length)
-                        console.log(typeof subteamIDs[0]);*/
                     for (let i = 0; i < memberSubteamIDs.length; i++) {
                         if ( subteamIDs.includes(memberSubteamIDs[i]) ) {
                             return true;
@@ -80,10 +63,12 @@ module.exports = async (req, res) => {
                     }
                     return false;
                 }).map( member => member._id );
-                //console.log("Relevant Members");
-                //console.log(relevantMemberIDs);
-                
-                return await data.members.assignTaskToAllMembers( {_id: {$in: relevantMemberIDs}}, { taskId: taskID.toString(), status: "pending" });
+
+                await data.members.assignTaskToAllMembers( {_id: {$in: relevantMemberIDs}}, { taskId: taskID.toString(), status: "pending" });
+
+                // For the rest of the members, assign "irrelevant" status to the new task
+                const remainingMemberIDs = difference(allMembers.map(m => m._id), relevantMemberIDs);
+                return await data.members.assignTaskToAllMembers( {_id: {$in: remainingMemberIDs}}, { taskId: taskID.toString(), status: "irrelevant" });
             })));
         }
     } else {

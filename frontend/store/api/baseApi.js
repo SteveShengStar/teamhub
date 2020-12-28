@@ -32,6 +32,8 @@ export const executeRequest = (request) => {
  * @param {*} dispatch
  */
 export const refreshable = (endpoint, token, options, dispatch, router) => {
+    console.log("Inside RESET.");
+
     if (token == null) throw new Error("Null token for " + endpoint)
     return fetch(endpoint, {...options, headers: {
         ...(options.headers && { ...options.headers }),
@@ -39,6 +41,7 @@ export const refreshable = (endpoint, token, options, dispatch, router) => {
     }})
         .then(res => res.json())
         .catch(err => {
+            console.log("Inside RESET.");
             dispatch({ type: "RESET" });
             useShouldRedirect({}, router)
         })
