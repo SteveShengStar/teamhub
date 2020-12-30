@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import Login from '../../frontend/components/molecules/LoginCard';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { UserTypes } from '../../frontend/store/reducers/userReducer';

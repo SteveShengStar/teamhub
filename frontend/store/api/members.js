@@ -1,4 +1,4 @@
-import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
+import { refreshable } from './baseApi';
 
 /**
  * Search for all members in the database with filter options
@@ -33,6 +33,22 @@ export function getMember(id, token, dispatch, router) {
 
 
 /**
+ * Search for tasks by member id
+ * @param {string} id 
+ * @returns list of tasks belonging to id
+ */
+export function getMemberTasks(id, token, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/tasks`, token, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({taskStatus: status})
+  }, dispatch, router);
+}
+
+
+/**
  * 
  * @param {*} options 
  * @param {string} token 
@@ -45,6 +61,23 @@ export function update(options, token, id, dispatch, router) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({data: options})
+  }, dispatch, router)
+}
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} id
+ * @param {string} taskId
+ * @param {string} status: the new status of the task: [pending, complete, irrelevant]
+ */
+export function updateTaskStatus(id, token, taskId, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/updateTaskStatus`, token, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({taskId: taskId, status: status})
   }, dispatch, router)
 }
 

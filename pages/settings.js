@@ -13,7 +13,6 @@ import ProfileSummary from '../frontend/components/molecules/AccountSettings/Pro
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
 import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
 
-import member from '../frontend/mockdata/member';
 import {lowerCase, capitalize} from 'lodash';
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
@@ -101,7 +100,7 @@ const Home = () => {
             getProfileInfo(dispatch, token, user._id, router);
             if (!isLoaded) setIsLoaded(true);
         }
-    }, [isLoaded, hydrated]);
+    }, [hydrated]);
 
 
     // TODO: check this later.
@@ -110,7 +109,6 @@ const Home = () => {
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.name) : [];
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(subteam => subteam.name) : [];
     const interests = (isLoaded && user.interests) ? user.interests.map(i => i.name) : []; 
-    const roleDescription = member.roleDescription;
     const links = user.links ? user.links : [];
 
     

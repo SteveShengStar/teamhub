@@ -21,8 +21,8 @@ const Name = () => {
     useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
-        // If user did not specify a nameInput, display error.
         if (!nameInput) {
+            // If user did not specify a nameInput, display error.
             window.alert("No name entered!")
         }
         loginTransition.setVisible(false)

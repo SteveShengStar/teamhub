@@ -21,17 +21,16 @@ import { constants } from "../constants";
 const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    // Use the theme (colours, fonts, etc.) from /frontend/components/theme.js
-    const theme = useContext(ThemeContext);
+    const theme = useContext(ThemeContext); // Using the theme (colours, fonts, etc.)  from  /frontend/components/theme.js
 
-    // Indicates whether the dialog window (with dropdown menus for list item filters) is visible and upfront
-    const [ modalVisible, setModalVisible ] = useState(false);
+
+    const [ modalVisible, setModalVisible ] = useState(false); // Indicates whether the dialog window (with dropdown menus for list item filters) is visible and upfront
     const [ searchQuery, setSearchQuery ] = useState({})
     const memberCardRef = useRef();
 
-    // token:    user authentication token. 
-    // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
-    const { token, hydrated, user } = useSelector(state => state.userState);
+    
+    const { token, hydrated, user } = useSelector(state => state.userState);  // token:    user authentication token. 
+                                                                              // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
     const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
     
     // Group selection 
@@ -40,7 +39,6 @@ const Home = () => {
 
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
-
         if (isSelectionEnabled) {
             if(id !== user._id) {
                 const index = selectedMembers.indexOf(id);
@@ -71,7 +69,6 @@ const Home = () => {
             });
             return;
         }
-
         lookupMember(dispatch, token, id, router);
     };
 
@@ -106,11 +103,11 @@ const Home = () => {
                 if (success) searchMembers(dispatch, token, {subteams: {"$in": user.subteams.map(st => st._id) }}, router);
             });
         }
-    }, [hydrated]);      /* hydrated: set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
+    }, [hydrated]);      /* hydrated is set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
 
     useEffect(() => {
         if (selectedMember._id) {
-            // Make the member profile card slide into view or out of view depending on which member was just selected 
+            // Make the member profile card slide into or out of view depending on which member was selected 
             anime({
                 targets: memberCardRef.current,
                 translateX: 0,

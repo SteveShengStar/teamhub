@@ -3,7 +3,7 @@ const data = require('../../../../backend/data/index');
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
