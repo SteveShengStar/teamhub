@@ -9,6 +9,7 @@ import Header4 from "../frontend/components/atoms/Header4";
 import Input from "../frontend/components/atoms/Input";
 import PageTemplate from "../frontend/components/templates/PageTemplate";
 import SwitchButton from "../frontend/components/atoms/SwitchButton";
+import LinkTree from "../frontend/components/organisms/LinkTree";
 import styled from "styled-components";
 import { SystemComponent } from "../frontend/components/atoms/SystemComponents";
 import theme from "../frontend/components/theme";
@@ -114,7 +115,6 @@ const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
   return (
     <SystemComponent
       display="flex-column"
-      height="50vh"
       justifyContent="flex-start"
       overflowY="scroll"
       overflowX="hidden"
@@ -190,12 +190,11 @@ const TodoList = () => {
           display="flex-column"
           justifyContent="space-between"
           alignItems="flex-start"
-          pb={10}
           width="50%"
         >
           <Header3>My Tasks</Header3>
           <SwitchButton
-            textLeft="Pending"
+            textLeft="Unfinished"
             textRight="Completed"
             selected={showPendingTasks}
             onToggle={handleButtonToggle}
