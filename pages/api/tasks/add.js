@@ -6,14 +6,12 @@ module.exports = async (req, res) => {
     await data.initIfNotStarted();
 
     if (req.method === 'POST') {
-        const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
-        if (authStatus) {
-
+        //const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
+        if (true) {
             res.setHeader('Content-Type', 'application/json');
             
-            // Check that the request payload is valid
             let payload = req.body;
-            if (await data.util.checkIsEmptyBody(payload)) {
+            if (await data.util.checkIsEmptyBody(payload)) { // Check that the request payload is valid
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('body must be present in request.');
@@ -30,8 +28,8 @@ module.exports = async (req, res) => {
                 return;
             }
 
-            // Add the New Task to the Tasks Collection (Tasks Table)
-            let queryResponse = 
+            
+            let queryResponse =             // Add the New Task to the Tasks Collection (Tasks Table)
                 await data.task.add({
                     title: title, 
                     description: description, 
@@ -41,18 +39,16 @@ module.exports = async (req, res) => {
             const taskID = new ObjectID(queryResponse._id);
 
 
-            // If no subteams are specified in the payload, then associate the new task with every subteam
+            // If no subteams are specified in the payload, associate the new task with every subteam
             const subteamIDs = subteams ? subteams : (await data.subteams.getAll()).map(team => team.id);
             // Update the subteams table/collection so that relevant subteams are now referencing the new task
             queryResponse = await data.subteams.addTaskReference(subteamIDs, taskID);
 
             
             res.statusCode = 200;
-            // Assign this new task to everybody, with a "pending" status
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 const allMembers = await data.members.search({}, {subteams: 1});
-
-                // Choose only members that belong to a subteam that is in the list, subteamIDs
+                // Choose only members that belong to a subteam in the array (subteamIDs)
                 const relevantMemberIDs = allMembers.filter( member => {
                     const memberSubteamIDs = member.subteams.map(st => st.id);
 
@@ -64,6 +60,7 @@ module.exports = async (req, res) => {
                     return false;
                 }).map( member => member._id );
 
+                // Assign this new task to everybody, with a "pending" status
                 await data.members.assignTaskToAllMembers( {_id: {$in: relevantMemberIDs}}, { taskId: taskID.toString(), status: "pending" });
 
                 // For the rest of the members, assign "irrelevant" status to the new task

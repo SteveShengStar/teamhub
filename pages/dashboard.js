@@ -14,8 +14,35 @@ import { SystemComponent } from "../frontend/components/atoms/SystemComponents";
 import theme from "../frontend/components/theme";
 import api from "../frontend/store/api";
 
-const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick }) => {
 
+const populateLinks = (description) => {
+    // Get all indices of <a> tags
+    let indexes = [-1];
+    do {
+        indexes.push(description.indexOf("<a", indexes[indexes.length - 1] + 1));
+    } while(indexes[indexes.length - 1] !== -1);
+    indexes = indexes.slice(1, indexes.length - 1);
+
+    // Make the hyperlinks active
+    if (indexes.length === 0) return description;
+    let endIdx = 0;
+    let populatedDescription = [];
+    for (let j = 0; j < indexes.length; j++) {
+        populatedDescription.push(description.substring(endIdx, indexes[j]));
+
+        
+        let descrip_startIsTrimmed = description.substring(indexes[j]);
+        let linkStartIdx = descrip_startIsTrimmed.indexOf("href='") + 6;
+        let linkEndIdx = descrip_startIsTrimmed.indexOf("'", linkStartIdx);
+        let link = descrip_startIsTrimmed.substring(linkStartIdx, linkEndIdx);
+        populatedDescription.push(<a href={link}>{descrip_startIsTrimmed.substring(descrip_startIsTrimmed.indexOf(">") + 1, descrip_startIsTrimmed.indexOf("</a>"))}</a>);
+        
+        endIdx = description.indexOf("</a>", indexes[j]) + 4;
+    }
+    return populatedDescription;
+}
+
+const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick }) => {
   const getTaskButtonText = () => {
     return status === 'complete' ? "Move to Pending" : "Complete Task";
   }
@@ -23,8 +50,6 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
   const getTaskButtonVariant = () => {
     return status === 'complete' ? "lightGrey" : "electrical";
   }
-  console.log("searchBarPlaceholderTexts");
-  console.log(searchBarPlaceholderTexts);
 
   return (
     <Card style={{ marginBottom: 15 }}>
@@ -32,15 +57,15 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
         <Header4>{title}</Header4>
         <Button variant={getTaskButtonVariant()} onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>
       </div>
-        {description && description}
+        {description && populateLinks(description)}
         {searchBarPlaceholderTexts && <TextInput placeholderTexts={searchBarPlaceholderTexts} />}
-        {docUrls && <GoogleDocLinks docUrls={docUrls}/>}
+        {docUrls && <GoogleDocLinks docUrls={docUrls.map(d => d.url)} docTitles={docUrls.map(d => d.displayTitle)} />}
     </Card>
   );
 };
 
-const GoogleDocLinks = ({ docUrls }) => {
-    return (<SystemComponent marginLeft="50px">
+const GoogleDocLinks = ({ docUrls, docTitles }) => {
+    return (<SystemComponent ml={3} mt={3}>
                 {docUrls.map((url, i) => (
                     <SystemComponent
                       display="flex"
@@ -50,7 +75,7 @@ const GoogleDocLinks = ({ docUrls }) => {
                       width="100%"
                       key={i}
                     >
-                        <DocsIcon size={24} style={{paddingRight: "5px"}}/> {url}
+                        <a href={url} target="_blank"><DocsIcon size={24} style={{paddingRight: "5px"}}/></a> <a href={url} target="_blank"><span style={{position: "relative", bottom: "4px"}}>{docTitles[i]}</span></a>
                     </SystemComponent>
                 ))}
           </SystemComponent>
@@ -58,8 +83,6 @@ const GoogleDocLinks = ({ docUrls }) => {
 }
 
 const TextInput = ({placeholderTexts}) => {
-  console.log("Second")
-  console.log(placeholderTexts)
   const [value, setValue] = useState("");
 
   const handleSubmit = () => {
@@ -71,9 +94,9 @@ const TextInput = ({placeholderTexts}) => {
     event.preventDefault();
   }
 
-  return (<SystemComponent>
+  return (<SystemComponent mt={3}>
             {placeholderTexts.map(text => 
-                <SystemComponent
+                (<SystemComponent
                   display="flex"
                   flexDirection="row"
                   justifyContent="flex-start"
@@ -82,7 +105,7 @@ const TextInput = ({placeholderTexts}) => {
                 >
                   <StyledInput placeholder={text} value={value} onChange={handleTextChange}/>
                   <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
-                </SystemComponent>
+                </SystemComponent>)
             )}
           </SystemComponent>
 )}
@@ -148,7 +171,7 @@ const TodoList = () => {
 
     if (res.success) {
       console.log("Successfully updated task status.");
-      getTasks();   // Fetch task data from the back end to make sure the front end is showing the most recent task-related details
+      getTasks();                     // Fetch task data from the back end to make sure the front end is showing the most recent task-related details
     } else {
       console.error("Error: Failed to update the task's status");
     }

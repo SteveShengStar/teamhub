@@ -44,6 +44,7 @@
     "redux-persist": "^6.0.0",
     "styled-components": "^5.0.0",
     "styled-system": "^5.1.2",
+    "url": "^0.11.0",
     "validator": "^12.2.0"
   },
   "devDependencies": {
