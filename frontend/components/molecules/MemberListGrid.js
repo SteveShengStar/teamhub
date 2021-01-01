@@ -106,6 +106,7 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                     isOnStream={member.stream && member.stream.coopStream[code]}
                                     onClick={() => onSelect(member._id)}
                                     imageUrl={member.imageUrl} 
+                                    isSelected={groupSelectedMembers.includes(member._id)}
                                 />
                             )
                         }

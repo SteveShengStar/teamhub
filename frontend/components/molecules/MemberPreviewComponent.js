@@ -10,7 +10,7 @@ import Image from '../atoms/Image';
 const GridLayout = styled(SystemComponent)`
     display: grid;
     grid-template-rows: 18px 18px;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto 1fr 20px;
     grid-column-gap: ${props => props.theme.space[4]}px;
     padding: ${props => props.theme.space[3]}px;
     cursor: pointer;
@@ -28,6 +28,16 @@ const RowFlexLayout = styled(SystemComponent)`
     display: flex;
     justify-content: space-between;
 `;
+
+const Dot = styled.div`
+    align-self: center;
+    justify-self: end;
+    width: 15px;
+    height: 15px;
+    border-radius: 8px;
+    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
+    grid-row: 1/3;
+`
 
 const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isSelected}) => {
     return (
@@ -55,6 +65,7 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, i
                 <BorderlessButton variant='software'>{subteam && subteam.name || ""}</BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
+            <SystemComponent>{isSelected && <i class="fa fas fa-check"/>}</SystemComponent>
         </GridLayout>
     );
 };
