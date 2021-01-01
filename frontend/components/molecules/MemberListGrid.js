@@ -39,7 +39,6 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers})
                         text="Your Team Leads"
                         mb={2} 
                         ml={0} 
-                        mt={2}
                     />
                     {fetchedMembers ? (
                         <SystemComponent

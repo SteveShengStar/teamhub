@@ -9,11 +9,9 @@ import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
 import Header3 from '../frontend/components/atoms/Header3';
 import Card from '../frontend/components/atoms/Card';
 import Button from "../frontend/components/atoms/Button";
-import MemberFilterComponent from '../frontend/components/molecules/MemberFilterComponent';
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
 import { searchMembers, lookupMember, getFilters, DataFetchType } from '../frontend/store/reducers/membersReducer';
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
-import MembersFilterModal from '../frontend/components/organisms/MembersFilterModal';
 
 import { getUserId, startGroupConversation } from "./api/slack";
 import { constants } from "../constants";
@@ -23,9 +21,6 @@ const Home = () => {
     const router = useRouter();
     const theme = useContext(ThemeContext); // Using the theme (colours, fonts, etc.)  from  /frontend/components/theme.js
 
-
-    const [ modalVisible, setModalVisible ] = useState(false); // Indicates whether the dialog window (with dropdown menus for list item filters) is visible and upfront
-    const [ searchQuery, setSearchQuery ] = useState({})
     const memberCardRef = useRef();
 
     
@@ -71,31 +66,6 @@ const Home = () => {
         }
         lookupMember(dispatch, token, id, router);
     };
-
-    const updateSearchQuery = (input) => {
-        if (typeof(input) == "string") {
-            setSearchQuery({...searchQuery, display: input || undefined})
-            return;
-        }
-        let normalized = {};
-        Object.keys(input).forEach(key => {
-            if (input[key] && input[key].length > 0) {
-                let newKey = key.toLowerCase()
-                if (key == "roles") newKey = "roles";
-                normalized[newKey] = input[key][0].label
-            }
-        });
-        setSearchQuery({...normalized, display: searchQuery.display });
-    };
-
-    /* useEffect(() => {
-        if (filters.projects && !fetchingData) {
-            // TODO: Must fix.
-            // Update the list of members based on the search bar's query
-            searchMembers(dispatch, token, searchQuery, router)
-        }
-    }, [searchQuery]) */     /* searchQuery: Object containing the text in the search bar
-                                {display: [text-in-search-bar]} */
 
     useEffect(() => {
         if (hydrated && !fetchingData) {
@@ -174,12 +144,6 @@ const Home = () => {
           gridTemplateRows="auto auto"
           gridTemplateColumns="auto 1fr"
         >
-          <MembersFilterModal
-            visible={modalVisible}
-            filters={filters}
-            updateSearchQuery={updateSearchQuery}
-            hide={() => setModalVisible(false)}
-          />
           <MembersListCard
             display="grid"
             gridTemplateColumns="1fr"
@@ -208,15 +172,11 @@ const Home = () => {
                         </>
                       ) : (
                         <OptionButton onClick={enableGroupSelection} width="80px">
-                          Select
+                          Group Actions
                         </OptionButton>
-                      )}
-                      <OptionButton onClick={() => setModalVisible(!modalVisible)} width="100px">
-                        Edit Filters
-                      </OptionButton> 
+                      )} 
                   </SystemComponent>                     
               </SystemComponent>
-              <MemberFilterComponent filterOptions={filters} updateSearchQuery={updateSearchQuery}/>
               <MemberListGrid memberData={selectedMember} members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
           </MembersListCard>
           <MemberCard 
