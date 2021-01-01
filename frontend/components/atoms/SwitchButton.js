@@ -48,6 +48,7 @@ const Toggle = styled(SystemComponent)`
     font-weight: ${props => props.selected ? 700 : 500};
     font-size: ${props => props.selected ? props.theme.fontSizes.body2 : props.theme.fontSizes.body}px;
     transition: all 0.2s ease;
+    padding: 0 20px;
     &:hover {
         opacity: 0.6;
     }

@@ -29,16 +29,6 @@ const RowFlexLayout = styled(SystemComponent)`
     justify-content: space-between;
 `;
 
-const Dot = styled.div`
-    align-self: center;
-    justify-self: end;
-    width: 15px;
-    height: 15px;
-    border-radius: 8px;
-    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
-    grid-row: 1/3;
-`
-
 const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isSelected}) => {
     return (
         <GridLayout 

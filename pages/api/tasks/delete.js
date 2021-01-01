@@ -30,11 +30,8 @@ module.exports = async (req, res) => {
 
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                console.log("One");
                 await data.task.delete(taskId);
-                console.log("Two");
                 await data.members.updateAllMembers({$pull: {tasks: {taskId: taskId}} });
-                console.log("Three");
                 return await data.subteams.deleteTaskReference(undefined, [taskId]);
             })));
         }

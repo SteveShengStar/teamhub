@@ -1,9 +1,12 @@
+import styled from 'styled-components';
 import { SystemComponent } from "../atoms/SystemComponents";
+import Header5 from '../atoms/Header5';
+import Image from '../atoms/Image';
 
 const importantLinks = [
     {
         title: 'Google Drive',
-        description: 'Technical Documentation and Meeting Notes',
+        description: 'Documentation and Meeting Notes',
         url: 'a',
         imagePath: '/static/linktree/gdrive.png'
     },
@@ -39,17 +42,49 @@ const importantLinks = [
     },
 ];
 
+const GridLayout = styled(SystemComponent)`
+    display: grid;
+    grid-template-rows: 18px 18px;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: ${props => props.theme.space[4]}px;
+    padding: ${props => props.theme.space[3]}px;
+    cursor: pointer;
+    background-color: ${props => props.theme.colors.greys[0]};
+
+    border: solid #000 2px;
+    border-radius: ${props => props.theme.space[3]}px;
+
+    &:hover {
+        transform: scale(1.01);
+        background-color: ${props => props.theme.colors.greys[1]};
+    }
+    &:active {
+        transform: scale(1.025);
+    }
+`;
 
 const LinkTree = () => {
-
     return(
         <SystemComponent display="flex" flexDirection="column" mb={3}>
-            {importantLinks.map(link => 
-                <SystemComponent borderRadius={3} borderWidth="2px" borderColor="black">
-                    <SystemComponent></SystemComponent>
-                    <SystemComponent></SystemComponent>
-                    <SystemComponent></SystemComponent>
-                </SystemComponent>
+            {importantLinks.map((link, i) => 
+                <a key={i} href={link.url} style={{textDecoration: "none"}} target="_blank">
+                    <GridLayout>
+                        <Image 
+                            height={36} 
+                            src={link.imagePath}
+                            gridRow="1/3"
+                            borderRadius="18px"
+                            overflow="visible"
+                        />
+                        <SystemComponent> 
+                            <Header5>{link.title}</Header5>
+                        </SystemComponent>
+
+                        <SystemComponent gridRow="2/3" gridColumn="2/3">
+                            {link.description}
+                        </SystemComponent>
+                    </GridLayout>
+                </a>
             )}
         </SystemComponent>
     )

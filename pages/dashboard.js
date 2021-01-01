@@ -43,25 +43,25 @@ const populateLinks = (description) => {
     return populatedDescription;
 }
 
-const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick }) => {
+const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick, showButton = true }) => {
   const getTaskButtonText = () => {
     return status === 'complete' ? "Move to Pending" : "Complete Task";
   }
 
   const getTaskButtonVariant = () => {
-    return status === 'complete' ? "lightGrey" : "electrical";
+    return status === 'complete' ? "moderateGrey" : "electrical";
   }
 
   return (
-    <Card style={{ marginBottom: 15 }}>
+    <CustomCard style={{ marginBottom: 15 }} backgroundColor={theme.colors.greys[1]}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <Header4>{title}</Header4>
-        <Button variant={getTaskButtonVariant()} onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>
+        {showButton && <Button mb={2} variant={getTaskButtonVariant()} onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>}
       </div>
         {description && populateLinks(description)}
         {searchBarPlaceholderTexts && <TextInput placeholderTexts={searchBarPlaceholderTexts} />}
         {docUrls && <GoogleDocLinks docUrls={docUrls.map(d => d.url)} docTitles={docUrls.map(d => d.displayTitle)} />}
-    </Card>
+    </CustomCard>
   );
 };
 
@@ -96,13 +96,13 @@ const TextInput = ({placeholderTexts}) => {
   }
 
   return (<SystemComponent mt={3}>
-            {placeholderTexts.map(text => 
+            {placeholderTexts.map(text =>
                 (<SystemComponent
                   display="flex"
                   flexDirection="row"
                   justifyContent="flex-start"
                   alignItems="center"
-                  width="700px"
+                  minWidth="300px"
                 >
                   <StyledInput placeholder={text} value={value} onChange={handleTextChange}/>
                   <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
@@ -112,34 +112,38 @@ const TextInput = ({placeholderTexts}) => {
 )}
 
 const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
+  const relevantTasks = tasks.filter(task => task.status === taskStatus);
   return (
     <SystemComponent
       display="flex-column"
       justifyContent="flex-start"
-      overflowY="scroll"
+      overflowY={["hidden", "hidden", "auto"]}
       overflowX="hidden"
-      padding="20px"
+      padding="15px"
       border={`solid 3px ${theme.colors.greys[3]}`}
+      backgroundColor={theme.colors.background}
     >
-      {tasks.filter(task => task.status === taskStatus)
-            .map(task => (
-              <TodoItemCard
-                id={task._id}
-                key={task._id}
-                status={task.status}
-                title={task.taskId.title}
-                description={task.taskId.description}
-                docUrls={task.taskId.documentLinks}
-                searchBarPlaceholderTexts={task.taskId.searchBarPlaceholderTexts}
-                handleButtonClick={handleButtonClick}
-              />
-            ))
+      {relevantTasks.length === 0 ?
+        (<TodoItemCard showButton={false} description={`You have no ${taskStatus === 'pending' ? 'Unfinished' : 'Completed' } tasks.`}/>)
+         :
+        (relevantTasks.map(task => (
+            <TodoItemCard
+              id={task._id}
+              key={task._id}
+              status={task.status}
+              title={task.taskId.title}
+              description={task.taskId.description}
+              docUrls={task.taskId.documentLinks}
+              searchBarPlaceholderTexts={task.taskId.searchBarPlaceholderTexts}
+              handleButtonClick={handleButtonClick}
+            />
+        )))
       }
     </SystemComponent>
   )
 };
 
-// TODO: "Enter Github username or email..." 
+
 const TodoList = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -148,7 +152,6 @@ const TodoList = () => {
   const { token, user: {_id}, hydrated } = useSelector(state => state.userState);
 
   const handleButtonToggle = () => {
-    console.log(showPendingTasks);
     setShowPendingTasks(!showPendingTasks);
   };
 
@@ -184,31 +187,51 @@ const TodoList = () => {
   }, [hydrated]);
 
   return (
-    <PageTemplate>
+    <PageTemplate title="Explore">
       <>
         <SystemComponent
-          display="flex-column"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          width="50%"
-        >
-          <Header3>My Tasks</Header3>
-          <SwitchButton
-            textLeft="Unfinished"
-            textRight="Completed"
-            selected={showPendingTasks}
-            onToggle={handleButtonToggle}
-          />
-        </SystemComponent>
+          display="grid"
+          gridTemplateColumns={["1fr", "1fr", "1fr 1fr", "1fr 1fr"]}
+          gridRowGap={3}
+          gridColumnGap={3}
+        > 
 
-        <TodoListBody
-          taskStatus={getStatus()}
-          tasks={tasks}
-          handleButtonClick={handleToggleCheck}
-        />
+          <SystemComponent>
+            <Header3>Important Links</Header3>
+            <SystemComponent 
+              display="flex-column"
+              justifyContent="flex-start"
+              overflowY={["hidden", "hidden", "auto"]}
+              overflowX="hidden"
+              padding="15px"
+              border={`solid 3px ${theme.colors.greys[3]}`}
+              backgroundColor={theme.colors.background}
+            >
+              <LinkTree />
+            </SystemComponent>
+          </SystemComponent>
 
-        <SystemComponent height="50vh">
-          <LinkTree/>
+          <SystemComponent>
+            <SystemComponent
+              display="flex"
+              justifyContent="space-between"
+            >
+              <Header3>My Tasks</Header3>
+              <SwitchButton
+                textLeft="Unfinished"
+                textRight="Completed"
+                selected={showPendingTasks}
+                onToggle={handleButtonToggle}
+              />
+            </SystemComponent>
+
+            <TodoListBody
+              taskStatus={getStatus()}
+              tasks={tasks}
+              handleButtonClick={handleToggleCheck}
+            />
+          </SystemComponent>
+
         </SystemComponent>
       </>
     </PageTemplate>
@@ -224,6 +247,13 @@ const SubmitButton = styled(Button)`
 `;
 
 const StyledInput = styled(Input)`
-  height: 24px;
-  width: 300px;
+  height: 30px;
+  width: 200px;
+  box-sizing: border-box;
+  padding-left: 5px;
+`;
+
+const CustomCard = styled(Card)`
+  background-color: ${props => props.theme.colors.greys[0]};
+  border: 1px solid #000;
 `;

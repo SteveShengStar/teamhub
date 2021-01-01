@@ -62,7 +62,11 @@ const Button = styled(SystemButton)(
             lightGrey: {
                 backgroundColor: 'greys.0',
                 color: 'black'
-            }
+            },
+            moderateGrey: {
+                backgroundColor: 'greys.2',
+                color: 'black'
+            },
         }
     }),
 );
