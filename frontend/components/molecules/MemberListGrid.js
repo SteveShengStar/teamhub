@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Header4 from '../atoms/Header4';
 
@@ -20,7 +20,7 @@ const MembersListHeader = (props) => {
     );
 }
 
-const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers}) => {
+const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, groupSelectedMembers}) => {
     const { subteams } = useSelector(state => state.membersState.filters);
 
     const normalizedSubteams = subteams && subteams.reduce((accum, subteam) => {
@@ -34,7 +34,6 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers})
         <>
             <GhostLoader>
                 <Container className={className}>
-
                     <MembersListHeader 
                         text="Your Team Leads"
                         mb={2} 
@@ -57,9 +56,9 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers})
                                     subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
                                     role={member.memberType ? member.memberType.name : ''}
                                     term={member.stream && member.stream.currentSchoolTerm || ""}
-                                    isOnStream={member.stream && member.stream.coopStream[code]}
                                     onClick={() => onSelect(member._id)}
                                     imageUrl={member.imageUrl} 
+                                    isSelected={groupSelectedMembers.includes(member._id)}
                                 />
                             )
                         }

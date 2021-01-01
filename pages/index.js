@@ -20,30 +20,29 @@ const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const theme = useContext(ThemeContext); // Using the theme (colours, fonts, etc.)  from  /frontend/components/theme.js
-
     const memberCardRef = useRef();
 
     
     const { token, hydrated, user } = useSelector(state => state.userState);  // token:    user authentication token. 
                                                                               // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
-    const { members, selectedMember, loadedMembers, filters, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
+    const { members, selectedMember, loadedMembers, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
     
-    // Group selection 
-    const [selectedMembers, setSelectedMembers] = useState([]);
-    const [isSelectionEnabled, setIsSelectionEnabled] = useState(false);
+    // Group Action selection 
+    const [groupSelectedMembers, setGroupSelectedMembers] = useState([]);
+    const [activeAction, setActiveAction] = useState("");
 
     // The user selected a member (identified by id) from the members list to see a preview of his/her profile
     const onSelectMember = (id) => {
-        if (isSelectionEnabled) {
+        if (activeAction) {
             if(id !== user._id) {
-                const index = selectedMembers.indexOf(id);
+                const index = groupSelectedMembers.indexOf(id);
                 if(index == -1) {
                     // Add id to selected members
-                    setSelectedMembers([...selectedMembers, id]); 
+                    setGroupSelectedMembers([...groupSelectedMembers, id]); 
                 } else {
                     // Remove id from selected members
-                    selectedMembers.splice(index, 1);
-                    setSelectedMembers([...selectedMembers]);
+                    groupSelectedMembers.splice(index, 1);
+                    setGroupSelectedMembers([...groupSelectedMembers]);
                 }
             }
             return;
@@ -90,8 +89,7 @@ const Home = () => {
     const getEmails = () => {
         const emails = [];
 
-        // Get the email of each user
-        selectedMembers.forEach(id => {
+        groupSelectedMembers.forEach(id => {    // Get the email of each user
             const email = members.find(({ _id }) => _id === id).email;
             if(email) emails.push(email);
         });
@@ -123,14 +121,33 @@ const Home = () => {
       window.open(`slack://channel?team=${constants.TEAM_ID}&id=${channel.id}`);
     }
 
-    const cancelGroupSelection = () => {
-      setIsSelectionEnabled(false);
-      setSelectedMembers([]);
+    const getActionText = () => {
+      if (activeAction === 'slack')
+        return 'Message'
+      else if (activeAction === 'email')
+        return 'Email'
+      return '';
     }
 
-    const enableGroupSelection = () => {
-      setIsSelectionEnabled(true);
-      setSelectedMembers([user._id]);
+    const onExecuteAction = () => {
+      if (activeAction === 'slack')
+        generateSlackGroup();
+      else if (activeAction === 'email')
+        generateGroupEmail();
+    }
+
+    const toggleGroupAction = (action) => {
+      if (action === activeAction) {
+        onCancel();
+        return;
+      }
+
+      if (action) setActiveAction(action);
+    }
+
+    const onCancel = () => {
+      setActiveAction("");
+      setGroupSelectedMembers([]);
     }
 
     return (
@@ -158,26 +175,27 @@ const Home = () => {
                   <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                   
                   <SystemComponent display="flex" flexWrap='wrap'>
-                      {isSelectionEnabled ? (
-                          <>
-                          <OptionButton onClick={generateGroupEmail} width="80px">
-                            Email
-                          </OptionButton>
-                          <OptionButton onClick={generateSlackGroup} width="100px">
-                            Slack DM
-                          </OptionButton>
-                          <CancelButton onClick={cancelGroupSelection} width="80px">
-                            Cancel
-                          </CancelButton>
-                        </>
-                      ) : (
-                        <OptionButton onClick={enableGroupSelection} width="80px">
-                          Group Actions
-                        </OptionButton>
-                      )} 
+                      <OptionButton onClick={() => toggleGroupAction('email')} isSelected={activeAction === 'email'}>
+                        Email
+                      </OptionButton>
+                      <OptionButton onClick={() => toggleGroupAction('slack')} isSelected={activeAction === 'slack'}>
+                        Slack DM
+                      </OptionButton>
+                      {
+                        (groupSelectedMembers.length > 0) && 
+                        <ExecuteActionButton onClick={onExecuteAction}>
+                          Send {getActionText()}
+                        </ExecuteActionButton>
+                      }
+                      {
+                        activeAction &&   
+                        <CancelButton onClick={onCancel}>
+                          Cancel
+                        </CancelButton>
+                      }
                   </SystemComponent>                     
               </SystemComponent>
-              <MemberListGrid memberData={selectedMember} members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} />
+              <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} groupSelectedMembers={groupSelectedMembers} />
           </MembersListCard>
           <MemberCard 
             animRef={memberCardRef}
@@ -243,8 +261,21 @@ const OptionButton = styled(Button)`
   display: block;
   margin-left: ${props => props.theme.space[3]}px;
   margin-bottom: ${props => props.theme.space[2]}px;
+
+  background-color: ${props => props.isSelected && props.theme.colors.background};
+  color: ${props => props.isSelected && props.theme.colors.foreground};
+  font-weight: ${props => props.isSelected && 700};
+  font-size: ${props => props.isSelected && props.theme.fontSizes.body2}px;
+  border: ${props => props.isSelected && 'solid 2px #000'};
+
+  ${props => props.isSelected && '&:hover {transform: scale(1); pointer: default;}'}
+  ${props => props.isSelected && '&:active {opacity: 1;}'}
 `;
 
 const CancelButton = styled(OptionButton)`
   background-color: ${({ theme }) => theme.colors.alertAction};
+`;
+
+const ExecuteActionButton = styled(OptionButton)`
+  background-color: ${({ theme }) => theme.colors.electrical};
 `;

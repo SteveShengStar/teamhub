@@ -29,7 +29,7 @@ const RowFlexLayout = styled(SystemComponent)`
     justify-content: space-between;
 `;
 
-const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream, isSelected}) => {
+const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isSelected}) => {
     return (
         <GridLayout 
             backgroundColor={isSelected ? "greys.2" : "greys.0"}

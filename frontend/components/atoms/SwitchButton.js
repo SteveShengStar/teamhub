@@ -43,8 +43,10 @@ const Toggle = styled(SystemComponent)`
     display: grid;
     align-items: center;
     justify-items: center;
-    background-color: ${props => props.selected ? props.theme.colors.action : props.theme.colors.background};
-    color: ${props => props.selected ? props.theme.colors.background : props.theme.colors.foreground};
+    background-color: ${props => props.selected ? props.theme.colors.background : props.theme.colors.action};
+    color: ${props => props.selected ? props.theme.colors.foreground : props.theme.colors.background};
+    font-weight: ${props => props.selected ? 700 : 500};
+    font-size: ${props => props.selected ? props.theme.fontSizes.body2 : props.theme.fontSizes.body}px;
     transition: all 0.2s ease;
     &:hover {
         opacity: 0.6;
