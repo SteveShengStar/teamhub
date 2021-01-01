@@ -187,7 +187,7 @@ const TodoList = () => {
   }, [hydrated]);
 
   return (
-    <PageTemplate title="Explore">
+    <PageTemplate title="Dashboard">
       <>
         <SystemComponent
           display="grid"
