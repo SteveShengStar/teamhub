@@ -188,7 +188,7 @@ const Settings = () => {
                                 type="normal"
                                 isLabelListSection={false}
                             >
-                                {user.bio}
+                                {user.bio ? user.bio : "Click Edit (above) to add a Short Bio."}
                             </SettingsSubsection>
                         </SettingsComponent>
 

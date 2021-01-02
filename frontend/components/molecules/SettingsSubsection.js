@@ -17,9 +17,9 @@ const ListItemWrapper = ({variant, label}) => (
 
 
 const SettingsSubsection = ({type,
-                                headerText, 
-                                labelValues,
-                                children}) => {
+                            headerText, 
+                            labelValues,
+                            children}) => {
 
     let sectionBody;
 
@@ -29,12 +29,17 @@ const SettingsSubsection = ({type,
             break;
         case 'list':
         default:
-            sectionBody = labelValues.map((labelValue, i) =>  (
-                <ListItemWrapper key={i}
-                    variant="lightgrey"
-                    label={startCase(labelValue)}
-                />
-            ));
+            if (labelValues.length === 0) {
+                sectionBody = <SystemComponent>You have no entries so far. Click Edit to add entries.</SystemComponent>
+            }
+            else {
+                sectionBody = labelValues.map((labelValue, i) => (
+                    <ListItemWrapper key={i}
+                        variant="lightgrey"
+                        label={startCase(labelValue)}
+                    />
+                ));
+            }
     }
     
     return (
