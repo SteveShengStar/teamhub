@@ -41,22 +41,29 @@ const About = () => {
   function trySubmit() {
     // If user did not specify a program, display error.
     if (!program) {
-      alert("No program selected!");
+      alert("No program was selected!");
       return;
     }
     // If user did not specify a coop sequence, display error.
     if (Object.keys(coopSequence).length == 0) {
-      alert("Coop sequence is 0!");
+      alert("No coop sequence was selected !");
       return;
     }
     if (!term) {
-      alert("No term is picked");
+      alert("No term was picked !");
+      return;
+    }
+    if (interests.includes(undefined) || interests.map(i => i.trim()).includes("")) {
+      alert("You specified an interest that is blank. That is now allowed !");
+      return;
+    }
+    if (skills.includes(undefined) || skills.map(i => i.trim()).includes("")) {
+      alert("You specified a skill that is blank. That is now allowed !");
       return;
     }
 
     // After passing all form-validation/error checks, transition to the next page
     loginTransition.setVisible(false);
-    // TODO: Is this needed ? Why is store being updated if this is client-side routing ?
     updateUser(dispatch, {
       birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,

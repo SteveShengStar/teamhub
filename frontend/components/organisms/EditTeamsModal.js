@@ -44,9 +44,14 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
         }
     }, [dataLoaded, visible]);
 
+    const removeBadValuesAndDuplicates = (array) => {
+        const uniqueSet = new Set(array.map(i => i.trim()))
+        return [...uniqueSet].filter(i => i);
+    }
+
     const handleSave = () => {
         updateUser(dispatch, {
-            "projects": selectedProjects,
+            "projects": removeBadValuesAndDuplicates(selectedProjects),
             "subteams": localSelectedTeams,
         }, token, user._id, router, false);
         handleCloseModal();
@@ -109,7 +114,7 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                 <SystemComponent>
                     <MultiSelectInput 
                         title="What Projects are you Working on ?"
-                        setSelectedItems={setSelectedProjects}
+                        setSelectedItems={list => setSelectedProjects(list)}
                         options={selectedProjects.map(project => 
                             ({value: project, label: capitalize(project)})
                         )}

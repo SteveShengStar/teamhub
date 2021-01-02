@@ -38,8 +38,7 @@ module.exports = async (req, res) => {
                 let payload = req.body.data;
                 if (payload.subteams) { 
                     const currentSubteamIDs = (await data.members.search({ _id: req.query.id }, {subteams: 1}))[0].subteams.map(st => st._id.toString());
-                    // Translate the subteam names into subteam IDs
-                    const newSubteamIDs = (await data.subteams.search( {name: payload.subteams }, {_id: 1})).map(st => st._id.toString());
+                    const newSubteamIDs = (await data.subteams.search( {name: payload.subteams }, {_id: 1})).map(st => st._id.toString()); // Translate the subteam names into subteam IDs
                     
                     
                     const numTasks = (await data.members.search({ _id: req.query.id }))[0].tasks.length;

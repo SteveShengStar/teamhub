@@ -29,11 +29,7 @@ const CustomContentContainer = styled(ContentContainer)`
         width: 650px;
     }
 `;
-// TODO: pull from theme
-// TODO: remove hard-coded height later
-// 28px - 15px (header of modal) - 50px (modal padding) - 70px (button section height) - 80px (background spacing) = 243px
 const EditSettingsModal = ({className, children, visible, title, handleCloseModal, handleSave = () => {}}) => {
-    
     return (
         <Background visible={visible}>
             <CustomContentContainer 

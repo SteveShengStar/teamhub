@@ -13,13 +13,6 @@ import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-
-const termMap = {
-    "F": "Fall",
-    "S": "Spring",
-    "W": "Winter"
-}
-
 const Role = () => {
     const { user, token, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
@@ -52,15 +45,19 @@ const Role = () => {
 
     const checkErrors = () => {
         if (!selectedRole.value) {
-            window.alert("No role specified!")
+            window.alert("No role was specified!")
             return false;
         }
         if (selectedSubteams.length == 0) {
-            window.alert("No subteams selected!")
+            window.alert("No subteam was selected!")
             return false;
         }
         if (selectedProjects.length == 0) {
-            window.alert("No projects selected!")
+            window.alert("No projects were specified!")
+            return false;
+        }
+        if (selectedProjects.includes(undefined) || selectedProjects.map(p => p.trim()).includes('')) {
+            window.alert("Some projects you specified are blank strings. That is now allowed !")
             return false;
         }
         return true;

@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
 import MultiSelectInput from '../molecules/MultiSelectInput';
+import { getFilters } from '../../store/reducers/membersReducer';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -150,7 +151,9 @@ const validProgramPattern = /^[A-Za-z,'-\s]*$/;
 const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { token, user } = useSelector(state => state.userState);
+    const { token, user, hydrated } = useSelector(state => state.userState);
+    const { filters } = useSelector(state => state.membersState);
+    const { interests: interestOpts, skills: skillOpts } = filters;
 
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
@@ -168,6 +171,12 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         program: false,
         birthDate: false
     });
+
+    useEffect(() => {
+        if (token && isEmpty(filters)) {
+            getFilters(dispatch, token, router);
+        }
+    }, [hydrated]);
 
     useEffect(() => {
         setFormValues({
@@ -190,6 +199,11 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             birthDate: false
         });
     }, [dataLoaded]);
+
+    const removeBadValuesAndDuplicates = (array) => {
+        const uniqueSet = new Set(array.map(i => i.trim()))
+        return [...uniqueSet].filter(i => i);
+    }
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
@@ -216,8 +230,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     "day": formValues.birthDate.split("-")[2]
                 },
                 "program": formValues.program.value.trim(),
-                "interests": interests,
-                "skills": skills,
+                "interests": removeBadValuesAndDuplicates(interests),
+                "skills": removeBadValuesAndDuplicates(skills),
                 "stream": {
                     ...user.stream,
                     "currentSchoolTerm": formValues.term.value, 
@@ -319,19 +333,26 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <MultiSelectInput
                         title="Skills"
                         setSelectedItems={setSkills}
-                        options={skills.map(skill => 
-                            ({value: skill.toLowerCase(), label: skill}))
+                        options={
+                            skillOpts ? 
+                            skillOpts.map(skill => 
+                            ({value: skill.name.toLowerCase(), label: skill.name}))
+                             : 
+                            []
                         }
                     />
                 </SystemComponent>
-                
                 <SystemComponent>
                     <MultiSelectInput
                         title="Interests"
                         setSelectedItems={setInterests}
-                        options={interests.map(interest => 
-                            ({value: interest.value, label: interest.label})
-                        )}
+                        options={
+                            interestOpts ? 
+                            interestOpts.map(interest => 
+                            ({value: interest.name.toLowerCase(), label: interest.name}))
+                             : 
+                            []
+                        }
                     />
                 </SystemComponent>
             </SystemComponent>

@@ -9,28 +9,14 @@ import Select, { CreatableSelect } from "../atoms/Select";
 import SubteamPicker from "../molecules/SubteamPicker";
 import Button from "../atoms/Button";
 
-const terms = {
-    "F": "Fall",
-    "S": "Spring",
-    "W": "Winter"
-}
-
 const OnboardingRoleCard = ({
-    selectedProjects, 
-    selectedSubteams, 
-    setSelectedProjects, 
+    selectedProjects,
+    selectedSubteams,
+    setSelectedProjects,
     setSelectedSubteams,
     selectedRole, setSelectedRole,
     submit, subteamOptions, roleOptions
 }) => {
-    const options = ["F16", "W17", "S17", "F17", "W18", "S18", "F18", "W19", "S19", "F19", "W20", "S20"]
-        .map(val => {
-            const term = terms[val[0]];
-            const year = '20' + val.slice(1);
-            return {
-                label: `${term} ${year}`, value: val
-            }
-        });
     const { projects } = useSelector(state => state.membersState.filters);
     return (
         <>
@@ -40,21 +26,21 @@ const OnboardingRoleCard = ({
                     <FlexColumn>
                         <SystemComponent>
                             <FormTitleHeader>What's your main role?</FormTitleHeader>
-                            <Select 
-                                value={{value: selectedRole.value, label: selectedRole.label}}
+                            <Select
+                                value={{ value: selectedRole.value, label: selectedRole.label }}
                                 onChange={val => setSelectedRole(val)}
-                                options={roleOptions.map(val => ({value: val._id, label: val.name}))}
+                                options={roleOptions.map(val => ({ value: val._id, label: val.name }))}
                             />
                         </SystemComponent>
 
                         <SystemComponent>
                             <FormTitleHeader>What subteam are you on?</FormTitleHeader>
-                            <SubteamPicker 
-                                selected={selectedSubteams} 
+                            <SubteamPicker
+                                selected={selectedSubteams}
                                 options={subteamOptions}
                                 updateSelected={(i) => {
                                     setSelectedSubteams(
-                                        selectedSubteams.find(index => index == i) != undefined ? 
+                                        selectedSubteams.find(index => index == i) != undefined ?
                                             selectedSubteams.filter(index => index != i)
                                             :
                                             [...selectedSubteams, i]
@@ -65,15 +51,15 @@ const OnboardingRoleCard = ({
 
                         <SystemComponent>
                             <FormTitleHeader>What project(s) are you working on?</FormTitleHeader>
-                            <CreatableSelect 
+                            <CreatableSelect
                                 isMulti
-                                options={projects ? projects.map(project => ({value: project.name, label: project.name})) : []}
+                                options={projects ? projects.map(project => ({ value: project.name, label: project.name })) : []}
                                 onChange={items => {
                                     const difference = items ? items.filter(item => !selectedProjects.find(proj => proj == item.value)).map(item => item.value) : [];
                                     const intersection = selectedProjects.filter(project => items && items.find(it => it.value == project))
                                     setSelectedProjects([...intersection, ...difference])
                                 }}
-                                value={selectedProjects.map(item => ({value: item, label: item}))}
+                                value={selectedProjects.map(item => ({ value: item, label: item }))}
                             />
                         </SystemComponent>
                     </FlexColumn>
