@@ -79,7 +79,7 @@ const SettingsComponent = ({children, title, onEditClicked, refId}) => {
     );
 };
 
-const Home = () => {
+const Settings = () => {
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -122,7 +122,7 @@ const Home = () => {
     };
 
     return (
-        <PageTemplate>
+        <PageTemplate title="Profile Settings">
             <>
                 <SettingsModalSelector  
                     activeModal={activeModal}
@@ -226,7 +226,7 @@ const Home = () => {
                                                 </NonUnderlinedLink>
                                             ) : (
                                                 <AddInfoPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
-                                                    {"[ Add an Account ]"}
+                                                    {"[ add a link here ]"}
                                                 </AddInfoPrompt>
                                             )}
                                         </SystemComponent>
@@ -240,4 +240,4 @@ const Home = () => {
         </PageTemplate>
     )
 };
-export default Home;
+export default Settings;

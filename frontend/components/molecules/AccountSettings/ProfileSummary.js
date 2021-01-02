@@ -3,12 +3,11 @@ import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import {SystemComponent} from '../../atoms/SystemComponents';
-import {SCHOOL_TERM_OPTS, COOP_SEQ_OPTS, PROGRAM_OPTS} from '../../organisms/EditProfileModal';
+import {SCHOOL_TERM_OPTS} from '../../organisms/EditProfileModal';
 
 import theme from '../../theme';
 
 // TODO: Set actual image URL later
-// TODO: Use server data
 const imageUrl = undefined;
 const Grid = styled(SystemComponent)`
     display: grid;
@@ -47,8 +46,6 @@ const Grid = styled(SystemComponent)`
     }
 `;
 
-// TODO: using styled component may be better
-// because I never pass parameters that actually configure properties of this container.
 const AvatarWrapperComponent = ({ children }) => {
     return (
         <Grid leftColumnWidth="140px">
@@ -60,7 +57,6 @@ const AvatarWrapperComponent = ({ children }) => {
     );
 };
 
-// TODO: insert icons to the left of the labels
 const ProfileSummary = ({isLoaded = false, 
                         firstname = "", 
                         lastname = "", 
@@ -87,7 +83,7 @@ const ProfileSummary = ({isLoaded = false,
         },
         program: {
             label: "Program",
-            value: (isLoaded && PROGRAM_OPTS.find(opt => opt.value === program)) ? PROGRAM_OPTS.find(p => p.value === program).label : ''
+            value: program
         },
         term: {
             label: "Term",
