@@ -23,18 +23,6 @@ const Member_Stream = new Schema({
     },
 });
 
-const Member_TermSchema = new Schema({
-    year: {
-        type: Number,
-        required: true
-    },
-    season: {
-        type: String,
-        required: true,
-        enum: ['Fall', 'Winter', 'Spring']
-    },
-});
-
 const Member_NameSchema = new Schema({
     first: {
         type: String,
@@ -107,9 +95,6 @@ const MemberSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Interest'
     }],
-    joined: {
-        type: Member_TermSchema,
-    },
     memberType: {
         type: Schema.Types.ObjectId,
         ref: 'MemberType'

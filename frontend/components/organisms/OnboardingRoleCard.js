@@ -20,7 +20,6 @@ const OnboardingRoleCard = ({
     selectedSubteams, 
     setSelectedProjects, 
     setSelectedSubteams,
-    selectedYear, setSelectedYear,
     selectedRole, setSelectedRole,
     submit, subteamOptions, roleOptions
 }) => {
@@ -38,17 +37,7 @@ const OnboardingRoleCard = ({
             <FormCard>
                 <Subtitle>Tell us more about yourself</Subtitle>
                 <div css={`display: grid; grid-template-rows: 1fr auto; height: calc(100% - 50px);`}>
-                    <FlexColumn mt={3}>
-                        <SystemComponent>
-                            <FormTitleHeader>When did you join the team?</FormTitleHeader>
-                            <Select 
-                                options={options} 
-                                onChange={val => setSelectedYear(val.value)}
-                                value={{value: selectedYear, label: `${terms[selectedYear[0]]} 20${selectedYear.slice(1)}`}}
-                            />
-                        </SystemComponent>
-                            
-
+                    <FlexColumn>
                         <SystemComponent>
                             <FormTitleHeader>What's your main role?</FormTitleHeader>
                             <Select 

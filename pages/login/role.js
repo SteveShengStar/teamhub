@@ -34,7 +34,6 @@ const Role = () => {
         return [found && found.name || ""];
     }) : []);
 
-    const [ selectedYear, setSelectedYear ] = useState(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
     const [ selectedRole, setSelectedRole ] = useState(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     const dispatch = useDispatch();
 
@@ -48,7 +47,6 @@ const Role = () => {
             return [found && found.name || ""];
         }) : []);
 
-        setSelectedYear(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
         setSelectedRole(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     }, [filters])
 
@@ -84,11 +82,7 @@ const Role = () => {
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: selectedProjects,
-            memberType: selectedRole.label,
-            joined: {
-                season: termMap[selectedYear[0]],
-                year: parseInt('20' + selectedYear.slice(1))
-            }
+            memberType: selectedRole.label
         }, token, user._id, router).then(() => {
             router.push("/login/about");
         }).catch((e) => {
@@ -106,8 +100,6 @@ const Role = () => {
                         selectedProjects={selectedProjects}
                         setSelectedProjects={setSelectedProjects}
                         setSelectedSubteams={setSelectedSubteams}
-                        selectedYear={selectedYear}
-                        setSelectedYear={setSelectedYear}
                         selectedRole={selectedRole}
                         setSelectedRole={setSelectedRole}
                         submit={trySubmit}

@@ -21,10 +21,6 @@ const testMemberData1 = {
         'OOP',
         'Recursion'
     ],
-    'joined': {
-        'year': 2019,
-        'season': 'Fall'
-    },
     'memberType': 'Newbie',
     'subteams': [
         'Software',

@@ -43,10 +43,6 @@ For example,
           "project": "TeamHub"
         }
       ],
-      "joined": {
-        "season": "Fall",
-        "year": 2019
-      },
       "memberType": {
         "name": "Member"
       },
@@ -147,10 +143,6 @@ A JSON object with the results
 		},
 		"email": "steven.x@waterloop.ca",
 		"imageUrl": "https://example.com",
-		"joined": {
-			"season": "Fall",
-			"year": 2019
-		},
 		"memberType": "Member",
 		"bio": "Here is my bio.",
 		"birthday": {
@@ -201,7 +193,6 @@ A JSON object of the document of the user with its authToken
 - bio
 - skills
 - interests
-- joined
 - coopExp
 - memberType
 - subteams

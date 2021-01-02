@@ -127,8 +127,6 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                                 </InlineItemRow>
                             </>
                     }
-                    <Header5 mt={2} mb={1}>Been on team since</Header5>
-                    <Body mb={5}>{memberData.joined ? `${memberData.joined.season} ${memberData.joined.year}` : ''}</Body>
                 </RightColumn>
             </ContentContainer>
         </InfoCard>
