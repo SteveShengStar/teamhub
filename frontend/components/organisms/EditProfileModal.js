@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
+import TextArea from "../atoms/TextArea";
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {removeBadValuesAndDuplicates} from '../../helpers'
@@ -27,11 +28,6 @@ export const SCHOOL_TERM_OPTS = [
     {value: '4A', label: '4A'},
     {value: '4B', label: '4B'},
     {value: '0', label: 'Unspecified'}
-];
-export const COOP_SEQ_OPTS = [
-    {value: '4', label: '4 Stream'}, // TODO: Retrieve these from backend
-    {value: '8', label: '8 Stream'},
-    {value: '0', label: 'other'}
 ];
 export const PROGRAM_OPTS = [
     {value: 'eng', label: 'Engineering'},
@@ -163,6 +159,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+        bio: dataLoaded ? user.bio : ""
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
@@ -187,6 +184,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
             term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+            bio: dataLoaded ? user.bio : ""
         });
 
         setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
@@ -229,7 +227,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 "stream": {
                     ...user.stream,
                     "currentSchoolTerm": formValues.term.value, 
-                }                 // TODO: change stream field later
+                },
+                "bio": formValues.bio              
             }, token, user._id, router, false);
             handleCloseModal();
         }
@@ -327,7 +326,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         }
                     />
                 </SystemComponent>
-                <SystemComponent>
+                <SystemComponent pb={4}>
                     <MultiSelectInput
                         title="Interests"
                         setSelectedItems={setInterests}
@@ -339,6 +338,10 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                             []
                         }
                     />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>Short Bio</Header5>
+                    <TextArea value={formValues['bio']} onChange={e => handleInputChange('bio', e.target.value)}></TextArea>
                 </SystemComponent>
             </SystemComponent>
             
