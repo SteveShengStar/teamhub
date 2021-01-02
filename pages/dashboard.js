@@ -192,7 +192,7 @@ const TodoList = () => {
         <SystemComponent
           display="grid"
           gridTemplateColumns={["1fr", "1fr", "1fr 1fr", "1fr 1fr"]}
-          gridRowGap={3}
+          gridRowGap={4}
           gridColumnGap={3}
         > 
 

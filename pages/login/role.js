@@ -91,7 +91,7 @@ const Role = () => {
     }
     return (
         <>
-            <PageTemplate myHubHidden={true} title="Onboarding">
+            <PageTemplate title="Onboarding">
                 <LoginTransition transitionRef={loginTransition.ref}>
                     <OnboardingRoleCard 
                         subteamOptions={filters.subteams || []}

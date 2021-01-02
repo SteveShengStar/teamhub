@@ -49,10 +49,6 @@ const About = () => {
       alert("Coop sequence is 0!");
       return;
     }
-    if (!bio) {
-      alert("No bio is set");
-      return;
-    }
     if (!term) {
       alert("No term is picked");
       return;
@@ -74,7 +70,7 @@ const About = () => {
   }
   return (
     <>
-      <PageTemplate myHubHidden title="Onboarding">
+      <PageTemplate title="Onboarding">
         <LoginTransition transitionRef={loginTransition.ref}>
             <OnboardingAboutCard 
               submit={trySubmit}

@@ -36,7 +36,7 @@ const Name = () => {
 
     return (
         <>
-            <PageTemplate myHubHidden title="Onboarding">
+            <PageTemplate title="Onboarding">
                 <LoginTransition transitionRef={loginTransition.ref}>
                     <LoginNameCard submit={trySubmit} nameInput={nameInput} setNameInput={setNameInput} />
                 </LoginTransition>

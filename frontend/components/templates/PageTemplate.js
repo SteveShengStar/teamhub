@@ -3,7 +3,6 @@ import Head from "next/head";
 import Image from "../atoms/Image";
 import { SystemComponent } from "../atoms/SystemComponents";
 import Subtitle from "../atoms/Subtitle";
-import MyHub from "../organisms/MyHub";
 import styled from "styled-components";
 
 export const PageTemplateGridLayout = styled(SystemComponent)`
@@ -17,7 +16,7 @@ export const PageTemplateGridLayout = styled(SystemComponent)`
   }
 `;
 
-const PageTemplate = ({ className, title, children, myHubHidden }) => {
+const PageTemplate = ({ className, title, children }) => {
   return (
     <div>
       <Head>
@@ -44,7 +43,6 @@ const PageTemplate = ({ className, title, children, myHubHidden }) => {
           overflowX="hidden"
           overflowY="auto"
         >
-          {/*myHubHidden ? null : <MyHub />*/}
           <PageTemplateGridLayout
             className={className}
             height="inherit"

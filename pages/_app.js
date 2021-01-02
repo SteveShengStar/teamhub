@@ -17,21 +17,15 @@ import theme from '../frontend/components/theme';
 import Nav from '../frontend/components/molecules/Nav';
 
 const navItems = [
-    /*{
-        name: 'Explore', link: '/'
-    },
-    /*{
-        name: 'The Team', link: '/team',
+    {
+        name: 'Home', link: '/dashboard'
     },
     {
-        name: 'Meetings', link: '/meetings'
+        name: 'The Team', link: '/'
     },
     {
-        name: 'Discover', link: '/discover'
+        name: 'Profile Info', link: '/settings'
     },
-    {
-        name: 'Account', link: '/account'
-    }*/
 ];
 
 class MyApp extends App {
@@ -58,6 +52,7 @@ class MyApp extends App {
             if (split) index = navItems.findIndex(item => item.link === '/' + split[1]);
             else index = navItems.findIndex(item => item.link === '/');
         }
+        
         return (
             <Provider store={reduxStore}>
                 <ThemeProvider theme={theme}>
@@ -65,11 +60,10 @@ class MyApp extends App {
                         loading={<Component {...pageProps} />}
                         persistor={this.persistor}
                     >
-                        <Nav navItems={navItems} index={index}/>
+                        <Nav navItems={router.route.indexOf('/login') === -1 ? navItems : []} index={index}/>
                         <Component {...pageProps} />
                     </PersistGate>
                 </ThemeProvider>
-                
             </Provider>
         );
     }

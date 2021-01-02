@@ -18,7 +18,7 @@ const importantLinks = [
     },
     {
         title: 'Google Calendar',
-        description: 'Schedule Group Meetings and Events',
+        description: 'Schedule Meetings and Events',
         url: 'a',
         imagePath: '/static/linktree/gcal.png'
     },

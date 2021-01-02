@@ -13,7 +13,7 @@ import ProfileSummary from '../frontend/components/molecules/AccountSettings/Pro
 import SettingsModalSelector from '../frontend/components/atoms/SettingsModalSelector';
 import EditableSectionHeader from '../frontend/components/molecules/AccountSettings/EditableSectionHeader';
 
-import {lowerCase, capitalize} from 'lodash';
+import {capitalize} from 'lodash';
 
 import PageTemplate from '../frontend/components/templates/PageTemplate';
 import {getProfileInfo} from '../frontend/store/reducers/userReducer';
@@ -28,7 +28,6 @@ const SettingsComponentBody = styled(SystemComponent)`
     margin-bottom: ${props => props.theme.space[5]}px;
 `;
 
-// TODO: Add images to make this 3 columns
 const ThreeColumnGrid = styled(SystemComponent)`
     display: grid;
     grid-template-columns: 20px 150px auto;
@@ -93,18 +92,11 @@ const Settings = () => {
 
     useEffect(() => {
         if (hydrated && !isLoaded) {
-            // TODO: Here I just want to retrieve the user information. 
-            // TODO: there are many things I can eliminate from the store.
-            // That way, I can get rid of the isLoaded variable. 
-            // The only slide of state I really need to store is the subteams list, that's it for now.
             getProfileInfo(dispatch, token, user._id, router);
             if (!isLoaded) setIsLoaded(true);
         }
     }, [hydrated]);
 
-
-    // TODO: check this later.
-    // All the user's profile information defaults to empty array if data is not loaded yet.
     const skills = (isLoaded && user.skills) ? user.skills.map(s => s.name) : [];
     const projects = (isLoaded && user.projects) ? user.projects.map(p => p.name) : [];
     const subteams = (isLoaded && user.subteams) ? user.subteams.map(subteam => subteam.name) : [];

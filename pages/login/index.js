@@ -22,7 +22,7 @@ export default () => {
 
     return (
         <>
-            <PageTemplate myHubHidden={true}>
+            <PageTemplate>
                 <LoginTransition transitionRef={loginTransition.ref}>
                     <Login 
                         shouldHide={() => {
