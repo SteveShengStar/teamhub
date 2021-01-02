@@ -68,12 +68,12 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
                     {memberData && memberData.projects && memberData.projects.length > 0 && <>
                         <Header5 mb={1}>Projects</Header5>
-                        <div css="display: flex; flex-direction: column;">
+                        <div css="display: flex; flex-direction: row;">
                             {
                                 memberProjects && memberProjects.length > 1 && memberProjects.slice(0, -1).map((project, i) => {
                                     return (
                                         <div key={i}>
-                                            <span>{project}</span> <span>{' • '}</span>
+                                            <span>{project}</span> <span>{' • '}</span> 
                                         </div>
                                     );
                                 })
