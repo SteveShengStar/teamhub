@@ -162,7 +162,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
-        sequence: ""                           // TODO: eliminate this later.
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
@@ -187,7 +186,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
             term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
-            sequence: "", // TODO: eliminate this later.
         });
 
         setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
@@ -250,8 +248,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
     let schoolTerm = SCHOOL_TERM_OPTS.find(opt => opt.value === formValues['term']);
     if (!schoolTerm) schoolTerm = formValues['term'];
-    let coopSeq = COOP_SEQ_OPTS.find(opt => opt.value === formValues['sequence']);
-    if (!coopSeq) coopSeq = formValues['sequence'];
 
     return (
         <EditSettingsModal 
@@ -315,13 +311,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     name="term"
                     value={schoolTerm}
                     options={SCHOOL_TERM_OPTS}
-                    handleChange={handleInputChange}
-                />
-                <SelectSegment 
-                    title="Work-Study Sequence"
-                    name="sequence"
-                    value={coopSeq}
-                    options={COOP_SEQ_OPTS}
                     handleChange={handleInputChange}
                 />
             </SystemComponent>
