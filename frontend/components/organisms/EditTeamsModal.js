@@ -26,6 +26,8 @@ const subteamDisplayNames = {
 
 const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { token, user } = useSelector(state => state.userState);
+    const { filters } = useSelector(state => state.membersState);
+    const { projects: projectOpts } = filters;
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -115,9 +117,13 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                     <MultiSelectInput 
                         title="What Projects are you Working on ?"
                         setSelectedItems={list => setSelectedProjects(list)}
-                        options={selectedProjects.map(project => 
-                            ({value: project, label: capitalize(project)})
-                        )}
+                        options={
+                            projectOpts ? 
+                            projectOpts.map(project => 
+                            ({value: project.name, label: capitalize(project.name)})) 
+                             : 
+                            []
+                        }
                     />
                 </SystemComponent>
             </SystemComponent>            
