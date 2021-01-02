@@ -13,6 +13,8 @@ import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
+import {removeBadValuesAndDuplicates} from '../../frontend/helpers';
+
 const Role = () => {
     const { user, token, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
@@ -56,7 +58,7 @@ const Role = () => {
             window.alert("No projects were specified!")
             return false;
         }
-        if (selectedProjects.includes(undefined) || selectedProjects.map(p => p.trim()).includes('')) {
+        if (selectedProjects.includes(undefined)) {
             window.alert("Some projects you specified are blank strings. That is now allowed !")
             return false;
         }
@@ -78,7 +80,7 @@ const Role = () => {
         loginTransition.setVisible(false);
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
-            projects: selectedProjects,
+            projects: removeBadValuesAndDuplicates(selectedProjects),
             memberType: selectedRole.label
         }, token, user._id, router).then(() => {
             router.push("/login/about");

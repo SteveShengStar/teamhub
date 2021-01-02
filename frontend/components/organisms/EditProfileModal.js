@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import {removeBadValuesAndDuplicates} from '../../helpers'
 import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
@@ -198,11 +199,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         });
     }, [dataLoaded]);
 
-    const removeBadValuesAndDuplicates = (array) => {
-        const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
-        return [...uniqueSet].filter(i => i);
-    }
-
     const handleSave = () => {
         const updatedErrorList = {...hasError};
 
@@ -294,7 +290,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         value={formValues['birthDate']}
                         handleChange={handleInputChange}
                         error={hasError['birthDate']}
-                        errorText="Birthdate must be valid and earlier than today." />
+                        errorText="Birth Date must be valid." />
                 </SystemComponent>
                 <SelectSegment 
                     title="Academic Program"

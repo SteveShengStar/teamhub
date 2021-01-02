@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import {removeBadValuesAndDuplicates} from '../../helpers'
 
 import styled from 'styled-components';
 import MultiSelectInput from '../molecules/MultiSelectInput';
 import {SystemComponent} from '../atoms/SystemComponents';
-import TextArea from '../atoms/TextArea';
 import { useRouter } from "next/router";
 
 import Header5 from '../atoms/Header5';
@@ -45,11 +45,6 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
             setSelectedProjects(dataLoaded && user.projects ? user.projects.map(p => p.name) : []);
         }
     }, [dataLoaded, visible]);
-
-    const removeBadValuesAndDuplicates = (array) => {
-        const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
-        return [...uniqueSet].filter(i => i);
-    }
 
     const handleSave = () => {
         updateUser(dispatch, {

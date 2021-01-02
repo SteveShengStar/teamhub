@@ -85,7 +85,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           </DateLayout>
           
         
-        <Header5 mb={1} mt={4}>Which terms are you onstream?</Header5>
+        <Header5 mb={1} mt={4}>Which terms are you on campus?</Header5>
         <GridLayout>
           {
             terms.map((term, i) => 

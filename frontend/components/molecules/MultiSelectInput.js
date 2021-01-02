@@ -5,7 +5,6 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import Creatable from 'react-select/creatable';
 
 
-// TODO: Load suggestions from backend.
 const MultiSelectInput = ({title,
                             setSelectedItems,
                             options}) => {

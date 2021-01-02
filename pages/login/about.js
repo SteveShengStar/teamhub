@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {removeBadValuesAndDuplicates} from '../../frontend/helpers';
 
 import PageTemplate from "../../frontend/components/templates/PageTemplate";
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
@@ -46,18 +47,18 @@ const About = () => {
     }
     // If user did not specify a coop sequence, display error.
     if (Object.keys(coopSequence).length == 0) {
-      alert("No coop sequence was selected !");
+      alert("Please answer the question: Which terms are you on campus. In the rare case that you cannot answer this question, choose something random.");
       return;
     }
     if (!term) {
       alert("No term was picked !");
       return;
     }
-    if (interests.includes(undefined) || interests.map(i => i.trim()).includes("")) {
+    if (interests.map(val => val.value).includes(undefined)) {
       alert("You specified an interest that is blank. That is now allowed !");
       return;
     }
-    if (skills.includes(undefined) || skills.map(i => i.trim()).includes("")) {
+    if (skills.map(skill => skill.value).includes(undefined)) {
       alert("You specified a skill that is blank. That is now allowed !");
       return;
     }
@@ -68,8 +69,8 @@ const About = () => {
       birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,
       stream: { coopStream: coopSequence, currentSchoolTerm: term },
-      interests: interests.map(val => val.value),
-      skills: skills.map(skill => skill.value),
+      interests: removeBadValuesAndDuplicates(interests.map(val => val.value)),
+      skills: removeBadValuesAndDuplicates(skills.map(skill => skill.value)),
       bio
     }, token, user._id, router).then(res => {
       router.push("/")
