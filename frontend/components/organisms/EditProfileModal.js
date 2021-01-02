@@ -5,13 +5,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
-import MultiSelectInput from '../molecules/MultiSelectInput'; // TODO: rename
+import MultiSelectInput from '../molecules/MultiSelectInput';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import { updateUser } from "../../store/reducers/userReducer";
 
 import isBefore from 'validator/lib/isBefore';
+import {isEmpty} from 'lodash';
 import theme from '../theme';
 
 export const SCHOOL_TERM_OPTS = [
@@ -26,7 +27,7 @@ export const SCHOOL_TERM_OPTS = [
     {value: '0', label: 'Unspecified'}
 ];
 export const COOP_SEQ_OPTS = [
-    {value: '4', label: '4 Stream'}, // TODO: Verify these values
+    {value: '4', label: '4 Stream'}, // TODO: Retrieve these from backend
     {value: '8', label: '8 Stream'},
     {value: '0', label: 'other'}
 ];
@@ -42,7 +43,6 @@ const CustomInput = styled(Input)`
     width: 100%;
 `;
 
-// TODO: make into a molecule
 const InputSegment = ({label, name, placeholder, value, handleChange, error = false, errorText = ""}) => {
     return (
         <>
@@ -151,22 +151,19 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { token, user } = useSelector(state => state.userState);
-    
-    //let birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
-    //birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const [formValues, setFormValues] = useState({
-        firstName: dataLoaded ? user.name.first : "",
-        lastName: dataLoaded ? user.name.last : "",
-        display: dataLoaded ? user.name.display : "",
-        birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
+        firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
+        lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
+        display: dataLoaded && !isEmpty(user) ? user.name.display : "",
+        birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
-        term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+        term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         sequence: ""                           // TODO: eliminate this later.
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
-    const [hasError, setHasError] = useState({ // TODO: Think about different locales later
+    const [hasError, setHasError] = useState({
         firstName: false,
         program: false,
         birthDate: false
@@ -175,12 +172,12 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     useEffect(() => {
         setFormValues({
             ...formValues, 
-            firstName: dataLoaded ? user.name.first : "",
-            lastName: dataLoaded ? user.name.last : "",
-            display: dataLoaded ? user.name.display : "",
-            birthDate: dataLoaded ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
+            firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
+            lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
+            display: dataLoaded && !isEmpty(user) ? user.name.display : "",
+            birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-            term: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+            term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             sequence: "", // TODO: eliminate this later.
         });
 
@@ -256,7 +253,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             >
                 <SystemComponent>
                     <InputSegment
-                        label="First Name" // TODO: think about different locales and name validation 
+                        label="First Name"
                         name="firstName"
                         placeholder="First Name" 
                         value={formValues['firstName']}

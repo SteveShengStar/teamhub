@@ -165,7 +165,8 @@ const TodoList = () => {
 
   const getTasks = async () => {
     const res = await api.members.getMemberTasks(_id, token, undefined, dispatch, router);
-    setTasks(res.body.length > 0 ? res.body[0].tasks : []);
+    if (res)
+      setTasks(res.body.length > 0 ? res.body[0].tasks : []);
   }
 
   const handleToggleCheck = async (taskId) => {
