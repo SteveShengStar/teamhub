@@ -199,7 +199,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [dataLoaded]);
 
     const removeBadValuesAndDuplicates = (array) => {
-        const uniqueSet = new Set(array.map(i => i.trim()))
+        const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
         return [...uniqueSet].filter(i => i);
     }
 
