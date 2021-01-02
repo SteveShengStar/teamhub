@@ -119,13 +119,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
                     {
                         memberData.stream && memberData.stream.currentSchoolTerm && memberData.program &&
-                            <>
-                                <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
-                                <InlineItemRow>
-                                    <Dot isOnStream={memberData.stream.coopStream[code]}/>
-                                    <Body as="div">{memberData.stream.coopStream[code] ? "Onstream" : "Offstream"}</Body>
-                                </InlineItemRow>
-                            </>
+                        <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
                     }
                 </RightColumn>
             </ContentContainer>
@@ -199,12 +193,4 @@ const SubteamsContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min-content, 100px));
     margin: 0 0 20px 0;
-`
-
-const Dot = styled.div`
-    width: 15px;
-    height: 15px;
-    border-radius: 8px;
-    margin: 0 3px 0 0;
-    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
 `
