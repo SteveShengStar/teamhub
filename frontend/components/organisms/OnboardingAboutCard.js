@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { SystemComponent } from "../atoms/SystemComponents";
 
 import Subtitle from "../atoms/Subtitle";
-import Header5 from "../atoms/Header4";
+import Header4 from "../atoms/Header4";
 import Select, { CreatableSelect } from "../atoms/Select";
-import Body from "../atoms/Body";
 import Card from "../atoms/Card";
 import TermSelect from "../atoms/TermSelect";
 import Button from "../atoms/Button";
@@ -35,10 +34,11 @@ const terms = ["W21", "S21", "F21"]
 
 const OnboardingAboutCard = ({values, setValues, submit}) => {
   const { interests, skills, years } = useSelector(state => state.membersState.filters)
+  const dayOptions = days[values.birthday[0]];
     return (
       <CustomCard>
         <Subtitle mb={3}>Tell us more about yourself</Subtitle>
-        <Header5 mb={1}>Birthday</Header5>
+        <HeaderSection mb={1} required>Birthday</HeaderSection>
         <DateLayout>
           <Select 
             placeholder="Month"
@@ -49,7 +49,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           <Select 
             placeholder="Day" 
             variant="text" 
-            options={[...Array(days[0])].map((_, day) => ({value: day + 1, label: day + 1 < 10 ? "0" + (day + 1) : day + 1}))}
+            options={[...Array(dayOptions)].map((_, day) => ({value: day + 1, label: day + 1 < 10 ? "0" + (day + 1) : day + 1}))}
             value={{value: values.birthday[1], label: values.birthday[1] < 10 ? '0' + values.birthday[1] : values.birthday[1]}}
             onChange={val => setValues.setBirthday([values.birthday[0], val.value, values.birthday[2]])}
             />
@@ -65,7 +65,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
 
           <DateLayout>
             <SystemComponent>
-              <Header5 mb={1} mt={4}>What program are you in?</Header5>
+              <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
               <CreatableSelect 
                 placeholder="Choose Program" 
                 options={programs.map(program => ({value: program, label: program}))} 
@@ -75,7 +75,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
             </SystemComponent>
 
             <SystemComponent>
-              <Header5 mb={1} mt={4}>What term are you on?</Header5>
+              <HeaderSection mb={1} mt={4} required>What term are you on?</HeaderSection>
               <Select 
                 options={years ? years.map(year => ({value: year, label: year})) : []} 
                 value={{value: values.term, label: values.term}}
@@ -85,7 +85,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           </DateLayout>
           
         
-        <Header5 mb={1} mt={4}>Which terms are you on campus?</Header5>
+        <HeaderSection mb={1} mt={4} required>Which terms are you on campus?</HeaderSection>
         <GridLayout>
           {
             terms.map((term, i) => 
@@ -107,7 +107,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           }
         </GridLayout>
 
-        <Header5 mt={4} mb={1}>What are some of your interests?</Header5>
+        <HeaderSection mt={4} mb={1}>What are some of your interests?</HeaderSection>
         <CreatableSelect 
           isMulti 
           variant="text" 
@@ -119,7 +119,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           }}
         />
 
-        <Header5 mt={4} mb={1}>What are some of your skills?</Header5>
+        <HeaderSection mt={4} mb={1}>What are some of your skills?</HeaderSection>
         <CreatableSelect 
           isMulti 
           variant="text" 
@@ -131,7 +131,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           }}       
         />
 
-        <Header5 mt={4} mb={1}>Write a little bio!</Header5>
+        <HeaderSection mt={4} mb={1}>Write a little bio!</HeaderSection>
         <TextBox placeholder="Write bio here..." value={values.bio} onChange={e => setValues.setBio(e.target.value)}/>
 
         <ContinueButton onClick={submit}>Continue</ContinueButton>
@@ -197,12 +197,6 @@ const InlineItemRow = styled(SystemComponent)`
   display: flex;
   align-items: center;
 `;
-const CustomBody = styled(Body)`
-  ${props => props.theme.mediaQueries.mobile} {
-    width: auto;
-  }
-  font-family: ${props => props.theme.fonts.body};
-`;
 
 const GridLayout = styled(SystemComponent)`
   display: grid;
@@ -218,5 +212,13 @@ const ContinueButton = styled(Button)`
         display: block;
         justify-self: end;
         position: relative;
+    }
+`
+
+const HeaderSection = styled(Header4)`
+    ${props => props.required && 
+        `&:after {
+            content: \' *\';
+        }`
     }
 `

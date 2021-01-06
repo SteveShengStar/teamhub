@@ -19,7 +19,7 @@ const useShouldRedirect = (user, router) => {
         return false
 
     }
-    if (!user.subteams || (user.subteams && user.subteams.length === 0) || !user.memberType || (!user.projects) || (user.projects && user.projects.length === 0)) {
+    if (!user.subteams || (user.subteams && user.subteams.length === 0) || !user.memberType) {
         if (router.pathname != "/login/role") {
             router.push("/login/role");
             return true

@@ -54,11 +54,7 @@ const Role = () => {
             window.alert("No subteam was selected!")
             return false;
         }
-        if (selectedProjects.length == 0) {
-            window.alert("No projects were specified!")
-            return false;
-        }
-        if (selectedProjects.includes(undefined)) {
+        if (selectedProjects.length > 0 && selectedProjects.includes(undefined)) {
             window.alert("Some projects you specified are blank strings. That is now allowed !")
             return false;
         }

@@ -25,7 +25,7 @@ const OnboardingRoleCard = ({
                 <div css={`display: grid; grid-template-rows: 1fr auto; height: calc(100% - 50px);`}>
                     <FlexColumn>
                         <SystemComponent>
-                            <FormTitleHeader>What's your main role?</FormTitleHeader>
+                            <FormTitleHeader required>What's your main role?</FormTitleHeader>
                             <Select
                                 value={{ value: selectedRole.value, label: selectedRole.label }}
                                 onChange={val => setSelectedRole(val)}
@@ -34,7 +34,7 @@ const OnboardingRoleCard = ({
                         </SystemComponent>
 
                         <SystemComponent>
-                            <FormTitleHeader>What subteam are you on?</FormTitleHeader>
+                            <FormTitleHeader required>What subteam are you on?</FormTitleHeader>
                             <SubteamPicker
                                 selected={selectedSubteams}
                                 options={subteamOptions}
@@ -73,6 +73,12 @@ export default OnboardingRoleCard;
 
 const FormTitleHeader = styled(Header4)`
     margin: 25px 0 3px 0;
+
+    ${props => props.required && 
+        `&:after {
+            content: \' *\';
+        }`
+    }
 `
 
 const FormCard = styled(Card)`
