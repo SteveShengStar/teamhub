@@ -47,7 +47,7 @@ const About = () => {
     }
     // If user did not specify a coop sequence, display error.
     if (Object.keys(coopSequence).length == 0) {
-      alert("Please answer the question: Which terms are you on campus. In the rare case that you cannot answer this question, choose something random.");
+      alert("Answer the Question: Which terms are you on campus. If this question is not applicable, choose something random.");
       return;
     }
     if (!term) {
