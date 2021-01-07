@@ -64,8 +64,9 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
         <InlineItemRow></InlineItemRow>
 
           <DateLayout>
-            <SystemComponent>
+            <SystemComponent gridColumn='1/3'>
               <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
+              <SystemComponent>You can also type in and create a new option below.</SystemComponent>
               <CreatableSelect 
                 placeholder="Choose Program" 
                 options={programs.map(program => ({value: program, label: program}))} 
