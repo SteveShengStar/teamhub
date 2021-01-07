@@ -230,7 +230,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     ...user.stream,
                     "currentSchoolTerm": formValues.term.value, 
                 },
-                "bio": formValues.bio              
+                "bio": formValues.bio.trim()              
             }, token, user._id, router, false);
             handleCloseModal();
         }
@@ -301,7 +301,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     handleChange={handleInputChange}
                     allowCustomInput={true}
                     error={hasError['program']}
-                    errorText="Please enter valid Program Name. Special characters allowed: - ' ,"
+                    errorText="Please enter valid Program Name. Special characters allowed are  - ' ,"
                     helpMessage="Type below to create a custom entry."
                 />
                 <SelectSegment 
