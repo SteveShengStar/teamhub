@@ -66,7 +66,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
           <DateLayout>
             <SystemComponent gridColumn='1/3'>
               <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
-              <SystemComponent>You can also type in and create a new option below.</SystemComponent>
+              <SystemComponent>Can't find your program ? You can type below and Create A New Entry.</SystemComponent>
               <CreatableSelect 
                 placeholder="Choose Program" 
                 options={programs.map(program => ({value: program, label: program}))} 
@@ -109,6 +109,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
         </GridLayout>
 
         <HeaderSection mt={4} mb={1}>What are some of your interests?</HeaderSection>
+        <SystemComponent>You can create New Entries by typing them below.</SystemComponent>
         <CreatableSelect 
           isMulti 
           variant="text" 
@@ -121,6 +122,7 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
         />
 
         <HeaderSection mt={4} mb={1}>What are some of your skills?</HeaderSection>
+        <SystemComponent>You can create New Entries by typing them below.</SystemComponent>
         <CreatableSelect 
           isMulti 
           variant="text" 
