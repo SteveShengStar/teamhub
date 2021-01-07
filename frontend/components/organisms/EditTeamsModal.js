@@ -119,6 +119,7 @@ const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {
                              : 
                             []
                         }
+                        helpMessage="Type below to create new/custom entries."
                     />
                 </SystemComponent>
             </SystemComponent>            

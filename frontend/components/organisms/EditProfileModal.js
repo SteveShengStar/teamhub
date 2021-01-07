@@ -123,7 +123,8 @@ const SelectSegment = ({title,
     options,
     allowCustomInput = false,
     error = false, 
-    errorText = ""}) => {
+    errorText = "",
+    helpMessage}) => {
 
         // TODO: refactor this
         const handleOptChange = (title, val) => {
@@ -138,6 +139,7 @@ const SelectSegment = ({title,
                     onChange={handleOptChange} // TODO: extra parameter passed up.
                     isMulti={false}
                     allowCustomInput={allowCustomInput}
+                    helpMessage={helpMessage}
                 />
                 {error && <SystemComponent color={theme.colors.alertAction}>{errorText}</SystemComponent>}
             </SystemComponent>
@@ -218,7 +220,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                 },
                 "birthday": {
                     "year": formValues.birthDate.split("-")[0],
-                    "month": formValues.birthDate.split("-")[1],
+                    "month": formValues.birthDate.split("-")[1] - 1,
                     "day": formValues.birthDate.split("-")[2]
                 },
                 "program": formValues.program.value.trim(),
@@ -300,6 +302,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     allowCustomInput={true}
                     error={hasError['program']}
                     errorText="Please enter valid Program Name. Special characters allowed: - ' ,"
+                    helpMessage="Type below to create a custom entry."
                 />
                 <SelectSegment 
                     title="School Term"
@@ -324,6 +327,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                              : 
                             []
                         }
+                        helpMessage="Type below to create new/custom entries."
                     />
                 </SystemComponent>
                 <SystemComponent pb={4}>
@@ -337,6 +341,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                              : 
                             []
                         }
+                        helpMessage="Type below to create new/custom entries."
                     />
                 </SystemComponent>
                 <SystemComponent>

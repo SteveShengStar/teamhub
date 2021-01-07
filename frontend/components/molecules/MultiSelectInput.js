@@ -7,7 +7,8 @@ import Creatable from 'react-select/creatable';
 
 const MultiSelectInput = ({title,
                             setSelectedItems,
-                            options}) => {
+                            options,
+                            helpMessage}) => {
 
     const handleSelectItems = (selectedItems) => {
         if (!selectedItems) {
@@ -23,6 +24,7 @@ const MultiSelectInput = ({title,
             <SystemComponent>
                 <Header5>{title}</Header5>
             </SystemComponent>
+            {helpMessage && <SystemComponent>{helpMessage}</SystemComponent>}
             <SystemComponent position="relative">
                 <Creatable
                     isClearable
