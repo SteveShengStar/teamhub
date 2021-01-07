@@ -158,7 +158,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
         lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
         display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-        birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
+        birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", (user.birthday.month + 1).toString(), "-", user.birthday.day.toString()) : "--",
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         bio: dataLoaded ? user.bio : ""
@@ -183,7 +183,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
             lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
             display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-            birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", user.birthday.month.toString(), "-", user.birthday.day.toString()) : "--",
+            birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", (user.birthday.month + 1).toString(), "-", user.birthday.day.toString()) : "--",
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
             term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             bio: dataLoaded ? user.bio : ""

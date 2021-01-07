@@ -71,7 +71,7 @@ const About = () => {
       stream: { coopStream: coopSequence, currentSchoolTerm: term },
       interests: removeBadValuesAndDuplicates(interests.map(val => val.value)),
       skills: removeBadValuesAndDuplicates(skills.map(skill => skill.value)),
-      bio
+      bio: bio.trim()
     }, token, user._id, router).then(res => {
       router.push("/")
     })
