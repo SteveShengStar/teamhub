@@ -51,7 +51,7 @@ const OnboardingRoleCard = ({
 
                         <SystemComponent>
                             <FormTitleHeader>What project(s) are you working on?</FormTitleHeader>
-                            <SystemComponent>Can't find the project you are looking for ? You can type below to Create New Entries.</SystemComponent>
+                            <SystemComponent>Can't find the project you are looking for ? You can type below and Create New Entries.</SystemComponent>
                             <CreatableSelect
                                 isMulti
                                 options={projects ? projects.map(project => ({ value: project.name, label: project.name })) : []}

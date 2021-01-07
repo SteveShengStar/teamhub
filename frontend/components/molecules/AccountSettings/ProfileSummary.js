@@ -64,7 +64,7 @@ const ProfileSummary = ({isLoaded = false,
                         program = "", 
                         schoolterm = "", 
                         email = ""}) => {
-    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month - 1, birthday.day) : new Date();
+    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-birthday-cake', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
