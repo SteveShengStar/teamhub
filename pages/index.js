@@ -11,6 +11,7 @@ import Card from '../frontend/components/atoms/Card';
 import Button from "../frontend/components/atoms/Button";
 import MemberListGrid from '../frontend/components/molecules/MemberListGrid';
 import { searchMembers, lookupMember, getFilters, DataFetchType } from '../frontend/store/reducers/membersReducer';
+import { getMemberEmail } from "../frontend/store/api/members";
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 
 import { getUserId, startGroupConversation } from "./api/slack";
@@ -86,19 +87,20 @@ const Home = () => {
         }
     }, [selectedMember]);
 
-    const getEmails = () => {
+    const getEmails = async () => {
         const emails = [];
 
-        groupSelectedMembers.forEach(id => {    // Get the email of each user
-            const email = members.find(({ _id }) => _id === id).email;
-            if(email) emails.push(email);
-        });
+        for (let i = 0; i < groupSelectedMembers.length; i++) {
+          const id = groupSelectedMembers[i];
+          const res = await getMemberEmail(id, token, dispatch, router);
 
+          if(res.success) emails.push(res.body[0].email);
+        }
         return emails;
     }
 
-    const generateGroupEmail = () => {
-        const emails = getEmails();
+    const generateGroupEmail = async () => {
+        const emails = await getEmails();
         const filteredEmails = emails.filter((email) => email !== user.email);
 
         // Generate Gmail mailto link

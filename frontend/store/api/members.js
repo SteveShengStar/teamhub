@@ -32,6 +32,11 @@ export function getMember(id, token, dispatch, router) {
 }
 
 
+export function getMemberEmail(id, token, dispatch, router) {
+  return refreshable(`/api/members/${id}/email`, token, {}, dispatch, router)
+}
+
+
 /**
  * Search for tasks by member id
  * @param {string} id 

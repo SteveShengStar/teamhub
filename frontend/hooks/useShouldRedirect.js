@@ -26,7 +26,7 @@ const useShouldRedirect = (user, router) => {
         }
         return false
     }
-    if (!user.bio) {
+    if (!user.birthday) {
         if (router.pathname != "/login/about") {
             router.push("/login/about");
             return true
