@@ -110,7 +110,7 @@ const Home = () => {
     }
 
     const generateSlackGroup = async () => {
-      const emails = getEmails();
+      const emails = await getEmails();
       const slackIds = [];
 
       for(const email of emails) {
