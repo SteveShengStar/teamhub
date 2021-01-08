@@ -45,7 +45,7 @@ const populateLinks = (description) => {
 
 const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick, showButton = true }) => {
   const getTaskButtonText = () => {
-    return status === 'complete' ? "Move to Pending" : "Complete Task";
+    return status === 'complete' ? "Mark as Unfinished" : "Mark as Complete";
   }
 
   const getTaskButtonVariant = () => {
@@ -54,10 +54,12 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
 
   return (
     <CustomCard style={{ marginBottom: 15 }} backgroundColor={theme.colors.greys[1]}>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <Header4>{title}</Header4>
-        {showButton && <Button mb={2} variant={getTaskButtonVariant()} onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>}
-      </div>
+      {showButton && <SystemComponent display="flex" flexDirection="row-reverse">
+          <Button mb={2} variant={getTaskButtonVariant()} display onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>
+      </SystemComponent>}
+      <SystemComponent>
+          <Header4>{title}</Header4>
+      </SystemComponent>
         {description && populateLinks(description)}
         {searchBarPlaceholderTexts && <TextInput placeholderTexts={searchBarPlaceholderTexts} />}
         {docUrls && <GoogleDocLinks docUrls={docUrls.map(d => d.url)} docTitles={docUrls.map(d => d.displayTitle)} />}

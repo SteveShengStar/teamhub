@@ -268,10 +268,11 @@ const OptionButton = styled(Button)`
   color: ${props => props.isSelected && props.theme.colors.foreground};
   font-weight: ${props => props.isSelected && 700};
   font-size: ${props => props.isSelected && props.theme.fontSizes.body2}px;
-  border: ${props => props.isSelected && 'solid 2px #000'};
+  border: ${props => props.isSelected && 'solid 1px #000'};
 
   ${props => props.isSelected && '&:hover {transform: scale(1); pointer: default;}'}
   ${props => props.isSelected && '&:active {opacity: 1;}'}
+  ${props => props.isSelected && 'cursor: default;'}
 `;
 
 const CancelButton = styled(OptionButton)`
