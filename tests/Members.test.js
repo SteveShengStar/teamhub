@@ -26,15 +26,7 @@ const testMemberData1 = {
         'Software',
         'Hardware'
     ],
-    'projects': [
-        {
-            'project': 'TeamHub',
-            'description': 'Test1'
-        }, {
-            'project': 'Website',
-            'description': 'Test2'
-        }
-    ],
+    'projects': ['TeamHub', 'Website'],
     'email': 'testuser1010@testing.ca',
     'stream': {
         'isCoop': true,
@@ -101,6 +93,7 @@ describe('Testing Members functions', () => {
     it('Tests Adding testMemberData1', async (done) => {
         // Test adding the member
         let resp = await addTestMember(testMemberData1);
+        console.log(resp);
         expect(resp.success).toBe(true);
 
         // Find the member that was just created
