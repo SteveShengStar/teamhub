@@ -21,7 +21,8 @@ const subteamDisplayNames = {
     "Mechanical": "mechanical",
     "Exec": "executive",
     "Infrastructure": "infrastructure",
-    "Admin": "admin"
+    "Admin": "admin",
+    "Web": "web"
 };
 
 const EditTeamsModal = ({dataLoaded, visible, handleCloseModal}) => {

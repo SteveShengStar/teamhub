@@ -23,6 +23,7 @@ const electricalGreen = '#26C309';
 const adminPurple = '#892FF2';
 const execYellow = '#CEAC36';
 const infraOrange = '#CEAC36';
+const webTeal = '#2bff79';
 
 /**
  * Responsive Scaling
@@ -108,7 +109,8 @@ const theme = {
         electrical: electricalGreen,
         admin: adminPurple,
         exec: execYellow,
-        infrastructure: infraOrange
+        infrastructure: infraOrange,
+        web: webTeal
     },
     fonts: {
         title: 'futura-pt',
