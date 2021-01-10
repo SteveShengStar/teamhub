@@ -54,7 +54,7 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
 
   return (
     <CustomCard style={{ marginBottom: 15 }} backgroundColor={theme.colors.greys[1]}>
-      <SystemComponent>
+      <SystemComponent mb={2}>
           <Header4>{title}</Header4>
       </SystemComponent>
 
