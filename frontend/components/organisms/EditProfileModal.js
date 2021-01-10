@@ -153,6 +153,10 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { token, user, hydrated } = useSelector(state => state.userState);
     const { filters } = useSelector(state => state.membersState);
     const { interests: interestOpts, skills: skillOpts } = filters;
+    console.log("Interest Options");
+    console.log(interestOpts)
+    console.log("Skill Options");
+    console.log(skillOpts)
 
     const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
     const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
