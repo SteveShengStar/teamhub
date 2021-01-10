@@ -51,8 +51,8 @@ const GridLayout = styled(SystemComponent)`
     cursor: pointer;
     background-color: ${props => props.theme.colors.greys[0]};
 
-    border: solid #000 2px;
-    border-radius: ${props => props.theme.space[3]}px;
+    border: solid ${props => props.theme.colors.greys[1]} 1px;
+    border-radius: 3px;
 
     &:hover {
         transform: scale(1.01);
@@ -65,9 +65,9 @@ const GridLayout = styled(SystemComponent)`
 
 const LinkTree = () => {
     return(
-        <SystemComponent display="flex" flexDirection="column" mb={3}>
+        <SystemComponent display="flex" flexDirection="column">
             {importantLinks.map((link, i) => 
-                <a key={i} href={link.url} style={{textDecoration: "none"}} target="_blank">
+                <a key={i} href={link.url} style={{textDecoration: "none", marginBottom: "15px" }} target="_blank">
                     <GridLayout>
                         <Image 
                             height={36} 

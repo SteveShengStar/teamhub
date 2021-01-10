@@ -54,15 +54,17 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
 
   return (
     <CustomCard style={{ marginBottom: 15 }} backgroundColor={theme.colors.greys[1]}>
-      {showButton && <SystemComponent display="flex" flexDirection="row-reverse">
-          <Button mb={2} variant={getTaskButtonVariant()} display onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>
-      </SystemComponent>}
       <SystemComponent>
           <Header4>{title}</Header4>
       </SystemComponent>
-        {description && populateLinks(description)}
-        {searchBarPlaceholderTexts && <TextInput placeholderTexts={searchBarPlaceholderTexts} />}
-        {docUrls && <GoogleDocLinks docUrls={docUrls.map(d => d.url)} docTitles={docUrls.map(d => d.displayTitle)} />}
+
+      {description && populateLinks(description)}
+      {searchBarPlaceholderTexts && <TextInput placeholderTexts={searchBarPlaceholderTexts} />}
+      {docUrls && <GoogleDocLinks docUrls={docUrls.map(d => d.url)} docTitles={docUrls.map(d => d.displayTitle)} />}
+      
+      {showButton && <SystemComponent display="flex" flexDirection="row-reverse">
+        <Button mb={2} variant={getTaskButtonVariant()} display onClick={() => handleButtonClick(id)}>{getTaskButtonText()}</Button>
+      </SystemComponent>}
     </CustomCard>
   );
 };
@@ -104,9 +106,8 @@ const TextInput = ({placeholderTexts}) => {
                   flexDirection="row"
                   justifyContent="flex-start"
                   alignItems="center"
-                  minWidth="300px"
                 >
-                  <StyledInput placeholder={text} value={value} onChange={handleTextChange}/>
+                  <StyledInput placeholder={text} value={value} onChange={handleTextChange} borderRadius="3px" borderWidth="1px" borderColor={`${props => props.theme.color.greys[1]}`}/>
                   <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
                 </SystemComponent>)
             )}
@@ -116,13 +117,12 @@ const TextInput = ({placeholderTexts}) => {
 const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
   const relevantTasks = tasks.filter(task => task.status === taskStatus);
   return (
-    <SystemComponent
+    <Card
       display="flex-column"
       justifyContent="flex-start"
       overflowY={["hidden", "hidden", "auto"]}
       overflowX="hidden"
       padding="15px"
-      border={`solid 3px ${theme.colors.greys[3]}`}
       backgroundColor={theme.colors.background}
     >
       {relevantTasks.length === 0 ?
@@ -141,7 +141,7 @@ const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
             />
         )))
       }
-    </SystemComponent>
+    </Card>
   )
 };
 
@@ -201,17 +201,16 @@ const TodoList = () => {
 
           <SystemComponent>
             <Header3>Important Links</Header3>
-            <SystemComponent 
+            <Card 
               display="flex-column"
               justifyContent="flex-start"
               overflowY={["hidden", "hidden", "auto"]}
               overflowX="hidden"
               padding="15px"
-              border={`solid 3px ${theme.colors.greys[3]}`}
               backgroundColor={theme.colors.background}
             >
               <LinkTree />
-            </SystemComponent>
+            </Card>
           </SystemComponent>
 
           <SystemComponent>
@@ -245,18 +244,18 @@ export default TodoList;
 
 const SubmitButton = styled(Button)`
   height: 30px;
-  width: 100px;
-  border-radius: 0px;
+  width: 80px;
 `;
 
 const StyledInput = styled(Input)`
   height: 30px;
-  width: 200px;
+  width: 180px;
   box-sizing: border-box;
   padding-left: 5px;
 `;
 
 const CustomCard = styled(Card)`
   background-color: ${props => props.theme.colors.greys[0]};
-  border: 1px solid #000;
+  border-radius: 3px;
+  padding: 10px !important;
 `;
