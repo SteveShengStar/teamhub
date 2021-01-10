@@ -154,11 +154,15 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { filters } = useSelector(state => state.membersState);
     const { interests: interestOpts, skills: skillOpts } = filters;
 
+    const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
+    const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
+    const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day.toString() : "";
+
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
         lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
         display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-        birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", (user.birthday.month + 1).toString(), "-", user.birthday.day.toString()) : "--",
+        birthDate: year + "-" + month + "-" + day,
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         bio: dataLoaded ? user.bio : ""
@@ -178,12 +182,16 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [hydrated]);
 
     useEffect(() => {
+        const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
+        const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
+        const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day.toString() : "";
+
         setFormValues({
             ...formValues, 
             firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
             lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
             display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-            birthDate: dataLoaded && !isEmpty(user) ? user.birthday.year.toString().concat("-", (user.birthday.month + 1).toString(), "-", user.birthday.day.toString()) : "--",
+            birthDate: year + "-" + month + "-" + day,
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
             term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             bio: dataLoaded ? user.bio : ""
