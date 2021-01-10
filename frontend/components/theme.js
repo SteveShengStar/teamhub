@@ -23,7 +23,7 @@ const electricalGreen = '#26C309';
 const adminPurple = '#892FF2';
 const execYellow = '#CEAC36';
 const infraOrange = '#CEAC36';
-const webTeal = '#2bff79';
+const webTeal = '#63c986';
 
 /**
  * Responsive Scaling
