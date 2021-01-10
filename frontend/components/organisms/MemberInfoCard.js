@@ -15,7 +15,7 @@ import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
-    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
+    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const memberSubteams = memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams.map(st => st.name) : [];
