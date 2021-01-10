@@ -48,7 +48,7 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                             gridGap={4}
                         >
                         {
-                            members && members.filter(member => member.memberType && (member.memberType.name === "Project/Team Lead"))
+                            members && members.filter(member => member.memberType && (member.memberType.name === "Project Lead"))
                                 .map((member, i) => 
                                 <MemberPreviewComponent 
                                     key={i}
