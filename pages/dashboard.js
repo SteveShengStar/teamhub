@@ -36,7 +36,7 @@ const populateLinks = (description) => {
         let linkStartIdx = descrip_startIsTrimmed.indexOf("href='") + 6;
         let linkEndIdx = descrip_startIsTrimmed.indexOf("'", linkStartIdx);
         let link = descrip_startIsTrimmed.substring(linkStartIdx, linkEndIdx);
-        populatedDescription.push(<a href={link}>{descrip_startIsTrimmed.substring(descrip_startIsTrimmed.indexOf(">") + 1, descrip_startIsTrimmed.indexOf("</a>"))}</a>);
+        populatedDescription.push(<a href={link} target="_blank">{descrip_startIsTrimmed.substring(descrip_startIsTrimmed.indexOf(">") + 1, descrip_startIsTrimmed.indexOf("</a>"))}</a>);
         
         endIdx = description.indexOf("</a>", indexes[j]) + 4;
     }
