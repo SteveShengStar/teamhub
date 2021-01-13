@@ -7,37 +7,37 @@ const importantLinks = [
     {
         title: 'Google Drive',
         description: 'Documentation and Meeting Notes',
-        url: 'a',
+        url: 'wloop.ca/drive',
         imagePath: '/static/linktree/gdrive.png'
     },
     {
         title: 'Slack',
         description: 'Message your Teammates',
-        url: 'a',
+        url: 'waterloop.slack.com',
         imagePath: '/static/linktree/slack.png'
     },
     {
         title: 'Google Calendar',
         description: 'Schedule Meetings and Events',
-        url: 'a',
+        url: 'wloop.ca/calendar',
         imagePath: '/static/linktree/gcal.png'
     },
     {
         title: 'Github',
         description: 'Access Waterloop\'s code repos',
-        url: 'a',
+        url: 'https://github.com/waterloop',
         imagePath: '/static/linktree/git.png'
     },
     {
         title: 'ClickUp',
         description: 'Track Tasks and Manage Tickets',
-        url: 'a',
+        url: 'wloop.ca/clickup',
         imagePath: '/static/linktree/clickup.png'
     },
     {
         title: 'Discord',
         description: 'Voice Conference with Teammates',
-        url: 'a',
+        url: 'wloop.ca/discord',
         imagePath: '/static/linktree/discord.png'
     },
 ];
