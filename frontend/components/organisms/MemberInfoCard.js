@@ -115,7 +115,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <SystemComponent display="flex" flexDirection="column" padding={3}>
                             <InlineItemRow>
                                 <MailIcon />
-                                <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ''}>Email</Link>
+                                <Link ml={2} target="_blank" href={memberData.email ? `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${memberData.email}` : ''}>Email</Link>
                             </InlineItemRow>
                             {
                                 memberData.links && memberData.links.map(({type, link}, i) =>
