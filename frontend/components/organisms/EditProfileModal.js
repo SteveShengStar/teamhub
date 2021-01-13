@@ -30,8 +30,8 @@ export const SCHOOL_TERM_OPTS = [
     {value: '0', label: 'Unspecified'}
 ];
 export const PROGRAM_OPTS = [
-    {value: 'eng', label: 'Engineering'},
-    {value: 'cs', label: 'Computer Science'},
+    {value: 'engineering', label: 'Engineering'},
+    {value: 'computer science', label: 'Computer Science'},
     {value: 'math', label: 'Math'}
 ]
 
