@@ -14,6 +14,8 @@ import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
 
+import {capitalize} from 'lodash';
+
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
@@ -25,6 +27,13 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
     const terms = ["W", "F", "S"];
     const date = new Date();
     const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
+
+    const linkMap = {
+        "website": 'fa-globe',       // CSS Class names of font-awesome icons
+        'linkedin': 'fa-linkedin',
+        'github': 'fa-github',
+        'facebook': 'fa-facebook-square'
+    }
 
     return (
         <InfoCard className={className} ref={animRef}>
@@ -110,7 +119,11 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                             </InlineItemRow>
                             {
                                 memberData.links && memberData.links.map(({type, link}, i) =>
-                                    <Link href={link} key={i} mt={2}>{type}</Link>
+                                    (link &&
+                                    <SystemComponent fontSize="16px" ml={1}>
+                                        <i className={`fa ${linkMap[type]}`}/>
+                                        <Link href={link} key={i} mt={2} ml="4px" target="_blank">{capitalize(type)}</Link>
+                                    </SystemComponent>)
                                 )
                             }
                             <Body>{`🎂 ${birthday}`}</Body>
