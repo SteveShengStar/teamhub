@@ -16,11 +16,7 @@ const CustomInput = styled(Input)`
     height: 34px;
     width: 100%;
 `;
-// Handle error display here
-// Pass flags up to the parent
 
-// How about value
-// validation happens here, so just store the value here.
 const URLField = ({label, name, placeholder, value, onHandleChange, error, errorText}) => {
     return (
         <>
@@ -103,9 +99,9 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         let linkedInUrl = formValues['linkedInUrl'].trim();
         let websiteUrl = formValues['websiteUrl'].trim();
 
-        validateUrl(errors, 'facebookUrl', facebookUrl, ['www.facebook.com']);
-        validateUrl(errors, 'githubUrl', githubUrl, ['www.github.com']);
-        validateUrl(errors, 'linkedInUrl', linkedInUrl, ['www.linkedin.com']);
+        validateUrl(errors, 'facebookUrl', facebookUrl, ['www.facebook.com', 'facebook.com']);
+        validateUrl(errors, 'githubUrl', githubUrl, ['www.github.com', 'github.com']);
+        validateUrl(errors, 'linkedInUrl', linkedInUrl, ['www.linkedin.com', 'linkedin.com']);
         validateUrl(errors, 'websiteUrl', websiteUrl);
 
         setErrors(errors);
