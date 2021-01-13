@@ -176,26 +176,29 @@ const Home = () => {
               <SystemComponent display="flex" justifyContent="space-between" alignItems="flex-start">
                   <Header3 style={{ transformOrigin: 'left' }}>Members</Header3>
                   
-                  <SystemComponent display="flex" flexWrap='wrap'>
-                      <OptionButton onClick={() => toggleGroupAction('email')} isSelected={activeAction === 'email'}>
-                        Email
-                      </OptionButton>
-                      {/*<OptionButton onClick={() => toggleGroupAction('slack')} isSelected={activeAction === 'slack'}>
-                        Slack DM
-                      </OptionButton>*/}
-                      {
-                        (groupSelectedMembers.length > 0) && 
-                        <ExecuteActionButton onClick={onExecuteAction}>
-                          Send {getActionText()}
-                        </ExecuteActionButton>
-                      }
-                      {
-                        activeAction &&   
-                        <CancelButton onClick={onCancel}>
-                          Cancel
-                        </CancelButton>
-                      }
-                  </SystemComponent>                     
+                  <SystemComponent>
+                      <SystemComponent display="flex" flexWrap='wrap' flexDirection="row-reverse">
+                          <OptionButton onClick={() => toggleGroupAction('email')} isSelected={activeAction === 'email'}>
+                            Email
+                          </OptionButton>
+                          {/*<OptionButton onClick={() => toggleGroupAction('slack')} isSelected={activeAction === 'slack'}>
+                            Slack DM
+                          </OptionButton>*/}
+                          {
+                            (groupSelectedMembers.length > 0) && 
+                            <ExecuteActionButton onClick={onExecuteAction}>
+                              Send {getActionText()}
+                            </ExecuteActionButton>
+                          }
+                          {
+                            activeAction &&   
+                            <CancelButton onClick={onCancel}>
+                              Cancel
+                            </CancelButton>
+                          }
+                      </SystemComponent>
+                        {activeAction && <SystemComponent textAlign='right'>Select a bunch of members below, then Click Send {getActionText()}.</SystemComponent>}           
+                  </SystemComponent>     
               </SystemComponent>
               <MemberListGrid members={members} onSelect={onSelectMember} fetchedMembers={fetchedMembers} groupSelectedMembers={groupSelectedMembers} />
           </MembersListCard>
