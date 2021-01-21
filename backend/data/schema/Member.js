@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
 const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
@@ -19,55 +20,7 @@ const Member_Stream = new Schema({
     currentSchoolTerm: {
         type: String,
         required: true
-    }
-});
-
-const Member_TermSchema = new Schema({
-    year: {
-        type: Number,
-        required: true
     },
-    season: {
-        type: String,
-        required: true,
-        enum: ['Fall', 'Winter', 'Spring']
-    },
-});
-
-const Member_ProjectSchema = new Schema({
-    project: {
-        type: Schema.Types.ObjectId,
-        ref: 'Project'
-    },
-    description: {
-        type: [String]
-    }
-});
-
-const Member_CoopExpSchema = new Schema({
-    company: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        required: true
-    },
-    location: new Schema({
-        city: {
-            type: String,
-            required: true
-        },
-        region: {
-            type: String,
-            required: true
-        },
-        country: {
-            type: String,
-            required: true
-        },
-    }),
-    term: Member_TermSchema
 });
 
 const Member_NameSchema = new Schema({
@@ -110,6 +63,18 @@ const Member_Link = new Schema({
     },
 });
 
+const Member_Task = new Schema({
+    taskId: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Task'
+    },
+    status: {
+        type: String,
+        required: true,
+        enum: ['pending', 'complete', 'irrelevant']
+    },
+});
 
 const MemberSchema = new Schema({
     name: {
@@ -130,12 +95,6 @@ const MemberSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Interest'
     }],
-    joined: {
-        type: Member_TermSchema,
-    },
-    coopExp: {
-        type: [Member_CoopExpSchema],
-    },
     memberType: {
         type: Schema.Types.ObjectId,
         ref: 'MemberType'
@@ -145,7 +104,8 @@ const MemberSchema = new Schema({
         ref: 'Subteam',
     }],
     projects: [{
-        type: Member_ProjectSchema
+        type: Schema.Types.ObjectId,
+        ref: 'Project',
     }],
     email: {
         type: String,
@@ -171,10 +131,14 @@ const MemberSchema = new Schema({
     tokenExpiry: {
         type: Number,
         select: false
-    }
+    },
+    tasks: {
+        type: [Member_Task]
+    },
 });
 
 MemberSchema.plugin(uniqueValidator);
+MemberSchema.plugin(deepPopulate);
 
 let Member;
 try {

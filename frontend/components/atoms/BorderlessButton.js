@@ -36,6 +36,9 @@ const BorderlessButton = styled(Button)(
             },
             infrastructure: {
                 color: 'infrastructure'
+            },
+            web: {
+                color: 'web'
             }
         }
     })

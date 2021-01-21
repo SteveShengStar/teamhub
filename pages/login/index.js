@@ -1,14 +1,13 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import Login from '../../frontend/components/molecules/LoginCard';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
-import api from '../../frontend/store/api';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import { UserTypes } from '../../frontend/store/reducers/userReducer';
-import useRedirect from '../../frontend/hooks/useRedirect';
+import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 import { ThemeContext } from 'styled-components';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
@@ -23,7 +22,7 @@ export default () => {
 
     return (
         <>
-            <PageTemplate myHubHidden={true}>
+            <PageTemplate>
                 <LoginTransition transitionRef={loginTransition.ref}>
                     <Login 
                         shouldHide={() => {
@@ -31,7 +30,7 @@ export default () => {
                         }} 
                         onFinish={(user) => {
                             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
-                            useRedirect(user, router)
+                            useShouldRedirect(user, router)
                         }} 
                     />
                 </LoginTransition>

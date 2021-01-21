@@ -1,4 +1,4 @@
-import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
+import { refreshable } from './baseApi';
 
 /**
  * Search for all members in the database with filter options
@@ -7,7 +7,6 @@ import { HttpVerb, executeRequest, getBaseApi, refreshable } from './baseApi';
  * @returns {Promise<{name: string, subteam: string, role: string, imageUrl: string}[]>} members
  */
 export function getAll(token, options = {isSSR: true}, dispatch, router) {
-  let ssr = options.isSSR
   if (options) {
     delete options.isSSR;
   }
@@ -18,7 +17,7 @@ export function getAll(token, options = {isSSR: true}, dispatch, router) {
     },
     body: JSON.stringify({
       options,
-      fields: ["name", "subteams", "memberType", "imageUrl", "stream"]
+      fields: ["name", "subteams", "memberType", "imageUrl", "stream"],
     })
   }, dispatch, router)
 }
@@ -30,6 +29,27 @@ export function getAll(token, options = {isSSR: true}, dispatch, router) {
  */
 export function getMember(id, token, dispatch, router) {
   return refreshable(`/api/members/${id}/info`, token, {}, dispatch, router)
+}
+
+
+export function getMemberEmail(id, token, dispatch, router) {
+  return refreshable(`/api/members/${id}/email`, token, {}, dispatch, router)
+}
+
+
+/**
+ * Search for tasks by member id
+ * @param {string} id 
+ * @returns list of tasks belonging to id
+ */
+export function getMemberTasks(id, token, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/tasks`, token, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({taskStatus: status})
+  }, dispatch, router);
 }
 
 
@@ -46,6 +66,23 @@ export function update(options, token, id, dispatch, router) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({data: options})
+  }, dispatch, router)
+}
+
+/**
+ * 
+ * @param {string} token 
+ * @param {string} id
+ * @param {string} taskId
+ * @param {string} status: the new status of the task: [pending, complete, irrelevant]
+ */
+export function updateTaskStatus(id, token, taskId, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/updateTaskStatus`, token, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({taskId: taskId, status: status})
   }, dispatch, router)
 }
 

@@ -18,7 +18,6 @@ const MemberGhostPreviewComponent = ({visible}) => {
             backgroundColor="greys.0" 
             borderRadius="small" 
             height={36} 
-            isVisible={visible}
         >
             <Image 
                 height={36} 
@@ -82,13 +81,6 @@ const GridLayout = styled(SystemComponent)`
         /*box-shadow: ${props => props.theme.shadows.dark};*/
         transform: scale(1.025);
     }
-    ${props => props.isVisible ? `
-        visiblity: visible;
-        opacity: 1;
-    ` : `
-        visibility: hidden;
-        opacity: 0;
-    `}
 `;
 
 const Dot = styled.div`

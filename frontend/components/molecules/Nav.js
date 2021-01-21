@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Title from '../atoms/Title';
 import Link from '../atoms/Link';
-import NextLink from 'next/link';
 import { SystemNav, SystemComponent } from '../atoms/SystemComponents';
 import Logo from '../atoms/Logo';
 
@@ -52,7 +50,7 @@ const Nav = ({navItems, index}) => {
   return (
     <MyNav display="flex" flexDirection="column" alignItems="flex-end" bg={scrolled ? "greys.0" : "transparent"} shadow={scrolled ? "default" : "none"}>
         <SystemComponent display="flex" justifyContent="flex-end">
-            <NavLogo alignSelf="center" />
+            <NavLogo alignSelf="center"/>
         </SystemComponent>
         <SystemComponent 
             display="flex" 
@@ -63,7 +61,7 @@ const Nav = ({navItems, index}) => {
         >
             {
                 navItems.map(({name, link}, i) => 
-                    <NextLink href={link} key={i}>
+                    <a href={link} key={i}>
                         <NavLink 
                             fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
                             fontWeight="bold"
@@ -73,7 +71,7 @@ const Nav = ({navItems, index}) => {
                         >
                             {name}
                         </NavLink>
-                    </NextLink>
+                    </a>
                 )
             }
         </SystemComponent>

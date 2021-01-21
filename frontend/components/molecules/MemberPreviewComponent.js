@@ -13,40 +13,26 @@ const GridLayout = styled(SystemComponent)`
     grid-template-columns: auto 1fr 20px;
     grid-column-gap: ${props => props.theme.space[4]}px;
     padding: ${props => props.theme.space[3]}px;
-    /*box-shadow: ${props => props.theme.shadows.default};*/
     cursor: pointer;
     transition: ${props => props.theme.transitions.default};
     &:hover {
         transform: scale(1.01);
-        /*background-color: white; */
         background-color: ${props => props.theme.colors.greys[1]};
-        /*box-shadow: ${props => props.theme.shadows.default};*/
     }
     &:active {
-        /*box-shadow: ${props => props.theme.shadows.dark};*/
         transform: scale(1.025);
     }
 `;
-
-const Dot = styled.div`
-    align-self: center;
-    justify-self: end;
-    width: 15px;
-    height: 15px;
-    border-radius: 8px;
-    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
-    grid-row: 1/3;
-`
 
 const RowFlexLayout = styled(SystemComponent)`
     display: flex;
     justify-content: space-between;
 `;
 
-const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream}) => {
+const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isSelected}) => {
     return (
         <GridLayout 
-            backgroundColor="greys.0"
+            backgroundColor={isSelected ? "greys.2" : "greys.0"}
             borderRadius="small" 
             height={36} 
             onClick={onClick}
@@ -66,11 +52,10 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, i
             </RowFlexLayout>
 
             <RowFlexLayout gridRow="2/3" gridColumn="2/3">
-                <BorderlessButton variant={'software'}>{subteam && subteam.name || ""}</BorderlessButton>
+                <BorderlessButton variant='software'>{subteam && subteam.name || ""}</BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
-            <Dot isOnStream={isOnStream}/>
-
+            <SystemComponent>{isSelected && <i class="fa fas fa-check"/>}</SystemComponent>
         </GridLayout>
     );
 };

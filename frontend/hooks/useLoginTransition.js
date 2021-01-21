@@ -7,7 +7,7 @@ import anime from "animejs"
  * @param { () => void } onExit 
  * @returns { { visible: boolean, setVisible: (visible: boolean) => void, hide: (onFinish: () => void) => void, show: () => void, ref: HTMLElement }}
  */
-export default () => {
+const useLoginTransition = () => {
     const htmlRef = useRef(null);
 
     const [ anim, setAnim ] = useState(false);
@@ -27,9 +27,9 @@ export default () => {
                 ],
                 duration: 500,
                 easing: "easeInOutQuad"
-            })
+            });
         }
-    }, [anim])
+    }, [anim]);
 
     function hide(onFinish) {
         if (htmlRef && htmlRef.current) {
@@ -39,7 +39,7 @@ export default () => {
                 duration: 0
             }).finished.then(() => {
                 onFinish && onFinish()
-            })
+            });
         }
     }
 
@@ -47,9 +47,8 @@ export default () => {
         if (!anim) setAnim(true)
     }
 
-    
-
     return {
         visible, setVisible, hide, show, ref: htmlRef
     }
 }
+export default useLoginTransition;

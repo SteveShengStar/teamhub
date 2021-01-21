@@ -6,6 +6,11 @@ const crypto = require('crypto');
 
 const auth = {};
 
+/**
+ * authHeader: authentication token provided by the client
+ * 
+ * return: information of the user that corresponds to the input token
+ */
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
         res.statusCode = 401;
@@ -28,6 +33,7 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const searchRes = await members.search({ token: authToken });
+    // TODO: test what happens when token expires
     if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
         res.statusCode = 403;
         res.end('Token forbidden.');
@@ -36,6 +42,12 @@ auth.checkAnyUser = async (authHeader, res) => {
     return searchRes[0];
 };
 
+/**
+ * authHeader: authentication token provided by the client
+ * userId: ID of the user who is attempting to access a secure endpoint or log in
+ * 
+ * return: true only if authentication was successful.
+ */
 auth.checkSpecificUser = async (authHeader, userId, res) => {
     if (!authHeader) {
         res.statusCode = 401;
@@ -73,7 +85,6 @@ auth.login = async (tokenObj) => {
             audience: authConfig['client_id'],
         });
         const payload = ticket.getPayload();
-        console.log(payload);
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {

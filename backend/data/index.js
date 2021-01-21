@@ -1,20 +1,15 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const path = require('path')
 
 let config = {};
 
-console.log(`Found env: ${process.env.TEAMHUB_ENV}`);
-
-if (process.env.TEAMHUB_ENV === 'testing') {
-    // Different connection string required for unit tests
+// if (process.env.TEAMHUB_ENV === 'testing') {
+//     // Different connection string required for unit tests
+//     config = require('./config.tests.json');
+// } else if (process.env.TEAMHUB_ENV === 'production' || process.env.TEAMHUB_ENV === 'preview') {
     config.url = process.env.MONGO_URL;
-} else if (process.env.TEAMHUB_ENV === 'production') {
-    config.url = process.env.MONGO_URL;
-} else {
-    config = JSON.parse(fs.readFileSync(path.join(__dirname, './config.json')));
-}
-
+// } else {
+//     config = require('./config.json');
+// }
 const data = {};
 
 data.connected = false;
@@ -54,5 +49,6 @@ data.subteams = require('./handlers/subteams');
 data.projects = require('./handlers/projects');
 data.auth = require('./handlers/auth');
 data.filters = require('./handlers/filters');
+data.task = require('./handlers/task');
 
 module.exports = data;

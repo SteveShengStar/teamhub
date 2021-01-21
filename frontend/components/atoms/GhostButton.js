@@ -45,7 +45,11 @@ const GhostButton = styled(Button)(
             infrastructure: {
                 color: 'infrastructure',
                 borderColor: 'infrastructure'
-            }
+            },
+            web: {
+                color: 'web',
+                borderColor: 'web'
+            },
         }
     })
 );

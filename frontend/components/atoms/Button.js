@@ -52,6 +52,12 @@ const Button = styled(SystemButton)(
             infrastructure: {
                 backgroundColor: 'infrastructure'
             },
+            web: {
+                backgroundColor: 'web'
+            },
+            cancel: {
+                backgroundColor: 'inactive'
+            },
             white: {
                 backgroundColor: 'white',
                 color: 'black'
@@ -59,7 +65,11 @@ const Button = styled(SystemButton)(
             lightGrey: {
                 backgroundColor: 'greys.0',
                 color: 'black'
-            }
+            },
+            moderateGrey: {
+                backgroundColor: 'greys.2',
+                color: 'black'
+            },
         }
     }),
 );

@@ -8,7 +8,7 @@ const Input = styled(SystemInput)(
             text: {
                 px: 3,
                 py: '8px',
-                borderColor: 'greys.3',
+                borderColor: 'greys.1',
                 borderWidth: 1,
                 borderStyle: 'solid',
                 transition: 'all 0.2s ease',

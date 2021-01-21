@@ -1,6 +1,7 @@
 import { combineReducers, createStore } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
+import { devToolsEnhancer } from 'redux-devtools-extension';
 
 import membersReducer, { membersInitialState } from './reducers/membersReducer';
 import userReducer, { usersInitialState, UserTypes } from './reducers/userReducer';
@@ -39,5 +40,6 @@ export const initializeStore = (initialState = initInitialState) => {
     return createStore(
         persistedReducer,
         initialState,
+        devToolsEnhancer()
     )
 }

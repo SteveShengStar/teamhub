@@ -10,7 +10,7 @@
     "dev:docker": "docker exec -it teamhub_nodejs npm run dev",
     "docker": "npm run start:docker && npm run dev:docker",
     "start": "next start",
-    "test": "TEAMHUB_ENV=testing MONGO_URL=mongodb://teamhub_mongodb/teamhub next build && MONGO_URL=mongodb://teamhub_mongodb/teamhub TEAMHUB_ENV=testing jest"
+    "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest"
   },
   "jest": {
     "testEnvironment": "node",
@@ -19,16 +19,19 @@
     }
   },
   "dependencies": {
+    "@slack/web-api": "^5.15.0",
     "animejs": "^3.1.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "eslint-plugin-react": "^7.16.0",
     "express": "^4.17.1",
     "googleapis": "^44.0.0",
+    "mongodb": "^3.6.2",
     "mongoose": "^5.7.5",
+    "mongoose-deep-populate": "^3.2.0",
     "mongoose-unique-validator": "^2.0.3",
-    "next": "9.0.7",
+    "next": "^9.5.5",
     "next-redux-wrapper": "^4.0.1",
     "nodemon": "^1.19.3",
     "now": "^16.6.0",
@@ -40,15 +43,18 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.0.0",
-    "styled-system": "^5.1.2"
+    "styled-system": "^5.1.2",
+    "url": "^0.11.0",
+    "validator": "^12.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.7.11",
     "@types/react": "^16.9.5",
+    "babel-jest": "^24.9.0",
     "babel-plugin-styled-components": "^1.10.6",
     "jest": "^24.9.0",
+    "redux-devtools-extension": "^2.13.8",
     "supertest": "^4.0.2",
-    "typescript": "^3.6.3",
-    "babel-jest": "^24.9.0"
+    "typescript": "^3.6.3"
   }
 }

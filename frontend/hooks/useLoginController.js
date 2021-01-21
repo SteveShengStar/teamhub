@@ -1,7 +1,7 @@
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
 import api from "../store/api"
-import useRedirect from "./useRedirect"
+import useShouldRedirect from "./useShouldRedirect"
 import { useRouter } from "next/router"
 import { UserTypes } from "../store/reducers/userReducer"
 
@@ -9,7 +9,7 @@ import { UserTypes } from "../store/reducers/userReducer"
  * @param {*} loginTransition
  * @param {*} dispatch
  */
-export default (loginTransition, dispatch, route) => {
+const useLoginController = (loginTransition, dispatch, route) => {
     const router = useRouter()
     const { hydrated, token, user } = useSelector(state => state.userState)
 
@@ -17,20 +17,21 @@ export default (loginTransition, dispatch, route) => {
         if (hydrated && token) {
             api.auth.loginWithToken(token, dispatch, router).then(user => {
                 dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
-                if (route == "/login") useRedirect(user, router)
-                else loginTransition.show()
+
+                if (!useShouldRedirect(user, router)) {
+                    loginTransition.show()
+                }
             }).catch(err => {
                 console.error(err)
-                if (route == "/login") loginTransition.show()
-                else useRedirect(user, router)
+                if (!useShouldRedirect(user,router)) {
+                    loginTransition.show()
+                }
             })
             return;
         }
-        if (hydrated) {
-            if (route == "/login") loginTransition.show()
-            else useRedirect(user, router)
-            return;
+        if (route && route === '/login') {
+            loginTransition.show();
         }
-        loginTransition.show()
     }, [hydrated])
 }
+export default useLoginController;

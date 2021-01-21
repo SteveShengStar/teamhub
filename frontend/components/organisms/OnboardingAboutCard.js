@@ -3,9 +3,8 @@ import styled from "styled-components";
 import { SystemComponent } from "../atoms/SystemComponents";
 
 import Subtitle from "../atoms/Subtitle";
-import Header5 from "../atoms/Header4";
+import Header4 from "../atoms/Header4";
 import Select, { CreatableSelect } from "../atoms/Select";
-import Body from "../atoms/Body";
 import Card from "../atoms/Card";
 import TermSelect from "../atoms/TermSelect";
 import Button from "../atoms/Button";
@@ -31,14 +30,15 @@ const programs = ["Computer Science", "Mathematics", "Mechanical Engineering",
 "Electrical Engineering", "Software Engineering", "Computer Engineering", "Mechatronics Engineering", "Systems Design Engineering",
 "Management Engineering", "Physics", "AFM", "CFM"]
 
-const terms = ["F19", "W20", "S20", "F20", "W21", "S21", "F21", "W22", "S22", "F22", "W23", "S23", "F23", "W24", "S24", "F24"]
+const terms = ["W21", "S21", "F21"]
 
-export default ({values, setValues, submit}) => {
+const OnboardingAboutCard = ({values, setValues, submit}) => {
   const { interests, skills, years } = useSelector(state => state.membersState.filters)
+  const dayOptions = days[values.birthday[0]];
     return (
       <CustomCard>
         <Subtitle mb={3}>Tell us more about yourself</Subtitle>
-        <Header5 mb={1}>Birthday</Header5>
+        <HeaderSection mb={1} required>Birthday</HeaderSection>
         <DateLayout>
           <Select 
             placeholder="Month"
@@ -49,7 +49,7 @@ export default ({values, setValues, submit}) => {
           <Select 
             placeholder="Day" 
             variant="text" 
-            options={[...Array(days[0])].map((_, day) => ({value: day + 1, label: day + 1 < 10 ? "0" + (day + 1) : day + 1}))}
+            options={[...Array(dayOptions)].map((_, day) => ({value: day + 1, label: day + 1 < 10 ? "0" + (day + 1) : day + 1}))}
             value={{value: values.birthday[1], label: values.birthday[1] < 10 ? '0' + values.birthday[1] : values.birthday[1]}}
             onChange={val => setValues.setBirthday([values.birthday[0], val.value, values.birthday[2]])}
             />
@@ -64,8 +64,9 @@ export default ({values, setValues, submit}) => {
         <InlineItemRow></InlineItemRow>
 
           <DateLayout>
-            <SystemComponent>
-              <Header5 mb={1} mt={4}>What program are you in?</Header5>
+            <SystemComponent gridColumn='1/3'>
+              <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
+              <SystemComponent>Can't find your program ? You can type below and Create A New Entry.</SystemComponent>
               <CreatableSelect 
                 placeholder="Choose Program" 
                 options={programs.map(program => ({value: program, label: program}))} 
@@ -75,7 +76,7 @@ export default ({values, setValues, submit}) => {
             </SystemComponent>
 
             <SystemComponent>
-              <Header5 mb={1} mt={4}>What term are you on?</Header5>
+              <HeaderSection mb={1} mt={4} required>What term are you on?</HeaderSection>
               <Select 
                 options={years ? years.map(year => ({value: year, label: year})) : []} 
                 value={{value: values.term, label: values.term}}
@@ -85,7 +86,7 @@ export default ({values, setValues, submit}) => {
           </DateLayout>
           
         
-        <Header5 mb={1} mt={4}>Which terms are you onstream?</Header5>
+        <HeaderSection mb={1} mt={4} required>Which terms are you on campus?</HeaderSection>
         <GridLayout>
           {
             terms.map((term, i) => 
@@ -107,7 +108,8 @@ export default ({values, setValues, submit}) => {
           }
         </GridLayout>
 
-        <Header5 mt={4} mb={1}>What are some of your interests?</Header5>
+        <HeaderSection mt={4} mb={1}>What are some of your interests?</HeaderSection>
+        <SystemComponent>You can create New Entries by typing them below.</SystemComponent>
         <CreatableSelect 
           isMulti 
           variant="text" 
@@ -119,7 +121,8 @@ export default ({values, setValues, submit}) => {
           }}
         />
 
-        <Header5 mt={4} mb={1}>What are some of your skills?</Header5>
+        <HeaderSection mt={4} mb={1}>What are some of your skills?</HeaderSection>
+        <SystemComponent>You can create New Entries by typing them below.</SystemComponent>
         <CreatableSelect 
           isMulti 
           variant="text" 
@@ -131,13 +134,14 @@ export default ({values, setValues, submit}) => {
           }}       
         />
 
-        <Header5 mt={4} mb={1}>Write a little bio!</Header5>
+        <HeaderSection mt={4} mb={1}>Write a little bio!</HeaderSection>
         <TextBox placeholder="Write bio here..." value={values.bio} onChange={e => setValues.setBio(e.target.value)}/>
 
         <ContinueButton onClick={submit}>Continue</ContinueButton>
       </CustomCard>
     )
 };
+export default OnboardingAboutCard;
 
 const SelectableTerms = styled(TermSelect)`
   background-color: ${props => props.selected ? props.theme.colors.software : props.theme.colors.white};
@@ -196,12 +200,6 @@ const InlineItemRow = styled(SystemComponent)`
   display: flex;
   align-items: center;
 `;
-const CustomBody = styled(Body)`
-  ${props => props.theme.mediaQueries.mobile} {
-    width: auto;
-  }
-  font-family: ${props => props.theme.fonts.body};
-`;
 
 const GridLayout = styled(SystemComponent)`
   display: grid;
@@ -217,5 +215,13 @@ const ContinueButton = styled(Button)`
         display: block;
         justify-self: end;
         position: relative;
+    }
+`
+
+const HeaderSection = styled(Header4)`
+    ${props => props.required && 
+        `&:after {
+            content: \' *\';
+        }`
     }
 `

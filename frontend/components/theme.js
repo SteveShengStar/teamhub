@@ -10,6 +10,7 @@ const greys = [
     '#333333' // dark grey
 ];
 const black = '#131313';
+const frostyBlue = '#d7e8f5'
 const primaryBlue = '#2C8DFF';
 const messagesBlue = '#1C9FFF';
 const themeYellow = '#FED138';
@@ -22,6 +23,7 @@ const electricalGreen = '#26C309';
 const adminPurple = '#892FF2';
 const execYellow = '#CEAC36';
 const infraOrange = '#CEAC36';
+const webTeal = '#63c986';
 
 /**
  * Responsive Scaling
@@ -66,7 +68,10 @@ space.cardMarginSmall = space[2];
 space.cardPadding = space[5];
 space.cardPaddingSmall = space[3];
 space.headerBottomMargin = space[4];
-space.titleBottomMargin = space[6];
+space.titleBottomMargin = space[6]; 
+// For Account Settings Page
+space.editableHeaderMargin = space[8];
+space.settingsSubsectionPadding = space[4];
 
 const cornerRadius = [0, 3, 5, 200];
 cornerRadius.none = cornerRadius[0];
@@ -95,14 +100,17 @@ const theme = {
         foreground: black,
         background: white,
         greys,
+        inactive: greys[2],
         messagesBackground: messagesBlue,
+        listBackgroundBlue: frostyBlue,
         clickUp: clickUpPurple,
         software: softwareMagenta,
         mechanical: mechRed,
         electrical: electricalGreen,
         admin: adminPurple,
         exec: execYellow,
-        infrastructure: infraOrange
+        infrastructure: infraOrange,
+        web: webTeal
     },
     fonts: {
         title: 'futura-pt',

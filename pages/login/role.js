@@ -13,29 +13,22 @@ import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
+import {removeBadValuesAndDuplicates} from '../../frontend/helpers';
 
-const termMap = {
-    "F": "Fall",
-    "S": "Spring",
-    "W": "Winter"
-}
-
-export default () => {
+const Role = () => {
     const { user, token, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
     
-    const [ shouldHide, setShouldHide ] = useState(false);
-
     const [ selectedSubteams, setSelectedSubteams ] = useState(user && user.subteams && filters.subteams ? user.subteams.map(subteam => {
         const found = filters.subteams.findIndex(st => st._id == subteam)
         return found >= 0 ? found : 0
     }) : []);
     const [ selectedProjects, setSelectedProjects ] = useState(user && user.projects && filters.projects ? user.projects.map(project => {
-        const found = filters.projects.find(proj => proj._id == project.project)
-        return [found && found.name || "", project.description];
+        const found = filters.projects.find(proj => proj._id == project)
+        return [found && found.name || ""];
     }) : []);
-    const [ selectedYear, setSelectedYear ] = useState(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
+
     const [ selectedRole, setSelectedRole ] = useState(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     const dispatch = useDispatch();
 
@@ -45,24 +38,24 @@ export default () => {
             return found >= 0 ? found : 0
         }) : []);
         setSelectedProjects(user && user.projects && filters.projects ? user.projects.map(project => {
-            const found = filters.projects.find(proj => proj._id == project.project)
-            return [found && found.name || "", project.description];
+            const found = filters.projects.find(proj => proj._id == project)
+            return [found && found.name || ""];
         }) : []);
-        setSelectedYear(user && user.joined ? `${user.joined.season[0]}${user.joined.year - 2000}` : "F19");
+
         setSelectedRole(user && user.memberType ? { value: user.memberType._id, label: user.memberType.name } : {});
     }, [filters])
 
     const checkErrors = () => {
         if (!selectedRole.value) {
-            window.alert("No role specified!")
+            window.alert("No role was specified!")
             return false;
         }
         if (selectedSubteams.length == 0) {
-            window.alert("No subteams selected!")
+            window.alert("No subteam was selected!")
             return false;
         }
-        if (selectedProjects.length == 0) {
-            window.alert("No projects selected!")
+        if (selectedProjects.length > 0 && selectedProjects.includes(undefined)) {
+            window.alert("Some projects you specified are blank strings. That is now allowed !")
             return false;
         }
         return true;
@@ -79,27 +72,21 @@ export default () => {
 
     const trySubmit = () => {
         if (!checkErrors()) return;
-        loginTransition.setVisible(false)
+    
+        loginTransition.setVisible(false);
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
-            projects: selectedProjects.map(project => {
-                return {
-                    project: project[0],
-                    description: project[1]
-                }
-            }),
-            memberType: selectedRole.label,
-            joined: {
-                season: termMap[selectedYear[0]],
-                year: parseInt('20' + selectedYear.slice(1))
-            }
+            projects: removeBadValuesAndDuplicates(selectedProjects),
+            memberType: selectedRole.label
         }, token, user._id, router).then(() => {
             router.push("/login/about");
+        }).catch((e) => {
+            console.log(e);
         })
     }
     return (
         <>
-            <PageTemplate myHubHidden={true} title="Onboarding">
+            <PageTemplate title="Onboarding">
                 <LoginTransition transitionRef={loginTransition.ref}>
                     <OnboardingRoleCard 
                         subteamOptions={filters.subteams || []}
@@ -108,8 +95,6 @@ export default () => {
                         selectedProjects={selectedProjects}
                         setSelectedProjects={setSelectedProjects}
                         setSelectedSubteams={setSelectedSubteams}
-                        selectedYear={selectedYear}
-                        setSelectedYear={setSelectedYear}
                         selectedRole={selectedRole}
                         setSelectedRole={setSelectedRole}
                         submit={trySubmit}
@@ -123,6 +108,7 @@ export default () => {
         </>
     )
 }
+export default Role;
 
 const Row = styled.div`
     position: fixed;

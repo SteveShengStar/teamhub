@@ -11,7 +11,11 @@ const SubteamSchema = new Schema({
     },
     description: {
         type: String
-    }
+    }, 
+    tasks: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Task'
+    }]
 });
 
 SubteamSchema.plugin(uniqueValidator);

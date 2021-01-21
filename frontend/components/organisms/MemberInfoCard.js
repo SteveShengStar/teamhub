@@ -13,40 +13,40 @@ import Image from '../atoms/Image';
 import MailIcon from '../atoms/Icons/MailIcon';
 import BorderlessButton from '../atoms/BorderlessButton';
 import Button from '../atoms/Button';
-import { useSelector } from 'react-redux';
+
+import {capitalize} from 'lodash';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
-    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month + 1, memberData.birthday.day) : new Date();
-    const { subteams, projects } = useSelector(state => state.membersState.filters);
+    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-    const skills = memberData.skills ? memberData.skills.map(skill => skill.name).join(' • ') : '';
-    const memberSubteams = memberData.subteams && memberData.subteams.map(value => subteams.find(subteam => subteam._id == value));
-    const memberProjects = memberData.projects && memberData.projects.map(project => {
-        const value = projects.find(val => val._id == project.project );
-        return {
-            name: value ? value.name : "",
-            descriptions: project.description
-        }
-    });
-    const subteam = memberSubteams && memberSubteams.length > 0 && memberSubteams[0].name ? memberSubteams[0].name : "";
+
+    const memberSubteams = memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams.map(st => st.name) : [];
+    const memberProjects = memberData.projects && memberData.projects.length > 0 ? memberData.projects.map(prj => prj.name) : [];
+    const subteam = memberSubteams && memberSubteams.length > 0 ? memberSubteams[0] : "";
 
     const terms = ["W", "F", "S"];
     const date = new Date();
     const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
+    const linkMap = {
+        "website": 'fa-globe',       // CSS Class names of font-awesome icons
+        'linkedin': 'fa-linkedin',
+        'github': 'fa-github',
+        'facebook': 'fa-facebook-square'
+    }
+
     return (
         <InfoCard className={className} ref={animRef}>
-            <Header3 mb={3} ml={20} mt={20}>Member</Header3>
-            <Button 
-                alignSelf="start"
-                justifySelf="end"
-                onClick={onClose}
-                gridColumn={2/3}
-                mr={20}
-                mt={20}
-            >
-                Close
-            </Button>
+            <SystemComponent pl={[0, 0, 20]} pr={[0, 0, 20]} pt={[0, 0, 20]} pb={0} display="flex" justifyContent="space-between" gridColumn="1/-1">
+                <Header3>Member</Header3>
+                <Button 
+                    alignSelf="start"
+                    justifySelf="end"
+                    onClick={onClose}
+                >
+                    Close
+                </Button>
+            </SystemComponent>
 
             <ContentContainer>
                 <LeftColumn>
@@ -57,7 +57,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         memberData.subteams ? (
                             <MemberSubtitle>
                                 { memberData && memberData.memberType && memberData.memberType.name || "Member" } on <BorderlessButton variant={ subteam && subteam.toLowerCase() || ""} fontSize="inherit" fontWeight="inherit">
-                                    { subteam}
+                                    {subteam}
                                 </BorderlessButton> team
                             </MemberSubtitle>
                         )
@@ -70,24 +70,26 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <Header5 mb={1}>Subteams</Header5>
                         <SubteamsContainer>
                             {
-                                memberSubteams.map((subteam, i) => <Button key={i} variant={subteam.name.toLowerCase()}>{subteam.name}</Button>)
+                                memberSubteams.map((subteam, i) => <Button key={i} variant={subteam.toLowerCase()}>{subteam}</Button>)
                             }
                         </SubteamsContainer>
                     </>}
 
                     {memberData && memberData.projects && memberData.projects.length > 0 && <>
                         <Header5 mb={1}>Projects</Header5>
-                        <div css="display: flex; flex-direction: column;">
+                        <div css="display: flex; flex-direction: row;">
                             {
-                                memberProjects && memberProjects.map((project, i) => {
+                                memberProjects && memberProjects.length > 1 && memberProjects.slice(0, -1).map((project, i) => {
                                     return (
                                         <div key={i}>
-                                            {project.name + ((project.descriptions && project.descriptions.length > 0) ?
-                                                    " | " + project.descriptions.join(" • ") : "")
-                                            }
+                                            <span>{project}</span> <span>{' • '}</span> 
                                         </div>
-                                    )
+                                    );
                                 })
+                            }
+                            {
+                                memberProjects && memberProjects.length > 0 
+                                && <div>{memberProjects[memberProjects.length - 1]}</div>
                             }
                         </div>
                     </>}
@@ -113,11 +115,15 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                         <SystemComponent display="flex" flexDirection="column" padding={3}>
                             <InlineItemRow>
                                 <MailIcon />
-                                <Link ml={2} href={memberData.email ? `mailto:${memberData.email}` : ''}>Email</Link>
+                                <Link ml={2} target="_blank" href={memberData.email ? `https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${memberData.email}` : ''}>Email</Link>
                             </InlineItemRow>
                             {
                                 memberData.links && memberData.links.map(({type, link}, i) =>
-                                    <Link href={link} key={i} mt={2}>{type}</Link>
+                                    (link &&
+                                    <SystemComponent fontSize="16px" ml={1}>
+                                        <i className={`fa ${linkMap[type]}`}/>
+                                        <Link href={link} key={i} mt={2} ml="4px" target="_blank">{capitalize(type)}</Link>
+                                    </SystemComponent>)
                                 )
                             }
                             <Body>{`🎂 ${birthday}`}</Body>
@@ -126,22 +132,13 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
                     {
                         memberData.stream && memberData.stream.currentSchoolTerm && memberData.program &&
-                            <>
-                                <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
-                                <InlineItemRow>
-                                    <Dot isOnStream={memberData.stream.coopStream[code]}/>
-                                    <Body as="div">{memberData.stream.coopStream[code] ? "Onstream" : "Offstream"}</Body>
-                                </InlineItemRow>
-                            </>
+                        <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
                     }
-                    <Header5 mt={2} mb={1}>Been on team since</Header5>
-                    <Body mb={5}>{memberData.joined ? `${memberData.joined.season} ${memberData.joined.year}` : ''}</Body>
                 </RightColumn>
             </ContentContainer>
         </InfoCard>
     );
 };
-
 export default MemberInfoCard;
 
 /**
@@ -209,12 +206,4 @@ const SubteamsContainer = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min-content, 100px));
     margin: 0 0 20px 0;
-`
-
-const Dot = styled.div`
-    width: 15px;
-    height: 15px;
-    border-radius: 8px;
-    margin: 0 3px 0 0;
-    background-color: ${props => props.isOnStream ? "#32E67E" : props.theme.colors.theme};
 `
