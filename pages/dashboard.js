@@ -24,24 +24,44 @@ const populateLinks = (description) => {
     } while(indexes[indexes.length - 1] !== -1);
     indexes = indexes.slice(1, indexes.length - 1);
 
-    // Make the hyperlinks active
+    
+    // Populate with <a> hyperlink tags
     if (indexes.length === 0) return description;
     let endIdx = 0;
-    let populatedDescription = [];
+    let descriptionWithHyperlinks = [];
     for (let j = 0; j < indexes.length; j++) {
-        populatedDescription.push(description.substring(endIdx, indexes[j]));
+        descriptionWithHyperlinks.push(description.substring(endIdx, indexes[j]));
 
-        
         let descrip_startIsTrimmed = description.substring(indexes[j]);
-        let linkStartIdx = descrip_startIsTrimmed.indexOf("href='") + 6;
+        let linkStartIdx = descrip_startIsTrimmed.indexOf("href='") + "href='".length;
         let linkEndIdx = descrip_startIsTrimmed.indexOf("'", linkStartIdx);
         let link = descrip_startIsTrimmed.substring(linkStartIdx, linkEndIdx);
-        populatedDescription.push(<a href={link} target="_blank">{descrip_startIsTrimmed.substring(descrip_startIsTrimmed.indexOf(">") + 1, descrip_startIsTrimmed.indexOf("</a>"))}</a>);
+        descriptionWithHyperlinks.push(<a href={link} target="_blank">{descrip_startIsTrimmed.substring(descrip_startIsTrimmed.indexOf(">") + 1, descrip_startIsTrimmed.indexOf("</a>"))}</a>);
         
-        endIdx = description.indexOf("</a>", indexes[j]) + 4;
+        endIdx = description.indexOf("</a>", indexes[j]) + "</a>".length;
     }
-    populatedDescription.push(description.substring(endIdx));
-    return populatedDescription;
+    descriptionWithHyperlinks.push(description.substring(endIdx));
+
+
+    // Populate with <br/> tags
+    let descriptionWithBreaks = [] 
+    for (let j = 0; j < descriptionWithHyperlinks.length; j++) {
+        if (typeof descriptionWithHyperlinks[j] === "string" && descriptionWithHyperlinks[j].includes("<br/>")) {
+            let startIdx = 0;
+            let endIdx = descriptionWithHyperlinks[j].indexOf("<br/>");
+            while(endIdx != -1) {
+               descriptionWithBreaks.push(descriptionWithHyperlinks[j].substring(startIdx, endIdx));
+               descriptionWithBreaks.push(<br/>);
+
+               startIdx = endIdx + "<br/>".length;
+               endIdx = descriptionWithHyperlinks[j].indexOf("<br/>", startIdx);
+            }
+            descriptionWithBreaks.push(descriptionWithHyperlinks[j].substring(startIdx));
+        } else {
+            descriptionWithBreaks.push(descriptionWithHyperlinks[j]);
+        }
+    }
+    return descriptionWithBreaks;
 }
 
 const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceholderTexts, handleButtonClick, showButton = true }) => {
