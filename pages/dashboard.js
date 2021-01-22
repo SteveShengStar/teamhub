@@ -24,7 +24,7 @@ const populateLinks = (description) => {
     } while(indexes[indexes.length - 1] !== -1);
     indexes = indexes.slice(1, indexes.length - 1);
 
-    
+
     // Populate with <a> hyperlink tags
     if (indexes.length === 0) return description;
     let endIdx = 0;
@@ -128,7 +128,7 @@ const TextInput = ({placeholderTexts}) => {
                   justifyContent="flex-start"
                   alignItems="center"
                 >
-                  <StyledInput placeholder={text} value={value} onChange={handleTextChange} borderRadius="3px" borderWidth="1px" borderColor={`${props => props.theme.color.greys[1]}`}/>
+                  <StyledInput placeholder={text} value={value} onChange={handleTextChange} borderWidth="1px" borderColor={`${props => props.theme.color.greys[1]}`}/>
                   <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
                 </SystemComponent>)
             )}
@@ -266,13 +266,22 @@ export default TodoList;
 const SubmitButton = styled(Button)`
   height: 30px;
   width: 80px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 `;
 
 const StyledInput = styled(Input)`
   height: 30px;
-  width: 180px;
+  min-width: 190px;
+  width: 100%;
   box-sizing: border-box;
   padding-left: 5px;
+  border: 1px solid ${props => props.theme.colors.greys[2]};
+  border-radius: 5px 0 0 5px;
+
+  &:hover {
+    border-color: ${props => props.theme.colors.greys[3]};
+  }
 `;
 
 const CustomCard = styled(Card)`
