@@ -40,6 +40,7 @@ const populateLinks = (description) => {
         
         endIdx = description.indexOf("</a>", indexes[j]) + 4;
     }
+    populatedDescription.push(description.substring(endIdx));
     return populatedDescription;
 }
 
