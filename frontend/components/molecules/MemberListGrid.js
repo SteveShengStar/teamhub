@@ -30,9 +30,6 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
     const date = new Date();
     const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
-    console.log("members")
-    console.log(members)
-
     return (
         <>
             <GhostLoader>
