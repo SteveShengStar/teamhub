@@ -30,6 +30,9 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
     const date = new Date();
     const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
+    console.log("members")
+    console.log(members)
+
     return (
         <>
             <GhostLoader>
@@ -39,46 +42,49 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                         mb={2} 
                         ml={0} 
                     />
-                    {fetchedMembers ? (
-                        <SystemComponent
+                    {fetchedMembers ? 
+                        (<SystemComponent
                             display="grid"
                             gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
                             gridAutoRows="min-content"
                             alignItems="start"
                             gridGap={4}
                         >
-                        {
-                            members && members.filter(member => member.memberType && (member.memberType.name === "Project Lead"))
-                                .map((member, i) => 
-                                <MemberPreviewComponent 
-                                    key={i}
-                                    name={`${member.name.display || member.name.first + " " + member.name.last}`}
-                                    subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
-                                    role={member.memberType ? member.memberType.name : ''}
-                                    term={member.stream && member.stream.currentSchoolTerm || ""}
-                                    onClick={() => onSelect(member._id)}
-                                    imageUrl={member.imageUrl} 
-                                    isSelected={groupSelectedMembers.includes(member._id)}
-                                />
-                            )
-                        }
-                        </SystemComponent>
-                        ) : (
-                        <SystemComponent        // Ghost loading overlay component
-                            display="grid"
-                            gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
-                            gridAutoRows="min-content"
-                            alignItems="start"
-                            gridGap={4}
-                            ref={animRef}
-                        >
-                            {
-                                [...Array(3)].map((_, i) =>
-                                    <MemberGhostPreviewComponent key={i} visible={!fetchedMembers}/>
-                                )
+                            {   
+                                (members && members.some(member => member.memberType && (member.memberType.name === "Project Lead"))) ?
+                                 members.filter(member => member.memberType && (member.memberType.name === "Project Lead"))
+                                    .map((member, i) => 
+                                    <MemberPreviewComponent 
+                                        key={i}
+                                        name={`${member.name.display || member.name.first + " " + member.name.last}`}
+                                        subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
+                                        role={member.memberType ? member.memberType.name : ''}
+                                        term={member.stream && member.stream.currentSchoolTerm || ""}
+                                        onClick={() => onSelect(member._id)}
+                                        imageUrl={member.imageUrl} 
+                                        isSelected={groupSelectedMembers.includes(member._id)}
+                                    />) :
+                                    <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>There is nothing to display here</SystemComponent>
                             }
                         </SystemComponent>
-                    )}
+                        )
+                         : 
+                        (<SystemComponent        // Ghost loading overlay component
+                                display="grid"
+                                gridTemplateColumns="repeat(auto-fill, minmax(250px, 1fr))"
+                                gridAutoRows="min-content"
+                                alignItems="start"
+                                gridGap={4}
+                                ref={animRef}
+                            >
+                                {
+                                    [...Array(3)].map((_, i) =>
+                                        <MemberGhostPreviewComponent key={i} visible={!fetchedMembers}/>
+                                    )
+                                }
+                            </SystemComponent>
+                        )
+                    }
 
                     <MembersListHeader 
                         text="Your Teammates"
@@ -95,7 +101,8 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                             gridGap={4}
                         >
                         {
-                            members && members.filter(member => !member.memberType || member.memberType.name === "Member")
+                            (members && members.some(member => !member.memberType || member.memberType.name === "Member")) ? 
+                            members.filter(member => !member.memberType || member.memberType.name === "Member")
                                 .map((member, i) => 
                                 <MemberPreviewComponent 
                                     key={i}
@@ -108,7 +115,8 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                     imageUrl={member.imageUrl} 
                                     isSelected={groupSelectedMembers.includes(member._id)}
                                 />
-                            )
+                            ) : 
+                            <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>There is nothing to display here</SystemComponent>
                         }
                         </SystemComponent>
                         ) : (  
