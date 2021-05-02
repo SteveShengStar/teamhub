@@ -17,7 +17,7 @@ const Update = () => {
     const onSubmit = (e) => {
         e.preventDefault()
 
-        if (file.name.substring(file.name.length - 4) === ".csv") {
+        if (file && file.name.substring(file.name.length - 4) === ".csv") {
             const formData = new FormData();
             formData.append('file', file);
 
