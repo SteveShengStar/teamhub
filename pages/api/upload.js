@@ -7,10 +7,10 @@ export default async (req, res) => {
 
     await data.initIfNotStarted();
     if (req.method === 'POST') {
+        console.log(req.headers);
+        const authStatus = await data.auth.checkAnyUser(req.headers['Authorization'], res);
 
-        //const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
-
-        //if (authStatus) {
+        if (authStatus) {
             try {
                 var form = new formidable.IncomingForm({ keepExtensions: true });
                 var fields = {};
@@ -84,7 +84,7 @@ export default async (req, res) => {
                 res.statusCode = 500;
                 res.end( JSON.stringify({message: "An error occurred while processing the data."}) );
             }
-        //}
+        }
     } else {
         res.setHeader('Content-Type', 'application/json');
         res.statusCode = 404;
