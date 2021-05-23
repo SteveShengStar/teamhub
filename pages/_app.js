@@ -21,10 +21,10 @@ const navItems = [
         name: 'Home', link: '/dashboard'
     },
     {
-        name: 'The Team', link: '/'
+        name: 'Teammates', link: '/'
     },
     {
-        name: 'Profile Info', link: '/settings'
+        name: 'My Profile', link: '/settings'
     },
 ];
 
