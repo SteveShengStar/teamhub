@@ -24,7 +24,6 @@ process.yml
 .env*
 .idea
 constants.js
-*.csv
 uploads/*
 *.deb
 

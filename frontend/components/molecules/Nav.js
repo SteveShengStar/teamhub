@@ -48,7 +48,7 @@ const Nav = ({navItems, index}) => {
   });
 
   return (
-    <MyNav display="flex" flexDirection="column" alignItems="flex-end" bg={scrolled ? "greys.0" : "transparent"} shadow={scrolled ? "default" : "none"}>
+    <MyNav display="flex" flexDirection="column" alignItems="flex-end" bg="greys.0" shadow={scrolled ? "default" : "none"}>
         <SystemComponent display="flex" justifyContent="flex-end">
             <NavLogo alignSelf="center"/>
         </SystemComponent>
