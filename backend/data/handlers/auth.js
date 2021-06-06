@@ -1,8 +1,74 @@
 const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
+const { google } = require('googleapis');
 const authConfig = require('./auth.config.json');
 const members = require('./members');
 const crypto = require('crypto');
+
+require('dotenv').config()
+
+const oauth2Client = {
+    clientId: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    redirect: 'http://localhost:3001/auth/success'
+}
+
+const scopes = [
+    'https://www.googleapis.com/auth/calendar.events'
+]
+
+function getOAuth2Client() {
+    return new google.auth.OAuth2(
+        googleConfig.clientId,
+        googleConfig.clientSecret,
+        googleConfig.redirect
+    );
+}
+
+function getAuthUrl(client) {
+    return client.generateAuthUrl({
+        access_type: 'offline',
+        prompt: 'consent',
+        scope: scopes
+    });
+}
+
+module.exports.getAuthConsentScreenUrl = function () {
+    const client = getOAuth2Client();
+    const url = getAuthUrl(client);
+    return url;
+}
+
+function getOAuth2User(client) {
+    return google.oauth2({
+        auth: client,
+        version: 'v2'
+    });
+}
+
+
+module.exports.getGoogleAccountFromCode = async function (code, cb) {
+    const client = getOAuth2Client();
+    const { tokens } = await client.getToken(code);
+    client.setCredentials(tokens);
+    const user = await getOAuth2User(client);
+
+    user.userinfo.get((err, res) => {
+        if (err) {
+            cb(err);
+        } else {
+            const userProfile = {
+                id: res.data.id,
+                accessToken: tokens.access_token,
+                name: res.data.name,
+                displayPicture: res.data.picture,
+                email: res.data.email
+            }
+            cb(null, userProfile);
+        }
+    })
+
+}
 
 const auth = {};
 
