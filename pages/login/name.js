@@ -13,7 +13,7 @@ import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 const Name = () => {
     const router = useRouter()
-    const { user, token,tempDisplayName } = useSelector(state => state.userState)
+    const { user, token, tempDisplayName } = useSelector(state => state.userState)
     const dispatch = useDispatch();
     const [ nameInput, setNameInput ] = useState(tempDisplayName || "");
 

@@ -9,6 +9,7 @@ export default async (req, res) => {
             res.statusCode = 200;
             res.end(JSON.stringify(authStatus));
         }
+        // TODO: handle the false case
     } else {
         res.statusCode = 404;
         res.end();
