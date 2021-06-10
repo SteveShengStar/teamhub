@@ -176,7 +176,7 @@ const TodoListBody = ({ taskStatus, tasks, handleButtonClick, bufferedItemIds })
 };
 
 
-const TodoList = () => {
+const Dashboard = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [showPendingTasks, setShowPendingTasks] = useState(true); // Whether the pending tasks or completed tasks are showing.
@@ -298,7 +298,7 @@ const TodoList = () => {
   );
 };
 
-export default TodoList;
+export default Dashboard;
 
 const SubmitButton = styled(Button)`
   height: 30px;

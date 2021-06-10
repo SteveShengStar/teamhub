@@ -17,7 +17,7 @@ import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 // import { getUserId, startGroupConversation } from "./api/slack";
 // import { constants } from "../constants";
 
-const Home = () => {
+const MembersListPage = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const theme = useContext(ThemeContext); // Using the theme (colours, fonts, etc.)  from  /frontend/components/theme.js
@@ -224,7 +224,7 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default MembersListPage;
 
 const MembersListCard = styled(Card)`
     transition: all 0.2s ease-out;
