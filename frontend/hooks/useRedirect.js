@@ -1,5 +1,3 @@
-import { useRouter } from "next/router"
-
 /**
  * @param {*} user
  * @param {*} router
@@ -11,7 +9,7 @@ export default (user, router) => {
         return;
     }
     if (!user.name || !user.name.display) {
-        if (router.pathname != "/login/name") router.push("/login/name")
+        if (router.pathname != "/login/authorize") router.push("/login/authorize")
         return;
     }
     if (!user.subteams || user.subteams.length === 0 || !user.memberType) {

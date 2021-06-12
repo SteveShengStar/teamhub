@@ -12,12 +12,16 @@ export default async (req, res) => {
             })));
             return;
         }
-
+        const [userProfile, redirectUrl] = await data.auth.login(req.body);
+        // res.setHeader('Location', redirectUrl);
+        console.log("userProfile");
+        console.log(userProfile);
+        console.log("redirectUrl");
+        console.log(redirectUrl);
         res.statusCode = 200;
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
-            const res = await data.auth.login(req.body);
-            return res;
-        })));
+            return {user: userProfile, redirectUrl: redirectUrl}
+        })));       // redirect user to oauth consent screen, which requests permission for Team Hub to access user's Google account data
     } else {
         res.statusCode = 404;
         res.end();

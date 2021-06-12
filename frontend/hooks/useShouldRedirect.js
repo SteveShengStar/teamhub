@@ -2,7 +2,7 @@
  * @param {*} user
  * @param {*} router
  */
-const useShouldRedirect = (user, router) => {
+const useShouldRedirect = (user, router, redirectUrl) => {
     // if user is logged in check user status
     if (!user || !user._id) {
         if (router.pathname != "/login") {
@@ -12,8 +12,14 @@ const useShouldRedirect = (user, router) => {
         return false
     }
     if (!user.name || !user.name.display) {
-        if (router.pathname != "/login/name") {
-            router.push("/login/name")
+        console.log(redirectUrl)
+        console.log(encodeURIComponent(redirectUrl))
+        if (router.pathname != "/login/authorize") {
+            //router.push("/login/authorize")
+            router.push({
+                pathname: '/login/authorize',
+                query: { redirectUrl: encodeURIComponent(redirectUrl) },
+            })
             return true
         }
         return false

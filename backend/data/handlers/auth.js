@@ -1,4 +1,6 @@
 const util = require('./util');
+// const express = require('express');
+
 const { OAuth2Client } = require('google-auth-library');
 const { google } = require('googleapis');
 const authConfig = require('./auth.config.json');
@@ -6,26 +8,29 @@ const members = require('./members');
 const crypto = require('crypto');
 
 require('dotenv').config()
+// const app = express()
 
-const oauth2Client = {
+const googleConfig = {
     clientId: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    redirect: 'http://localhost:3001/auth/success'
+    redirect: 'http://localhost:3000/api/auth/redirect'
 }
 
-const scopes = [
-    'https://www.googleapis.com/auth/calendar.events'
-]
-
 function getOAuth2Client() {
-    return new google.auth.OAuth2(
+    return new OAuth2Client(
         googleConfig.clientId,
         googleConfig.clientSecret,
         googleConfig.redirect
     );
 }
 
-function getAuthUrl(client) {
+const scopes = [
+    'https://www.googleapis.com/auth/calendar.events',
+    'profile',
+    'email'
+]
+
+function getOAuthConsentScreenUrl(client) {
     return client.generateAuthUrl({
         access_type: 'offline',
         prompt: 'consent',
@@ -33,41 +38,11 @@ function getAuthUrl(client) {
     });
 }
 
-module.exports.getAuthConsentScreenUrl = function () {
-    const client = getOAuth2Client();
-    const url = getAuthUrl(client);
-    return url;
-}
-
 function getOAuth2User(client) {
     return google.oauth2({
         auth: client,
         version: 'v2'
     });
-}
-
-
-module.exports.getGoogleAccountFromCode = async function (code, cb) {
-    const client = getOAuth2Client();
-    const { tokens } = await client.getToken(code);
-    client.setCredentials(tokens);
-    const user = await getOAuth2User(client);
-
-    user.userinfo.get((err, res) => {
-        if (err) {
-            cb(err);
-        } else {
-            const userProfile = {
-                id: res.data.id,
-                accessToken: tokens.access_token,
-                name: res.data.name,
-                displayPicture: res.data.picture,
-                email: res.data.email
-            }
-            cb(null, userProfile);
-        }
-    })
-
 }
 
 const auth = {};
@@ -145,40 +120,83 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
 
 auth.login = async (tokenObj) => {
     return util.handleWrapper(async () => {
-        const client = new OAuth2Client(authConfig['client_id']);
+        const client = getOAuth2Client();
         const ticket = await client.verifyIdToken({
             idToken: tokenObj.tokenId,
-            audience: authConfig['client_id'],
+            audience: googleConfig.clientId,
         });
         const payload = ticket.getPayload();
         if (payload.hd != 'waterloop.ca') {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
             const searchRes = await members.search({ email: payload['email'] });
+            console.log("22222");
+            console.log(searchRes);
             if (!searchRes || searchRes.length === 0) {
-                const token = crypto.randomBytes(32).toString('hex');
-                const res = await members.add({
+                // Create new user
+                console.log("22aaa");
+                const userProfile = await members.add({
                     name: {
                         first: payload['given_name'],
                         last: payload['family_name']
                     },
                     email: payload['email'],
-                    imageUrl: payload['picture'],
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+                    imageUrl: payload['picture']
+                    //tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
-                return [res];
-            } else {
-                const token = crypto.randomBytes(64).toString('hex');
-                await members.updateMember({ email: payload['email'] }, {
-                    imageUrl: payload['picture'],
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
-                });
-                return await members.search({ email: payload['email'] }, false, true);
-            }
+                console.log("33333");
+                return [userProfile, getOAuthConsentScreenUrl(client)];
+            }// else {
+            //     const token = crypto.randomBytes(64).toString('hex');
+            //     await members.updateMember({ email: payload['email'] }, {
+            //         imageUrl: payload['picture'],
+            //         token,
+            //         tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+            //     });
+            //     res.statusCode = 200;
+            //     return await members.search({ email: payload['email'] }, false, true);
+            // }
         }
     });
 };
+
+auth.authorize = async (code) => { 
+    const client = getOAuth2Client();
+
+    client.on('tokens', (tokens) => {
+        if (tokens.refresh_token) {
+            // store the refresh_token in my database!
+            console.log("Refresh:");
+            console.log(tokens.refresh_token);
+        }
+        console.log("Access:");
+        console.log(tokens.access_token);
+    });
+
+    const { tokens } = await client.getToken(code);
+    client.setCredentials(tokens);
+    const user = await getOAuth2User(client);
+
+    // print info about access token
+    const tokenInfo = await client.getTokenInfo(tokens.access_token);
+    console.log("Token Info");
+    console.log(tokenInfo);
+    
+    user.userinfo.get((err, res) => {
+        if (err) {
+            console.log("Error getting user info from user object.");
+        } else {
+            // const userProfile = {
+            //     id: res.data.id,
+            //     accessToken: tokens.access_token,
+            //     name: res.data.name,
+            //     displayPicture: res.data.picture,
+            //     email: res.data.email
+            // }
+            console.log(user);
+        }
+    });  
+    return {message: "Successfully went through the authorization process"};
+}
 
 module.exports = auth;

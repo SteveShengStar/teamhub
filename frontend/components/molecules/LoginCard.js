@@ -14,8 +14,10 @@ const Login = ({shouldHide, onFinish, loginRef}) => {
     function responseGoogle(response) {
         if (response.error) return;
         shouldHide && shouldHide();
-        userLogin(response, dispatch).then((user) => {
-            onFinish && onFinish(user);
+        userLogin(response, dispatch).then((payload) => {
+            console.log("payload:");
+            console.log(payload);
+            onFinish && onFinish(payload.user, payload.redirectUrl);
         })
     }
     return (

@@ -24,10 +24,14 @@ const useLoginController = (loginTransition, dispatch, route) => {
             }).catch(err => {
                 console.error(err)
                 if (!useShouldRedirect(user,router)) {
-                    loginTransition.show()
+                    loginTransition.show()  // TODO: this will show the transition animation indefinitely, need a better way to handle this.
                 }
             })
             return;
+        } else {
+            if (!useShouldRedirect(user,router)) {
+                loginTransition.show()      // TODO: this will show the transition animation indefinitely, need a better way to handle this.
+            }
         }
         if (route && route === '/login') {
             loginTransition.show();

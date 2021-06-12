@@ -58,14 +58,14 @@ const userReducer = (state = usersInitialState, action) => {
 export const userLogin = async (response, dispatch) => {
     try {
         const res = await api.auth.login(response);
-        const user = res && res.body && res.body[0] || res.body;
+        const user = res && res.body && res.body || res.body.user;
         if (user && user.token) {
             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, token: user.token, display: response.profileObj.name });
         }
         else {
             dispatch({ type: UserTypes.FAILED_LOGIN })
         }
-        return user;
+        return res.body;
     }
     catch(err) {
         // TODO: Handle error 

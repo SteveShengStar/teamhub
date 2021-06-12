@@ -28,9 +28,9 @@ export default () => {
                         shouldHide={() => {
                             loginTransition.setVisible(false)
                         }} 
-                        onFinish={(user) => {
+                        onFinish={(user, redirectUrl) => {
                             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
-                            useShouldRedirect(user, router)
+                            useShouldRedirect(user, router, redirectUrl)
                         }} 
                     />
                 </LoginTransition>
