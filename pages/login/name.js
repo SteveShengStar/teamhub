@@ -27,7 +27,6 @@ const Name = () => {
         }
         loginTransition.setVisible(false)
 
-        
         // Persist the newly entered user information to the database
         updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
             useShouldRedirect(user, router)

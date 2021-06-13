@@ -26,6 +26,7 @@ process.yml
 constants.js
 uploads/*
 *.deb
+/pages/calendar.js
 
 # debug
 npm-debug.log*

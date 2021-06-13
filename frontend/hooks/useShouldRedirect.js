@@ -15,7 +15,6 @@ const useShouldRedirect = (user, router, redirectUrl) => {
         console.log(redirectUrl)
         console.log(encodeURIComponent(redirectUrl))
         if (router.pathname != "/login/authorize") {
-            //router.push("/login/authorize")
             router.push({
                 pathname: '/login/authorize',
                 query: { redirectUrl: encodeURIComponent(redirectUrl) },

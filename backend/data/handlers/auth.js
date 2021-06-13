@@ -1,5 +1,4 @@
 const util = require('./util');
-// const express = require('express');
 
 const { OAuth2Client } = require('google-auth-library');
 const { google } = require('googleapis');
@@ -8,7 +7,6 @@ const members = require('./members');
 const crypto = require('crypto');
 
 require('dotenv').config()
-// const app = express()
 
 const googleConfig = {
     clientId: process.env.GOOGLE_CLIENT_ID,
@@ -30,11 +28,12 @@ const scopes = [
     'email'
 ]
 
-function getOAuthConsentScreenUrl(client) {
+function getOAuthConsentScreenUrl(client, email) {
     return client.generateAuthUrl({
         access_type: 'offline',
         prompt: 'consent',
-        scope: scopes
+        scope: scopes,
+        state: email
     });
 }
 
@@ -130,11 +129,8 @@ auth.login = async (tokenObj) => {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
             const searchRes = await members.search({ email: payload['email'] });
-            console.log("22222");
-            console.log(searchRes);
             if (!searchRes || searchRes.length === 0) {
                 // Create new user
-                console.log("22aaa");
                 const userProfile = await members.add({
                     name: {
                         first: payload['given_name'],
@@ -142,10 +138,8 @@ auth.login = async (tokenObj) => {
                     },
                     email: payload['email'],
                     imageUrl: payload['picture']
-                    //tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
-                console.log("33333");
-                return [userProfile, getOAuthConsentScreenUrl(client)];
+                return [userProfile, getOAuthConsentScreenUrl(client, payload['email'])];
             }// else {
             //     const token = crypto.randomBytes(64).toString('hex');
             //     await members.updateMember({ email: payload['email'] }, {
@@ -160,43 +154,38 @@ auth.login = async (tokenObj) => {
     });
 };
 
-auth.authorize = async (code) => { 
-    const client = getOAuth2Client();
-
-    client.on('tokens', (tokens) => {
+auth.authorize = async (authCode, email) => {   
+    const client = getOAuth2Client();       // TODO: I probably do not need to create a new instance so frequently
+    client.on('tokens', (tokens) => {       // TODO: I probably should not register this event handler multiple times.
         if (tokens.refresh_token) {
             // store the refresh_token in my database!
             console.log("Refresh:");
             console.log(tokens.refresh_token);
+            await members.updateMember({email: email}, {refToken: tokens.refresh_token});    // TODO: Proper exception handling
         }
         console.log("Access:");
         console.log(tokens.access_token);
     });
 
-    const { tokens } = await client.getToken(code);
+    const { tokens } = await client.getToken(authCode);
     client.setCredentials(tokens);
     const user = await getOAuth2User(client);
 
     // print info about access token
     const tokenInfo = await client.getTokenInfo(tokens.access_token);
-    console.log("Token Info");
+    console.log("Token Info:");
     console.log(tokenInfo);
     
     user.userinfo.get((err, res) => {
         if (err) {
             console.log("Error getting user info from user object.");
         } else {
-            // const userProfile = {
-            //     id: res.data.id,
-            //     accessToken: tokens.access_token,
-            //     name: res.data.name,
-            //     displayPicture: res.data.picture,
-            //     email: res.data.email
-            // }
-            console.log(user);
+            //console.log(user); // TODO: Do I really need to update this entry on every call ?
+            // Store access token and expiry date in database
+            await members.updateMember({email: email}, {token: tokens.access_token, tokenExpiry: tokenInfo.expiry_date});     // TODO: proper exception handling
         }
-    });  
-    return {message: "Successfully went through the authorization process"};
+    });
+    return {message: "Successfully authorized Team Hub to access the user's Google data."};
 }
 
 module.exports = auth;
