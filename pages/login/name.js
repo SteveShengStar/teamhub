@@ -4,24 +4,21 @@ import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
 import LoginNameCard from '../../frontend/components/molecules/LoginNameCard';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateUser } from '../../frontend/store/reducers/userReducer';
+import { updateUserAndGetToken } from '../../frontend/store/reducers/userReducer';
 import useLoginTransition from '../../frontend/hooks/useLoginTransition';
-import useLoginController from '../../frontend/hooks/useLoginController';
 import { useRouter } from 'next/router';
 import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
-import { SystemComponent } from '../../frontend/components/atoms/SystemComponents';
+
 
 const Name = () => {
     const router = useRouter()
-    const { user, token, tempDisplayName } = useSelector(state => state.userState)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
+    const { user, tempDisplayName } = useSelector(state => state.userState)
     const [ nameInput, setNameInput ] = useState(tempDisplayName || "");
 
     // Token is missing if user accessed this page directly or if user is being directed here for the first time.
     // TODO: use cookies and sessions
-    const loginTransition = useLoginTransition()
-    useLoginController(loginTransition, dispatch, router.pathname)
 
     const trySubmit = () => {
         if (!nameInput) {
@@ -31,25 +28,12 @@ const Name = () => {
         loginTransition.setVisible(false)
 
         // Persist the newly entered user information to the database
-        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router)
+        updateUserAndGetToken(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, user._id, router)
             .then(user => {
                 useShouldRedirect(user, router)
             })
     }
 
-    console.log("Check 1");
-    if (!token) {
-        return (
-            <>
-                <PageTemplate title="Onboarding">
-                    <SystemComponent>
-                        Loading. Please wait ...
-                    </SystemComponent>
-                </PageTemplate>
-            </>
-        )
-    }
-    console.log("Check 2");
     return (
         <>
             <PageTemplate title="Onboarding">

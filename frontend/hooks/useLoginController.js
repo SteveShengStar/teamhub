@@ -4,7 +4,6 @@ import api from "../store/api"
 import useShouldRedirect from "./useShouldRedirect"
 import { useRouter } from "next/router"
 import { UserTypes } from "../store/reducers/userReducer"
-import {getAccessToken} from '../store/reducers/userReducer';
 
 /**
  * Authenticate the user (confirm he is logged in). 
@@ -35,17 +34,15 @@ const useLoginController = (loginTransition, dispatch, route) => { // TODO: Use 
             })
             return;
         } else {
-            if (route && route === '/login/name') {     // If token is not in Redux store, fetch to see if it exists in the database. 
-                getAccessToken(dispatch, user._id)
+            // Handle cases where the token is not stored in the frontend
+            if (route && route === '/login') { 
+                loginTransition.show();         
             } else {
                 if (!useShouldRedirect(user, router)) {
                     loginTransition.show()      // TODO: Is this still needed ? Handles the authorize step. Make sure to examine the below condition.
                 }
             }
         }
-        if (route && route === '/login') {  
-            loginTransition.show();         
-        }
-    }, [hydrated])
+    }, [hydrated]);
 }
 export default useLoginController;
