@@ -40,8 +40,6 @@ const userReducer = (state = usersInitialState, action) => {
                 user: {}
             }
         case UserTypes.UPDATE_TOKEN: // TODO: Remove later
-            console.log("action")
-            console.log(action)
             return {
                 ...state,
                 token: action.token,

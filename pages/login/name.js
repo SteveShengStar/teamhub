@@ -37,6 +37,7 @@ const Name = () => {
             })
     }
 
+    console.log("Check 1");
     if (!token) {
         return (
             <>
@@ -48,6 +49,7 @@ const Name = () => {
             </>
         )
     }
+    console.log("Check 2");
     return (
         <>
             <PageTemplate title="Onboarding">
