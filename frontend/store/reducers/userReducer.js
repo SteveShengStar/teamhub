@@ -3,7 +3,8 @@ import api from "../api";
 export const UserTypes = new Proxy({
     RECEIVED_LOGIN: "RECEIVED_LOGIN",
     FAILED_LOGIN: "FAILED_LOGIN",
-    UPDATE_INFO: "UPDATE_INFO"
+    UPDATE_INFO: "UPDATE_INFO",
+    UPDATE_TOKEN: "UPDATE_TOKEN"
 }, {
     set: () => {
         throw new Error("Can't mutate type UserTypes")
@@ -25,7 +26,7 @@ const userReducer = (state = usersInitialState, action) => {
                 ...state,
                 user: action.payload
             };
-        case UserTypes.RECEIVED_LOGIN:
+        case UserTypes.RECEIVED_LOGIN: 
             return {
                 ...state,
                 user: action.payload,
@@ -37,6 +38,13 @@ const userReducer = (state = usersInitialState, action) => {
                 ...state,
                 token: "",
                 user: {}
+            }
+        case UserTypes.UPDATE_TOKEN: // TODO: Remove later
+            console.log("action")
+            console.log(action)
+            return {
+                ...state,
+                token: action.token,
             }
         case "persist/REHYDRATE":
             const userState = action.payload && action.payload.userState
@@ -78,10 +86,11 @@ export const userLogin = async (response, dispatch) => {
  * @param {*} options 
  * @param {string} token 
  * @param {string} id 
+ * @param {boolean} signUp   Indicates whether the user is signing up for the first time.
  */
 export const updateUser = async (dispatch, options, token, id, router, signUp = true) => {
     try {
-        // TODO: think about just doing the post request only. RN, we need a secnd. request becuase first request has missing fields.
+        // TODO: think about just doing the post request only. RN, we need a second request becuase first request has missing fields.
         const res = await api.members.update(options, token, id, dispatch, router);
         if (res && res.success) {
             const user = await api.members.getMember(id, token, dispatch, router);
@@ -89,19 +98,26 @@ export const updateUser = async (dispatch, options, token, id, router, signUp = 
                 if (signUp) {
                     dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] })
                 }
-                else
+                else {
                     dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] })
+                }
                 return user.body[0];
             }
         }
-        return;
+        return; // TODO: handle error
     }
     catch(err) {
         throw new Error(err)
     }
 }
 
-
+/**
+ * Retrieves user profile info
+ * 
+ * @param {string} token 
+ * @param {string} id 
+ * @returns 
+ */
 export const getProfileInfo = async function(dispatch, token, id, router) {
     try {
         const user = await api.members.getMember(id, token, dispatch, router);
@@ -113,5 +129,19 @@ export const getProfileInfo = async function(dispatch, token, id, router) {
     }
 }
 
+/**
+ * Retrieves user access token
+ * 
+ * @param {string} id 
+ * @returns 
+ */
+export const getAccessToken = async function(dispatch, id) {
+    try {
+        const result = await api.members.getAccessToken(id);
+        dispatch({ type: UserTypes.UPDATE_TOKEN, token: result.body[0].token });
+    } catch(err) {
+        console.log(`Error: Failed to return profile data for user with id: ${id} `, err);
+    }
+}
 
 export default userReducer;

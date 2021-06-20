@@ -1,4 +1,6 @@
 const Member = require('../schema/Member');
+const ObjectID = require('mongodb').ObjectID;
+
 const skills = require('./skills');
 const interests = require('./interests');
 const memberTypes = require('./memberTypes');
@@ -123,6 +125,12 @@ members.search = async (body, fields, showToken = false, returnSubteamTaskList =
         }
     });
 };
+
+members.getToken = async (userId) => {
+    return util.handleWrapper(async () => {
+        return await Member.find({_id: new ObjectID(userId)}).select(['token']);
+    });
+}
 
 /**
  * Assign a task to all members

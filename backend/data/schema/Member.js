@@ -124,8 +124,12 @@ const MemberSchema = new Schema({
     links: {
         type: [Member_Link]
     },
-    token: {
+    refToken: { // Refresh token
         type: String,
+        select: false
+    },
+    token: {    // Access token
+        type: String,   
         select: false
     },
     tokenExpiry: {

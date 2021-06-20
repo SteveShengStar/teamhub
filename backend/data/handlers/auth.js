@@ -47,9 +47,9 @@ function getOAuth2User(client) {
 const auth = {};
 
 /**
- * authHeader: authentication token provided by the client
+ * @param authHeader: authentication token provided by the client
  * 
- * return: information of the user that corresponds to the input token
+ * @return: information of the user that corresponds to the input token
  */
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
@@ -156,7 +156,7 @@ auth.login = async (tokenObj) => {
 
 auth.authorize = async (authCode, email) => {   
     const client = getOAuth2Client();       // TODO: I probably do not need to create a new instance so frequently
-    client.on('tokens', (tokens) => {       // TODO: I probably should not register this event handler multiple times.
+    client.on('tokens', async (tokens) => {       // TODO: I probably should not register this event handler multiple times.
         if (tokens.refresh_token) {
             // store the refresh_token in my database!
             console.log("Refresh:");
@@ -168,24 +168,13 @@ auth.authorize = async (authCode, email) => {
     });
 
     const { tokens } = await client.getToken(authCode);
-    client.setCredentials(tokens);
-    const user = await getOAuth2User(client);
+    client.setCredentials(tokens);  // TODO: is this line necessary ?
 
-    // print info about access token
+    // get info about access_token
     const tokenInfo = await client.getTokenInfo(tokens.access_token);
-    console.log("Token Info:");
-    console.log(tokenInfo);
-    
-    user.userinfo.get((err, res) => {
-        if (err) {
-            console.log("Error getting user info from user object.");
-        } else {
-            //console.log(user); // TODO: Do I really need to update this entry on every call ?
-            // Store access token and expiry date in database
-            await members.updateMember({email: email}, {token: tokens.access_token, tokenExpiry: tokenInfo.expiry_date});     // TODO: proper exception handling
-        }
-    });
-    return {message: "Successfully authorized Team Hub to access the user's Google data."};
+
+    // TODO: error handling
+    await members.updateMember({email: email}, {token: tokens.access_token, tokenExpiry: tokenInfo.expiry_date})
 }
 
 module.exports = auth;

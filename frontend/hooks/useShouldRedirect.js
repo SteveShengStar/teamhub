@@ -3,45 +3,49 @@
  * @param {*} router
  */
 const useShouldRedirect = (user, router, redirectUrl) => {
-    // if user is logged in check user status
-    if (!user || !user._id) {
+    if (!user || !user._id) {   
         if (router.pathname != "/login") {
             router.push("/login")
-            return true
+            return true // show the page transition/load animation
         }
-        return false
+        return false    // since we are not transitioning to new page, don't show the page transition/load animation
     }
-    if (!user.name || !user.name.display) {
-        console.log(redirectUrl)
-        console.log(encodeURIComponent(redirectUrl))
+    if (!user.token) {
         if (router.pathname != "/login/authorize") {
             router.push({
                 pathname: '/login/authorize',
-                query: { redirectUrl: encodeURIComponent(redirectUrl) },
+                query: { redirectUrl: encodeURIComponent(redirectUrl) },    // TODO: put this in the Redux store.
             })
-            return true
+            return true // show the page transition/load animation
         }
-        return false
-
+        return false    // since we are not transitioning to new page, don't show the page transition/load animation
+    }
+    if (!user.name || !user.name.display) {
+        console.log(encodeURIComponent(redirectUrl))
+        if (router.pathname != "/login/name") {
+            router.push('/login/name');
+            return true // show the page transition/load animation
+        }
+        return false    // since we are not transitioning to new page, don't show the page transition/load animation
     }
     if (!user.subteams || (user.subteams && user.subteams.length === 0) || !user.memberType) {
         if (router.pathname != "/login/role") {
             router.push("/login/role");
-            return true
+            return true // show the page transition/load animation
         }
-        return false
+        return false    // since we are not transitioning to new page, don't show the page transition/load animation
     }
     if (!user.birthday) {
         if (router.pathname != "/login/about") {
             router.push("/login/about");
-            return true
+            return true // show the page transition/load animation
         }
-        return false
+        return false    // since we are not transitioning to new page, don't show the page transition/load animation
     }
     if (router.pathname.startsWith("/login")) {
         router.push("/");
-        return true
+        return true     // show the page transition/load animation
     }
-    return false
+    return false        // since we are not transitioning to new page, don't show the page transition/load animation
 }
 export default useShouldRedirect;

@@ -7,11 +7,10 @@ export default async (req, res) => {
         const {code: authCode, state: email} = req.query;
 
         res.setHeader('Content-Type', 'application/json');
-        res.setHeader('Location', '/pages/login/name');
+        res.setHeader('Location', '/login/name');
         res.statusCode = 307; 
-        return res.end(JSON.stringify(await data.util.resWrapper(async () => {
-            return await data.auth.authorize(authCode, email);
-        })));
+        await data.auth.authorize(authCode, email); // TODO: error handling
+        res.end()
     } else {
         res.statusCode = 404;       // TODO: Need better status code and method of handling a redirect failure
         res.end();

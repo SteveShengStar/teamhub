@@ -13,9 +13,6 @@ export default async (req, res) => {
             return;
         }
         const [userProfile, redirectUrl] = await data.auth.login(req.body);
-        // res.setHeader('Location', redirectUrl);
-        console.log("userProfile");
-        console.log(userProfile);
         console.log("redirectUrl");
         console.log(redirectUrl);
         res.statusCode = 200;

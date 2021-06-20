@@ -10,6 +10,7 @@ import useLoginController from '../../frontend/hooks/useLoginController';
 import { useRouter } from 'next/router';
 import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
+import { SystemComponent } from '../../frontend/components/atoms/SystemComponents';
 
 const Name = () => {
     const router = useRouter()
@@ -17,6 +18,8 @@ const Name = () => {
     const dispatch = useDispatch();
     const [ nameInput, setNameInput ] = useState(tempDisplayName || "");
 
+    // Token is missing if user accessed this page directly or if user is being directed here for the first time.
+    // TODO: use cookies and sessions
     const loginTransition = useLoginTransition()
     useLoginController(loginTransition, dispatch, router.pathname)
 
@@ -28,11 +31,23 @@ const Name = () => {
         loginTransition.setVisible(false)
 
         // Persist the newly entered user information to the database
-        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
-            useShouldRedirect(user, router)
-        })
+        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router)
+            .then(user => {
+                useShouldRedirect(user, router)
+            })
     }
 
+    if (!token) {
+        return (
+            <>
+                <PageTemplate title="Onboarding">
+                    <SystemComponent>
+                        Loading. Please wait ...
+                    </SystemComponent>
+                </PageTemplate>
+            </>
+        )
+    }
     return (
         <>
             <PageTemplate title="Onboarding">

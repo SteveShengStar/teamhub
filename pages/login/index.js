@@ -13,7 +13,7 @@ import { ThemeContext } from 'styled-components';
 import LoginTransition from '../../frontend/components/templates/LoginTransition';
 
 
-export default () => {
+const LoginHome = () => {
     const theme = useContext(ThemeContext);
     const router = useRouter();
     const dispatch = useDispatch()
@@ -39,4 +39,4 @@ export default () => {
         </>
     )
 }
-    
+export default LoginHome;
