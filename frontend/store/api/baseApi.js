@@ -41,6 +41,6 @@ export const refreshable = (endpoint, token, options, dispatch, router) => {
         .then(res => res.json())
         .catch(err => {
             dispatch({ type: "RESET" });
-            useShouldRedirect({}, router)
+            useShouldRedirect({}, router, "", token)
         })
 }

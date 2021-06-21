@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import {removeBadValuesAndDuplicates} from '../../frontend/helpers';
 
 import PageTemplate from "../../frontend/components/templates/PageTemplate";
-import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import OnboardingAboutCard from "../../frontend/components/organisms/OnboardingAboutCard";
 import Button from "../../frontend/components/atoms/Button";
 import styled from "styled-components";
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-import useLoginTransition from "../../frontend/hooks/useLoginTransition";
 import useLoginController from "../../frontend/hooks/useLoginController";
 import LoadingModal from "../../frontend/components/atoms/LoadingModal";
 import { getFilters } from "../../frontend/store/reducers/membersReducer";
@@ -35,9 +33,7 @@ const About = () => {
       }
   }, [hydrated])
 
-
-  const loginTransition = useLoginTransition()
-  useLoginController(loginTransition, dispatch, router.pathname);
+  useLoginController(dispatch, router.pathname);
 
   function trySubmit() {
     // If user did not specify a program, display error.
@@ -64,7 +60,6 @@ const About = () => {
     }
 
     // After passing all form-validation/error checks, transition to the next page
-    loginTransition.setVisible(false);
     updateUser(dispatch, {
       birthday: { month: birthday[0], day: birthday[1], year: birthday[2] },
       program,
@@ -79,22 +74,19 @@ const About = () => {
   return (
     <>
       <PageTemplate title="Onboarding">
-        <LoginTransition transitionRef={loginTransition.ref}>
-            <OnboardingAboutCard 
-              submit={trySubmit}
-              values={{
-                birthday, program, coopSequence, setCoopSequence, interests, skills, bio, term
-              }}
-              setValues={{
-                setBirthday, setProgram, setCoopSequence, setInterests, setSkills, setBio, setTerm
-              }}
-            />
-          </LoginTransition>
+          <OnboardingAboutCard 
+            submit={trySubmit}
+            values={{
+              birthday, program, coopSequence, setCoopSequence, interests, skills, bio, term
+            }}
+            setValues={{
+              setBirthday, setProgram, setCoopSequence, setInterests, setSkills, setBio, setTerm
+            }}
+          />
         </PageTemplate>
       <Row>
         <Button onClick={trySubmit}>Continue</Button>
       </Row>
-      <LoadingModal visible={!loginTransition.visible}/>
     </>
   )
 };

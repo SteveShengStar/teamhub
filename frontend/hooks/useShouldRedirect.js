@@ -2,7 +2,7 @@
  * @param {*} user
  * @param {*} router
  */
-const useShouldRedirect = (user, router, redirectUrl) => {
+const useShouldRedirect = (user, router, redirectUrl, token) => {
     if (!user || !user._id) {   
         if (router.pathname != "/login") {
             router.push("/login")
@@ -10,7 +10,7 @@ const useShouldRedirect = (user, router, redirectUrl) => {
         }
         return false    // since we are not transitioning to new page, don't show the page transition/load animation
     }
-    if (!user.token) {
+    if (!token) {
         if (router.pathname != "/login/authorize") {
             router.push({
                 pathname: '/login/authorize',

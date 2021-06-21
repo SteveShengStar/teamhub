@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
-import LoginTransition from '../../frontend/components/templates/LoginTransition';
 import { useDispatch, useSelector } from 'react-redux';
 import OnboardingRoleCard from '../../frontend/components/organisms/OnboardingRoleCard';
 import styled from 'styled-components';
@@ -9,7 +8,6 @@ import Button from '../../frontend/components/atoms/Button';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import { getFilters } from "../../frontend/store/reducers/membersReducer"
 import { useRouter } from 'next/router';
-import useLoginTransition from '../../frontend/hooks/useLoginTransition';
 import useLoginController from '../../frontend/hooks/useLoginController';
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
@@ -67,13 +65,11 @@ const Role = () => {
         }
     }, [hydrated])
 
-    const loginTransition = useLoginTransition()
-    useLoginController(loginTransition, dispatch, router.pathname)
+    useLoginController(dispatch, router.pathname)
 
     const trySubmit = () => {
         if (!checkErrors()) return;
     
-        loginTransition.setVisible(false);
         updateUser(dispatch, {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: removeBadValuesAndDuplicates(selectedProjects),
@@ -87,24 +83,21 @@ const Role = () => {
     return (
         <>
             <PageTemplate title="Onboarding">
-                <LoginTransition transitionRef={loginTransition.ref}>
-                    <OnboardingRoleCard 
-                        subteamOptions={filters.subteams || []}
-                        roleOptions={filters.roles || []}
-                        selectedSubteams={selectedSubteams} 
-                        selectedProjects={selectedProjects}
-                        setSelectedProjects={setSelectedProjects}
-                        setSelectedSubteams={setSelectedSubteams}
-                        selectedRole={selectedRole}
-                        setSelectedRole={setSelectedRole}
-                        submit={trySubmit}
-                    />
-                </LoginTransition>
+                <OnboardingRoleCard 
+                    subteamOptions={filters.subteams || []}
+                    roleOptions={filters.roles || []}
+                    selectedSubteams={selectedSubteams} 
+                    selectedProjects={selectedProjects}
+                    setSelectedProjects={setSelectedProjects}
+                    setSelectedSubteams={setSelectedSubteams}
+                    selectedRole={selectedRole}
+                    setSelectedRole={setSelectedRole}
+                    submit={trySubmit}
+                />
             </PageTemplate>
             <Row>
                 <ContinueButton justifySelf="end" onClick={trySubmit}>Continue</ContinueButton>
             </Row>
-            <LoadingModal visible={!loginTransition.visible} />
         </>
     )
 }

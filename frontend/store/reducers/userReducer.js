@@ -112,7 +112,7 @@ export const updateUser = async (dispatch, options, token, id, router, signUp = 
 export const updateUserAndGetToken = async (dispatch, options, id, router) => {
     try {
         // TODO: think about just doing the post request only. RN, we need a second request becuase first request has missing fields.
-        const res1 = await api.members.getAccessToken(options, token, id, dispatch, router);
+        const res1 = await api.members.getAccessToken(id);
         const token = res1.body[0].token;
         dispatch({ type: UserTypes.UPDATE_TOKEN, token: token });
         
@@ -121,7 +121,7 @@ export const updateUserAndGetToken = async (dispatch, options, id, router) => {
             const user = await api.members.getMember(id, token, dispatch, router);
             if (user && user.success) {
                 dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] })
-                return user.body[0];
+                return [token, user.body[0]];
             }
         }
         return; // TODO: handle error
