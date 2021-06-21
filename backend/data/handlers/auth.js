@@ -129,27 +129,23 @@ auth.login = async (tokenObj) => {
             throw new Error('Domain of account not "waterloop.ca"');
         } else {
             const searchRes = await members.search({ email: payload['email'] });
+            // Create new user if not found in the database
             if (!searchRes || searchRes.length === 0) {
-                // Create new user
                 const userProfile = await members.add({
                     name: {
                         first: payload['given_name'],
                         last: payload['family_name']
                     },
                     email: payload['email'],
-                    imageUrl: payload['picture']
+                    imageUrl: payload['picture']    // Update profile picture with the one from Google Account
                 });
                 return [userProfile, getOAuthConsentScreenUrl(client, payload['email'])];
-            }// else {
-            //     const token = crypto.randomBytes(64).toString('hex');
-            //     await members.updateMember({ email: payload['email'] }, {
-            //         imageUrl: payload['picture'],
-            //         token,
-            //         tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
-            //     });
-            //     res.statusCode = 200;
-            //     return await members.search({ email: payload['email'] }, false, true);
-            // }
+            } else {
+                await members.updateMember({ email: payload['email'] }, {
+                    imageUrl: payload['picture'],   // Update profile picture with the one from Google Account
+                });
+                return await members.search({ email: payload['email'] }, undefined, true);  // specify true (3rd argument) to return access_token to the frontend
+            }
         }
     });
 };

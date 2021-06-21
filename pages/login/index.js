@@ -22,8 +22,14 @@ const LoginHome = () => {
             <PageTemplate>
                 <Login
                     onFinish={(user, redirectUrl) => {
-                        dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user })
-                        useShouldRedirect(user, router, redirectUrl)
+                        const token = user.token;
+                        if (token) {
+                            user.token = undefined;
+                            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, token: token })
+                        } else {
+                            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user})
+                        }
+                        useShouldRedirect(user, router, redirectUrl, token)
                     }} 
                 />
             </PageTemplate>
