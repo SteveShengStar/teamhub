@@ -1,5 +1,5 @@
 const data = require('../../../backend/data/index');
-import {difference} from 'lodash';
+const difference =require('lodash/difference');
 var ObjectID = require('mongodb').ObjectID;
 
 module.exports = async (req, res) => {

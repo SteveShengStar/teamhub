@@ -1,6 +1,6 @@
 const data = require('../../../backend/data/index');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'GET' || req.method === 'POST') {
         const userPayload = await data.auth.checkAnyUser(req.headers['authorization'], res);

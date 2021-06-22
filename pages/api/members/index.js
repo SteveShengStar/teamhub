@@ -22,5 +22,3 @@ router.use('/:id/tasks', tasks);
 router.use('/:id/token', token);
 router.use('/:id/update', update);
 router.use('/:id/updateTaskStatus', updateTaskStatus);
-
-export default router;

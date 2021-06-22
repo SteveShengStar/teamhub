@@ -1,5 +1,6 @@
 const data = require('../../../backend/data/index');
-import {union, intersection} from 'lodash';
+const union = require('lodash/union');
+const intersection = require('lodash/intersection');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();

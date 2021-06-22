@@ -1,6 +1,8 @@
 const data = require('../../../../backend/data/index');
 const ObjectID = require('mongodb').ObjectID;
-import {difference, intersection, union} from 'lodash';
+const difference = require('lodash/difference');
+const intersection = require('lodash/intersection');
+const union = require('lodash/union');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
