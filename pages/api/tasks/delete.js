@@ -1,5 +1,4 @@
 const data = require('../../../backend/data/index');
-var ObjectID = require('mongodb').ObjectID;
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();

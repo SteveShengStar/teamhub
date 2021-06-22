@@ -1,12 +1,12 @@
 import express from 'express';
-import getAll from './getAll';
 import add from './add';
-import search from './search';
+import update from './update';
+import delete from './delete';
 
 const router = express.Router();
 
-router.use('/', getAll);
 router.use('/add', add);
-router.use('/search', search);
+router.use('/delete', delete);
+router.use('/update', update);
 
 export default router;
