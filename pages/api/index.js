@@ -1,9 +1,9 @@
-import express from 'express';
-import auth from './auth';
-import members from './members';
-import tasks from './tasks';
-import filters from './filters';
-import upload from './upload';
+const express = require('express');
+const auth = require('./auth');
+const members = require('./members');
+const tasks = require('./tasks');
+const filters = require('./filters');
+const upload = require('./upload');
 
 const router = express.Router();
 

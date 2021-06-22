@@ -1,7 +1,7 @@
-import express from 'express';
-import check from './check';
-import login from './login';
-import redirect from './redirect';
+const express = require('express');
+const check = require('./check');
+const login = require('./login');
+const redirect = require('./redirect');
 
 const router = express.Router();
 

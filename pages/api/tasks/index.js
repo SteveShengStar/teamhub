@@ -1,7 +1,7 @@
-import express from 'express';
-import add from './add';
-import update from './update';
-import delete from './delete';
+const express = require('express');
+const add = require('./add');
+const update = require('./update');
+const delete = require('./delete');
 
 const router = express.Router();
 
