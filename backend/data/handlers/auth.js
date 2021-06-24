@@ -2,14 +2,13 @@ const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
 const members = require('./members');
-const crypto = require('crypto');
 
 const auth = {};
 
 /**
- * authHeader: authentication token provided by the client
+ * @param authHeader: authentication token provided by the client
  * 
- * return: information of the user that corresponds to the input token
+ * @return: information of the user that corresponds to the input token
  */
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
@@ -43,10 +42,10 @@ auth.checkAnyUser = async (authHeader, res) => {
 };
 
 /**
- * authHeader: authentication token provided by the client
- * userId: ID of the user who is attempting to access a secure endpoint or log in
+ * @param authHeader: authentication token provided by the client
+ * @param userId: ID of the user who is attempting to access a secure endpoint or log in
  * 
- * return: true only if authentication was successful.
+ * @return: true only if authentication was successful.
  */
 auth.checkSpecificUser = async (authHeader, userId, res) => {
     if (!authHeader) {
@@ -90,7 +89,6 @@ auth.login = async (tokenObj) => {
         } else {
             const searchRes = await members.search({ email: payload['email'] });
             if (!searchRes || searchRes.length === 0) {
-                const token = crypto.randomBytes(32).toString('hex');
                 const res = await members.add({
                     name: {
                         first: payload['given_name'],
@@ -98,15 +96,14 @@ auth.login = async (tokenObj) => {
                     },
                     email: payload['email'],
                     imageUrl: payload['picture'],
-                    token,
+                    token: tokenObj.accessToken,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
                 return [res];
             } else {
-                const token = crypto.randomBytes(64).toString('hex');
                 await members.updateMember({ email: payload['email'] }, {
                     imageUrl: payload['picture'],
-                    token,
+                    token: tokenObj.accessToken,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
                 return await members.search({ email: payload['email'] }, false, true);
