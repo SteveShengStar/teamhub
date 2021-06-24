@@ -97,14 +97,14 @@ auth.login = async (tokenObj) => {
                     email: payload['email'],
                     imageUrl: payload['picture'],
                     token: tokenObj.accessToken,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+                    tokenExpiry: tokenObj.tokenObj.expires_at
                 });
                 return [res];
             } else {
                 await members.updateMember({ email: payload['email'] }, {
                     imageUrl: payload['picture'],
                     token: tokenObj.accessToken,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+                    tokenExpiry: tokenObj.tokenObj.expires_at
                 });
                 return await members.search({ email: payload['email'] }, false, true);
             }
