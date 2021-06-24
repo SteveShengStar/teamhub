@@ -14,9 +14,6 @@ import { searchMembers, lookupMember, getFilters, DataFetchType } from '../front
 import { getMemberEmail } from "../frontend/store/api/members";
 import MemberInfoCard from '../frontend/components/organisms/MemberInfoCard';
 
-// import { getUserId, startGroupConversation } from "./api/slack";
-// import { constants } from "../constants";
-
 const Home = () => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -109,20 +106,6 @@ const Home = () => {
         window.open(link);
     }
 
-    // const generateSlackGroup = async () => {
-    //   const emails = await getEmails();
-    //   const slackIds = [];
-
-    //   for(const email of emails) {
-    //     const slackId = await getUserId(email);
-    //     slackIds.push(slackId);
-    //   }
-      
-    //   const slackIdsStr = slackIds.join();
-    //   const { channel } = await startGroupConversation(slackIdsStr);
-    //   window.open(`slack://channel?team=${constants.TEAM_ID}&id=${channel.id}`);
-    // }
-
     const getActionText = () => {
       if (activeAction === 'slack')
         return 'Message'
@@ -132,8 +115,6 @@ const Home = () => {
     }
 
     const onExecuteAction = () => {
-      // if (activeAction === 'slack')
-      //   generateSlackGroup();
       if (activeAction === 'email')
         generateGroupEmail();
     }
@@ -181,9 +162,6 @@ const Home = () => {
                           <OptionButton onClick={() => toggleGroupAction('email')} isSelected={activeAction === 'email'}>
                             Email
                           </OptionButton>
-                          {/*<OptionButton onClick={() => toggleGroupAction('slack')} isSelected={activeAction === 'slack'}>
-                            Slack DM
-                          </OptionButton>*/}
                           {
                             (groupSelectedMembers.length > 0) && 
                             <ExecuteActionButton onClick={onExecuteAction}>
