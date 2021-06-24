@@ -26,6 +26,7 @@ process.yml
 constants.js
 uploads/*
 *.deb
+pages/caldemo.js
 
 # debug
 npm-debug.log*
