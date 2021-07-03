@@ -14,8 +14,6 @@ const Login = ({shouldHide, onFinish, loginRef}) => {
     function responseGoogle(response) {
         if (response.error) return;
         shouldHide && shouldHide();
-        console.log("response")
-        console.log(response)
         userLogin(response, dispatch).then((user) => {
             onFinish && onFinish(user);
         })
@@ -36,7 +34,6 @@ const Login = ({shouldHide, onFinish, loginRef}) => {
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
-                    prompt='consent select_account'
                     scope="profile email https://www.googleapis.com/auth/calendar.events"
                 />
             </SystemComponent>

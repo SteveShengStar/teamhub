@@ -7,7 +7,7 @@ const {google} = require('googleapis');
 const auth = {};
 
 /**
- * @param authHeader: authentication token provided by the client
+ * @param {String} authHeader: authentication token provided by the client
  * 
  * @return: information of the user that corresponds to the input token
  */
@@ -43,8 +43,8 @@ auth.checkAnyUser = async (authHeader, res) => {
 };
 
 /**
- * @param authHeader: authentication token provided by the client
- * @param userId: ID of the user who is attempting to access a secure endpoint or log in
+ * @param {String} authHeader: authentication token provided by the client
+ * @param {String} userId: ID of the user who is attempting to access a secure endpoint or log in
  * 
  * @return: true only if authentication was successful.
  */
@@ -79,6 +79,8 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
 
 auth.login = async (tokenObj) => {
     return util.handleWrapper(async () => {
+        // Documentation: Please see "Using a Google API Client Library" section in: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+        // Verify the ID Token
         const client = new OAuth2Client(authConfig['client_id']);
         const ticket = await client.verifyIdToken({
             idToken: tokenObj.tokenId,
@@ -90,6 +92,7 @@ auth.login = async (tokenObj) => {
         } else {
             const searchRes = await members.search({ email: payload['email'] });
             if (!searchRes || searchRes.length === 0) {
+                // Create a new user
                 const res = await members.add({
                     name: {
                         first: payload['given_name'],
@@ -102,6 +105,7 @@ auth.login = async (tokenObj) => {
                 });
                 return [res];
             } else {
+                // Update the access token and its expiry date of an existing user
                 await members.updateMember({ email: payload['email'] }, {
                     imageUrl: payload['picture'],
                     token: tokenObj.accessToken,
