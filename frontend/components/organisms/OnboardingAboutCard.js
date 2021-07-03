@@ -63,27 +63,29 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
         </DateLayout>
         <InlineItemRow></InlineItemRow>
 
-          <DateLayout>
-            <SystemComponent gridColumn='1/3'>
-              <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
-              <SystemComponent>Can't find your program ? You can type below and Create A New Entry.</SystemComponent>
-              <CreatableSelect 
-                placeholder="Choose Program" 
-                options={programs.map(program => ({value: program, label: program}))} 
-                value={{value: values.program, label: values.program}}
-                onChange={val => setValues.setProgram(val.value)}
-              />
-            </SystemComponent>
+        <DateLayout>
+          <SystemComponent gridColumn='1/4'>
+            <HeaderSection mb={1} mt={4} required>What program are you in?</HeaderSection>
+            <SystemComponent>Can't find your program ? You can type below and Create A New Entry.</SystemComponent>
+            <CreatableSelect 
+              placeholder="Choose Program" 
+              options={programs.map(program => ({value: program, label: program}))} 
+              value={{value: values.program, label: values.program}}
+              onChange={val => setValues.setProgram(val.value)}
+            />
+          </SystemComponent>
+        </DateLayout>
 
-            <SystemComponent>
-              <HeaderSection mb={1} mt={4} required>What term are you on?</HeaderSection>
-              <Select 
-                options={years ? years.map(year => ({value: year, label: year})) : []} 
-                value={{value: values.term, label: values.term}}
-                onChange={val => setValues.setTerm(val.value)}
-              />
-            </SystemComponent>
-          </DateLayout>
+        <DateLayout>
+          <SystemComponent>
+            <HeaderSection mb={1} mt={4} required>What term are you on?</HeaderSection>
+            <Select 
+              options={years ? years.map(year => ({value: year, label: year})) : []} 
+              value={{value: values.term, label: values.term}}
+              onChange={val => setValues.setTerm(val.value)}
+            />
+          </SystemComponent>
+        </DateLayout>
           
         
         <HeaderSection mb={1} mt={4} required>Which terms are you on campus?</HeaderSection>
@@ -137,7 +139,12 @@ const OnboardingAboutCard = ({values, setValues, submit}) => {
         <HeaderSection mt={4} mb={1}>Write a little bio!</HeaderSection>
         <TextBox placeholder="Write bio here..." value={values.bio} onChange={e => setValues.setBio(e.target.value)}/>
 
-        <ContinueButton onClick={submit}>Continue</ContinueButton>
+        <SystemComponent 
+          display="flex"
+          flexDirection="row-reverse"
+        >
+          <ContinueButton onClick={submit}>Continue</ContinueButton>
+        </SystemComponent>
       </CustomCard>
     )
 };
@@ -196,6 +203,7 @@ const CustomCard = styled(Card)`
     margin: 0;
   }
 `;
+
 const InlineItemRow = styled(SystemComponent)`
   display: flex;
   align-items: center;
@@ -208,19 +216,18 @@ const GridLayout = styled(SystemComponent)`
   width: auto;
 `;
 
-
 const ContinueButton = styled(Button)`
     display: none;
     ${props => props.theme.mediaQueries.tablet} {
-        display: block;
-        justify-self: end;
-        position: relative;
+        display: inline-block;
+        margin-top: 10px;
     }
 `
 
 const HeaderSection = styled(Header4)`
     ${props => props.required && 
         `&:after {
+            color: red;
             content: \' *\';
         }`
     }
