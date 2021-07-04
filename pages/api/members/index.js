@@ -6,7 +6,7 @@ const NO_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = NO_AUTH_ORIGINS.includes(req.headers['Origin']) 
+        const authStatus = NO_AUTH_ORIGINS.includes(req.headers['origin']) 
                             || await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
