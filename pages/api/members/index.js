@@ -1,12 +1,12 @@
 const data = require('../../../backend/data/index');
 
 // List of Origins that don't need to authenticate but can only access a limited subset of member data
-const NO_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
+const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = NO_AUTH_ORIGINS.includes(req.headers['origin']) 
+        const authStatus = BYPASS_AUTH_ORIGINS.includes(req.headers['origin']) 
                             || await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
@@ -20,8 +20,8 @@ module.exports = async (req, res) => {
                     basis = req.body.fields;
                 }
 
-                // If the request is coming from the Waterloop website, we don't authenticate, but also don't pass back any sensitive info. 
-                if (NO_AUTH_ORIGINS.includes(req.headers['Origin'])) {
+                // If the request is coming from the Waterloop website don't send back any sensitive data
+                if (BYPASS_AUTH_ORIGINS.includes(req.headers['origin'])) {
                     if (basis.includes("token")) {
                         let index = basis.indexOf("token"); 
                         basis.splice(index, 1); // Remove token from return-fields list
