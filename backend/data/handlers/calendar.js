@@ -9,21 +9,68 @@ const calendar = {};
  * Add a new Google Calendar Event
  * 
  * @param {String} token: access_token for Oauth
- * @param {String} userId: 
  * @param {Object} eventDetails: contains details about the calendar event
  * 
  * @returns Details of the Calendar Event that got added
  */
-calendar.add = async (token, userId, eventDetails) => {
+calendar.add = async (token, eventDetails) => {
     const client = new OAuth2Client(authConfig['client_id']);
     client.setCredentials({
         access_token: token
     });
 
     const calendar = google.calendar({version: 'v3', auth: client});
-    // TODO: implement the functionality here.
-    // return the details of the added Calendar event in the response body
-    return {};
+
+    const eventStartTime = new Date(eventDetails['startTime']);
+    const eventEndTime = new Date(eventDetails['endTime']);
+    const attendeesInfo = [];
+    for (var i = 0; i < eventDetails['attendeeEmails'].length; i++) {
+        attendeesInfo.push({ email: eventDetails['attendeeEmails'][i] })
+    }
+
+    let conferenceObj = {};
+    if (eventDetails['createMeetLink']) {
+        conferenceObj = {
+            createRequest: {
+                requestId: eventDetails['title'],
+                conferenceSolutionKey: {
+                    type: 'hangoutsMeet'
+                }
+            }
+        }
+    }
+
+    const event = {
+        summary: eventDetails['title'],
+        location: '',
+        description: eventDetails['description'],
+        start: {
+            dateTime: eventStartTime,
+            timeZone: 'Canada/Eastern'
+        },
+        end: {
+            dateTime: eventEndTime,
+            timeZone: 'Canada/Eastern'
+        },
+        conferenceData: conferenceObj,
+        colorId: 1,
+        attendees: attendeesInfo,
+    }
+    
+    calendar.events.insert(
+        {
+            calendarId: 'primary',
+            resource: event,
+            conferenceDataVersion: 1,
+        },
+        (err) => {
+            if (err) return console.error('Calendar Event Creation Error: ', err)
+
+            return console.log('Calendar Event Created.')
+        }
+    )
+
+    return eventDetails;
 }
 
 
@@ -31,22 +78,65 @@ calendar.add = async (token, userId, eventDetails) => {
  * Updates an existing Google Calendar Event
  * 
  * @param {String} token: access_token for Oauth
- * @param {String} userId: 
- * @param {String} eventId: ID of the calendar event to update
  * @param {Object} eventDetails: object containing the new data (used to update the calendar event)
  * 
  * @returns New details of the Calendar Event that got updated
  */
- calendar.update = async (token, userId, eventId, eventDetails) => {
+calendar.update = async (token, eventDetails) => {
     const client = new OAuth2Client(authConfig['client_id']);
     client.setCredentials({
         access_token: token
     });
 
     const calendar = google.calendar({version: 'v3', auth: client});
-    // TODO: implement the functionality here.
-    // return the New details of the updated Calendar event in the response body
-    return {};
+
+    const eventStartTime = new Date(eventDetails['startTime']);
+    const eventEndTime = new Date(eventDetails['endTime']);
+    const attendeesInfo = [];
+    for (var i = 0; i < eventDetails['attendeeEmails'].length; i++) {
+        attendeesInfo.push({ email: eventDetails['attendeeEmails'][i] })
+    }
+
+    let conferenceObj = {};
+    if (eventDetails['createMeetLink']) {
+        conferenceObj = {
+            createRequest: {
+                requestId: eventDetails['title'],
+                conferenceSolutionKey: {
+                    type: 'hangoutsMeet'
+                }
+            }
+        }
+    }
+
+    const event = {
+        summary: eventDetails['title'],
+        location: '',
+        description: eventDetails['description'],
+        start: {
+            dateTime: eventStartTime,
+            timeZone: 'Canada/Eastern'
+        },
+        end: {
+            dateTime: eventEndTime,
+            timeZone: 'Canada/Eastern'
+        },
+        conferenceData: conferenceObj,
+        colorId: 1,
+        attendees: attendeesInfo,
+    }
+
+    calendar.events.update({
+        calendarId: 'primary',
+        eventId: eventDetails['eventId'],
+        requestBody: event,
+    }, (err) => {
+        if (err) return console.log('Error updating event: ', err)
+
+        return console.log('Calendar Event Updated.')
+    })
+
+    return eventDetails;
 }
 
 module.exports = calendar;

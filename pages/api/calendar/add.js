@@ -11,11 +11,10 @@ module.exports = async (req, res) => {
             const token = req.headers['authorization'].split(' ')[1];
             res.statusCode = 200;
 
-            const userId = req.body. ;          // TODO: get the user id from the request body
-            const eventDetails = req.body. ;    // TODO: get the calendar event details from the request body
+            const eventDetails = req.body;
             return res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 // Call the function which adds a new Google Calendar Event.
-                return await data.calendar.add(token, userId, eventDetails);
+                return await data.calendar.add(token, eventDetails);
             })));
         } else {
             res.statusCode = 401;
