@@ -46,11 +46,11 @@ calendar.add = async (token, eventDetails) => {
         description: eventDetails['description'],
         start: {
             dateTime: eventStartTime,
-            timeZone: 'Canada/Eastern'
+            timeZone: 'America/New_York'
         },
         end: {
             dateTime: eventEndTime,
-            timeZone: 'Canada/Eastern'
+            timeZone: 'America/New_York'
         },
         conferenceData: conferenceObj,
         colorId: 1,
@@ -115,18 +115,18 @@ calendar.update = async (token, eventDetails) => {
         description: eventDetails['description'],
         start: {
             dateTime: eventStartTime,
-            timeZone: 'Canada/Eastern'
+            timeZone: 'America/New_York'
         },
         end: {
             dateTime: eventEndTime,
-            timeZone: 'Canada/Eastern'
+            timeZone: 'America/New_York'
         },
         conferenceData: conferenceObj,
         colorId: 1,
         attendees: attendeesInfo,
     }
 
-    calendar.events.update({
+    calendar.events.patch({
         calendarId: 'primary',
         eventId: eventDetails['eventId'],
         requestBody: event,
