@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             const eventDetails = req.body;
             return res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 // Call the function which adds a new Google Calendar Event.
-                return await data.calendar.add(token, eventDetails);
+                return await data.calendar.add(token, eventDetails, res);
             })));
         }
     } else {

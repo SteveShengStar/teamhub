@@ -14,8 +14,6 @@ const Login = ({shouldHide, onFinish, loginRef}) => {
     function responseGoogle(response) {
         if (response.error) return;
         shouldHide && shouldHide();
-        console.log("response")
-        console.log(response)
         userLogin(response, dispatch).then((user) => {
             onFinish && onFinish(user);
         })
