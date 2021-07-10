@@ -59,7 +59,7 @@ calendar.add = async (token, eventDetails) => {
     
     calendar.events.insert(
         {
-            calendarId: 'primary',
+            calendarId: 'teamwaterloop.ca_n1amot5q70vk292jdq9sh2fq0g@group.calendar.google.com',
             resource: event,
             conferenceDataVersion: 1,
         },
@@ -127,7 +127,7 @@ calendar.update = async (token, eventDetails) => {
     }
 
     calendar.events.patch({
-        calendarId: 'primary',
+        calendarId: 'teamwaterloop.ca_n1amot5q70vk292jdq9sh2fq0g@group.calendar.google.com',
         eventId: eventDetails['eventId'],
         requestBody: event,
     }, (err) => {
