@@ -56,7 +56,6 @@ calendar.add = async (token, eventDetails) => {
         colorId: 1,
         attendees: attendeesInfo,
     }
-    
     calendar.events.insert(
         {
             calendarId: 'teamwaterloop.ca_n1amot5q70vk292jdq9sh2fq0g@group.calendar.google.com',

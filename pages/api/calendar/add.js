@@ -16,9 +16,6 @@ module.exports = async (req, res) => {
                 // Call the function which adds a new Google Calendar Event.
                 return await data.calendar.add(token, eventDetails);
             })));
-        } else {
-            res.statusCode = 401;
-            res.end(JSON.stringify({message: "Not Authorized to access this webpage."}));
         }
     } else {
         res.statusCode = 404;
