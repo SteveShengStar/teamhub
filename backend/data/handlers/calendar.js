@@ -133,7 +133,7 @@ calendar.update = async (token, eventDetails, res) => {
         event.attendees = attendeesInfo;
     }
 
-    let conferenceObj = {};
+    let conferenceObj = null;
     if (eventDetails['createMeetLink']) {
         conferenceObj = {
             createRequest: {
