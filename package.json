@@ -31,7 +31,7 @@
     "mongoose": "^5.7.5",
     "mongoose-deep-populate": "^3.2.0",
     "mongoose-unique-validator": "^2.0.3",
-    "next": "^9.5.5",
+    "next": "^11.1.0",
     "next-redux-wrapper": "^4.0.1",
     "nodemon": "^1.19.3",
     "now": "^16.6.0",
