@@ -6,7 +6,7 @@ const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca/'];
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = BYPASS_AUTH_ORIGINS.includes(req.headers['Referer']) 
+        const authStatus = BYPASS_AUTH_ORIGINS.includes(req.headers['referer']) 
                             || await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
