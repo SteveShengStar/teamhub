@@ -3,7 +3,8 @@ import api from "../api";
 export const UserTypes = new Proxy({
     RECEIVED_LOGIN: "RECEIVED_LOGIN",
     FAILED_LOGIN: "FAILED_LOGIN",
-    UPDATE_INFO: "UPDATE_INFO"
+    UPDATE_INFO: "UPDATE_INFO",
+    RECEIVED_LOGOUT: "RECEIVED_LOGOUT"
 }, {
     set: () => {
         throw new Error("Can't mutate type UserTypes")
@@ -81,9 +82,9 @@ export const userLogin = async (response, dispatch) => {
 }
 
 
-export const userLogout = async (userId, dispatch) => {
+export const userLogout = async (token, userId, dispatch) => {
     try {
-        const res = await api.auth.logout(userId);
+        const res = await api.auth.logout(token, userId);
         if (res.success) {
             dispatch({ type: UserTypes.RECEIVED_LOGOUT });
         }
@@ -93,7 +94,8 @@ export const userLogout = async (userId, dispatch) => {
     }
     catch(err) {
         // TODO: Handle error 
-        throw new Error(err);
+        console.error(err);
+        throw new Error(err.toString());
     }
 }
 
