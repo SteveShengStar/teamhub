@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
 
             const token = req.headers['authorization'].split(' ')[1];
             res.statusCode = 200;
-            await data.auth.listEvents(token);
+            await data.calendar.listEvents(token);
         } else {
             res.statusCode = 401;
         }

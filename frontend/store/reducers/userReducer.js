@@ -32,11 +32,18 @@ const userReducer = (state = usersInitialState, action) => {
                 ...(action.token && { token: action.token }),
                 ...(action.display && {tempDisplayName: action.display })
             };
+        case UserTypes.RECEIVED_LOGOUT:
+            return {
+                ...state,
+                user: {},
+                token: "",
+                tempDisplayName: ""
+            };
         case UserTypes.FAILED_LOGIN: // TODO: look at what this behaviour will lead to
             return {
                 ...state,
-                token: "",
-                user: {}
+                user: {},
+                token: ""
             }
         case "persist/REHYDRATE":
             const userState = action.payload && action.payload.userState
@@ -66,6 +73,23 @@ export const userLogin = async (response, dispatch) => {
             dispatch({ type: UserTypes.FAILED_LOGIN })
         }
         return user;
+    }
+    catch(err) {
+        // TODO: Handle error 
+        throw new Error(err);
+    }
+}
+
+
+export const userLogout = async (userId, dispatch) => {
+    try {
+        const res = await api.auth.logout(userId);
+        if (res.success) {
+            dispatch({ type: UserTypes.RECEIVED_LOGOUT });
+        }
+        else {
+            console.log(res.error)
+        }
     }
     catch(err) {
         // TODO: Handle error 

@@ -78,7 +78,7 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
 
 auth.login = async (tokenObj) => {
     return util.handleWrapper(async () => {
-        // Documentation: Please see "Using a Google API Client Library" section in: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+        // Reference: Please see "Using a Google API Client Library" section in: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
         // Verify the ID Token
         const client = new OAuth2Client(authConfig['client_id']);
         const ticket = await client.verifyIdToken({
@@ -105,7 +105,8 @@ auth.login = async (tokenObj) => {
                 return [res];
             } else {
                 // Update the access token and its expiry date of an existing user
-                await members.updateMember({ email: payload['email'] }, {
+                await members.updateMember({email: payload['email']}, 
+                {
                     imageUrl: payload['picture'],
                     token: tokenObj.accessToken,
                     tokenExpiry: tokenObj.tokenObj.expires_at
@@ -116,36 +117,21 @@ auth.login = async (tokenObj) => {
     });
 };
 
-/**
- * @param {String} token: access_token for Oauth
- * @returns 
- */
-auth.listEvents = async (token) => {
-    const client = new OAuth2Client(authConfig['client_id']);
-    client.setCredentials({
-        access_token: token
-    });
-        
-    const calendar = google.calendar({version: 'v3', auth: client});
-    calendar.events.list({
-        calendarId: 'primary',
-        timeMin: (new Date()).toISOString(),
-        maxResults: 10,
-        singleEvents: true,
-        orderBy: 'startTime',
-    }, (err, res) => {
-        if (err) return console.log('The API returned an error: ' + err);
-        const events = res.data.items;
-        if (events.length) {
-            console.log('Upcoming 10 events:');
-            events.map((event, i) => {
-                const start = event.start.dateTime || event.start.date;
-                console.log(`${start} - ${event.summary}`);
+auth.logout = async (userId) => {
+    return util.handleWrapper(async () => {
+        // Reference: https://developers.google.com/identity/sign-in/web/sign-in#sign_out_a_user
+        const searchRes = await members.search({ _id: userId });
+        if (!searchRes || searchRes.length === 0) {
+            const res = await members.update({_id: userId},
+            {
+                token: "",
+                tokenExpiry: undefined
             });
+            return res;
         } else {
-            console.log('No upcoming events found.');
+            throw new Error("Failed to log the user out properly.");
         }
     });
-}
+};
 
 module.exports = auth;

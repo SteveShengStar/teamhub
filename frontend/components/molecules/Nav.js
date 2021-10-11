@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Link from '../atoms/Link';
 import { SystemNav, SystemComponent } from '../atoms/SystemComponents';
 import Logo from '../atoms/Logo';
+import LogoutButton from './LogoutButton';
 
 const MyNav = styled(SystemNav)`
   position: fixed;
@@ -74,6 +75,7 @@ const Nav = ({navItems, index}) => {
                     </a>
                 )
             }
+           <LogoutButton />
         </SystemComponent>
     </MyNav>
   );
