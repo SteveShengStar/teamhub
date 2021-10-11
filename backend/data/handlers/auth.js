@@ -68,7 +68,7 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
         res.end('Token forbidden.');
         return false;
     }
-    if (searchRes[0].tokenExpiry >= Date.now()) {
+    if (searchRes[0].tokenExpiry < Date.now()) {
         res.statusCode = 403;
         res.end('Token expired.');
         return false;

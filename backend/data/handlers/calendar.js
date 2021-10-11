@@ -42,7 +42,7 @@ calendar.add = async (token, eventDetails, res) => {
     client.setCredentials({
         access_token: token
     });
-    const calendar = google.calendar({version: 'v3', auth: client});
+    const gcal = google.calendar({version: 'v3', auth: client});
 
     const attendeesInfo = [];
     if (eventDetails.hasOwnProperty('attendeeEmails')) {
@@ -80,7 +80,7 @@ calendar.add = async (token, eventDetails, res) => {
     }
 
     try {
-        return calendar.events.insert(
+        return gcal.events.insert(
             {
                 calendarId: 'teamwaterloop.ca_n1amot5q70vk292jdq9sh2fq0g@group.calendar.google.com',
                 resource: event,
@@ -153,10 +153,10 @@ calendar.update = async (token, eventDetails, res) => {
     client.setCredentials({
         access_token: token
     });
-    const calendar = google.calendar({version: 'v3', auth: client});
+    const gcal = google.calendar({version: 'v3', auth: client});
 
     try {
-        return calendar.events.patch(
+        return gcal.events.patch(
             {
                 calendarId: 'teamwaterloop.ca_n1amot5q70vk292jdq9sh2fq0g@group.calendar.google.com',
                 eventId: eventDetails['eventId'],
