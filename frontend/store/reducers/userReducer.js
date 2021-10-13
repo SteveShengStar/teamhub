@@ -29,7 +29,7 @@ const userReducer = (state = usersInitialState, action) => {
         case UserTypes.RECEIVED_LOGIN:
             return {
                 ...state,
-                user: action.payload,
+                user: action.payload,   // TODO: Check if "user" contains session.
                 ...(action.token && { token: action.token }),
                 ...(action.display && {tempDisplayName: action.display })
             };
@@ -66,9 +66,10 @@ const userReducer = (state = usersInitialState, action) => {
 export const userLogin = async (response, dispatch) => {
     try {
         const res = await api.auth.login(response);
+        console.log(res);
         const user = res && res.body && res.body[0] || res.body;
         if (user && user.token) {
-            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, token: user.token, display: response.profileObj.name });
+            dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, /*token: user.token*/ display: response.profileObj.name });
         }
         else {
             dispatch({ type: UserTypes.FAILED_LOGIN })
