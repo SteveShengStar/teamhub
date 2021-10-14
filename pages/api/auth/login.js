@@ -22,12 +22,12 @@ export default async (req, res) => {
         res.setHeader('Set-Cookie', cookie.serialize("token", user.token, {
             httpOnly: true,
             sameSite: 'lax',
-            expires: new Date(user.tokenExpiry)
+            expires: new Date(user.tokenExpiry),
+            path: '/'   // default path is current API url path.
         }));
         // Strip user token info:
         user.token = undefined;
         user.tokenExpiry = undefined;
-
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
             return lRep;
         })));

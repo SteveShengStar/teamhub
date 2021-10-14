@@ -13,7 +13,7 @@ export const UserTypes = new Proxy({
 
 export const usersInitialState = {
     user: {},
-    token: "",
+    token: "mock",  // TODO: Refactor a significant chunk of code to remove reducer dependency.
     tempDisplayName: "",
     hydrated: false
 }
@@ -30,7 +30,7 @@ const userReducer = (state = usersInitialState, action) => {
             return {
                 ...state,
                 user: action.payload,
-                ...(action.token && { token: action.token }),   // TODO [security]: remove?
+                // ...(action.token && { token: action.token }),   // TODO [security]: remove?
                 ...(action.display && {tempDisplayName: action.display })
             };
         case UserTypes.RECEIVED_LOGOUT:
@@ -66,7 +66,6 @@ const userReducer = (state = usersInitialState, action) => {
 export const userLogin = async (response, dispatch) => {
     try {
         const res = await api.auth.login(response);
-        console.log(res);
         const user = res && res.body && res.body[0] || res.body;
         if (user && user.token) {
             dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user, display: response.profileObj.name });

@@ -62,7 +62,7 @@ const Role = () => {
     }
 
     useEffect(() => {
-        if (token && !filters.projects) {
+        if (!filters.projects) {
             getFilters(dispatch, token, router)
         }
     }, [hydrated])

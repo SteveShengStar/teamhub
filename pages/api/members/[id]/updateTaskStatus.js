@@ -1,9 +1,12 @@
 const data = require('../../../../backend/data/index');
+const cookie = require('cookie');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'PUT') {
-        const authStatus = await data.auth.checkSpecificUser(req.headers['authorization'], req.query.id, res);
+        // Get the Access Token from the request headers
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkSpecificUser(`Bearer ${token}`, req.query.id, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 

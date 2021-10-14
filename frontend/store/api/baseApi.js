@@ -41,8 +41,8 @@ export const refreshable = (endpoint, token, options, dispatch, router) => {
     }})
         .then(res => res.json())
         .catch(err => {
-            dispatch && dispatch({ type: "RESET" });    // Clear the user slice of the Redux store
-            router && useShouldRedirect({}, router)   // If error occurred, redirect the user to the appropriate webpage.
+            dispatch({ type: "RESET" });    // Clear the user slice of the Redux store
+            useShouldRedirect({}, router)   // If error occurred, redirect the user to the appropriate webpage.
                                             // The first parameter is empty object, so that the user is directed to the initial login/signup page
         })
 }
