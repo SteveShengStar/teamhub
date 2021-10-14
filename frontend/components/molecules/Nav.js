@@ -75,7 +75,8 @@ const Nav = ({navItems, index}) => {
                     </a>
                 )
             }
-           <LogoutButton />
+            {/* Don't display logout button on login route. */}
+           {(navItems.length > 0) && <LogoutButton />}
         </SystemComponent>
     </MyNav>
   );
