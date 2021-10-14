@@ -1,9 +1,10 @@
 const data = require('../../../backend/data/index');
+import cookie from 'cookie';
 
 export default async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${cookie.parse(req.headers.cookie).token}`, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             

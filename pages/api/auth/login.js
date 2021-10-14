@@ -23,7 +23,7 @@ export default async (req, res) => {
             httpOnly: true,
             sameSite: 'lax',
             expires: new Date(user.tokenExpiry)
-        }));    // TODO: How to check this worked?
+        }));
         // Strip user token info:
         user.token = undefined;
         user.tokenExpiry = undefined;

@@ -35,16 +35,14 @@ export const executeRequest = (request) => {
  * @param {*} dispatch
  */
 export const refreshable = (endpoint, token, options, dispatch, router) => {
-
-    if (token == null) throw new Error("Null token for " + endpoint)
     return fetch(endpoint, {...options, headers: {
         ...(options.headers && { ...options.headers }),
-        authorization: `Bearer ${token}`
+        credentials: 'same-origin'  // Will send http-only cookie to backend.
     }})
         .then(res => res.json())
         .catch(err => {
-            dispatch({ type: "RESET" });    // Clear the user slice of the Redux store
-            useShouldRedirect({}, router)   // If error occurred, redirect the user to the appropriate webpage.
+            dispatch && dispatch({ type: "RESET" });    // Clear the user slice of the Redux store
+            router && useShouldRedirect({}, router)   // If error occurred, redirect the user to the appropriate webpage.
                                             // The first parameter is empty object, so that the user is directed to the initial login/signup page
         })
 }
