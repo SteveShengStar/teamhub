@@ -26,7 +26,6 @@ data.init = async () => {
     }
 
     await mongoose.connect(config.url, {
-        useCreateIndex: true,
         useUnifiedTopology: true,
         useNewUrlParser: true,
     });

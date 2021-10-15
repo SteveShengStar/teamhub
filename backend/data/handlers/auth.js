@@ -121,11 +121,11 @@ auth.logout = async (userId) => {
     return util.handleWrapper(async () => {
         // Reference: https://developers.google.com/identity/sign-in/web/sign-in#sign_out_a_user
         const searchRes = await members.search({ _id: userId });
-        if (!searchRes || searchRes.length === 0) {
-            const res = await members.update({_id: userId},
+        if (searchRes && searchRes.length === 1) {
+            const res = await members.updateMember({_id: userId},
             {
                 token: "",
-                tokenExpiry: undefined
+                tokenExpiry: null
             });
             return res;
         } else {

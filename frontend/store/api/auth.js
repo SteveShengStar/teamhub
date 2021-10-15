@@ -16,13 +16,13 @@ export const loginWithToken = (token, dispatch, router) => {
 }
 
 
-export const logout = (userId) => {
-    return fetch('/api/auth/logout', {
+export const logout = (token, userId) => {
+    return refreshable('/api/auth/logout', token, {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({userId: userId})
-    }).then(res => res.json());
+        body: JSON.stringify({userId})
+    });
 }
