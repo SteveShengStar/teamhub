@@ -82,7 +82,7 @@ const Nav = ({ navItems, index }) => {
           </a>
         ))}
         {console.log(router.pathname)}
-        {router.pathname == '/login' ? null : <LogoutButton />}
+        {router.pathname.startsWith('/login') ? null : <LogoutButton />}
       </SystemComponent>
     </MyNav>
   );
