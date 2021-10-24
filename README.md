@@ -20,7 +20,7 @@
 ### Installation
 
 Clone from GitHub with:
-```git clone https://www.github.com/waterloop/teamhub.git```
+`git clone https://www.github.com/waterloop/teamhub.git`
 
 Navigate to `/backend/data/config.template.json`.
 
@@ -50,17 +50,18 @@ To run tests locally, use the command `npm run test` **when you are in a shell i
 - If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
+
 1. Install `Node.js` and `MongoDB` locally
 2. Run the script under `/docker/mongodb/docker-entrypoint-initdb.d/import.sh` if you are on Linux system. If you are on Windows or Mac, you may have to modify the command the script slightly.
 3. Run `npm install` in the root directory of this repo to install all othe dependencies
 4. Run `npm run dev` to start the dev environment
 
 ## Notes about Contributing
+
 Please create a new Git branch and work on your issue/feature on that branch. Ask the team lead which branch you should branch out from.
 
 Use the following branch naming convention:
 {first_name}.{last_name}/{descriptive_name_for_your_task}
-
 
 ## Documentation
 
