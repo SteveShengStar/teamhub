@@ -134,6 +134,9 @@ const MemberSchema = new Schema({
     tasks: {
         type: [Member_Task]
     },
+    active: {
+        type: Boolean,
+    }
 });
 
 MemberSchema.plugin(uniqueValidator);
