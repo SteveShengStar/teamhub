@@ -155,9 +155,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { interests: interestOpts, skills: skillOpts } = filters;
 
 
-    const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year : "";
-    const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? user.birthday.month : "";
-    const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day : "";
+    const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
+    const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
+    const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
 
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
@@ -183,9 +183,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [hydrated]);
 
     useEffect(() => {
-        const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year : "";
-        const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? user.birthday.month : "";
-        const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day : "";
+        const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
+        const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
+        const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
 
         setFormValues({
             ...formValues, 
