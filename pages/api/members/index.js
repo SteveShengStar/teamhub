@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
                 let basis;
                 // Create a list of fields that must be returned for each member
                 if (!req.body.fields) {
-                    basis = ["name", "program", "bio", "skills", "interests", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "birthday", "links", "token", "tokenExpiry"]
+                    basis = ["name", "program", "bio", "skills", "interests", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "birthday", "links", "token", "tokenExpiry", "active"]
                 } else {
                     basis = req.body.fields;
                 }
