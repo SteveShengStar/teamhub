@@ -98,6 +98,7 @@ auth.login = async (tokenObj) => {
                     },
                     email: payload['email'],
                     imageUrl: payload['picture'],
+                    active: true,
                     token,
                     tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
