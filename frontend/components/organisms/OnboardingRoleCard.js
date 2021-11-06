@@ -77,6 +77,7 @@ const FormTitleHeader = styled(Header4)`
 
     ${props => props.required && 
         `&:after {
+            color: red;
             content: \' *\';
         }`
     }
@@ -93,10 +94,8 @@ const FormCard = styled(Card)`
         transform: translate(-50%, -50%);
         max-width: 800px;
         min-height: 0;
-        height: 70%;
         margin: 0;
     }
-    
 `
 
 const FlexColumn = styled(SystemComponent)`

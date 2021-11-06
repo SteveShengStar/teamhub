@@ -1,17 +1,13 @@
 const data = require('../../../backend/data/index');
-var ObjectID = require('mongodb').ObjectID;
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
     await data.initIfNotStarted();
-
-    if (req.method === 'DELETE') {
+    if (req.method === 'POST') {
         const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             
-            // Check that the request payload is valid
-            let payload = req.body;
-            if (await data.util.checkIsEmptyBody(payload)) {
+            if (await data.util.checkIsEmptyBody(req.body)) {
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
                     throw Error('body must be present in request.');
@@ -19,24 +15,23 @@ module.exports = async (req, res) => {
                 return;
             }
 
-            const { taskId } = payload;
-            if (!taskId) {
+            const {userId} = req.body;
+            if (!userId) {
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                    throw Error('taskId field must be specified in body.');
+                    throw Error('userId must be specified in the body.');
                 })));
                 return;
             }
 
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                await data.task.delete(taskId);
-                await data.members.updateAllMembers({$pull: {tasks: {taskId: taskId}} });
-                return await data.subteams.deleteTaskReference(undefined, [taskId]);
+                const res = await data.auth.logout(userId);
+                return res;
             })));
         }
     } else {
         res.statusCode = 404;
         res.end();
     }
-}
+};

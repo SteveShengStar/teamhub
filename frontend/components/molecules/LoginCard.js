@@ -34,6 +34,7 @@ const Login = ({shouldHide, onFinish, loginRef}) => {
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
+                    scope="profile email https://www.googleapis.com/auth/calendar.events"
                 />
             </SystemComponent>
         </LoginCard>

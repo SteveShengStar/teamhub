@@ -74,7 +74,7 @@ const TodoItemCard = ({ status, id, title, description, docUrls, searchBarPlaceh
   }
 
   return (
-    <CustomCard style={{ marginBottom: 15 }} backgroundColor={theme.colors.greys[1]}>
+    <CustomCard backgroundColor={theme.colors.greys[1]}>
       <SystemComponent mb={2}>
           <Header4>{title}</Header4>
       </SystemComponent>
@@ -135,12 +135,14 @@ const TextInput = ({placeholderTexts}) => {
           </SystemComponent>
 )}
 
-const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
+const TodoListBody = ({ taskStatus, tasks, handleButtonClick, bufferedItemIds }) => {
   const relevantTasks = tasks.filter(task => task.status === taskStatus);
+
   return (
     <Card
-      display="flex-column"
-      justifyContent="flex-start"
+      display="grid"
+      gridRowGap={4}
+      gridTemplateColumns="1fr"
       overflowY={["hidden", "hidden", "auto"]}
       overflowX="hidden"
       padding="15px"
@@ -149,7 +151,14 @@ const TodoListBody = ({ taskStatus, tasks, handleButtonClick }) => {
       {relevantTasks.length === 0 ?
         (<TodoItemCard showButton={false} description={`You have no ${taskStatus === 'pending' ? 'Unfinished' : 'Completed' } tasks.`}/>)
          :
-        (relevantTasks.map(task => (
+        (relevantTasks.map((task, i) => (
+          bufferedItemIds.includes(task._id) ? 
+            <SystemComponent key={task._id}>
+              <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>
+                Item is being moved. Please wait ...
+              </SystemComponent>
+            </SystemComponent>
+            :
             <TodoItemCard
               id={task._id}
               key={task._id}
@@ -172,6 +181,8 @@ const TodoList = () => {
   const router = useRouter();
   const [showPendingTasks, setShowPendingTasks] = useState(true); // Whether the pending tasks or completed tasks are showing.
   const [tasks, setTasks] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [bufferedItemIds, setBufferedItemIds] = useState([]);
   const { token, user: {_id}, hydrated } = useSelector(state => state.userState);
 
   const handleButtonToggle = () => {
@@ -190,10 +201,15 @@ const TodoList = () => {
     const res = await api.members.getMemberTasks(_id, token, undefined, dispatch, router);
     if (res)
       setTasks(res.body.length > 0 ? res.body[0].tasks : []);
+
+    if (!isDataLoaded)
+      setIsDataLoaded(true);
   }
 
   const handleToggleCheck = async (taskId) => {
     const taskToUpdate = tasks.find(task => task._id === taskId);
+    setBufferedItemIds([taskToUpdate._id]);
+
     const res = await api.members.updateTaskStatus(_id, token, taskToUpdate.taskId._id, getOppositeStatus(), dispatch, router); // Update the status of the task.
 
     if (res.success) {
@@ -202,6 +218,7 @@ const TodoList = () => {
     } else {
       console.error("Error: Failed to update the task's status");
     }
+    setBufferedItemIds(bufferedItemIds.filter(i => taskId !== i));
   };
 
   useEffect(() => {
@@ -248,11 +265,31 @@ const TodoList = () => {
               />
             </SystemComponent>
 
-            <TodoListBody
-              taskStatus={getStatus()}
-              tasks={tasks}
-              handleButtonClick={handleToggleCheck}
-            />
+            {
+              isDataLoaded ?
+              <TodoListBody
+                taskStatus={getStatus()}
+                tasks={tasks}
+                handleButtonClick={handleToggleCheck}
+                bufferedItemIds={bufferedItemIds}
+              /> :
+              <Card
+                display="grid"
+                gridRowGap={4}
+                gridTemplateColumns="1fr"
+                overflowY={["hidden", "hidden", "auto"]}
+                overflowX="hidden"
+                padding="15px"
+                backgroundColor={theme.colors.background}
+              >
+                <SystemComponent>
+                  <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>
+                    Data is being loaded. Please wait ...
+                  </SystemComponent>
+                </SystemComponent>
+              </Card>
+            }
+            
           </SystemComponent>
 
         </SystemComponent>
