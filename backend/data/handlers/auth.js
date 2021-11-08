@@ -63,8 +63,8 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
-    
-    if (`${searchRes[0].first} ${searchRes[0].last}` === 'Steven Xiong') {
+
+    if (`${searchRes[0].name.first} ${searchRes[0].name.last}` === 'Steven Xiong') {
         return true
     }
 
