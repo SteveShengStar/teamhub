@@ -81,7 +81,6 @@ const Nav = ({ navItems, index }) => {
             </NavLink>
           </a>
         ))}
-        {console.log(router.pathname)}
         {router.pathname.startsWith('/login') ? null : <LogoutButton />}
       </SystemComponent>
     </MyNav>
