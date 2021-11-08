@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 let config = {};
 
-if (process.env.TEAMHUB_ENV === 'testing') {
-    // Different connection string required for unit tests
-    config = require('./config.tests.json');
-} else if (process.env.TEAMHUB_ENV === 'production' || process.env.TEAMHUB_ENV === 'preview') {
-    config.url = process.env.MONGO_URL;
-} else {
-    config = require('./config.json');
-}
+// if (process.env.TEAMHUB_ENV === 'testing') {
+//     // Different connection string required for unit tests
+//     config = require('./config.tests.json');
+// } else if (process.env.TEAMHUB_ENV === 'production' || process.env.TEAMHUB_ENV === 'preview') {
+config.url = process.env.MONGO_URL;
+// } else {
+//     config = require('./config.json');
+// }
 const data = {};
 
 data.connected = false;
