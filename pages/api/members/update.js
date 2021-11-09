@@ -2,6 +2,8 @@
 // e.g, if req.body was { active: true }, then it add an active: true to all members in the db
 const data = require("../../../backend/data/index.js");
 
+const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
+
 module.exports = async (req, res) => {
   await data.initIfNotStarted();
   if (req.method === "POST") {
@@ -25,5 +27,5 @@ module.exports = async (req, res) => {
   else {
     res.statusCode = 404;
     res.end();
-}
+  }
 };

@@ -65,9 +65,9 @@ const GridLayout = styled(SystemComponent)`
 
 const LinkTree = () => {
     return(
-        <SystemComponent display="flex" flexDirection="column">
+        <SystemComponent display="grid" gridRowGap={4}>
             {importantLinks.map((link, i) => 
-                <a key={i} href={link.url} style={{textDecoration: "none", marginBottom: "15px" }} target="_blank">
+                <a key={i} href={link.url} style={{textDecoration: "none"}} target="_blank">
                     <GridLayout>
                         <Image 
                             height={36} 

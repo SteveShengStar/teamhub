@@ -2,14 +2,8 @@ const mongoose = require('mongoose');
 
 let config = {};
 
-// if (process.env.TEAMHUB_ENV === 'testing') {
-//     // Different connection string required for unit tests
-//     config = require('./config.tests.json');
-// } else if (process.env.TEAMHUB_ENV === 'production' || process.env.TEAMHUB_ENV === 'preview') {
-    config.url = process.env.MONGO_URL;
-// } else {
-//     config = require('./config.json');
-// }
+config.url = process.env.MONGO_URL;
+
 const data = {};
 
 data.connected = false;
@@ -26,7 +20,6 @@ data.init = async () => {
     }
 
     await mongoose.connect(config.url, {
-        useCreateIndex: true,
         useUnifiedTopology: true,
         useNewUrlParser: true,
     });
@@ -50,5 +43,6 @@ data.projects = require('./handlers/projects');
 data.auth = require('./handlers/auth');
 data.filters = require('./handlers/filters');
 data.task = require('./handlers/task');
+data.calendar = require('./handlers/calendar')
 
 module.exports = data;
