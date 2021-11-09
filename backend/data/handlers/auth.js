@@ -105,7 +105,8 @@ auth.login = async (tokenObj) => {
                     email: payload['email'],
                     imageUrl: payload['picture'],
                     token: tokenObj.accessToken,
-                    tokenExpiry: tokenObj.tokenObj.expires_at
+                    tokenExpiry: tokenObj.tokenObj.expires_at,
+                    active: true,
                 });
                 return [res];
             } else {
