@@ -30,7 +30,6 @@ const userReducer = (state = usersInitialState, action) => {
             return {
                 ...state,
                 user: action.payload,
-                // ...(action.token && { token: action.token }),   // TODO [security]: remove?
                 ...(action.display && {tempDisplayName: action.display })
             };
         case UserTypes.RECEIVED_LOGOUT:
