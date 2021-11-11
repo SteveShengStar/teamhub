@@ -182,6 +182,7 @@ members.updateMember = async (filter, body, options) => {
  * Update data for all members
  */
 members.updateAllMembers = async (body, options) => {
+    
     if (options) {
         return util.handleWrapper(async () => {
             body = await replaceBodyWithIds(body);
