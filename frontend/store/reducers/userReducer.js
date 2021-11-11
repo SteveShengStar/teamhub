@@ -16,7 +16,6 @@ export const UserTypes = new Proxy(
 
 export const usersInitialState = {
   user: {},
-  token: 'mock', // TODO: Refactor a significant chunk of code to remove reducer dependency.
   tempDisplayName: '',
   hydrated: false,
 };
