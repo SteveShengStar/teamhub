@@ -21,17 +21,15 @@ module.exports = async (req, res) => {
                     basis = req.body.fields;
                 }
 
-            let fields = {};
-            for (const field of basis) {
-              fields[field] = 1;
-            }
-            return await data.members.getAll(fields);
-          })
-        )
-      );
+                let fields = {};
+                for (const field of basis) {
+                    fields[field] = 1;
+                }
+                return await data.members.getAll(fields);
+            })));
+        }
+    } else {
+        res.statusCode = 404;
+        res.end();
     }
-  } else {
-    res.statusCode = 404;
-    res.end();
-  }
 };

@@ -84,7 +84,7 @@ const Settings = () => {
 
     const [ activeModal, setActiveModal ] = useState(false);
     const [ isLoaded, setIsLoaded ] = useState(false);
-    const { hydrated, token, user, fetchedMembers } = useSelector(state => state.userState);
+    const { hydrated, token, user } = useSelector(state => state.userState);
     
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
@@ -115,12 +115,13 @@ const Settings = () => {
 
     return (
         <PageTemplate title="Profile Settings">
+            <>
                 <SettingsModalSelector  
                     activeModal={activeModal}
                     handleCloseModal={handleCloseModal}
                     isLoaded={isLoaded}
                 />
-                {isLoaded ? <SystemComponent display="flex" overflow="hidden">
+                <SystemComponent display="flex" overflow="hidden">
                     <SettingsContainer>
                         <SettingsComponent title="Teams &amp; Responsibilities"
                             refId={refIds[0]}
@@ -226,114 +227,8 @@ const Settings = () => {
                             </ThreeColumnGrid>
                         </SettingsComponent>
                     </SettingsContainer>
-                </SystemComponent> : 
-                <SystemComponent display="flex" overflow="hidden" opacity="0.5">
-                <SettingsContainer>
-                    <SettingsComponent title="Teams &amp; Responsibilities"
-                        refId={refIds[0]}
-                        onEditClicked={() => {
-                            setActiveModal(ACTIVE_MODAL.TEAMS_RESPONSIBILITIES); 
-                        }
-                    }>
-                        <SettingsSubsection headerText='My Subteams'
-                            type='list'
-                            isLabelListSection={true}
-                            labelValues={subteams}
-                        />
-                        <SettingsSubsection headerText='My Projects'
-                            type='list'
-                            isLabelListSection={true}
-                            labelValues={projects}
-                        />
-                    </SettingsComponent>
-
-                    <SettingsComponent title="Profile Information"
-                        refId={refIds[1]}
-                        onEditClicked={() => {
-                            setActiveModal(ACTIVE_MODAL.PROFILE_INFO); 
-                        }}
-                    >
-                        <SystemComponent mb={2}>
-                            {isLoaded && user ? 
-                                (
-                                    <ProfileSummary 
-                                        isLoaded={isLoaded}
-                                        firstname={user.name ? user.name.first : ""}
-                                        lastname={user.name ? user.name.last : ""}
-                                        birthday={user.birthday}
-                                        program={user.program}
-                                        schoolterm={user.stream ? user.stream.currentSchoolTerm : ""}
-                                        email={user.email}
-                                    />
-                                ) : (
-                                    <ProfileSummary 
-                                        isLoaded={isLoaded}
-                                    />
-                                )
-                            }
-                        </SystemComponent>
-                        <SettingsSubsection headerText='My Skills'
-                            type="list"
-                            isLabelListSection={true}
-                            labelValues={skills}
-                        />
-                        <SettingsSubsection headerText='My Interests'
-                            type="list"
-                            isLabelListSection={true}
-                            labelValues={interests}
-                        />
-                        <SettingsSubsection headerText='Short Bio'
-                            type="normal"
-                            isLabelListSection={false}
-                        >
-                            {user.bio ? user.bio : "Click Edit (above) to add a Short Bio."}
-                        </SettingsSubsection>
-                    </SettingsComponent>
-
-                    <SettingsComponent title="External Accounts"
-                        refId={refIds[2]}
-                        onEditClicked={() => {
-                            setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS); 
-                        }}
-                    >
-                        <ThreeColumnGrid>
-                            {
-                                accountTypes.map((acctType, i) =>
-                                <> 
-                                    <SystemComponent gridColumn="1 / 2"><i className={"fa " + linkLabelIcons[i]}/></SystemComponent>
-                                    <SystemComponent gridColumn="2 / 3" 
-                                        gridRow={(i+1).toString().concat(" / span 1")}
-                                    >
-                                        <Header5>
-                                            {capitalize(acctType)}
-                                        </Header5>
-                                    </SystemComponent>
-                                    <SystemComponent 
-                                        gridColumn="3 / 4" 
-                                        gridRow={(i+1).toString().concat(" / span 1")}
-                                        textAlign="right"
-                                    >
-                                        {(links.find(link => link.type === acctType) && 
-                                            (links.find(link => link.type === acctType).link.length > 0)) ? (
-                                            <NonUnderlinedLink 
-                                                href={links.find(link => link.type === acctType).link} 
-                                                alt={altText[acctType]} 
-                                                target="_blank"
-                                            >
-                                                {links.find(link => link.type === acctType).link}
-                                            </NonUnderlinedLink>
-                                        ) : (
-                                            <AddInfoPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
-                                                {"[ add a link here ]"}
-                                            </AddInfoPrompt>
-                                        )}
-                                    </SystemComponent>
-                                </>
-                            )}
-                        </ThreeColumnGrid>
-                    </SettingsComponent>
-                </SettingsContainer>
-            </SystemComponent>}
+                </SystemComponent>
+            </>
         </PageTemplate>
     )
 };
