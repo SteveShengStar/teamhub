@@ -3,7 +3,6 @@ import EditProfileModal from '../organisms/EditProfileModal';
 import EditTeamsModal from '../organisms/EditTeamsModal';
 import EditLinksModal from '../organisms/EditLinksModal';
 
-// TODO: do not reveal the stuff yet
 const SettingsModalSelector = ({isLoaded, activeModal, handleCloseModal}) => {
     return (
         <>
