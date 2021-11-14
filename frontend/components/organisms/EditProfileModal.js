@@ -12,7 +12,7 @@ import { getFilters } from '../../store/reducers/membersReducer';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
-import { updateUser } from "../../store/reducers/userReducer";
+import { updateProfileInfo } from "../../store/reducers/userReducer";
 
 import isBefore from 'validator/lib/isBefore';
 import {isEmpty} from 'lodash';
@@ -221,27 +221,36 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
-            updateUser(dispatch, {
-                "name": {
-                    "first": formValues.firstName.trim(),
-                    "last": formValues.lastName.trim(),
-                    "display": formValues.display.trim()
-                },
-                "birthday": {
-                    "year": formValues.birthDate.split("-")[0],
-                    "month": formValues.birthDate.split("-")[1] - 1,
-                    "day": formValues.birthDate.split("-")[2]
-                },
-                "program": formValues.program.value.trim(),
-                "interests": removeBadValuesAndDuplicates(interests),
-                "skills": removeBadValuesAndDuplicates(skills),
-                "stream": {
-                    ...user.stream,
-                    "currentSchoolTerm": formValues.term.value, 
-                },
-                "bio": formValues.bio.trim()              
-            }, token, user._id, router, false);
-            handleCloseModal();
+            setTimeout(function() {
+                updateProfileInfo(dispatch, {
+                    "name": {
+                        "first": formValues.firstName.trim(),
+                        "last": formValues.lastName.trim(),
+                        "display": formValues.display.trim()
+                    },
+                    "birthday": {
+                        "year": formValues.birthDate.split("-")[0],
+                        "month": formValues.birthDate.split("-")[1] - 1,
+                        "day": formValues.birthDate.split("-")[2]
+                    },
+                    "program": formValues.program.value.trim(),
+                    "interests": removeBadValuesAndDuplicates(interests),
+                    "skills": removeBadValuesAndDuplicates(skills),
+                    "stream": {
+                        ...user.stream,
+                        "currentSchoolTerm": formValues.term.value, 
+                    },
+                    "bio": formValues.bio.trim()              
+                }, token, user._id, router, false)
+                .then(res => {
+                    if (res.success) {
+                        dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+                    }
+                    handleCloseModal();
+                }).catch(() => {
+                    handleCloseModal();
+                });
+            }, 4000);
         }
     }
 

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
-import { updateUser } from "../../store/reducers/userReducer";
+import { updateProfileInfo } from "../../store/reducers/userReducer";
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -114,16 +114,24 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
             linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
             websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
 
-            updateUser(dispatch, {
-                "links": [
-                    {"type": "facebook", "link": facebookUrl},
-                    {"type": "github", "link": githubUrl},
-                    {"type": "website", "link": websiteUrl},
-                    {"type": "linkedin", "link": linkedInUrl}
-                ]
-            }, token, user._id, router, false);
-
-            handleCloseModal();
+            setTimeout(function(){ 
+                updateProfileInfo(dispatch, {
+                    "links": [
+                        {"type": "facebook", "link": facebookUrl},
+                        {"type": "github", "link": githubUrl},
+                        {"type": "website", "link": websiteUrl},
+                        {"type": "linkedin", "link": linkedInUrl}
+                    ]
+                }, token, user._id, router)
+                .then(res => {
+                    if (res.success) {
+                        dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+                    }
+                    handleCloseModal();
+                }).catch(() => {
+                    handleCloseModal();
+                });
+            }, 4000);
         }
     }
 

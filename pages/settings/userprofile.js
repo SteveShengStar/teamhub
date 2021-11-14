@@ -23,8 +23,8 @@ const UserProfileSection = ({sectionTitle, setActiveModal, userDataLoaded}) => {
                 {userDataLoaded && 
                     <ProfileSummary 
                         dataLoaded={userDataLoaded}
-                        firstname={user.name.first}
-                        lastname={user.name.last}
+                        firstname={user.name && user.name.first}
+                        lastname={user.name && user.name.last}
                         birthday={user.birthday}
                         program={user.program}
                         schoolterm={user.stream ? user.stream.currentSchoolTerm : ""}

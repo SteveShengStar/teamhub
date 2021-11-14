@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeBadValuesAndDuplicates } from '../../helpers';
 
-import styled from 'styled-components';
 import MultiSelectInput from '../molecules/MultiSelectInput';
 import { SystemComponent } from '../atoms/SystemComponents';
 import { useRouter } from 'next/router';
@@ -11,7 +10,7 @@ import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
-import { updateUser } from '../../store/reducers/userReducer';
+import { updateProfileInfo } from '../../store/reducers/userReducer';
 import { filter, capitalize } from 'lodash';
 
 // Subteam ID to String Mapping
@@ -58,18 +57,26 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   }, [dataLoaded, visible]);
 
   const handleSave = () => {
-    updateUser(
-      dispatch,
-      {
-        projects: removeBadValuesAndDuplicates(selectedProjects),
-        subteams: localSelectedTeams,
-      },
-      token,
-      user._id,
-      router,
-      false
-    );
-    handleCloseModal();
+    setTimeout(function() {
+      updateProfileInfo(
+        dispatch,
+        {
+          projects: removeBadValuesAndDuplicates(selectedProjects),
+          subteams: localSelectedTeams,
+        },
+        token,
+        user._id,
+        router,
+        false
+      ).then(res => {
+        if (res.success) {
+            dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+        }
+        handleCloseModal();
+      }).catch(() => {
+        handleCloseModal();
+      });
+    }, 4000);
   };
 
   const toggleSelectItem = (team) => {
