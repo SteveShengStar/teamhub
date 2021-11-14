@@ -40,7 +40,7 @@ const AddInfoPrompt = styled(SystemLink)`
 const LinksSection = ({sectionTitle, setActiveModal, userDataLoaded}) => {
 
     const { user } = useSelector(state => state.userState);
-    const links = userDataLoaded && user ? user.links : [];
+    const links = userDataLoaded && user && user.links ? user.links : [];
     const linkLabelIcons = ['fa-globe', 'fa-linkedin', 'fa-github', 'fa-facebook-square'] // CSS Class names of font-awesome icons
     const accountTypes = ["website", 'linkedin', 'github', 'facebook'];
     const altText = {
