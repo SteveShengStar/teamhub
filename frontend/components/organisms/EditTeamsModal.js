@@ -93,64 +93,67 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   };
 
   return (
-    <EditSettingsModal
-      visible={visible}
-      title="Edit Teams &amp; Responsibilities"
-      handleCloseModal={handleCloseModal}
-      handleSave={handleSave}
-    >
-      <SystemComponent
-        display="grid"
-        gridTemplateColumns="100%"
-        gridAutoRows="minmax(70px, auto)"
-        gridRowGap={4}
+    <>
+      {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
+      <EditSettingsModal
+        visible={visible}
+        title="Edit Teams &amp; Responsibilities"
+        handleCloseModal={handleCloseModal}
+        handleSave={handleSave}
       >
-        <SystemComponent>
-          <Header5>Which Subteams are you in ?</Header5>
-          <SystemComponent
-            display="grid"
-            gridTemplateColumns="1fr"
-            gridRowGap={3}
-          >
-            {persistedSelectedTeams.map((team) => (
-              <SystemComponent key={team}>
-                <ToggleListItem
-                  id={team}
-                  text={subteamDisplayNames[team]}
-                  selected={localSelectedTeams.includes(team)}
-                  onSelect={toggleSelectItem}
-                />
-              </SystemComponent>
-            ))}
-            {persistedNonSelectedteams.map((team) => (
-              <SystemComponent key={team}>
-                <ToggleListItem
-                  id={team}
-                  text={subteamDisplayNames[team]}
-                  selected={localSelectedTeams.includes(team)}
-                  onSelect={toggleSelectItem}
-                />
-              </SystemComponent>
-            ))}
+        <SystemComponent
+          display="grid"
+          gridTemplateColumns="100%"
+          gridAutoRows="minmax(70px, auto)"
+          gridRowGap={4}
+        >
+          <SystemComponent>
+            <Header5>Which Subteams are you in ?</Header5>
+            <SystemComponent
+              display="grid"
+              gridTemplateColumns="1fr"
+              gridRowGap={3}
+            >
+              {persistedSelectedTeams.map((team) => (
+                <SystemComponent key={team}>
+                  <ToggleListItem
+                    id={team}
+                    text={subteamDisplayNames[team]}
+                    selected={localSelectedTeams.includes(team)}
+                    onSelect={toggleSelectItem}
+                  />
+                </SystemComponent>
+              ))}
+              {persistedNonSelectedteams.map((team) => (
+                <SystemComponent key={team}>
+                  <ToggleListItem
+                    id={team}
+                    text={subteamDisplayNames[team]}
+                    selected={localSelectedTeams.includes(team)}
+                    onSelect={toggleSelectItem}
+                  />
+                </SystemComponent>
+              ))}
+            </SystemComponent>
+          </SystemComponent>
+          <SystemComponent>
+            <MultiSelectInput
+              title="What Projects are you Working on ?"
+              setSelectedItems={(list) => setSelectedProjects(list)}
+              options={
+                projectOpts
+                  ? projectOpts.map((project) => ({
+                      value: project.name,
+                      label: capitalize(project.name),
+                    }))
+                  : []
+              }
+              helpMessage="Type below to create new/custom entries."
+            />
           </SystemComponent>
         </SystemComponent>
-        <SystemComponent>
-          <MultiSelectInput
-            title="What Projects are you Working on ?"
-            setSelectedItems={(list) => setSelectedProjects(list)}
-            options={
-              projectOpts
-                ? projectOpts.map((project) => ({
-                    value: project.name,
-                    label: capitalize(project.name),
-                  }))
-                : []
-            }
-            helpMessage="Type below to create new/custom entries."
-          />
-        </SystemComponent>
-      </SystemComponent>
-    </EditSettingsModal>
+      </EditSettingsModal>
+    </>
   );
 };
 export default EditTeamsModal;
