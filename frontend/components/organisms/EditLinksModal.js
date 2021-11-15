@@ -114,6 +114,8 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
             linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
             websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
 
+            // TODO: set "isShowingGhostLoader" boolean variable to true
+
             setTimeout(function(){ 
                 updateProfileInfo(dispatch, {
                     "links": [
@@ -127,9 +129,11 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     if (res.success) {
                         dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
                     }
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
                     handleCloseModal();
                 }).catch(() => {
-                    handleCloseModal();
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    alert("An error occured when updating your profile information.");
                 });
             }, 4000);
         }

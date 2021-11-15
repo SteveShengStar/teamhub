@@ -57,6 +57,9 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   }, [dataLoaded, visible]);
 
   const handleSave = () => {
+
+    // TODO: set "isShowingGhostLoader" boolean variable to true
+
     setTimeout(function() {
       updateProfileInfo(
         dispatch,
@@ -72,9 +75,11 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
         if (res.success) {
             dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
         }
+        // TODO: set "isShowingGhostLoader" boolean variable to false
         handleCloseModal();
       }).catch(() => {
-        handleCloseModal();
+        // TODO: set "isShowingGhostLoader" boolean variable to false
+        alert("An error occured when updating your profile information.");
       });
     }, 4000);
   };

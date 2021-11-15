@@ -221,6 +221,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
+
+            // TODO: set "isShowingGhostLoader" boolean variable to true
+
             setTimeout(function() {
                 updateProfileInfo(dispatch, {
                     "name": {
@@ -246,9 +249,11 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     if (res.success) {
                         dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
                     }
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
                     handleCloseModal();
                 }).catch(() => {
-                    handleCloseModal();
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    alert("An error occured when updating your profile information.");
                 });
             }, 4000);
         }
