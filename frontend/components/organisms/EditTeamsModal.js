@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeBadValuesAndDuplicates } from '../../helpers';
 
-import styled from 'styled-components';
 import MultiSelectInput from '../molecules/MultiSelectInput';
 import { SystemComponent } from '../atoms/SystemComponents';
 import { useRouter } from 'next/router';
@@ -11,7 +10,7 @@ import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
-import { updateUser } from '../../store/reducers/userReducer';
+import { updateProfileInfo } from '../../store/reducers/userReducer';
 import { filter, capitalize } from 'lodash';
 
 // Subteam ID to String Mapping
@@ -58,18 +57,31 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   }, [dataLoaded, visible]);
 
   const handleSave = () => {
-    updateUser(
-      dispatch,
-      {
-        projects: removeBadValuesAndDuplicates(selectedProjects),
-        subteams: localSelectedTeams,
-      },
-      token,
-      user._id,
-      router,
-      false
-    );
-    handleCloseModal();
+
+    // TODO: set "isShowingGhostLoader" boolean variable to true
+
+    setTimeout(function() {
+      updateProfileInfo(
+        dispatch,
+        {
+          projects: removeBadValuesAndDuplicates(selectedProjects),
+          subteams: localSelectedTeams,
+        },
+        token,
+        user._id,
+        router,
+        false
+      ).then(res => {
+        if (res.success) {
+            dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+        }
+        // TODO: set "isShowingGhostLoader" boolean variable to false
+        handleCloseModal();
+      }).catch(() => {
+        // TODO: set "isShowingGhostLoader" boolean variable to false
+        alert("An error occured when updating your profile information.");
+      });
+    }, 4000);
   };
 
   const toggleSelectItem = (team) => {
@@ -81,64 +93,67 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   };
 
   return (
-    <EditSettingsModal
-      visible={visible}
-      title="Edit Teams &amp; Responsibilities"
-      handleCloseModal={handleCloseModal}
-      handleSave={handleSave}
-    >
-      <SystemComponent
-        display="grid"
-        gridTemplateColumns="100%"
-        gridAutoRows="minmax(70px, auto)"
-        gridRowGap={4}
+    <>
+      {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
+      <EditSettingsModal
+        visible={visible}
+        title="Edit Teams &amp; Responsibilities"
+        handleCloseModal={handleCloseModal}
+        handleSave={handleSave}
       >
-        <SystemComponent>
-          <Header5>Which Subteams are you in ?</Header5>
-          <SystemComponent
-            display="grid"
-            gridTemplateColumns="1fr"
-            gridRowGap={3}
-          >
-            {persistedSelectedTeams.map((team) => (
-              <SystemComponent key={team}>
-                <ToggleListItem
-                  id={team}
-                  text={subteamDisplayNames[team]}
-                  selected={localSelectedTeams.includes(team)}
-                  onSelect={toggleSelectItem}
-                />
-              </SystemComponent>
-            ))}
-            {persistedNonSelectedteams.map((team) => (
-              <SystemComponent key={team}>
-                <ToggleListItem
-                  id={team}
-                  text={subteamDisplayNames[team]}
-                  selected={localSelectedTeams.includes(team)}
-                  onSelect={toggleSelectItem}
-                />
-              </SystemComponent>
-            ))}
+        <SystemComponent
+          display="grid"
+          gridTemplateColumns="100%"
+          gridAutoRows="minmax(70px, auto)"
+          gridRowGap={4}
+        >
+          <SystemComponent>
+            <Header5>Which Subteams are you in ?</Header5>
+            <SystemComponent
+              display="grid"
+              gridTemplateColumns="1fr"
+              gridRowGap={3}
+            >
+              {persistedSelectedTeams.map((team) => (
+                <SystemComponent key={team}>
+                  <ToggleListItem
+                    id={team}
+                    text={subteamDisplayNames[team]}
+                    selected={localSelectedTeams.includes(team)}
+                    onSelect={toggleSelectItem}
+                  />
+                </SystemComponent>
+              ))}
+              {persistedNonSelectedteams.map((team) => (
+                <SystemComponent key={team}>
+                  <ToggleListItem
+                    id={team}
+                    text={subteamDisplayNames[team]}
+                    selected={localSelectedTeams.includes(team)}
+                    onSelect={toggleSelectItem}
+                  />
+                </SystemComponent>
+              ))}
+            </SystemComponent>
+          </SystemComponent>
+          <SystemComponent>
+            <MultiSelectInput
+              title="What Projects are you Working on ?"
+              setSelectedItems={(list) => setSelectedProjects(list)}
+              options={
+                projectOpts
+                  ? projectOpts.map((project) => ({
+                      value: project.name,
+                      label: capitalize(project.name),
+                    }))
+                  : []
+              }
+              helpMessage="Type below to create new/custom entries."
+            />
           </SystemComponent>
         </SystemComponent>
-        <SystemComponent>
-          <MultiSelectInput
-            title="What Projects are you Working on ?"
-            setSelectedItems={(list) => setSelectedProjects(list)}
-            options={
-              projectOpts
-                ? projectOpts.map((project) => ({
-                    value: project.name,
-                    label: capitalize(project.name),
-                  }))
-                : []
-            }
-            helpMessage="Type below to create new/custom entries."
-          />
-        </SystemComponent>
-      </SystemComponent>
-    </EditSettingsModal>
+      </EditSettingsModal>
+    </>
   );
 };
 export default EditTeamsModal;

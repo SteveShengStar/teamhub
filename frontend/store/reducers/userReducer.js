@@ -106,26 +106,47 @@ export const updateUser = async (
   options,
   token,
   id,
-  router,
-  signUp = true
+  router
 ) => {
   try {
-    // TODO: think about just doing the post request only. RN, we need a secnd. request becuase first request has missing fields.
     const res = await api.members.update(options, token, id, dispatch, router);
     if (res && res.success) {
       const user = await api.members.getMember(id, token, dispatch, router);
       if (user && user.success) {
-        if (signUp) {
-          dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
-        } else dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
+        dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
         return user.body[0];
       }
     }
-    return;
+    throw new Error("userReducer.js#updateUser(): Failed to retrieve user data.");
   } catch (err) {
     throw new Error(err);
   }
 };
+
+/**
+ *
+ * @param {*} options
+ * @param {string} token
+ * @param {string} id
+ */
+export const updateProfileInfo = async (
+  dispatch,
+  options,
+  token,
+  id,
+  router
+) => {
+  try {
+    const res = await api.members.update(options, token, id, dispatch, router);
+    if (res && res.success) {
+      return await api.members.getMember(id, token, dispatch, router);
+    }
+    throw new Error("userReducer.js#updateUser(): Failed to retrieve user data.");
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
 
 export const getProfileInfo = async function (dispatch, token, id, router) {
   try {

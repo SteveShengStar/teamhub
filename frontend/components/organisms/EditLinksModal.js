@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
-import { updateUser } from "../../store/reducers/userReducer";
+import { updateProfileInfo } from "../../store/reducers/userReducer";
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -114,16 +114,28 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
             linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
             websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
 
-            updateUser(dispatch, {
-                "links": [
-                    {"type": "facebook", "link": facebookUrl},
-                    {"type": "github", "link": githubUrl},
-                    {"type": "website", "link": websiteUrl},
-                    {"type": "linkedin", "link": linkedInUrl}
-                ]
-            }, token, user._id, router, false);
+            // TODO: set "isShowingGhostLoader" boolean variable to true
 
-            handleCloseModal();
+            setTimeout(function(){ 
+                updateProfileInfo(dispatch, {
+                    "links": [
+                        {"type": "facebook", "link": facebookUrl},
+                        {"type": "github", "link": githubUrl},
+                        {"type": "website", "link": websiteUrl},
+                        {"type": "linkedin", "link": linkedInUrl}
+                    ]
+                }, token, user._id, router)
+                .then(res => {
+                    if (res.success) {
+                        dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+                    }
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    handleCloseModal();
+                }).catch(() => {
+                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    alert("An error occured when updating your profile information.");
+                });
+            }, 4000);
         }
     }
 
@@ -140,63 +152,66 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
     }
 
     return (
-        <EditSettingsModal 
-            visible={visible} 
-            title="Edit External Accounts" 
-            handleCloseModal={handleCloseModal}
-            handleSave={handleSave}
-        >
-            <SystemComponent display="grid" 
-                gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-                gridColumnGap={[20, 30, 40]}
-                gridAutoRows='minmax(70px, auto)'
+        <>
+            {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
+            <EditSettingsModal 
+                visible={visible} 
+                title="Edit External Accounts" 
+                handleCloseModal={handleCloseModal}
+                handleSave={handleSave}
             >
-                <SystemComponent>
-                    <URLField
-                        label="Personal Website"
-                        name="websiteUrl"
-                        placeholder="Enter Website Link ..." 
-                        value={formValues["websiteUrl"]}
-                        error={hasError['websiteUrl']}
-                        errorText={"Please Enter Valid Url."}
-                        onHandleChange={handleChange}
-                    />
+                <SystemComponent display="grid" 
+                    gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
+                    gridColumnGap={[20, 30, 40]}
+                    gridAutoRows='minmax(70px, auto)'
+                >
+                    <SystemComponent>
+                        <URLField
+                            label="Personal Website"
+                            name="websiteUrl"
+                            placeholder="Enter Website Link ..." 
+                            value={formValues["websiteUrl"]}
+                            error={hasError['websiteUrl']}
+                            errorText={"Please Enter Valid Url."}
+                            onHandleChange={handleChange}
+                        />
+                    </SystemComponent>
+                    <SystemComponent>
+                        <URLField
+                            label="Github"
+                            name="githubUrl"
+                            placeholder="Enter Github Link ..." 
+                            value={formValues["githubUrl"]}
+                            error={hasError['githubUrl']}
+                            errorText={"Please Enter Valid Github Profile Url."}
+                            onHandleChange={handleChange}
+                        />
+                    </SystemComponent>
+                    <SystemComponent>
+                        <URLField
+                            label="LinkedIn"
+                            name="linkedInUrl"
+                            placeholder="Enter LinkedIn Link ..."
+                            value={formValues["linkedInUrl"]}
+                            error={hasError['linkedInUrl']} 
+                            errorText={"Please Enter Valid LinkedIn Profile Url."}
+                            onHandleChange={handleChange}
+                        />
+                    </SystemComponent>
+                    <SystemComponent>   
+                        <URLField
+                            label="Facebook"
+                            name="facebookUrl"
+                            placeholder="Enter Facebook Link ..." 
+                            value={formValues["facebookUrl"]}
+                            error={hasError.facebookUrl}
+                            errorText={"Please Enter Valid Facebook Profile Url."}
+                            onHandleChange={handleChange}
+                        />
+                    </SystemComponent>
                 </SystemComponent>
-                <SystemComponent>
-                    <URLField
-                        label="Github"
-                        name="githubUrl"
-                        placeholder="Enter Github Link ..." 
-                        value={formValues["githubUrl"]}
-                        error={hasError['githubUrl']}
-                        errorText={"Please Enter Valid Github Profile Url."}
-                        onHandleChange={handleChange}
-                    />
-                </SystemComponent>
-                <SystemComponent>
-                    <URLField
-                        label="LinkedIn"
-                        name="linkedInUrl"
-                        placeholder="Enter LinkedIn Link ..."
-                        value={formValues["linkedInUrl"]}
-                        error={hasError['linkedInUrl']} 
-                        errorText={"Please Enter Valid LinkedIn Profile Url."}
-                        onHandleChange={handleChange}
-                    />
-                </SystemComponent>
-                <SystemComponent>   
-                    <URLField
-                        label="Facebook"
-                        name="facebookUrl"
-                        placeholder="Enter Facebook Link ..." 
-                        value={formValues["facebookUrl"]}
-                        error={hasError.facebookUrl}
-                        errorText={"Please Enter Valid Facebook Profile Url."}
-                        onHandleChange={handleChange}
-                    />
-                </SystemComponent>
-            </SystemComponent>
-        </EditSettingsModal>
+            </EditSettingsModal>
+        </>
     )
 }
 export default EditLinksModal;
