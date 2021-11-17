@@ -10,6 +10,8 @@ import Header5 from '../atoms/Header5';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import theme from '../theme';
 import {isURL} from 'validator';
+import LinkGhostLoadingScreen from '../molecules/LinkGhostLoadingScreen';
+ 
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -89,6 +91,8 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         }
     }
 
+    let isShowingGhostLoader = true;
+
     const handleSave = (evt) => {
         evt.preventDefault();
 
@@ -114,8 +118,6 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
             linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
             websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
 
-            // TODO: set "isShowingGhostLoader" boolean variable to true
-
             setTimeout(function(){ 
                 updateProfileInfo(dispatch, {
                     "links": [
@@ -129,10 +131,10 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     if (res.success) {
                         dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
                     }
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    isShowingGhostLoader = false; 
                     handleCloseModal();
                 }).catch(() => {
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
+                    isShowingGhostLoader = false; 
                     alert("An error occured when updating your profile information.");
                 });
             }, 4000);
@@ -151,9 +153,10 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         });
     }
 
+    let ghoststyle = "links"; 
     return (
         <>
-            {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
+            {isShowingGhostLoader === true ? <LinkGhostLoadingScreen/> : 
             <EditSettingsModal 
                 visible={visible} 
                 title="Edit External Accounts" 
@@ -210,7 +213,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                         />
                     </SystemComponent>
                 </SystemComponent>
-            </EditSettingsModal>
+            </EditSettingsModal>}
         </>
     )
 }

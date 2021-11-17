@@ -13,6 +13,8 @@ import EditSettingsModal from '../molecules/EditSettingsModal';
 import { updateProfileInfo } from '../../store/reducers/userReducer';
 import { filter, capitalize } from 'lodash';
 
+import TeamsGhostLoadingScreen from '../molecules/TeamsGhostLoadingScreen';
+
 // Subteam ID to String Mapping
 const subteamDisplayNames = {
   Business: 'business',
@@ -56,9 +58,9 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
     }
   }, [dataLoaded, visible]);
 
-  const handleSave = () => {
+let isShowingGhostLoader = true; 
 
-    // TODO: set "isShowingGhostLoader" boolean variable to true
+  const handleSave = () => {
 
     setTimeout(function() {
       updateProfileInfo(
@@ -75,10 +77,10 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
         if (res.success) {
             dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
         }
-        // TODO: set "isShowingGhostLoader" boolean variable to false
+        isShowingGhostLoader = false; 
         handleCloseModal();
       }).catch(() => {
-        // TODO: set "isShowingGhostLoader" boolean variable to false
+        isShowingGhostLoader = false; 
         alert("An error occured when updating your profile information.");
       });
     }, 4000);
@@ -92,9 +94,10 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
     }
   };
 
+  let ghoststyle = "teams"; 
   return (
     <>
-      {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
+    {isShowingGhostLoader === true ? <TeamsGhostLoadingScreen persistedSelectedTeams={persistedSelectedTeams} persistedNonSelectedteams={persistedNonSelectedteams}/> : 
       <EditSettingsModal
         visible={visible}
         title="Edit Teams &amp; Responsibilities"
@@ -153,6 +156,7 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
           </SystemComponent>
         </SystemComponent>
       </EditSettingsModal>
+    }
     </>
   );
 };

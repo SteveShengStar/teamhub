@@ -12,7 +12,7 @@ import { getFilters } from '../../store/reducers/membersReducer';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
-import { updateProfileInfo } from "../../store/reducers/userReducer";
+import { updateUser } from "../../store/reducers/userReducer";
 
 import isBefore from 'validator/lib/isBefore';
 import {isEmpty} from 'lodash';
@@ -155,15 +155,15 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { interests: interestOpts, skills: skillOpts } = filters;
 
 
-    const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
-    const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
-    const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
+    const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
+    const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
+    const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day.toString() : "";
 
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
         lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
         display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-        birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
+        birthDate: year + "-" + month + "-" + day,
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
         term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         bio: dataLoaded ? user.bio : ""
@@ -183,16 +183,16 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [hydrated]);
 
     useEffect(() => {
-        const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
-        const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
-        const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
+        const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
+        const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
+        const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day.toString() : "";
 
         setFormValues({
             ...formValues, 
             firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
             lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
             display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-            birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
+            birthDate: year + "-" + month + "-" + day,
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
             term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             bio: dataLoaded ? user.bio : ""
@@ -221,41 +221,27 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
-
-            // TODO: set "isShowingGhostLoader" boolean variable to true
-
-            setTimeout(function() {
-                updateProfileInfo(dispatch, {
-                    "name": {
-                        "first": formValues.firstName.trim(),
-                        "last": formValues.lastName.trim(),
-                        "display": formValues.display.trim()
-                    },
-                    "birthday": {
-                        "year": formValues.birthDate.split("-")[0],
-                        "month": formValues.birthDate.split("-")[1] - 1,
-                        "day": formValues.birthDate.split("-")[2]
-                    },
-                    "program": formValues.program.value.trim(),
-                    "interests": removeBadValuesAndDuplicates(interests),
-                    "skills": removeBadValuesAndDuplicates(skills),
-                    "stream": {
-                        ...user.stream,
-                        "currentSchoolTerm": formValues.term.value, 
-                    },
-                    "bio": formValues.bio.trim()              
-                }, token, user._id, router, false)
-                .then(res => {
-                    if (res.success) {
-                        dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
-                    }
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
-                    handleCloseModal();
-                }).catch(() => {
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
-                    alert("An error occured when updating your profile information.");
-                });
-            }, 4000);
+            updateUser(dispatch, {
+                "name": {
+                    "first": formValues.firstName.trim(),
+                    "last": formValues.lastName.trim(),
+                    "display": formValues.display.trim()
+                },
+                "birthday": {
+                    "year": formValues.birthDate.split("-")[0],
+                    "month": formValues.birthDate.split("-")[1] - 1,
+                    "day": formValues.birthDate.split("-")[2]
+                },
+                "program": formValues.program.value.trim(),
+                "interests": removeBadValuesAndDuplicates(interests),
+                "skills": removeBadValuesAndDuplicates(skills),
+                "stream": {
+                    ...user.stream,
+                    "currentSchoolTerm": formValues.term.value, 
+                },
+                "bio": formValues.bio.trim()              
+            }, token, user._id, router, false);
+            handleCloseModal();
         }
     }
 
@@ -270,112 +256,110 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     if (!schoolTerm) schoolTerm = formValues['term'];
 
     return (
-        <>
-            {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
-            <EditSettingsModal 
-                visible={visible} 
-                title="Edit Profile Information" 
-                handleCloseModal={handleCloseModal}
-                handleSave={handleSave}
+        <EditSettingsModal 
+            visible={visible} 
+            title="Edit Profile Information" 
+            handleCloseModal={handleCloseModal}
+            handleSave={handleSave}
+        >
+            <SystemComponent display="grid" 
+                gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
+                gridColumnGap={[20, 30, 40]}
+                gridAutoRows='minmax(70px, auto)'
             >
-                <SystemComponent display="grid" 
-                    gridTemplateColumns={["100%", "repeat(2, 1fr)"]}
-                    gridColumnGap={[20, 30, 40]}
-                    gridAutoRows='minmax(70px, auto)'
-                >
-                    <SystemComponent>
-                        <InputSegment
-                            label="First Name"
-                            name="firstName"
-                            placeholder="First Name" 
-                            value={formValues['firstName']}
-                            handleChange={handleInputChange}
-                            error={hasError['firstName']}
-                            errorText="Please enter your First Name." />
-                    </SystemComponent>
-                    <SystemComponent>
-                        <InputSegment
-                            label="Last Name" 
-                            name="lastName"
-                            placeholder="Last Name" 
-                            value={formValues['lastName']}
-                            handleChange={handleInputChange} />
-                    </SystemComponent>
-                    <SystemComponent>
-                        <InputSegment
-                            label="Display Name" 
-                            name="display"
-                            placeholder="Display Name" 
-                            value={formValues['display']}
-                            handleChange={handleInputChange} />
-                    </SystemComponent>
-                    <SystemComponent>
-                        <DateInputSegment
-                            label="Birth Date" 
-                            name="birthDate"
-                            value={formValues['birthDate']}
-                            handleChange={handleInputChange}
-                            error={hasError['birthDate']}
-                            errorText="Birth Date must be valid." />
-                    </SystemComponent>
-                    <SelectSegment 
-                        title="Academic Program"
-                        name="program"
-                        value={formValues['program']}
-                        options={PROGRAM_OPTS}
+                <SystemComponent>
+                    <InputSegment
+                        label="First Name"
+                        name="firstName"
+                        placeholder="First Name" 
+                        value={formValues['firstName']}
                         handleChange={handleInputChange}
-                        allowCustomInput={true}
-                        error={hasError['program']}
-                        errorText="Please enter valid Program Name. Special characters allowed are  - ' ,"
-                        helpMessage="Type below to create a custom entry."
-                    />
-                    <SelectSegment 
-                        title="School Term"
-                        name="term"
-                        value={schoolTerm}
-                        options={SCHOOL_TERM_OPTS}
-                        handleChange={handleInputChange}
-                    />
+                        error={hasError['firstName']}
+                        errorText="Please enter your First Name." />
                 </SystemComponent>
+                <SystemComponent>
+                    <InputSegment
+                        label="Last Name" 
+                        name="lastName"
+                        placeholder="Last Name" 
+                        value={formValues['lastName']}
+                        handleChange={handleInputChange} />
+                </SystemComponent>
+                <SystemComponent>
+                    <InputSegment
+                        label="Display Name" 
+                        name="display"
+                        placeholder="Display Name" 
+                        value={formValues['display']}
+                        handleChange={handleInputChange} />
+                </SystemComponent>
+                <SystemComponent>
+                    <DateInputSegment
+                        label="Birth Date" 
+                        name="birthDate"
+                        value={formValues['birthDate']}
+                        handleChange={handleInputChange}
+                        error={hasError['birthDate']}
+                        errorText="Birth Date must be valid." />
+                </SystemComponent>
+                <SelectSegment 
+                    title="Academic Program"
+                    name="program"
+                    value={formValues['program']}
+                    options={PROGRAM_OPTS}
+                    handleChange={handleInputChange}
+                    allowCustomInput={true}
+                    error={hasError['program']}
+                    errorText="Please enter valid Program Name. Special characters allowed are  - ' ,"
+                    helpMessage="Type below to create a custom entry."
+                />
+                <SelectSegment 
+                    title="School Term"
+                    name="term"
+                    value={schoolTerm}
+                    options={SCHOOL_TERM_OPTS}
+                    handleChange={handleInputChange}
+                />
+            </SystemComponent>
 
-                <SystemComponent display="grid" 
-                    gridAutoRows='minmax(70px, auto)'
-                >
-                    <SystemComponent pb={4}>
-                        <MultiSelectInput
-                            title="Skills"
-                            setSelectedItems={setSkills}
-                            options={
-                                skillOpts ? 
-                                skillOpts.map(skill => 
-                                ({value: skill.name.toLowerCase(), label: skill.name}))
-                                : 
-                                []
-                            }
-                            helpMessage="Type below to create new/custom entries."
-                        />
-                    </SystemComponent>
-                    <SystemComponent pb={4}>
-                        <MultiSelectInput
-                            title="Interests"
-                            setSelectedItems={setInterests}
-                            options={
-                                interestOpts ? 
-                                interestOpts.map(interest => 
-                                ({value: interest.name.toLowerCase(), label: interest.name}))
-                                : 
-                                []
-                            }
-                            helpMessage="Type below to create new/custom entries."
-                        />
-                    </SystemComponent>
-                    <SystemComponent>
-                        <Header5>Short Bio</Header5>
-                        <TextArea value={formValues['bio']} onChange={e => handleInputChange('bio', e.target.value)}></TextArea>
-                    </SystemComponent>
+            <SystemComponent display="grid" 
+                gridAutoRows='minmax(70px, auto)'
+            >
+                <SystemComponent pb={4}>
+                    <MultiSelectInput
+                        title="Skills"
+                        setSelectedItems={setSkills}
+                        options={
+                            skillOpts ? 
+                            skillOpts.map(skill => 
+                            ({value: skill.name.toLowerCase(), label: skill.name}))
+                             : 
+                            []
+                        }
+                        helpMessage="Type below to create new/custom entries."
+                    />
                 </SystemComponent>
-            </EditSettingsModal>
-        </>
+                <SystemComponent pb={4}>
+                    <MultiSelectInput
+                        title="Interests"
+                        setSelectedItems={setInterests}
+                        options={
+                            interestOpts ? 
+                            interestOpts.map(interest => 
+                            ({value: interest.name.toLowerCase(), label: interest.name}))
+                             : 
+                            []
+                        }
+                        helpMessage="Type below to create new/custom entries."
+                    />
+                </SystemComponent>
+                <SystemComponent>
+                    <Header5>Short Bio</Header5>
+                    <TextArea value={formValues['bio']} onChange={e => handleInputChange('bio', e.target.value)}></TextArea>
+                </SystemComponent>
+            </SystemComponent>
+            
+        </EditSettingsModal>
     );
 }
 export default EditProfileModal;
