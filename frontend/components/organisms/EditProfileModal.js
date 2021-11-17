@@ -183,9 +183,9 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [hydrated]);
 
     useEffect(() => {
-        const year = (dataLoaded && !isEmpty(user) && user.birthday.year) ? user.birthday.year.toString() : "";
-        const month = (dataLoaded && !isEmpty(user) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
-        const day = (dataLoaded && !isEmpty(user) && user.birthday.day) ? user.birthday.day.toString() : "";
+        const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year.toString() : "";
+        const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? (user.birthday.month + 1).toString() : "";
+        const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day.toString() : "";
 
         setFormValues({
             ...formValues, 
