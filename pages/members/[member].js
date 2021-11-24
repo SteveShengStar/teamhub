@@ -15,8 +15,6 @@ const Post = () => {
     const selectedMember = useSelector(state => state.membersState.selectedMember);
     const loadedMembers = useSelector(state => state.membersState.loadedMembers);
 
-    const { token } = useSelector(state => state.userState);
-
     function reroute() {
         if (window.innerWidth >= theme.breakpoints[1].slice(0, -2)) {
             router.push("/");
@@ -34,7 +32,7 @@ const Post = () => {
             
             return
         }
-        lookupMember(dispatch, token, routeId, router);
+        lookupMember(dispatch, routeId, router);
     }, []);
 
     useEffect(() => {

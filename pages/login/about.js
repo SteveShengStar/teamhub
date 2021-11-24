@@ -15,7 +15,7 @@ import LoadingModal from "../../frontend/components/atoms/LoadingModal";
 import { getFilters } from "../../frontend/store/reducers/membersReducer";
 
 const About = () => {
-  const { user, token, hydrated } = useSelector(state => state.userState);
+  const { user, hydrated } = useSelector(state => state.userState);
   const { filters } = useSelector(state => state.membersState);
   const [birthday, setBirthday] = useState(user && user.birthday ? [user.birthday.month || 0, user.birthday.day || 1, user.birthday.year || 2000] : [0,1,2000]);
   const [program, setProgram ] = useState(user && user.program || "");
@@ -30,8 +30,8 @@ const About = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-      if (token && !filters.projects) {
-          getFilters(dispatch, token, router)
+      if (!filters.projects) {
+          getFilters(dispatch, router)
       }
   }, [hydrated])
 
@@ -72,7 +72,7 @@ const About = () => {
       interests: removeBadValuesAndDuplicates(interests.map(val => val.value)),
       skills: removeBadValuesAndDuplicates(skills.map(skill => skill.value)),
       bio: bio.trim()
-    }, token, user._id, router).then(res => {
+    }, user._id, router).then(res => {
       router.push("/")
     })
   }

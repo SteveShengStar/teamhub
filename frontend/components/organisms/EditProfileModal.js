@@ -150,7 +150,7 @@ const validProgramPattern = /^[A-Za-z,'-\s]*$/;
 const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { token, user, hydrated } = useSelector(state => state.userState);
+    const { user, hydrated } = useSelector(state => state.userState);
     const { filters } = useSelector(state => state.membersState);
     const { interests: interestOpts, skills: skillOpts } = filters;
 
@@ -177,8 +177,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     });
 
     useEffect(() => {
-        if (token && isEmpty(filters)) {
-            getFilters(dispatch, token, router);
+        if (isEmpty(filters)) {
+            getFilters(dispatch, router);
         }
     }, [hydrated]);
 
@@ -244,7 +244,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         "currentSchoolTerm": formValues.term.value, 
                     },
                     "bio": formValues.bio.trim()              
-                }, token, user._id, router, false)
+                }, user._id, router, false)
                 .then(res => {
                     if (res.success) {
                         dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });

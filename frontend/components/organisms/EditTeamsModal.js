@@ -27,7 +27,7 @@ const subteamDisplayNames = {
 };
 
 const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
-  const { token, user } = useSelector((state) => state.userState);
+  const { user } = useSelector((state) => state.userState);
   const { filters } = useSelector((state) => state.membersState);
   const { projects: projectOpts } = filters;
   const router = useRouter();
@@ -67,7 +67,6 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
           projects: removeBadValuesAndDuplicates(selectedProjects),
           subteams: localSelectedTeams,
         },
-        token,
         user._id,
         router,
         false

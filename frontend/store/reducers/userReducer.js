@@ -65,7 +65,7 @@ export const userLogin = async (response, dispatch) => {
   try {
     const res = await api.auth.login(response);
     const user = (res && res.body && res.body[0]) || res.body;
-    if (user && user.token) {
+    if (user) {
       dispatch({
         type: UserTypes.RECEIVED_LOGIN,
         display: response.profileObj.name,
@@ -80,9 +80,9 @@ export const userLogin = async (response, dispatch) => {
   }
 };
 
-export const userLogout = async (token, userId, dispatch) => {
+export const userLogout = async (userId, dispatch) => {
   try {
-    const res = await api.auth.logout(token, userId);
+    const res = await api.auth.logout(userId);
     if (res.success) {
       dispatch({ type: UserTypes.RECEIVED_LOGOUT });
     } else {
@@ -98,20 +98,18 @@ export const userLogout = async (token, userId, dispatch) => {
 /**
  *
  * @param {*} options
- * @param {string} token
  * @param {string} id
  */
 export const updateUser = async (
   dispatch,
   options,
-  token,
   id,
   router
 ) => {
   try {
-    const res = await api.members.update(options, token, id, dispatch, router);
+    const res = await api.members.update(options, id, dispatch, router);
     if (res && res.success) {
-      const user = await api.members.getMember(id, token, dispatch, router);
+      const user = await api.members.getMember(id, dispatch, router);
       if (user && user.success) {
         dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
         return user.body[0];
@@ -126,20 +124,18 @@ export const updateUser = async (
 /**
  *
  * @param {*} options
- * @param {string} token
  * @param {string} id
  */
 export const updateProfileInfo = async (
   dispatch,
   options,
-  token,
   id,
   router
 ) => {
   try {
-    const res = await api.members.update(options, token, id, dispatch, router);
+    const res = await api.members.update(options, id, dispatch, router);
     if (res && res.success) {
-      return await api.members.getMember(id, token, dispatch, router);
+      return await api.members.getMember(id, dispatch, router);
     }
     throw new Error("userReducer.js#updateUser(): Failed to retrieve user data.");
   } catch (err) {
@@ -148,9 +144,9 @@ export const updateProfileInfo = async (
 };
 
 
-export const getProfileInfo = async function (dispatch, token, id, router) {
+export const getProfileInfo = async function (dispatch, id, router) {
   try {
-    const user = await api.members.getMember(id, token, dispatch, router);
+    const user = await api.members.getMember(id, dispatch, router);
     // TODO: potentially eliminate this store update afterwards.
     dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
     return user.body[0];

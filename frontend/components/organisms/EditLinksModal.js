@@ -36,7 +36,7 @@ const URLField = ({label, name, placeholder, value, onHandleChange, error, error
 const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { token, user } = useSelector(state => state.userState);
+    const { user } = useSelector(state => state.userState);
 
     const facebookUrl = dataLoaded && user.links && user.links.find(l => l.type === "facebook")
                             ? user.links.find(l => l.type === "facebook").link : '';
@@ -124,7 +124,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                         {"type": "website", "link": websiteUrl},
                         {"type": "linkedin", "link": linkedInUrl}
                     ]
-                }, token, user._id, router)
+                }, user._id, router)
                 .then(res => {
                     if (res.success) {
                         dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });

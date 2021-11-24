@@ -84,10 +84,10 @@ const membersReducer = (state = membersInitialState, action) => {
 }
 export default membersReducer;
 
-export async function searchMembers(dispatch, token, options = { isSSR: true }, router) {
+export async function searchMembers(dispatch, options = { isSSR: true }, router) {
     try {
         dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.MEMBERS })
-        const res = await api.members.getAll(token, options, dispatch, router);
+        const res = await api.members.getAll(options, dispatch, router);
         if (res && res.success) {
             dispatch({
                 type: MemberReducerTypes.SET_ALL_MEMBERS,
@@ -102,13 +102,12 @@ export async function searchMembers(dispatch, token, options = { isSSR: true }, 
 /**
  * 
  * @param {*} dispatch 
- * @param {string} token 
  * @param {string} id 
  */
-export const lookupMember = async function(dispatch, token, id, router) {
+export const lookupMember = async function(dispatch, id, router) {
     try {
         dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.MEMBER})
-        const res = await api.members.getMember(id, token, dispatch, router);
+        const res = await api.members.getMember(id, dispatch, router);
         if (res.success && res.body && res.body.length > 0) {
             dispatch({
                 type: "ADD_LOADED_MEMBER",
@@ -124,10 +123,10 @@ export const lookupMember = async function(dispatch, token, id, router) {
     }
 };
 
-export const getFilters = async function(dispatch, token, router) {
+export const getFilters = async function(dispatch, router) {
     try {
         dispatch({ type: MemberReducerTypes.FETCHING_DATA, payload: DataFetchType.FILTERS })
-        const res = await api.members.getFilterOptions(token, dispatch, router);
+        const res = await api.members.getFilterOptions(dispatch, router);
         if (res.success && res.body) {
             dispatch({ type: MemberReducerTypes.LOAD_FILTERS, payload: res.body })
             return true
