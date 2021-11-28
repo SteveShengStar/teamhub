@@ -26,11 +26,12 @@ export default async (req, res) => {
                 })));
                 return;
             }
-            // unset expired token from cookie:
+
+            // unset expired token from cookie
             res.setHeader('Set-Cookie', cookie.serialize("token", "", {
                 httpOnly: true,
                 sameSite: 'lax',
-                expires: new Date(0),
+                expires: new Date(Date.now() - 1000),
                 path: '/'   // default path is current API url path.
             }));
             res.statusCode = 200;

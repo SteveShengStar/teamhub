@@ -68,6 +68,7 @@ export const userLogin = async (response, dispatch) => {
     if (user) {
       dispatch({
         type: UserTypes.RECEIVED_LOGIN,
+        payload: user,
         display: response.profileObj.name,
       });
     } else {
@@ -75,7 +76,6 @@ export const userLogin = async (response, dispatch) => {
     }
     return user;
   } catch (err) {
-    // TODO: Handle error
     throw new Error(err);
   }
 };
@@ -89,7 +89,6 @@ export const userLogout = async (userId, dispatch) => {
       console.log(res.error);
     }
   } catch (err) {
-    // TODO: Handle error
     console.error(err);
     throw new Error(err.toString());
   }
