@@ -150,7 +150,7 @@ const validProgramPattern = /^[A-Za-z,'-\s]*$/;
 const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
-    const { token, user, hydrated } = useSelector(state => state.userState);
+    const { user, hydrated } = useSelector(state => state.userState);
     const { filters } = useSelector(state => state.membersState);
     const { interests: interestOpts, skills: skillOpts } = filters;
 
@@ -177,8 +177,8 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     });
 
     useEffect(() => {
-        if (token && isEmpty(filters)) {
-            getFilters(dispatch, token, router);
+        if (isEmpty(filters)) {
+            getFilters(dispatch, router);
         }
     }, [hydrated]);
 
@@ -221,41 +221,34 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
-
-            // TODO: set "isShowingGhostLoader" boolean variable to true
-
-            setTimeout(function() {
-                updateProfileInfo(dispatch, {
-                    "name": {
-                        "first": formValues.firstName.trim(),
-                        "last": formValues.lastName.trim(),
-                        "display": formValues.display.trim()
-                    },
-                    "birthday": {
-                        "year": formValues.birthDate.split("-")[0],
-                        "month": formValues.birthDate.split("-")[1] - 1,
-                        "day": formValues.birthDate.split("-")[2]
-                    },
-                    "program": formValues.program.value.trim(),
-                    "interests": removeBadValuesAndDuplicates(interests),
-                    "skills": removeBadValuesAndDuplicates(skills),
-                    "stream": {
-                        ...user.stream,
-                        "currentSchoolTerm": formValues.term.value, 
-                    },
-                    "bio": formValues.bio.trim()              
-                }, token, user._id, router, false)
-                .then(res => {
-                    if (res.success) {
-                        dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
-                    }
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
-                    handleCloseModal();
-                }).catch(() => {
-                    // TODO: set "isShowingGhostLoader" boolean variable to false
-                    alert("An error occured when updating your profile information.");
-                });
-            }, 4000);
+            updateProfileInfo(dispatch, {
+                "name": {
+                    "first": formValues.firstName.trim(),
+                    "last": formValues.lastName.trim(),
+                    "display": formValues.display.trim()
+                },
+                "birthday": {
+                    "year": formValues.birthDate.split("-")[0],
+                    "month": formValues.birthDate.split("-")[1] - 1,
+                    "day": formValues.birthDate.split("-")[2]
+                },
+                "program": formValues.program.value.trim(),
+                "interests": removeBadValuesAndDuplicates(interests),
+                "skills": removeBadValuesAndDuplicates(skills),
+                "stream": {
+                    ...user.stream,
+                    "currentSchoolTerm": formValues.term.value, 
+                },
+                "bio": formValues.bio.trim()              
+            }, user._id, router, false)
+            .then(res => {
+                if (res.success) {
+                    dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+                }
+                handleCloseModal();
+            }).catch(() => {
+                alert("An error occured when updating your profile information.");
+            });
         }
     }
 
@@ -271,7 +264,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
     return (
         <>
-            {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
             <EditSettingsModal 
                 visible={visible} 
                 title="Edit Profile Information" 

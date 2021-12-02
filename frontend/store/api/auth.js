@@ -11,13 +11,13 @@ export const login = (response) => {
     }).then(res => res.json());
 }
 
-export const loginWithToken = (token, dispatch, router) => {
-    return refreshable('/api/auth/check', token, {}, dispatch, router)
+export const loginWithToken = (dispatch, router) => {
+    return refreshable('/api/auth/check', {}, dispatch, router)
 }
 
 
-export const logout = (token, userId) => {
-    return refreshable('/api/auth/logout', token, {
+export const logout = (userId) => {
+    return refreshable('/api/auth/logout', {
         method: 'POST',
         headers: {
             'Accept': 'application/json',

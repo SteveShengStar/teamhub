@@ -1,4 +1,5 @@
 const data = require('../../../backend/data/index');
+const cookie = require('cookie');
 
 // List of Origins that don't need to authenticate but can only access a limited subset of member data
 const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
@@ -6,8 +7,11 @@ const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
+        // Get the Access Token from the request headers
+        const token = cookie.parse(req.headers.cookie).token;
         const authStatus = BYPASS_AUTH_ORIGINS.includes(req.headers['origin']) 
-                            || await data.auth.checkAnyUser(req.headers['authorization'], res);
+                            || await data.auth.checkAnyUser(`Bearer ${token}`, res);
+                            
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             res.setHeader("Access-Control-Allow-Origin", req.headers['origin']);

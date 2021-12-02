@@ -30,16 +30,13 @@ export const executeRequest = (request) => {
  * redirecting to the correct page if error occurs. 
  * 
  * @param {string} endpoint 
- * @param {string} token
  * @param {*} options
  * @param {*} dispatch
  */
-export const refreshable = (endpoint, token, options, dispatch, router) => {
-
-    if (token == null) throw new Error("Null token for " + endpoint)
+export const refreshable = (endpoint, options, dispatch, router) => {
     return fetch(endpoint, {...options, headers: {
         ...(options.headers && { ...options.headers }),
-        authorization: `Bearer ${token}`
+        credentials: 'same-origin'  // Will send http-only cookie to backend.
     }})
         .then(res => res.json())
         .catch(err => {

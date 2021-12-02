@@ -20,9 +20,7 @@ const Home = () => {
     const theme = useContext(ThemeContext); // Using the theme (colours, fonts, etc.)  from  /frontend/components/theme.js
     const memberCardRef = useRef();
 
-    
-    const { token, hydrated, user } = useSelector(state => state.userState);  // token:    user authentication token. 
-                                                                              // hydrated: boolean flag -- "true" if the Redux store has been re-populated after a page-load/page-refresh
+    const { hydrated, user } = useSelector(state => state.userState);   // hydrated: boolean flag -- true if the Redux store has been re-populated after a page-load/page-refresh                                                             
     const { members, selectedMember, loadedMembers, fetchingData, fetchedMembers } = useSelector(state => state.membersState);
     
     // Group Action selection 
@@ -61,13 +59,13 @@ const Home = () => {
             });
             return;
         }
-        lookupMember(dispatch, token, id, router);
+        lookupMember(dispatch, id, router);
     };
 
     useEffect(() => {
         if (hydrated && !fetchingData) {
-            getFilters(dispatch, token, router).then(success => {
-                if (success) searchMembers(dispatch, token, {subteams: {"$in": user.subteams.map(st => st._id) }}, router);
+            getFilters(dispatch, router).then(success => {
+                if (success) searchMembers(dispatch, {subteams: {"$in": user.subteams.map(st => st._id) }}, router);
             });
         }
     }, [hydrated]);      /* hydrated is set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
@@ -89,7 +87,7 @@ const Home = () => {
 
         for (let i = 0; i < groupSelectedMembers.length; i++) {
           const id = groupSelectedMembers[i];
-          const res = await getMemberEmail(id, token, dispatch, router);
+          const res = await getMemberEmail(id, dispatch, router);
 
           if(res.success) emails.push(res.body[0].email);
         }

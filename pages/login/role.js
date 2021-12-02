@@ -16,7 +16,7 @@ import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 import {removeBadValuesAndDuplicates} from '../../frontend/helpers';
 
 const Role = () => {
-    const { user, token, hydrated } = useSelector(state => state.userState);
+    const { user, hydrated } = useSelector(state => state.userState);
     const filters = useSelector(state => state.membersState.filters);
     const router = useRouter();
     
@@ -62,8 +62,8 @@ const Role = () => {
     }
 
     useEffect(() => {
-        if (token && !filters.projects) {
-            getFilters(dispatch, token, router)
+        if (!filters.projects) {
+            getFilters(dispatch, router)
         }
     }, [hydrated])
 
@@ -78,7 +78,7 @@ const Role = () => {
             subteams: selectedSubteams.map(index => filters.subteams[index].name),
             projects: removeBadValuesAndDuplicates(selectedProjects),
             memberType: selectedRole.label
-        }, token, user._id, router).then(() => {
+        }, user._id, router).then(() => {
             router.push("/login/about");
         }).catch((e) => {
             console.log(e);

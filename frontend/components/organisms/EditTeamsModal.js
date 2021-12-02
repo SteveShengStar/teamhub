@@ -27,7 +27,7 @@ const subteamDisplayNames = {
 };
 
 const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
-  const { token, user } = useSelector((state) => state.userState);
+  const { user } = useSelector((state) => state.userState);
   const { filters } = useSelector((state) => state.membersState);
   const { projects: projectOpts } = filters;
   const router = useRouter();
@@ -57,17 +57,12 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
   }, [dataLoaded, visible]);
 
   const handleSave = () => {
-
-    // TODO: set "isShowingGhostLoader" boolean variable to true
-
-    setTimeout(function() {
       updateProfileInfo(
         dispatch,
         {
           projects: removeBadValuesAndDuplicates(selectedProjects),
           subteams: localSelectedTeams,
         },
-        token,
         user._id,
         router,
         false
@@ -75,13 +70,10 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
         if (res.success) {
             dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
         }
-        // TODO: set "isShowingGhostLoader" boolean variable to false
         handleCloseModal();
       }).catch(() => {
-        // TODO: set "isShowingGhostLoader" boolean variable to false
         alert("An error occured when updating your profile information.");
       });
-    }, 4000);
   };
 
   const toggleSelectItem = (team) => {
@@ -94,7 +86,6 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
 
   return (
     <>
-      {isShowingGhostLoader === true && <GhostLoadingScreenReactComponent/>}
       <EditSettingsModal
         visible={visible}
         title="Edit Teams &amp; Responsibilities"

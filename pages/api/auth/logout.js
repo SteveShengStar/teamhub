@@ -1,9 +1,12 @@
 const data = require('../../../backend/data/index');
+const cookie = require('cookie');
 
 export default async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = await data.auth.checkAnyUser(req.headers['authorization'], res);
+        // Get the Access Token from the request headers
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);        
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             
@@ -24,6 +27,13 @@ export default async (req, res) => {
                 return;
             }
 
+            // unset expired token from cookie
+            res.setHeader('Set-Cookie', cookie.serialize("token", "", {
+                httpOnly: true,
+                sameSite: 'lax',
+                expires: new Date(Date.now() - 1000),
+                path: '/'   // default path is current API url path.
+            }));
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 const res = await data.auth.logout(userId);

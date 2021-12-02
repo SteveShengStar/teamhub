@@ -183,7 +183,7 @@ const TodoList = () => {
   const [tasks, setTasks] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [bufferedItemIds, setBufferedItemIds] = useState([]);
-  const { token, user: {_id}, hydrated } = useSelector(state => state.userState);
+  const { user: {_id}, hydrated } = useSelector(state => state.userState);
 
   const handleButtonToggle = () => {
     setShowPendingTasks(!showPendingTasks);
@@ -198,7 +198,7 @@ const TodoList = () => {
   }
 
   const getTasks = async () => {
-    const res = await api.members.getMemberTasks(_id, token, undefined, dispatch, router);
+    const res = await api.members.getMemberTasks(_id, undefined, dispatch, router);
     if (res)
       setTasks(res.body.length > 0 ? res.body[0].tasks : []);
 
@@ -210,7 +210,7 @@ const TodoList = () => {
     const taskToUpdate = tasks.find(task => task._id === taskId);
     setBufferedItemIds([taskToUpdate._id]);
 
-    const res = await api.members.updateTaskStatus(_id, token, taskToUpdate.taskId._id, getOppositeStatus(), dispatch, router); // Update the status of the task.
+    const res = await api.members.updateTaskStatus(_id, taskToUpdate.taskId._id, getOppositeStatus(), dispatch, router); // Update the status of the task.
 
     if (res.success) {
       console.log("Successfully updated task status.");

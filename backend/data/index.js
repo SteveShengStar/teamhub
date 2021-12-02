@@ -10,6 +10,7 @@ if (process.env.TEAMHUB_ENV === 'testing') {
 } else {
     config = require('./config.json');
 }
+
 const data = {};
 
 data.connected = false;

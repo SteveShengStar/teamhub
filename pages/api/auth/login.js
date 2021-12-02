@@ -1,4 +1,5 @@
 const data = require('../../../backend/data/index');
+const cookie = require('cookie');
 
 export default async (req, res) => {
     await data.initIfNotStarted();
@@ -14,9 +15,21 @@ export default async (req, res) => {
         }
 
         res.statusCode = 200;
+
+        const lRep = await data.auth.login(req.body);  // NOTE: Sending token directly to backend to be stored on MongoDB.
+
+        const user = lRep[0];
+        res.setHeader('Set-Cookie', cookie.serialize("token", user.token, {
+            httpOnly: true,
+            sameSite: 'lax',
+            expires: new Date(user.tokenExpiry),
+            path: '/'   // default path is current API url path.
+        }));
+        // Strip user token info:
+        user.token = undefined;
+        user.tokenExpiry = undefined;
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
-            const res = await data.auth.login(req.body);
-            return res;
+            return lRep;
         })));
     } else {
         res.statusCode = 404;

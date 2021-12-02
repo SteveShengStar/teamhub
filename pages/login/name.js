@@ -13,7 +13,7 @@ import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 const Name = () => {
     const router = useRouter()
-    const { user, token,tempDisplayName } = useSelector(state => state.userState)
+    const { user, tempDisplayName } = useSelector(state => state.userState)
     const dispatch = useDispatch();
     const [ nameInput, setNameInput ] = useState(tempDisplayName || "");
 
@@ -29,7 +29,7 @@ const Name = () => {
 
         
         // Persist the newly entered user information to the database
-        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, token, user._id, router).then(user => {
+        updateUser(dispatch, { name: { display: nameInput, first: user.name.first, last: user.name.last }}, user._id, router).then(user => {
             useShouldRedirect(user, router)
         })
     }

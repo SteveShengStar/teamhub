@@ -30,7 +30,7 @@ const Settings = () => {
 
     const [ activeModal, setActiveModal ] = useState(false);
     const [ userDataLoaded, setUserDataLoaded ] = useState(false);
-    const { hydrated, token, user } = useSelector(state => state.userState);
+    const { hydrated, user } = useSelector(state => state.userState);
     
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
@@ -38,7 +38,7 @@ const Settings = () => {
 
     useEffect(() => {
         if (hydrated && !userDataLoaded) {
-            getProfileInfo(dispatch, token, user._id, router);
+            getProfileInfo(dispatch, user._id, router);
             setUserDataLoaded(true);
         }
     }, [hydrated]);
