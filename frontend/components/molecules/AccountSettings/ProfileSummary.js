@@ -57,25 +57,25 @@ const AvatarWrapperComponent = ({ children }) => {
     );
 };
 
-const ProfileSummary = ({isLoaded = false, 
+const ProfileSummary = ({dataLoaded = false, 
                         firstname = "", 
                         lastname = "", 
                         birthday = undefined, 
                         program = "", 
                         schoolterm = "", 
                         email = ""}) => {
-    birthday = (isLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
+    birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
     birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
     const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-birthday-cake', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
     const userInformation = {
         firstName: {
             label: 'First Name',
-            value: isLoaded ? firstname : '' 
+            value: firstname
         },
         lastName: {
             label: "Last Name",
-            value: isLoaded ? lastname : ''
+            value: lastname
         },
         birthDay: {
             label: "Birthday",
@@ -87,11 +87,11 @@ const ProfileSummary = ({isLoaded = false,
         },
         term: {
             label: "Term",
-            value: (isLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm)) ? SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm).label : ''
+            value: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm)) ? SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm).label : ''
         },
         email: {
             label: "Email",
-            value: isLoaded ? email : ''
+            value: email
         }
     };
 

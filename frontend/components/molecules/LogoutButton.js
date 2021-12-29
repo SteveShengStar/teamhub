@@ -11,12 +11,11 @@ import useShouldRedirect from '../../hooks/useShouldRedirect';
 const LogoutButton = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    const { token } = useSelector(state => state.userState);
     const { _id: userId } = useSelector(state => state.userState.user);
 
     const logOut = () => {
         console.log("Logging Out - Begin");
-        userLogout(token, userId, dispatch).then(() => {
+        userLogout(userId, dispatch).then(() => {
             useShouldRedirect({}, router);
             console.log("Logging Out - Complete");
         });

@@ -27,6 +27,7 @@ constants.js
 uploads/*
 *.deb
 pages/caldemo.js
+backend/data/index.js
 
 # debug
 npm-debug.log*

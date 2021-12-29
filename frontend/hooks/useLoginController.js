@@ -15,12 +15,12 @@ import { UserTypes } from "../store/reducers/userReducer"
  */
 const useLoginController = (loginTransition, dispatch, route) => {
     const router = useRouter()
-    const { hydrated, token, user } = useSelector(state => state.userState)
+    const { hydrated, user } = useSelector(state => state.userState)
 
     useEffect(() => {
-        if (hydrated && token) {
+        if (hydrated) {
             // Authenticate and check the validity of the user access token
-            api.auth.loginWithToken(token, dispatch, router).then(user => {
+            api.auth.loginWithToken(dispatch, router).then(user => {
                 dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user }) // Update the Redux Store
 
                 // Redirect the user (if necessary) to the appropriate webpage

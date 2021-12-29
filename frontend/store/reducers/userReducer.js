@@ -16,7 +16,6 @@ export const UserTypes = new Proxy(
 
 export const usersInitialState = {
   user: {},
-  token: '',
   tempDisplayName: '',
   hydrated: false,
 };
@@ -32,21 +31,18 @@ const userReducer = (state = usersInitialState, action) => {
       return {
         ...state,
         user: action.payload,
-        ...(action.token && { token: action.token }),
         ...(action.display && { tempDisplayName: action.display }),
       };
     case UserTypes.RECEIVED_LOGOUT:
       return {
         ...state,
         user: {},
-        token: '',
         tempDisplayName: '',
       };
     case UserTypes.FAILED_LOGIN: // TODO: look at what this behaviour will lead to
       return {
         ...state,
         user: {},
-        token: '',
       };
     case 'persist/REHYDRATE':
       const userState = action.payload && action.payload.userState;
@@ -69,11 +65,10 @@ export const userLogin = async (response, dispatch) => {
   try {
     const res = await api.auth.login(response);
     const user = (res && res.body && res.body[0]) || res.body;
-    if (user && user.token) {
+    if (user) {
       dispatch({
         type: UserTypes.RECEIVED_LOGIN,
         payload: user,
-        token: user.token,
         display: response.profileObj.name,
       });
     } else {
@@ -81,21 +76,19 @@ export const userLogin = async (response, dispatch) => {
     }
     return user;
   } catch (err) {
-    // TODO: Handle error
     throw new Error(err);
   }
 };
 
-export const userLogout = async (token, userId, dispatch) => {
+export const userLogout = async (userId, dispatch) => {
   try {
-    const res = await api.auth.logout(token, userId);
+    const res = await api.auth.logout(userId);
     if (res.success) {
       dispatch({ type: UserTypes.RECEIVED_LOGOUT });
     } else {
       console.log(res.error);
     }
   } catch (err) {
-    // TODO: Handle error
     console.error(err);
     throw new Error(err.toString());
   }
@@ -104,38 +97,55 @@ export const userLogout = async (token, userId, dispatch) => {
 /**
  *
  * @param {*} options
- * @param {string} token
  * @param {string} id
  */
 export const updateUser = async (
   dispatch,
   options,
-  token,
   id,
-  router,
-  signUp = true
+  router
 ) => {
   try {
-    // TODO: think about just doing the post request only. RN, we need a secnd. request becuase first request has missing fields.
-    const res = await api.members.update(options, token, id, dispatch, router);
+    const res = await api.members.update(options, id, dispatch, router);
     if (res && res.success) {
-      const user = await api.members.getMember(id, token, dispatch, router);
+      const user = await api.members.getMember(id, dispatch, router);
       if (user && user.success) {
-        if (signUp) {
-          dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
-        } else dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
+        dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user.body[0] });
         return user.body[0];
       }
     }
-    return;
+    throw new Error("userReducer.js#updateUser(): Failed to retrieve user data.");
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export const getProfileInfo = async function (dispatch, token, id, router) {
+/**
+ *
+ * @param {*} options
+ * @param {string} id
+ */
+export const updateProfileInfo = async (
+  dispatch,
+  options,
+  id,
+  router
+) => {
   try {
-    const user = await api.members.getMember(id, token, dispatch, router);
+    const res = await api.members.update(options, id, dispatch, router);
+    if (res && res.success) {
+      return await api.members.getMember(id, dispatch, router);
+    }
+    throw new Error("userReducer.js#updateUser(): Failed to retrieve user data.");
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+
+export const getProfileInfo = async function (dispatch, id, router) {
+  try {
+    const user = await api.members.getMember(id, dispatch, router);
     // TODO: potentially eliminate this store update afterwards.
     dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
     return user.body[0];

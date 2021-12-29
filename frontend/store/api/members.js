@@ -2,15 +2,14 @@ import { refreshable } from './baseApi';
 
 /**
  * Search for all members in the database with filter options
- * @param {string} token
  * @param {*} filterOptions 
  * @returns {Promise<{name: string, subteam: string, role: string, imageUrl: string}[]>} members
  */
-export function getAll(token, options = {isSSR: true}, dispatch, router) {
+export function getAll(options = {isSSR: true}, dispatch, router) {
   if (options) {
     delete options.isSSR;
   }
-  return refreshable("/api/members/search", token, {
+  return refreshable("/api/members/search", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -27,13 +26,13 @@ export function getAll(token, options = {isSSR: true}, dispatch, router) {
  * @param {string} id 
  * @returns {Promise<Member>} members
  */
-export function getMember(id, token, dispatch, router) {
-  return refreshable(`/api/members/${id}/info`, token, {}, dispatch, router)
+export function getMember(id, dispatch, router) {
+  return refreshable(`/api/members/${id}/info`, {}, dispatch, router)
 }
 
 
-export function getMemberEmail(id, token, dispatch, router) {
-  return refreshable(`/api/members/${id}/email`, token, {}, dispatch, router)
+export function getMemberEmail(id, dispatch, router) {
+  return refreshable(`/api/members/${id}/email`, {}, dispatch, router)
 }
 
 
@@ -42,8 +41,8 @@ export function getMemberEmail(id, token, dispatch, router) {
  * @param {string} id 
  * @returns list of tasks belonging to id
  */
-export function getMemberTasks(id, token, status, dispatch, router) {
-  return refreshable(`/api/members/${id}/tasks`, token, {
+export function getMemberTasks(id, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/tasks`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -56,11 +55,10 @@ export function getMemberTasks(id, token, status, dispatch, router) {
 /**
  * 
  * @param {*} options 
- * @param {string} token 
  * @param {string} id
  */
-export function update(options, token, id, dispatch, router) {
-  return refreshable(`/api/members/${id}/update`, token, {
+export function update(options, id, dispatch, router) {
+  return refreshable(`/api/members/${id}/update`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -71,13 +69,12 @@ export function update(options, token, id, dispatch, router) {
 
 /**
  * 
- * @param {string} token 
  * @param {string} id
  * @param {string} taskId
  * @param {string} status: the new status of the task: [pending, complete, irrelevant]
  */
-export function updateTaskStatus(id, token, taskId, status, dispatch, router) {
-  return refreshable(`/api/members/${id}/updateTaskStatus`, token, {
+export function updateTaskStatus(id, taskId, status, dispatch, router) {
+  return refreshable(`/api/members/${id}/updateTaskStatus`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -86,10 +83,7 @@ export function updateTaskStatus(id, token, taskId, status, dispatch, router) {
   }, dispatch, router)
 }
 
-/**
- * 
- * @param {string} token 
- */
-export function getFilterOptions(token, dispatch, router) {
-  return refreshable(`/api/filters`, token, {}, dispatch, router)
+
+export function getFilterOptions(dispatch, router) {
+  return refreshable(`/api/filters`, {}, dispatch, router)
 }
