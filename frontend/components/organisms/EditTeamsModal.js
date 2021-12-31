@@ -10,7 +10,7 @@ import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
-import { updateProfileInfo } from '../../store/reducers/userReducer';
+import { updateProfileInfo, UserTypes } from '../../store/reducers/userReducer';
 import { filter, capitalize } from 'lodash';
 
 // Subteam ID to String Mapping

@@ -63,12 +63,12 @@ const Home = () => {
     };
 
     useEffect(() => {
-        if (hydrated && !fetchingData) {
+        if (hydrated && user && !fetchingData) {
             getFilters(dispatch, router).then(success => {
                 if (success) searchMembers(dispatch, {subteams: {"$in": user.subteams.map(st => st._id) }}, router);
             });
         }
-    }, [hydrated]);      /* hydrated is set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
+    }, [hydrated, user]);      /* hydrated is set to true once data is re-loaded into the Redux store after a page-refresh/page-reload */ 
 
     useEffect(() => {
         if (selectedMember._id) {

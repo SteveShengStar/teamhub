@@ -24,6 +24,7 @@ const Name = () => {
         if (!nameInput) {
             // If user did not specify a nameInput, display error.
             window.alert("No name entered!")
+            return;
         }
         loginTransition.setVisible(false)
 

@@ -12,7 +12,7 @@ import { getFilters } from '../../store/reducers/membersReducer';
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
-import { updateProfileInfo } from "../../store/reducers/userReducer";
+import { updateProfileInfo, UserTypes } from "../../store/reducers/userReducer";
 
 import isBefore from 'validator/lib/isBefore';
 import {isEmpty} from 'lodash';

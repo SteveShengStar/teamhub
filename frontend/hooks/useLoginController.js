@@ -31,19 +31,15 @@ const useLoginController = (loginTransition, dispatch, route) => {
                 console.error(err);
 
                 // Redirect the user (if necessary) to the appropriate webpage
-                if (!useShouldRedirect(user,router)) {
+                if (!useShouldRedirect(user, router)) {
                     loginTransition.show()
                 }
             })
             return;
         }
-        if (route && route === '/login') {
-            loginTransition.show();
-            return;
-        }
 
         // Redirect user to initial login/signup page if they tried accessing the 2nd, 3rd, etc. step of the signup process directly
-        if (hydrated && route && route.startsWith('/login')) {
+        if (hydrated && router.pathname && router.pathname.startsWith('/login')) {
             if (!useShouldRedirect(user, router)) {
                 loginTransition.show();
             }

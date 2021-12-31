@@ -16,7 +16,7 @@ export const loginWithToken = (dispatch, router) => {
 }
 
 
-export const logout = (userId) => {
+export const logout = (userId, dispatch, router) => {
     return refreshable('/api/auth/logout', {
         method: 'POST',
         headers: {
@@ -24,5 +24,6 @@ export const logout = (userId) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({userId})
-    });
+    },
+    dispatch, router);
 }

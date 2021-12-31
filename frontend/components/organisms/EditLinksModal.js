@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
 import {SystemComponent} from '../atoms/SystemComponents';
-import { updateProfileInfo } from "../../store/reducers/userReducer";
+import { updateProfileInfo, UserTypes } from "../../store/reducers/userReducer";
 
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
@@ -127,7 +127,8 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                     dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
                 }
                 handleCloseModal();
-            }).catch(() => {
+            }).catch((err) => {
+                console.log(err);
                 alert("An error occured when updating your profile information.");
             });
         }

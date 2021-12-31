@@ -80,18 +80,13 @@ export const userLogin = async (response, dispatch) => {
   }
 };
 
-export const userLogout = async (userId, dispatch) => {
-  try {
-    const res = await api.auth.logout(userId);
-    if (res.success) {
+export const userLogout = async (userId, dispatch, router) => {
+    const res = await api.auth.logout(userId, dispatch, router);
+    if (res && res.success) {
       dispatch({ type: UserTypes.RECEIVED_LOGOUT });
     } else {
-      console.log(res.error);
+      console.error("Received a 403 return code. The user login token must have expired.");
     }
-  } catch (err) {
-    console.error(err);
-    throw new Error(err.toString());
-  }
 };
 
 /**
