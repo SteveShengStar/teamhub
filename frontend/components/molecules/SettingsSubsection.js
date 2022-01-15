@@ -19,7 +19,8 @@ const ListItemWrapper = ({variant, label}) => (
 const SettingsSubsection = ({type,
                             headerText, 
                             labelValues,
-                            children}) => {
+                            children,
+                            defaultDisplayText = "No entries to show. Click Edit to Add Info here."}) => {
 
     let sectionBody;
 
@@ -30,7 +31,7 @@ const SettingsSubsection = ({type,
         case 'list':
         default:
             if (labelValues.length === 0) {
-                sectionBody = <SystemComponent>You have no entries so far. Click Edit to add entries.</SystemComponent>
+                sectionBody = <SystemComponent>{defaultDisplayText}</SystemComponent>
             }
             else {
                 sectionBody = labelValues.map((labelValue, i) => (
