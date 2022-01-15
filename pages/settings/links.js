@@ -85,7 +85,7 @@ const LinksSection = ({sectionTitle, setActiveModal, userDataLoaded}) => {
                                 </NonUnderlinedLink>
                             ) : (
                                 <AddInfoPrompt alt={altText[acctType]} onClick={e => setActiveModal(ACTIVE_MODAL.EXTERNAL_LINKS)}>
-                                    {"Click to add a link"}
+                                    {"Click to add link"}
                                 </AddInfoPrompt>
                             )}
                         </SystemComponent>
