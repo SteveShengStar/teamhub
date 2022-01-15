@@ -20,11 +20,13 @@ const TeamsSection = ({sectionTitle, setActiveModal, userDataLoaded}) => {
                 type='list'
                 isLabelListSection={true}
                 labelValues={subteams}
+                defaultDisplayText='No Subteams to show. Click Edit to choose the subteam you belong to.'
             />
             <SettingsSubsection headerText='My Projects'
                 type='list'
                 isLabelListSection={true}
                 labelValues={projects}
+                defaultDisplayText='No Projects to show. Click Edit to choose projects you are working on.'
             />
         </SettingsSection>
     )
