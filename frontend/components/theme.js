@@ -123,6 +123,11 @@ const theme = {
     title: 'futura-pt',
     body: 'Nunito Sans',
   },
+  textInputHeight: {
+    small: '26px',
+    medium: '26px',
+    large: '34px',
+  },
   fontSizes,
   fontWeights,
   space,
