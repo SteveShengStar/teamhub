@@ -26,6 +26,19 @@ const FormHeader = ({title, marginBottom}) => {
 const RegistrationForm = () => {
     const theme = useContext(ThemeContext);
 
+    const [formValues, setFormValues] = useState({
+        fullName:  "",
+        phoneNumber: null, 
+        email: "", 
+        program: "", 
+        studentId:null,  
+    });
+
+    const handleInputChange = (name, value) => {
+        console.log(value)
+        setFormValues({...formValues, [name]: value});
+    }
+
     return (
         <PageTemplate>
             <SystemComponent>
@@ -47,10 +60,87 @@ const RegistrationForm = () => {
                         justifyItems="start"
                         overflowY="auto"
                     >
-                        <FieldSection title='First Name' />
-                        <FieldSection title="Checkbox" type="checkbox" />
-                        <FieldSection title="Radio Button" type="radio" />
+                        <FieldSection 
+                        title='Full Name '
+                        asterik={true}                     
+                            name="fullName"
+                            value={formValues['fullName']}
+                            onChange={handleInputChange}        
+                            />
+                        <SystemComponent></SystemComponent>
                     </SystemComponent>
+                    <SystemComponent
+                        display="grid"
+                        gridTemplateColumns="1fr"
+                        gridAutoRows="autofill"
+                        gridAutoFlow="row"
+                        gridGap={["cardPadding", "cardMargin", "cardMargin"]}
+                        justifyItems="start"
+                        overflowY="auto"
+                    >
+                        <FieldSection 
+                        title='Phone Number'      
+                        name="phoneNumber"
+                        value={formValues['phoneNumber']} 
+                        onChange={handleInputChange}
+                        />
+                        
+                        <SystemComponent></SystemComponent>
+                    </SystemComponent>
+                    <SystemComponent
+                        display="grid"
+                        gridTemplateColumns="1fr"
+                        gridAutoRows="autofill"
+                        gridAutoFlow="row"
+                        gridGap={["cardPadding", "cardMargin", "cardMargin"]}
+                        justifyItems="start"
+                        overflowY="auto"
+                    >
+                        <FieldSection 
+                        title='Personal Email Address'                             
+                        name="email"
+                        value={formValues['email']}
+                        onChange={handleInputChange}
+                        />
+
+                        <SystemComponent></SystemComponent>
+                    </SystemComponent>
+                    <SystemComponent
+                        display="grid"
+                        gridTemplateColumns="1fr"
+                        gridAutoRows="autofill"
+                        gridAutoFlow="row"
+                        gridGap={["cardPadding", "cardMargin", "cardMargin"]}
+                        justifyItems="start"
+                        overflowY="auto"
+                    >
+                        <FieldSection 
+                        title='Program '
+                        asterik={true}                     
+                        name="program"
+                        value={formValues['[program]']}
+                        onChange={handleInputChange}        
+                        />
+                        <SystemComponent></SystemComponent>
+                    </SystemComponent>
+                    <SystemComponent
+                        display="grid"
+                        gridTemplateColumns="1fr"
+                        gridAutoRows="autofill"
+                        gridAutoFlow="row"
+                        gridGap={["cardPadding", "cardMargin", "cardMargin"]}
+                        justifyItems="start"
+                        overflowY="auto"
+                    >
+                        <FieldSection 
+                        title='Student ID # ' 
+                        asterik={true}
+                        name="studentId"
+                        value={formValues['[studentId]']}
+                        onChange={handleInputChange}
+                         /> 
+                        <SystemComponent></SystemComponent>
+                    </SystemComponent> 
                 </Card>
             </SystemComponent>
         </PageTemplate>
