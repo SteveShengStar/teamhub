@@ -4,6 +4,8 @@ import { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
+import Checkbox from '../../atoms/Checkbox';
+import Radio from '../../atoms/Radio';
 
 const TitleSection = ({text}) => {
     return (
@@ -38,6 +40,10 @@ const FieldSection = ({title, description='', type="textbox"}) => {
                         theme.textInputHeight.large]} 
                         width="600px"
                     />
+                )
+            case 'checkbox':
+                return (
+                   <Checkbox></Checkbox>
                 )
             default:
                 return <></>;
