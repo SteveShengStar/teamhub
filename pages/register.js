@@ -48,8 +48,7 @@ const RegistrationForm = () => {
                         overflowY="auto"
                     >
                         <FieldSection title='First Name' />
-                        <SystemComponent>as</SystemComponent>
-                        <SystemComponent>as</SystemComponent>
+                        <FieldSection title="Checkbox" type="checkbox" />
                     </SystemComponent>
                 </Card>
             </SystemComponent>
