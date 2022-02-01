@@ -5,15 +5,16 @@ import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
 
-const TitleSection = ({text}) => {
+const TitleSection = ({text, asterik}) => {
     return (
         <SystemComponent>
             <Header4>
                 {text}
+                {asterik && <span style={{color: 'red'}}>*</span>}
             </Header4>
         </SystemComponent>
     )
-}
+} 
 
 const DescriptionSection = ({text}) => {
     return (
@@ -25,10 +26,16 @@ const DescriptionSection = ({text}) => {
     )
 }
 
-const FieldSection = ({title, description='', type="textbox"}) => {
+const FieldSection = ({title, description='', type="textbox", asterik, onChange, name, value}) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
+
+
+        // const handleChange = ({target}) => {
+        //     e.preventDefault()
+        //     setFormValue(target.value)
+        // }
         switch (type) {
             case 'textbox':
                 return (
@@ -37,6 +44,9 @@ const FieldSection = ({title, description='', type="textbox"}) => {
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large]} 
                         width="600px"
+                        name={name}
+                        value={value}
+                        onChange={(e) => onChange(name, e.target.value)}
                     />
                 )
             default:
@@ -50,7 +60,7 @@ const FieldSection = ({title, description='', type="textbox"}) => {
             textAlign='center'
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
-                <TitleSection text={title} />
+                <TitleSection text={title} asterik={asterik} />
                 <DescriptionSection text={description} />
             </SystemComponent>
 
