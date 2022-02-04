@@ -5,7 +5,7 @@ import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
 import Checkbox from '../../atoms/Checkbox';
-import Radio from '../../atoms/Radio';
+import RadioButton from '../../atoms/Radio';
 
 const TitleSection = ({text}) => {
     return (
@@ -43,7 +43,11 @@ const FieldSection = ({title, description='', type="textbox"}) => {
                 )
             case 'checkbox':
                 return (
-                   <Checkbox></Checkbox>
+                   <Checkbox/>
+                )
+            case 'radio':
+                return (
+                    <RadioButton/>
                 )
             default:
                 return <></>;
