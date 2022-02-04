@@ -1,109 +1,61 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useState } from 'react';
 import styled from "styled-components";
+import { SystemComponent } from './SystemComponents';
 
-// Credits: https://codesandbox.io/s/react-styled-components-radio-button-qpxul?file=/src/index.js
+// Credits: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+const RadioButton = () => {
+  const [selected, setSelected] = useState(false);
 
-const { useState } = React;
-
-const Radio = () => {
-  const [select, setSelect] = useState("optionA");
-
-  const handleSelectChange = event => {
-    const value = event.target.value;
-    setSelect(value);
-  };
   return (
-    <Wrapper>
-      <Item>
-        <RadioButton
-          type="radio"
-          name="radio"
-          value="optionA"
-          checked={select === "optionA"}
-          onChange={event => handleSelectChange(event)}
-        />
-        <RadioButtonLabel />
-        <div>Choose Pickup</div>
-      </Item>
-      <Item>
-        <RadioButton
-          type="radio"
-          name="radio"
-          value="optionB"
-          checked={select === "optionB"}
-          onChange={event => handleSelectChange(event)}
-        />
-        <RadioButtonLabel />
-        <div>Choose Delivery</div>
-      </Item>
+    <Wrapper onClick={() => setSelected(!selected)} selected={selected} >
+      <BigCircle />
+      <SmallCircle />
     </Wrapper>
   );
 };
+export default RadioButton;
 
-const Wrapper = styled.div`
-  height: auto;
-  width: 100%;
-  padding: 0px 16px 24px 16px;
-  box-sizing: border-box;
-`;
-
-const Item = styled.div`
-  display: flex;
-  align-items: center;
-  height: 48px;
-  position: relative;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  border-radius: 2px;
-  margin-bottom: 10px;
-`;
-
-const RadioButtonLabel = styled.label`
+const BigCircle = styled(SystemComponent)`
   position: absolute;
-  top: 25%;
-  left: 4px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: white;
-  border: 1px solid #ccc;
-`;
-const RadioButton = styled.input`
-  opacity: 0;
-  z-index: 1;
-  cursor: pointer;
-  width: 25px;
+  top: 0;
+  left: 0;
   height: 25px;
-  margin-right: 10px;
-  &:hover ~ ${RadioButtonLabel} {
-    background: #ccc;
-    &::after {
-      content: "\f005";
-      font-family: "FontAwesome";
-      display: block;
-      color: white;
-      width: 12px;
-      height: 12px;
-      margin: 4px;
-    }
+  width: 25px;
+  border: 1px solid ${props => props.theme.colors.greys[3]};
+  border-radius: 100%;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.3);
+`;
+
+const SmallCircle = styled(SystemComponent)`
+  position: absolute;
+  top: 7px;
+  left: 7px;
+  width: 13px;
+  height: 13px;
+  background-color: white;
+  border-radius: 100%;
+`;
+
+const Wrapper = styled(SystemComponent)`
+  display: block;
+  position: relative;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  ${BigCircle} {
+    background-color: ${props => props.selected ? props.theme.colors.primaryBlue : props.theme.colors.white};
   }
-  &:checked + ${Item} {
-    background: yellowgreen;
-    border: 2px solid yellowgreen;
+
+  &:hover ${BigCircle} {
+    background-color: ${props => props.selected ? props.theme.colors.primaryBlue : props.theme.colors.greys[1]};
   }
-  &:checked + ${RadioButtonLabel} {
-    background: yellowgreen;
-    border: 1px solid yellowgreen;
-    &::after {
-      content: "\f005";
-      font-family: "FontAwesome";
-      display: block;
-      color: white;
-      width: 12px;
-      height: 12px;
-      margin: 4px;
-    }
+
+  &:hover ${SmallCircle} {
+    display: ${props => props.selected ? "block" : "none"};
   }
 `;
-export default Radio;

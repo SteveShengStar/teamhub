@@ -49,6 +49,7 @@ const RegistrationForm = () => {
                     >
                         <FieldSection title='First Name' />
                         <FieldSection title="Checkbox" type="checkbox" />
+                        <FieldSection title="Radio Button" type="radio" />
                     </SystemComponent>
                 </Card>
             </SystemComponent>
