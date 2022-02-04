@@ -3,11 +3,9 @@ import styled from 'styled-components';
 import { SystemComponent } from './SystemComponents';
 
 // Credits: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
-const Checkbox = () => {  
-    const [checked, setChecked] = useState(false);  
-
+const Checkbox = ({checked, handleClick, value}) => {
     return (
-      <Wrapper onClick={() => setChecked(!checked)} checked={checked} >
+      <Wrapper onClick={() => handleClick(value)} checked={checked} >
         <Box />
         <Checkmark />
       </Wrapper>
