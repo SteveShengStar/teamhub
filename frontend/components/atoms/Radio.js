@@ -3,11 +3,9 @@ import styled from "styled-components";
 import { SystemComponent } from './SystemComponents';
 
 // Credits: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
-const RadioButton = () => {
-  const [selected, setSelected] = useState(false);
-
+const RadioButton = ({selected}) => {
   return (
-    <Wrapper onClick={() => setSelected(!selected)} selected={selected} >
+    <Wrapper selected={selected} >
       <BigCircle />
       <SmallCircle />
     </Wrapper>
