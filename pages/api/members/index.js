@@ -7,7 +7,7 @@ const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
-        const authStatus = false;
+        let authStatus = false;
 
         // Get the Access Token from the request headers
         if(BYPASS_AUTH_ORIGINS.includes(req.headers['origin'])) {
