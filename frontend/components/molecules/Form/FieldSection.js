@@ -5,12 +5,12 @@ import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
 
-const TitleSection = ({text, asterik}) => {
+const TitleSection = ({text, required}) => {
     return (
         <SystemComponent>
             <Header4>
                 {text}
-                {asterik && <span style={{color: 'red'}}>*</span>}
+                {required && <span style={{color: 'red'}}>*</span>}
             </Header4>
         </SystemComponent>
     )
@@ -26,16 +26,11 @@ const DescriptionSection = ({text}) => {
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", asterik, onChange, name, value}) => {
+const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
 
-
-        // const handleChange = ({target}) => {
-        //     e.preventDefault()
-        //     setFormValue(target.value)
-        // }
         switch (type) {
             case 'textbox':
                 return (
@@ -43,7 +38,7 @@ const FieldSection = ({title, description='', type="textbox", asterik, onChange,
                         theme.textInputHeight.small, 
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large]} 
-                        width="600px"
+                        width={["90%", "90%", "600px"]}
                         name={name}
                         value={value}
                         onChange={(e) => onChange(name, e.target.value)}
@@ -60,13 +55,13 @@ const FieldSection = ({title, description='', type="textbox", asterik, onChange,
             textAlign='center'
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
-                <TitleSection text={title} asterik={asterik} />
-                <DescriptionSection text={description} />
+                <TitleSection text={title} required={required} />
             </SystemComponent>
 
             <SystemComponent>
                 {renderInputField(type)}
             </SystemComponent>
+            {hasError && <SystemComponent textAlign="left" color="red">{errorText}</SystemComponent>}
         </SystemComponent>
     )
 }
