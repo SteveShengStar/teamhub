@@ -4,6 +4,8 @@ import { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
+import RadioSection from '../../molecules/Form/RadioSection';
+import CheckboxSection from '../../molecules/Form/CheckboxSection';
 
 const TitleSection = ({text, required}) => {
     return (
@@ -26,7 +28,7 @@ const DescriptionSection = ({text}) => {
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText }) => {
+const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
@@ -43,6 +45,14 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                         value={value}
                         onChange={(e) => onChange(name, e.target.value)}
                     />
+                )
+            case 'checkbox':
+                return (
+                   <CheckboxSection options={["option 1", "option 2", "option 3"]}/>
+                )
+            case 'radio':
+                return (
+                    <RadioSection options={["option 1", "option 2", "option 3"]}/>
                 )
             default:
                 return <></>;

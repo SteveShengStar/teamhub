@@ -154,6 +154,9 @@ const RegistrationForm = () => {
                             hasError={hasError['studentId']} 
                             errorText="Student ID must be an 8 digit number."   
                             /> 
+                            <FieldSection title='First Name' />
+                            <FieldSection title="Checkbox" type="checkbox" />
+                            <FieldSection title="Radio Button" type="radio" />
                         <SystemComponent><Button onClick={handleSave}>Submit</Button></SystemComponent>
                     </SystemComponent> 
                 </Card>

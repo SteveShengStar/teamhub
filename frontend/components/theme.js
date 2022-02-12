@@ -101,9 +101,12 @@ const theme = {
   colors: {
     theme: themeYellow,
     action: primaryBlue,
+    primaryBlue,
     alertAction: alertRed,
     foreground: black,
     background: white,
+    black,
+    white,
     greys,
     inactive: greys[2],
     messagesBackground: messagesBlue,
