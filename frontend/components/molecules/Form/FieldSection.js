@@ -48,11 +48,19 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                 )
             case 'checkbox':
                 return (
-                   <CheckboxSection options={["option 1", "option 2", "option 3"]}/>
+                   <CheckboxSection 
+                        options={options} 
+                        name={name} 
+                        selectedOptions={value}  
+                        setSelectedOptions={onChange}/>
                 )
             case 'radio':
                 return (
-                    <RadioSection options={["option 1", "option 2", "option 3"]}/>
+                    <RadioSection options={options}
+                        selectedOption={value}
+                        name={name}
+                        setSelectedOption={onChange}
+                    />
                 )
             default:
                 return <></>;

@@ -7,9 +7,34 @@ import Subtitle from "../frontend/components/atoms/Subtitle";
 import Card from '../frontend/components/atoms/Card';
 import FieldSection from "../frontend/components/molecules/Form/FieldSection";
 import Button from '../frontend/components/atoms/Button';
+
+const TERMDESCRIPTIONS = [
+    'Academic term, active on Waterloop in-person', 
+    'Academic term, active on Waterloop remotely', 
+    'Co-op term, working on Waterloop remotely', 
+    'Co-op term, active on Waterloop in-person', 
+    'Not active on Waterloop this term', 
+    'Other',
+];
+
+const PREVTERMS = ['F21', 'S21', 'W21', 'F20', "S20",'W20',];
+
+const FUTURETERMS = ['W22', 'S22', 'F22', 'W23', "S23",'F23',];
+
+const MEMBERSHIP = [
+    'Member', 
+    'Exec/lead/advisor', 
+    'Coop', 
+    'Not active on Waterloop this term',
+];
+
+const REQUIREMENTS = [
+    'Yes, and I submitted proof', 
+    'No',
+];
+
 const FormHeader = ({title, marginBottom}) => {
     const theme = useContext(ThemeContext);
-
     return (
         <SystemComponent
             fontSize={theme.fontSizes.header3}
@@ -31,7 +56,15 @@ const RegistrationForm = () => {
         phoneNumber: null, 
         email: "", 
         program: "", 
-        studentId:null,  
+        studentId: null,  
+        termDescription: "", 
+        membership: "", 
+        previousTerms: [], 
+        futureTerms: [], 
+        safetyReq: false,
+        whmis: false, 
+        machineShopOrientation: false,
+
     });
 
     const [hasError, setHasError] = useState({
@@ -39,7 +72,7 @@ const RegistrationForm = () => {
         phoneNumber: false,
         email: false, 
         program: false, 
-        studentId: false
+        studentId: false,
     });
 
     const handleSave = () => {
@@ -85,6 +118,10 @@ const RegistrationForm = () => {
             };
         }
         setFormValues({...formValues, [name]: value});
+    }
+
+    const handleFieldChange = (name, value) => {
+        setFormValues({...formValues, [name]: value})
     }
 
     return (
@@ -152,8 +189,71 @@ const RegistrationForm = () => {
                             value={formValues['studentId']}
                             onChange={handleInputChange}
                             hasError={hasError['studentId']} 
-                            errorText="Student ID must be an 8 digit number."   
+                            errorText="Student ID must have 8 digits."   
                             /> 
+                        <FieldSection 
+                            title="Which describes you best?" 
+                            type="radio" 
+                            name="termDescription"
+                            required={true} 
+                            options={TERMDESCRIPTIONS}
+                            onChange={handleFieldChange}
+                            value={formValues.termDescription}
+                            />
+                        <FieldSection
+                            title="Membership Type" 
+                            name="membership"
+                            type="radio" 
+                            required={true}
+                            options={MEMBERSHIP}
+                            value={formValues.membership}
+                            onChange={handleFieldChange}
+                            />
+                        <FieldSection 
+                            title="Previous Terms" 
+                            type="checkbox" 
+                            name="previousTerm"
+                            value={formValues['previousTerms']}
+                            required={true} 
+                            options={PREVTERMS}
+                            onChange={handleFieldChange}
+                            />
+                        <FieldSection 
+                            title="Future Terms" 
+                            type="checkbox" 
+                            name="futureTerms"
+                            value={formValues['futureTerms']}
+                            required={true} 
+                            options={FUTURETERMS}
+                            onChange={handleFieldChange}
+                            />
+                        <FieldSection 
+                            title="Student Design Center Safety Requirements" 
+                            name="safetyReq"
+                            type="radio" 
+                            required={true}
+                            options={REQUIREMENTS}
+                            onChange={handleFieldChange}
+                            value={formValues.safetyReq}
+                            />
+                        <FieldSection 
+                            title="WHMIS 2015" 
+                            name="whmis"
+                            type="radio" 
+                            required={true}
+                            options={REQUIREMENTS}
+                            onChange={handleFieldChange}
+                            value={formValues.whmis}
+                            />
+                        <FieldSection 
+                            title="Machine Shop Orientation" 
+                            name="machineShopOrientation"
+                            type="radio" 
+                            required={true}
+                            options={REQUIREMENTS}
+                            onChange={handleFieldChange}
+                            value={formValues.machineShopOrientation}
+                            />
                         <SystemComponent><Button onClick={handleSave}>Submit</Button></SystemComponent>
                     </SystemComponent> 
                 </Card>

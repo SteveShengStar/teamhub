@@ -2,21 +2,20 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import Checkbox from '../../atoms/Checkbox';
 
-const CheckboxSection = ({options}) => {
-    const [selectedOptions, setSelectedOptions] = useState([]);
+const CheckboxSection = ({options, name, selectedOptions, setSelectedOptions}) => {
+    // const [selectedOptions, setSelectedOptions] = useState([]);
 
     const toggleOption = (value) => {
         if (selectedOptions.includes(value)) {
             let idx = selectedOptions.indexOf(value);
-            setSelectedOptions([
-                ...selectedOptions.slice(0, idx),
-                ...selectedOptions.slice(idx + 1)
-            ]);
+            setSelectedOptions(
+                name, 
+                [...selectedOptions.slice(0, idx), ...selectedOptions.slice(idx + 1)]);
         } else {
-            setSelectedOptions([
-                ...selectedOptions,
-                value
-            ]);
+            setSelectedOptions(
+                name, 
+                [...selectedOptions, value]
+            );
         }
     }
 
