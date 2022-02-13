@@ -5,14 +5,16 @@ import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
 import RadioSection from '../../molecules/Form/RadioSection';
+import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
+
 
 const TitleSection = ({text, required}) => {
     return (
         <SystemComponent>
             <Header4>
                 {text}
-                {required && <span style={{color: 'red'}}>*</span>}
+                {required && <span style={{color: 'red'}}> * </span>}
             </Header4>
         </SystemComponent>
     )
@@ -57,6 +59,14 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
             case 'radio':
                 return (
                     <RadioSection options={options}
+                        selectedOption={value}
+                        name={name}
+                        setSelectedOption={onChange}
+                    />
+                )
+            case 'boolean':
+                return (
+                    <BooleanRadioSection
                         selectedOption={value}
                         name={name}
                         setSelectedOption={onChange}
