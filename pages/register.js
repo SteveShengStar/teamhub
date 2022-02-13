@@ -28,11 +28,6 @@ const MEMBERSHIP = [
     'Not active on Waterloop this term',
 ];
 
-const REQUIREMENTS = [
-    'Yes, and I submitted proof', 
-    'No',
-];
-
 const FormHeader = ({title, marginBottom}) => {
     const theme = useContext(ThemeContext);
     return (
@@ -69,10 +64,17 @@ const RegistrationForm = () => {
 
     const [hasError, setHasError] = useState({
         fullName: false,
-        phoneNumber: false,
+        phoneNumber: false, 
         email: false, 
         program: false, 
-        studentId: false,
+        studentId: false,  
+        termDescription: false, 
+        membership: false, 
+        previousTerms: false, 
+        futureTerms: false, 
+        safetyReq: false,
+        whmis: false, 
+        machineShopOrientation: false,
     });
 
     const handleSave = () => {
@@ -98,6 +100,21 @@ const RegistrationForm = () => {
         }
         if (!formValues.studentId || formValues.studentId.length !== 8) {
             updatedErrorList['studentId'] = true;
+        }
+        if (!formValues.termDescription) {
+            updatedErrorList['termDescription'] = true;
+        }
+        if (!formValues.membership) {
+            updatedErrorList['membership'] = true;
+        }
+        if (formValues.safetyReq === null || formValues.safetyReq === undefined) {
+            updatedErrorList['safetyReq'] = true;
+        }
+        if (formValues.whmis === null || formValues.whmis === undefined) {
+            updatedErrorList['whmis'] = true;
+        }
+        if (formValues.machineShopOrientation === null || formValues.machineShopOrientation === undefined) {
+            updatedErrorList['machineShopOrientation'] = true;
         }
 
         setHasError(updatedErrorList);
@@ -199,6 +216,8 @@ const RegistrationForm = () => {
                             options={TERMDESCRIPTIONS}
                             onChange={handleFieldChange}
                             value={formValues.termDescription}
+                            hasError={hasError['termDescription']}
+                            errorText="Please select an option."
                             />
                         <FieldSection
                             title="Membership Type" 
@@ -208,51 +227,56 @@ const RegistrationForm = () => {
                             options={MEMBERSHIP}
                             value={formValues.membership}
                             onChange={handleFieldChange}
+                            hasError={hasError['membership']}
+                            errorText="Please select an option."
                             />
                         <FieldSection 
                             title="Previous Terms" 
                             type="checkbox" 
                             name="previousTerms"
                             value={formValues['previousTerms']}
-                            required={true} 
                             options={PREVTERMS}
                             onChange={handleFieldChange}
+                            hasError={hasError['previousTerms']}
                             />
                         <FieldSection 
                             title="Future Terms" 
                             type="checkbox" 
                             name="futureTerms"
                             value={formValues['futureTerms']}
-                            required={true} 
                             options={FUTURETERMS}
                             onChange={handleFieldChange}
+                            hasError={hasError['futureTerms']}
                             />
                         <FieldSection 
                             title="Student Design Center Safety Requirements" 
                             name="safetyReq"
-                            type="radio" 
+                            type="boolean" 
                             required={true}
-                            options={REQUIREMENTS}
                             onChange={handleFieldChange}
                             value={formValues.safetyReq}
+                            hasError={hasError['safetyReq']}
+                            errorText="Please select an option."
                             />
                         <FieldSection 
                             title="WHMIS 2015" 
                             name="whmis"
-                            type="radio" 
+                            type="boolean" 
                             required={true}
-                            options={REQUIREMENTS}
                             onChange={handleFieldChange}
                             value={formValues.whmis}
+                            hasError={hasError['whmis']}
+                            errorText="Please select an option."
                             />
                         <FieldSection 
                             title="Machine Shop Orientation" 
                             name="machineShopOrientation"
-                            type="radio" 
+                            type="boolean" 
                             required={true}
-                            options={REQUIREMENTS}
                             onChange={handleFieldChange}
                             value={formValues.machineShopOrientation}
+                            hasError={hasError['machineShopOrientation']}
+                            errorText="Please select an option."
                             />
                         <SystemComponent><Button onClick={handleSave}>Submit</Button></SystemComponent>
                     </SystemComponent> 
