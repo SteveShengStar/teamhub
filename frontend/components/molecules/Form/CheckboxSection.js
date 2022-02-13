@@ -3,8 +3,6 @@ import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import Checkbox from '../../atoms/Checkbox';
 
 const CheckboxSection = ({options, name, selectedOptions, setSelectedOptions}) => {
-    // const [selectedOptions, setSelectedOptions] = useState([]);
-
     const toggleOption = (value) => {
         if (selectedOptions.includes(value)) {
             let idx = selectedOptions.indexOf(value);
@@ -24,7 +22,7 @@ const CheckboxSection = ({options, name, selectedOptions, setSelectedOptions}) =
             {
                 options.map(opt => 
                     <SystemComponent height="40px" >
-                        <Checkbox checked={selectedOptions.includes(opt)} handleClick={toggleOption} value={opt} />
+                        <Checkbox checked={selectedOptions.includes(opt)} handleClick={() => toggleOption(opt)} value={opt} />
                         <SystemComponent ml="45px" fontSize="16px" pt="2px">{opt}</SystemComponent>
                     </SystemComponent>
                 )
