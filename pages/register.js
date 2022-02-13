@@ -145,7 +145,10 @@ const RegistrationForm = () => {
         <PageTemplate>
             <SystemComponent>
                 <Card
-                    width={["100%", "768px"]}
+                    css={{
+                        boxSizing: 'border-box'
+                    }}
+                    width={["98%", "500px", "700px", "768px"]}
                     margin={["cardMarginSmall", "auto"]}
                     padding={["cardPaddingSmall", "cardPaddingSmall", "cardPadding"]}
                 >
