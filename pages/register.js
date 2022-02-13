@@ -212,7 +212,7 @@ const RegistrationForm = () => {
                         <FieldSection 
                             title="Previous Terms" 
                             type="checkbox" 
-                            name="previousTerm"
+                            name="previousTerms"
                             value={formValues['previousTerms']}
                             required={true} 
                             options={PREVTERMS}
