@@ -136,6 +136,10 @@ const MemberSchema = new Schema({
     },
     active: {
         type: Boolean,
+    },
+    miscDetails: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserDetails',
     }
 });
 
