@@ -5,17 +5,20 @@ import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
 import RadioSection from '../../molecules/Form/RadioSection';
+import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
 
-const TitleSection = ({text}) => {
+
+const TitleSection = ({text, required}) => {
     return (
         <SystemComponent>
             <Header4>
                 {text}
+                {required && <span style={{color: 'red'}}> * </span>}
             </Header4>
         </SystemComponent>
     )
-}
+} 
 
 const DescriptionSection = ({text}) => {
     return (
@@ -27,27 +30,47 @@ const DescriptionSection = ({text}) => {
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", options=[]}) => {
+const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
+
         switch (type) {
             case 'textbox':
                 return (
                     <Input height={[
                         theme.textInputHeight.small, 
                         theme.textInputHeight.medium, 
-                        theme.textInputHeight.large]} 
-                        width="600px"
+                        theme.textInputHeight.large]}
+                        width="98%"
+                        name={name}
+                        value={value}
+                        onChange={(e) => onChange(name, e.target.value)}
                     />
                 )
             case 'checkbox':
                 return (
-                   <CheckboxSection options={["option 1", "option 2", "option 3"]}/>
+                   <CheckboxSection 
+                        options={options} 
+                        name={name} 
+                        selectedOptions={value}  
+                        setSelectedOptions={onChange}/>
                 )
             case 'radio':
                 return (
-                    <RadioSection options={["option 1", "option 2", "option 3"]}/>
+                    <RadioSection options={options}
+                        selectedOption={value}
+                        name={name}
+                        setSelectedOption={onChange}
+                    />
+                )
+            case 'boolean':
+                return (
+                    <BooleanRadioSection
+                        selectedOption={value}
+                        name={name}
+                        setSelectedOption={onChange}
+                    />
                 )
             default:
                 return <></>;
@@ -57,16 +80,17 @@ const FieldSection = ({title, description='', type="textbox", options=[]}) => {
     return (
         <SystemComponent
             fontSize={theme.fontSizes.header3}
-            textAlign='center'
+            textAlign='left'
+            width={["98%", "100%", "100%", "600px"]}
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
-                <TitleSection text={title} />
-                <DescriptionSection text={description} />
+                <TitleSection text={title} required={required} />
             </SystemComponent>
 
             <SystemComponent>
                 {renderInputField(type)}
             </SystemComponent>
+            {hasError && <SystemComponent textAlign="left" color="red">{errorText}</SystemComponent>}
         </SystemComponent>
     )
 }
