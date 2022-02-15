@@ -1,10 +1,12 @@
 const Member = require('../schema/Member');
+const UserDetails = require('../schema/UserDetails');
 const skills = require('./skills');
 const interests = require('./interests');
 const memberTypes = require('./memberTypes');
 const projects = require('./projects');
 const subteams = require('./subteams');
 const util = require('./util');
+const _ = require('lodash');
 
 const members = {};
 
@@ -164,18 +166,18 @@ members.delete = async (body) => {
 /**
  * Update data for a single member only
  */
-members.updateMember = async (filter, body, options) => {
-    if (options) {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateOne(filter, body, options).exec());
-        });
-    } else {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateOne(filter, body).exec());
-        });
-    }
+members.updateMember = async (filter, body, options = {}) => {
+    const memberFields = Object.keys(Member.schema.paths);
+    const memberData = _.pick(body, memberFields);
+
+    const userDetailFields = Object.keys(UserDetails.schema.paths);
+    const userDetails = _.pick(body, userDetailFields);
+    memberData.miscDetails = userDetails;
+    
+    return util.handleWrapper(async () => {
+        memberData = await replaceBodyWithIds(memberData);
+        return (await Member.updateOne(filter, memberData, options).exec());
+    });
 };
 
 /**
