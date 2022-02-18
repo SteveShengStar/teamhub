@@ -16,7 +16,7 @@ export default Checkbox;
 const Box = styled(SystemComponent)`
   position: absolute;
   top: 0;
-  left: 0;
+  left: -9px;
   height: 25px;
   width: 25px;
   border: 1px solid ${props => props.theme.colors.greys[3]};
@@ -26,7 +26,7 @@ const Box = styled(SystemComponent)`
 const Checkmark = styled(SystemComponent)`
   position: absolute;
   top: 5px;
-  left: 9px;
+  left: 0;
   width: 5px;
   height: 10px;
   border: solid white;
