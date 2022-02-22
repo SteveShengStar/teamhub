@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { ThemeContext } from 'styled-components';
-
+// import { useMediaQuery } from 'react-responsive'
 import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
 import Input from '../../atoms/Input';
@@ -33,6 +33,8 @@ const DescriptionSection = ({text}) => {
 const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
 
+    // https://www.npmjs.com/package/react-responsive
+//  const isMobile = useMediaQuery({query: '(maxWidth: 768px)'});
     const renderInputField = (type) => {
 
         switch (type) {
@@ -42,7 +44,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                         theme.textInputHeight.small, 
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large]} 
-                        width={["90%", "90%", "600px"]}
+                        width={"600px"}
                         name={name}
                         value={value}
                         onChange={(e) => onChange(name, e.target.value)}

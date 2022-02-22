@@ -9,17 +9,39 @@ import FieldSection from "../frontend/components/molecules/Form/FieldSection";
 import Button from '../frontend/components/atoms/Button';
 
 const TERMDESCRIPTIONS = [
-    'Academic term, active on Waterloop in-person', 
-    'Academic term, active on Waterloop remotely', 
-    'Co-op term, working on Waterloop remotely', 
-    'Co-op term, active on Waterloop in-person', 
-    'Not active on Waterloop this term', 
-    'Other',
+"1A Co-op", 
+"1B Study", 
+"1B Co-op", 
+"2A Study", 
+"2A Co-op", 
+"2B Study", 
+'2B Co-op',
+"3A Study", 
+"3A Co-op",
+"3B Study", 
+"3B Co-op", 
+"4A Study",
+"4A Co-op", 
+"4B Study", 
+"4B Co-op", 
+"Graduate Student", 
+"Not currently enrolled at the University of Waterloo", 
+"Alumni",
 ];
 
-const PREVTERMS = ['F21', 'S21', 'W21', 'F20', "S20",'W20',];
+const PREVTERMS = ['F22', 'S22', 'W22','F21', 'S21', 'W21', 'F20', "S20",'W20', 'F19', 'S19', 'W19', 'F18', 'S18', 'W18'];
 
-const FUTURETERMS = ['W22', 'S22', 'F22', 'W23', "S23",'F23',];
+const FUTURETERMS = ['W22', 'S22', 'F22', 'W23', "S23",'F23', 'None of the above'];
+
+const SUBTEAMS = ["Business", "LIM", "Mechanical", "MC", "BMS", "Embedded","Infrastructure", "Web", "Team Hub"]
+
+const ACTIVESTATUS = [
+    "Yes, I will continue on the team, and I will be on campus (or working locally)", 
+    "Yes, I will continue on the team remotely and can come to campus if needed/possible", 
+    "Yes, I will continue on the team remotely only",
+    "Undecided or unsure", 
+    "No, taking the term off" 
+]
 
 const MEMBERSHIP = [
     'Member', 
@@ -27,6 +49,15 @@ const MEMBERSHIP = [
     'Coop', 
     'Not active on Waterloop this term',
 ];
+
+const CONTINUINGSTATUS = [
+    'Continue with my sub-team', 
+    'Transfer to another sub-team (please specify)', 
+    'Want to take on a leadership role - lead', 
+    'Want to take on a leadership role - co-op supervisor', 
+    'Want to become a co-op', 
+    'I\'m undecided or not continuing',
+]
 
 const FormHeader = ({title, marginBottom}) => {
     const theme = useContext(ThemeContext);
@@ -48,33 +79,28 @@ const RegistrationForm = () => {
 
     const [formValues, setFormValues] = useState({
         fullName:  "",
-        phoneNumber: null, 
-        email: "", 
-        program: "", 
-        studentId: null,  
         termDescription: "", 
-        membership: "", 
         previousTerms: [], 
         futureTerms: [], 
-        safetyReq: false,
-        whmis: false, 
-        machineShopOrientation: false,
-
+        subteam: "",
+        activeStatus: "", 
+        continuingStatus: "", 
+        email: "", 
+        comments: "",
+        futureTasks: "", 
     });
 
     const [hasError, setHasError] = useState({
         fullName: false,
-        phoneNumber: false, 
-        email: false, 
-        program: false, 
-        studentId: false,  
         termDescription: false, 
         membership: false, 
         previousTerms: false, 
-        futureTerms: false, 
-        safetyReq: false,
-        whmis: false, 
-        machineShopOrientation: false,
+        futureTerms: false,
+        activeStatus: false, 
+        subteam: false,
+        activeStatus: false,
+        continuingStatus: false,
+        email: false, 
     });
 
     const handleSave = () => {
@@ -89,32 +115,23 @@ const RegistrationForm = () => {
         if (!formValues.fullName || formValues.fullName.split(' ').length !== 2) {
             updatedErrorList['fullName'] = true;
         }
-        if (!formValues.phoneNumber || formValues.phoneNumber.length !== 10) {
-            updatedErrorList['phoneNumber'] = true;
-        }
         if (!formValues.email || !isEmail(formValues.email)) {
             updatedErrorList['email'] = true;
-        }
-        if (!formValues.program) {
-            updatedErrorList['program'] = true;
-        }
-        if (!formValues.studentId || formValues.studentId.length !== 8) {
-            updatedErrorList['studentId'] = true;
         }
         if (!formValues.termDescription) {
             updatedErrorList['termDescription'] = true;
         }
-        if (!formValues.membership) {
-            updatedErrorList['membership'] = true;
+        if (!formValues.subteam) {
+            updatedErrorList['subteam'] = true;
         }
-        if (formValues.safetyReq === null || formValues.safetyReq === undefined) {
-            updatedErrorList['safetyReq'] = true;
+        if (!formValues.continuingStatus) {
+            updatedErrorList['continuingStatus'] = true;
         }
-        if (formValues.whmis === null || formValues.whmis === undefined) {
-            updatedErrorList['whmis'] = true;
+        if (!formValues.activeStatus) {
+            updatedErrorList['activeStatus'] = true;
         }
-        if (formValues.machineShopOrientation === null || formValues.machineShopOrientation === undefined) {
-            updatedErrorList['machineShopOrientation'] = true;
+        if (!formValues.futureTerms) {
+            updatedErrorList['futureTerms'] = true;
         }
 
         setHasError(updatedErrorList);
@@ -172,43 +189,7 @@ const RegistrationForm = () => {
                             errorText="Please enter your full name."
                             />
                         <FieldSection 
-                            title='Phone Number'      
-                            name="phoneNumber"
-                            required={true}
-                            value={formValues['phoneNumber']} 
-                            onChange={handleInputChange}
-                            hasError={hasError['phoneNumber']}
-                            errorText="Please enter a valid 10 digit phone number."
-                            />
-                        <FieldSection 
-                            title='Personal Email Address'                             
-                            name="email"
-                            required={true}
-                            value={formValues['email']}
-                            onChange={handleInputChange}
-                            hasError={hasError['email']}
-                            errorText="Please enter a valid email."
-                            />
-                        <FieldSection 
-                            title='Program'
-                            required={true}                     
-                            name="program"
-                            value={formValues['program']}
-                            onChange={handleInputChange}
-                            hasError={hasError['program']} 
-                            errorText="Please enter your program."       
-                            />
-                        <FieldSection 
-                            title='Student ID #' 
-                            required={true}
-                            name="studentId"
-                            value={formValues['studentId']}
-                            onChange={handleInputChange}
-                            hasError={hasError['studentId']} 
-                            errorText="Student ID must have 8 digits."   
-                            /> 
-                        <FieldSection 
-                            title="Which describes you best?" 
+                            title="This upcoming term, I will be on my" 
                             type="radio" 
                             name="termDescription"
                             required={true} 
@@ -216,17 +197,6 @@ const RegistrationForm = () => {
                             onChange={handleFieldChange}
                             value={formValues.termDescription}
                             hasError={hasError['termDescription']}
-                            errorText="Please select an option."
-                            />
-                        <FieldSection
-                            title="Membership Type" 
-                            name="membership"
-                            type="radio" 
-                            required={true}
-                            options={MEMBERSHIP}
-                            value={formValues.membership}
-                            onChange={handleFieldChange}
-                            hasError={hasError['membership']}
                             errorText="Please select an option."
                             />
                         <FieldSection 
@@ -239,7 +209,7 @@ const RegistrationForm = () => {
                             hasError={hasError['previousTerms']}
                             />
                         <FieldSection 
-                            title="Future Terms" 
+                            title="I will be in Waterloo during" 
                             type="checkbox" 
                             name="futureTerms"
                             value={formValues['futureTerms']}
@@ -247,35 +217,59 @@ const RegistrationForm = () => {
                             onChange={handleFieldChange}
                             hasError={hasError['futureTerms']}
                             />
-                        <FieldSection 
-                            title="Student Design Center Safety Requirements" 
-                            name="safetyReq"
-                            type="boolean" 
+                        <FieldSection
+                            title="Your subteam" 
+                            name="subteam"
+                            type="radio" 
                             required={true}
+                            options={SUBTEAMS}
+                            value={formValues.subteam}
                             onChange={handleFieldChange}
-                            value={formValues.safetyReq}
-                            hasError={hasError['safetyReq']}
+                            hasError={hasError['subteam']}
+                            errorText="Please select an option."
+                            />
+                        <FieldSection
+                            title="Will you be active on the team this upcoming term?" 
+                            name="activeStatus"
+                            type="radio" 
+                            required={true}
+                            options={ACTIVESTATUS}
+                            value={formValues.activeStatus}
+                            onChange={handleFieldChange}
+                            hasError={hasError['activeStatus']}
+                            errorText="Please select an option."
+                            />
+                        <FieldSection
+                            title="If you're continuing, what are you planning to do?" 
+                            name="continuingStatus"
+                            type="radio" 
+                            required={true}
+                            options={CONTINUINGSTATUS}
+                            value={formValues.continuingStatus}
+                            onChange={handleFieldChange}
+                            hasError={hasError['continuingStatus']}
                             errorText="Please select an option."
                             />
                         <FieldSection 
-                            title="WHMIS 2015" 
-                            name="whmis"
-                            type="boolean" 
+                            title='Please provide your personal email address'                             
+                            name="email"
                             required={true}
-                            onChange={handleFieldChange}
-                            value={formValues.whmis}
-                            hasError={hasError['whmis']}
-                            errorText="Please select an option."
+                            value={formValues['email']}
+                            onChange={handleInputChange}
+                            hasError={hasError['email']}
+                            errorText="Please enter a valid email."
                             />
                         <FieldSection 
-                            title="Machine Shop Orientation" 
-                            name="machineShopOrientation"
-                            type="boolean" 
-                            required={true}
-                            onChange={handleFieldChange}
-                            value={formValues.machineShopOrientation}
-                            hasError={hasError['machineShopOrientation']}
-                            errorText="Please select an option."
+                            title='Any additional comments or thoughts on the term?'
+                            name="comments"
+                            value={formValues['comments']}
+                            onChange={handleInputChange}
+                            />
+                        <FieldSection 
+                            title='Is there anything specific you want to work on next term?'
+                            name="futureTasks"
+                            value={formValues['futureTasks']}
+                            onChange={handleInputChange}
                             />
                         <SystemComponent><Button onClick={handleSave}>Submit</Button></SystemComponent>
                     </SystemComponent> 
