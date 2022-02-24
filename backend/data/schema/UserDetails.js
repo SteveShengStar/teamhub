@@ -5,27 +5,27 @@ const Schema = mongoose.Schema;
 const UserDetailsSchema = new Schema({
     phone: {
         type: Number,
-        required: true
+        // required: true
     },
     personalEmail: {
         type: String,
-        required: true
+        // required: true
     },
     studentId: {
         type: Number,
-        required: true
+        // required: true
     },
     termStatus: {
         type: String,
-        required: true
+        // required: true
     },
     nextTermActivity: {
         type: String,
-        required: true
+        // required: true
     },
     nextTermRole: {
         type: String,
-        required: true
+        // required: true
     },
     termComments: {
         type: String,
@@ -37,15 +37,15 @@ const UserDetailsSchema = new Schema({
     },
     designCentreSafety: {
         type: Boolean,
-        required: true
+        // required: true
     },
     whimis: {
         type: Boolean,
-        required: true
+        // required: true
     },
     machineShop: {
         type: Boolean,
-        required: true
+        // required: true
     }
 });
 

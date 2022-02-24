@@ -6,12 +6,10 @@ const Schema = mongoose.Schema;
 
 const Member_Stream = new Schema({
     isCoop: {
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     onStream: {
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     coopStream: {
         type: Map,
