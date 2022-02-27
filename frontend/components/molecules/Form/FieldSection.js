@@ -41,7 +41,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                     <Input height={[
                         theme.textInputHeight.small, 
                         theme.textInputHeight.medium, 
-                        theme.textInputHeight.large]} 
+                        theme.textInputHeight.large]}
                         width="98%"
                         name={name}
                         value={value}
