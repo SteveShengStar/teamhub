@@ -42,7 +42,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                         theme.textInputHeight.small, 
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large]} 
-                        width={["90%", "90%", "600px"]}
+                        width="98%"
                         name={name}
                         value={value}
                         onChange={(e) => onChange(name, e.target.value)}
@@ -80,7 +80,8 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
     return (
         <SystemComponent
             fontSize={theme.fontSizes.header3}
-            textAlign='center'
+            textAlign='left'
+            width={["98%", "100%", "100%", "600px"]}
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
                 <TitleSection text={title} required={required} />
