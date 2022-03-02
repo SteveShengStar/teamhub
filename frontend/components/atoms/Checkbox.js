@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { SystemComponent } from './SystemComponents';
 
-// Credits: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
 const Checkbox = ({checked, handleClick, value}) => {
     return (
       <Wrapper onClick={() => handleClick(value)} checked={checked} >
@@ -13,6 +12,8 @@ const Checkbox = ({checked, handleClick, value}) => {
 }
 export default Checkbox;
 
+// Starter code for Checkbox implementation provided by: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+// Personal customizations have been applied
 const Box = styled(SystemComponent)`
   position: absolute;
   top: 0;
