@@ -4,28 +4,22 @@ const Schema = mongoose.Schema;
 
 const UserDetailsSchema = new Schema({
     phone: {
-        type: Number,
-        // required: true
+        type: Number
     },
     personalEmail: {
-        type: String,
-        // required: true
+        type: String
     },
     studentId: {
-        type: Number,
-        // required: true
+        type: Number
     },
     termStatus: {
-        type: String,
-        // required: true
+        type: String
     },
     nextTermActivity: {
-        type: String,
-        // required: true
+        type: String
     },
     nextTermRole: {
-        type: String,
-        // required: true
+        type: String
     },
     termComments: {
         type: String,
@@ -36,16 +30,13 @@ const UserDetailsSchema = new Schema({
         required: false
     },
     designCentreSafety: {
-        type: Boolean,
-        // required: true
+        type: Boolean
     },
     whimis: {
-        type: Boolean,
-        // required: true
+        type: Boolean
     },
     machineShop: {
-        type: Boolean,
-        // required: true
+        type: Boolean
     }
 });
 
