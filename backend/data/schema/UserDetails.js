@@ -32,7 +32,7 @@ const UserDetailsSchema = new Schema({
     designCentreSafety: {
         type: Boolean
     },
-    whimis: {
+    whmis: {
         type: Boolean
     },
     machineShop: {

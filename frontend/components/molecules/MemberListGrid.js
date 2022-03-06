@@ -53,10 +53,9 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                     .map((member, i) => 
                                     <MemberPreviewComponent 
                                         key={i}
-                                        name={`${member.name.display || member.name.first + " " + member.name.last}`}
+                                        name={member.name.first + " " + member.name.last}
                                         subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
                                         role={member.memberType ? member.memberType.name : ''}
-                                        term={member.stream && member.stream.currentSchoolTerm || ""}
                                         onClick={() => onSelect(member._id)}
                                         imageUrl={member.imageUrl} 
                                         isSelected={groupSelectedMembers.includes(member._id)}
@@ -103,11 +102,9 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                 .map((member, i) => 
                                 <MemberPreviewComponent 
                                     key={i}
-                                    name={`${member.name.display || member.name.first + " " + member.name.last}`}
+                                    name={member.name.first + " " + member.name.last}
                                     subteam={member.subteams && member.subteams.length > 0 && normalizedSubteams && normalizedSubteams[member.subteams[0]] || ""} 
                                     role={member.memberType ? member.memberType.name : ''}
-                                    term={member.stream && member.stream.currentSchoolTerm || ""}
-                                    isOnStream={member.stream && member.stream.coopStream[code]}
                                     onClick={() => onSelect(member._id)}
                                     imageUrl={member.imageUrl} 
                                     isSelected={groupSelectedMembers.includes(member._id)}

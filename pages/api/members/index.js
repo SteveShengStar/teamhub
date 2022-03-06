@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 let basis;
                 if (!req.body.fields) {
-                    basis = ["name", "program", "bio", "skills", "interests", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "birthday", "links", "token", "tokenExpiry", "active"]
+                    basis = ["name", "program", "bio", "skills", "interests", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "links", "token", "tokenExpiry", "active"]
                 } else {
                     basis = req.body.fields;
                 }

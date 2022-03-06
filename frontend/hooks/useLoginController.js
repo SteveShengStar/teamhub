@@ -11,9 +11,8 @@ import { UserTypes } from "../store/reducers/userReducer"
  * 
  * @param {*} loginTransition
  * @param {*} dispatch
- * @param {String} route
  */
-const useLoginController = (loginTransition, dispatch, route) => {
+const useLoginController = (loginTransition, dispatch) => {
     const router = useRouter()
     const { hydrated, user } = useSelector(state => state.userState)
 

@@ -8,7 +8,6 @@ const testMemberData1 = {
     'name': {
         'first': 'TestUser1010',
         'last': 'TestUser1010',
-        'display': 'TestUser1010'
     },
     'program': 'Software Engineering',
     'bio': 'Hello, this is my bio',
@@ -38,11 +37,6 @@ const testMemberData1 = {
         'currentSchoolTerm': '1A'
     },
     'imageURL': 'www.google.com',
-    'birthday': {
-        'month': 5,
-        'day': 12,
-        'year': 2001
-    },
     'links': [
         {
             'type': 'GitHub',
@@ -56,7 +50,6 @@ const testMemberData2 = {
     'name': {
         'first': 'TestUser2',
         'last': 'TestUser2',
-        'display': 'TestUser2'
     },
     'email': 'testuser2@testing.ca'
 };
@@ -65,7 +58,6 @@ const testMemberData3 = {
     'name': {
         'first': 'TestUser3',
         'last': 'TestUser3',
-        'display': 'TestUser3'
     },
     'email': 'testuser3@testing.ca'
 };
