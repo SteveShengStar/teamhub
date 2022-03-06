@@ -119,7 +119,7 @@ const RegistrationForm = () => {
     const setErrorMessages = (formErrors) => {
         const {fullName, phoneNumber, email, program, studentId, termStatus, memberType, 
             subteam, designCentreSafety, whmis, machineShop} = formValues;
-        if (!fullName || fullName.split(/\s+/).length !== 2) {
+        if (!fullName || fullName.split(/\s+/).length < 2) {
             formErrors['fullName'] = true;
         }
         if (!phoneNumber || phoneNumber.length !== 10) {
@@ -157,9 +157,7 @@ const RegistrationForm = () => {
     }
 
     const handleSubmit = (evt) => {
-        console.log("HAHA");
         evt.preventDefault();
-        console.log('clicked button')
         console.log(formValues)
         const formErrors = {...hasError};
 
@@ -173,10 +171,11 @@ const RegistrationForm = () => {
             const {fullName, phoneNumber, email, program, studentId, termStatus, memberType, 
                 subteam, designCentreSafety, whmis, machineShop, previousTerms, futureTerms} = formValues;
 
+            const fullNameParts = fullName.split(/\s+/);
             updateUser(dispatch, {
                 name: {
-                    first: fullName.split(/\s+/)[0].trim(),
-                    last: fullName.split(/\s+/)[1].trim()
+                    first: fullNameParts[0].trim(),
+                    last: fullNameParts[fullNameParts.length - 1].trim()
                 },
                 phone: phoneNumber.trim(),
                 program: program.trim(),
