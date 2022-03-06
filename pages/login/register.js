@@ -243,7 +243,6 @@ const RegistrationForm = () => {
                                     title='Full Name'
                                     required={true}                     
                                     name="fullName"
-                                    required={true}
                                     value={formValues['fullName']}
                                     onChange={handleInputChange}
                                     hasError={hasError['fullName']}
