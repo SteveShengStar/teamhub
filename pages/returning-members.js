@@ -50,7 +50,7 @@ const PREV_TERMS = [
   'W18',
 ];
 
-const FUTURETERMS = [
+const FUTURE_TERMS = [
   'W22',
   'S22',
   'F22',
@@ -251,7 +251,7 @@ const ReturningMembersForm = () => {
               type="checkbox"
               name="futureTerms"
               value={formValues['futureTerms']}
-              options={FUTURETERMS}
+              options={FUTURE_TERMS}
               onChange={handleFieldChange}
               hasError={hasError['futureTerms']}
             />
