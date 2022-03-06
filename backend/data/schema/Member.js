@@ -4,23 +4,6 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
-const Member_Stream = new Schema({
-    isCoop: {
-        type: Boolean
-    },
-    onStream: {
-        type: Boolean
-    },
-    coopStream: {
-        type: Map,
-        of: Boolean
-    },
-    currentSchoolTerm: {
-        type: String,
-        required: true
-    },
-});
-
 const Member_NameSchema = new Schema({
     first: {
         type: String,
@@ -28,24 +11,6 @@ const Member_NameSchema = new Schema({
     },
     last: {
         type: String,
-        required: true
-    },
-    display: {
-        type: String
-    },
-});
-
-const Member_Birthday = new Schema({
-    month: {
-        type: Number,
-        required: true
-    },
-    day: {
-        type: Number,
-        required: true
-    },
-    year: {
-        type: Number,
         required: true
     }
 });
@@ -110,14 +75,11 @@ const MemberSchema = new Schema({
         required: true,
         unique: true
     },
-    stream: {
-        type: Member_Stream
-    },
+    activeSchoolTerms: [{
+        type: String
+    }],
     imageUrl: {
         type: String
-    },
-    birthday: {
-        type: Member_Birthday
     },
     links: {
         type: [Member_Link]

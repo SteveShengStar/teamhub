@@ -60,14 +60,11 @@ const AvatarWrapperComponent = ({ children }) => {
 const ProfileSummary = ({dataLoaded = false, 
                         firstname = "", 
                         lastname = "", 
-                        birthday = undefined, 
                         program = "", 
                         schoolterm = "", 
                         email = ""}) => {
-    birthday = (dataLoaded && birthday) ? new Date(birthday.year, birthday.month, birthday.day) : new Date();
-    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
 
-    const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-birthday-cake', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
+    const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
     const userInformation = {
         firstName: {
             label: 'First Name',
@@ -76,10 +73,6 @@ const ProfileSummary = ({dataLoaded = false,
         lastName: {
             label: "Last Name",
             value: lastname
-        },
-        birthDay: {
-            label: "Birthday",
-            value: birthday
         },
         program: {
             label: "Program",

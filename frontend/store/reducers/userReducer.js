@@ -16,7 +16,6 @@ export const UserTypes = new Proxy(
 
 export const usersInitialState = {
   user: {},
-  tempDisplayName: '',
   hydrated: false,
 };
 
@@ -31,13 +30,11 @@ const userReducer = (state = usersInitialState, action) => {
       return {
         ...state,
         user: action.payload,
-        ...(action.display && { tempDisplayName: action.display }),
       };
     case UserTypes.RECEIVED_LOGOUT:
       return {
         ...state,
-        user: {},
-        tempDisplayName: '',
+        user: {}
       };
     case UserTypes.FAILED_LOGIN: // TODO: look at what this behaviour will lead to
       return {
@@ -68,8 +65,7 @@ export const userLogin = async (response, dispatch) => {
     if (user) {
       dispatch({
         type: UserTypes.RECEIVED_LOGIN,
-        payload: user,
-        display: response.profileObj.name,
+        payload: user
       });
     } else {
       dispatch({ type: UserTypes.FAILED_LOGIN });

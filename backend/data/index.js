@@ -19,6 +19,10 @@ data.init = async () => {
         throw new Error('No URL found in config.');
     }
 
+    console.log(`Disconnecting from db just in case!`);
+    await mongoose.disconnect();
+    data.connected = false;
+
     await mongoose.connect(config.url, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
@@ -30,8 +34,8 @@ data.init = async () => {
 };
 
 data.close = async () => {
-    data.connected = false;
     await mongoose.disconnect();
+    data.connected = false;
 };
 
 data.util = require('./handlers/util');

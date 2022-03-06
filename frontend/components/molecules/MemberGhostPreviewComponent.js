@@ -37,7 +37,6 @@ const MemberGhostPreviewComponent = ({visible}) => {
                 <AnimatingBlank width={"30%"} height={"90%"} backgroundColor="greys.1" origin="left"></AnimatingBlank>
                 <AnimatingBlank width={"10%"} height={"90%"} backgroundColor="greys.1" origin="right"></AnimatingBlank>
             </RowFlexLayout>
-            <Dot isOnStream={false}/>
 
         </GridLayout>
     );
