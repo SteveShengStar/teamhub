@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from "styled-components";
 import { SystemComponent } from './SystemComponents';
 
-// Credits: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
 const RadioButton = ({selected}) => {
   return (
     <Wrapper selected={selected} >
@@ -13,10 +12,12 @@ const RadioButton = ({selected}) => {
 };
 export default RadioButton;
 
+// Starter code for Radio button implementation provided by: https://www.w3schools.com/howto/howto_css_custom_checkbox.asp
+// Personal customizations have been applied
 const BigCircle = styled(SystemComponent)`
   position: absolute;
   top: 0;
-  left: 0;
+  left: -9px;
   height: 25px;
   width: 25px;
   border: 1px solid ${props => props.theme.colors.greys[3]};
@@ -27,7 +28,7 @@ const BigCircle = styled(SystemComponent)`
 const SmallCircle = styled(SystemComponent)`
   position: absolute;
   top: 7px;
-  left: 7px;
+  left: -2px;
   width: 13px;
   height: 13px;
   background-color: white;

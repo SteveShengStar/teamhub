@@ -13,8 +13,8 @@ const RadioSection = ({options, name, selectedOption, setSelectedOption}) => {
     return (
         <>
             {
-                options.map(opt => 
-                    <SystemComponent onClick={() => selectOption(opt)} height="40px" >
+                options.map((opt, i) => 
+                    <SystemComponent key={i} onClick={() => selectOption(opt)} height="40px" >
                         <RadioButton selected={opt === selectedOption} />
                         <SystemComponent ml="45px" fontSize="16px" pt="2px">{opt}</SystemComponent>
                     </SystemComponent>

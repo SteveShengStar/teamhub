@@ -6,7 +6,7 @@ import { SystemComponent, SystemSpan } from '../frontend/components/atoms/System
 import Subtitle from "../frontend/components/atoms/Subtitle";
 import Card from '../frontend/components/atoms/Card';
 import FieldSection from "../frontend/components/molecules/Form/FieldSection";
-import Button from '../frontend/components/atoms/Button';
+import SubmitButton from '../frontend/components/atoms/SubmitButton';
 
 const TERMDESCRIPTIONS = [
     'Academic term, active on Waterloop in-person', 
@@ -32,13 +32,20 @@ const FormHeader = ({title, marginBottom}) => {
     const theme = useContext(ThemeContext);
     return (
         <SystemComponent
-            fontSize={theme.fontSizes.header3}
             textAlign='center'
             mb={marginBottom}
         >
             <SystemSpan>
-                <Subtitle>{title}</Subtitle>
+                <Subtitle fontSize={[theme.fontSizes.smallSubtitle, theme.fontSizes.subtitle]}>{title}</Subtitle>
             </SystemSpan>
+        </SystemComponent>
+    );
+}
+
+const FormFooter = ({handleSave}) => {
+    return (
+        <SystemComponent mt={5} textAlign='center'>
+            <SubmitButton onClick={handleSave}>Submit</SubmitButton>
         </SystemComponent>
     );
 }
@@ -145,12 +152,15 @@ const RegistrationForm = () => {
         <PageTemplate>
             <SystemComponent>
                 <Card
-                    width={["100%", "768px"]}
+                    css={{
+                        boxSizing: 'border-box'
+                    }}
+                    width={["98%", "500px", "700px", "768px"]}
                     margin={["cardMarginSmall", "auto"]}
-                    padding={["cardPaddingSmall", "cardPaddingSmall", "cardPadding"]}
+                    padding={["cardPaddingSmall", "cardPadding", "cardPadding"]}
                 >
                     <FormHeader
-                        title="Tell us more About You"
+                        title="Tell us More About You"
                         marginBottom={theme.space.titleBottomMargin}
                     />
                     <SystemComponent
@@ -277,8 +287,8 @@ const RegistrationForm = () => {
                             hasError={hasError['machineShopOrientation']}
                             errorText="Please select an option."
                             />
-                        <SystemComponent><Button onClick={handleSave}>Submit</Button></SystemComponent>
                     </SystemComponent> 
+                    <FormFooter handleSave={handleSave}/>
                 </Card>
             </SystemComponent>
         </PageTemplate>

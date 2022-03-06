@@ -1,10 +1,16 @@
+const mongoose = require('mongoose');
+
 const Member = require('../schema/Member');
+const UserDetails = require('../schema/UserDetails');
 const skills = require('./skills');
 const interests = require('./interests');
 const memberTypes = require('./memberTypes');
 const projects = require('./projects');
 const subteams = require('./subteams');
 const util = require('./util');
+const _ = require('lodash');
+
+const db = mongoose.connection;
 
 const members = {};
 
@@ -53,21 +59,22 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
 };
 
 /** 
- * @param {Object} body: selection criteria for selecting members to return (ie. {email: 'steven.x@waterloop.ca'} return the member with 'steven.x@waterloop.ca' as email)
+ * Returns all members (and their associated information) that match the filter criteria specified in input params
+ * 
+ * @param {Object} filter: selection criteria for selecting members to return (ie. {email: 'steven.x@waterloop.ca'} return the member with 'steven.x@waterloop.ca' as email)
  * @param {Object} fields: specifies which fields to return
  * @param {boolean} showToken: whether or not to return the access token and expiry date of token
  * @param {boolean} returnSubteamTaskList: whether or not to return the tasks that should be completed by the member(s)
  * 
- * Returns all members (and their associated information) that match the filter criteria specified in input params
  */
-members.search = async (body, fields, showToken = false, returnSubteamTaskList = false) => {
+members.search = async (filter, fields, showToken = false, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
-        const searchByDisplayName = body ? body.displayName : null;
+        const searchByDisplayName = filter ? filter.displayName : null;
         if (searchByDisplayName) {
-            delete body.displayName;
+            delete filter.displayName;
         }
         if (fields) {
-            const query = Member.find(body).select(fields);
+            const query = Member.find(filter).select(fields);
             if (fields['skills']) {
                 query.populate('skills');
             }
@@ -99,7 +106,7 @@ members.search = async (body, fields, showToken = false, returnSubteamTaskList =
         } else {
             let res;
             if (showToken) {
-                res = await (Member.find(body)
+                res = await (Member.find(filter)
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
@@ -108,7 +115,7 @@ members.search = async (body, fields, showToken = false, returnSubteamTaskList =
                     .select('+token')
                     .exec());
             } else {
-                res = await (Member.find(body)
+                res = await (Member.find(filter)
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
@@ -139,61 +146,91 @@ members.assignTaskToAllMembers = async (filter, newTask) => {
 }
 
 /**
- * Add a new member to the database
+ * Add a new user to the database
  * 
- * @param {Object} memberBody: the new member's details
+ * @param {Object} userPayload:    the new user's details
  */
-members.add = async (memberBody) => {
+members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
-        memberBody = await replaceBodyWithIds(memberBody);
-        return await Member.create(memberBody);
+        const userSummaryFields = Object.keys(Member.schema.paths);
+        const userDetailFields = Object.keys(UserDetails.schema.paths);
+        let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
+        let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
+
+        const session = await db.startSession();
+        const response = await session.withTransaction(async () => {
+            const userDetailsResponse = await UserDetails.create(userDetails).session(session);
+            userSummary.miscDetails = userDetailsResponse._id;
+            userSummary = await replacePayloadWithIds(userSummary);
+            const res = await Member.create(userSummary).session(session);
+            return res;
+        });
+        session.endSession();
+        return response;
     });
 };
 
 /**
  * Delete members from the database
  * 
- * @param {Object} body: details for selecting which member(s) to delete
+ * @param {Object} filter: details about which member(s) to delete
  */
-members.delete = async (body) => {
+members.delete = async (filter) => {
     return util.handleWrapper(async () => {
-        return (await Member.deleteMany(body).exec());
+        const userDetailRecordsToDelete = (await Member.find(filter).exec()).map(r => r.miscDetails);
+        const session = await db.startSession();
+        const res = await session.withTransaction(async () => {
+            const deletedRecords = await Member.deleteMany(filter).session(session).exec();
+            if (userDetailRecordsToDelete.length > 0) {
+                await UserDetails.deleteMany({_id: {$in: userDetailRecordsToDelete}}).session(session).exec();
+            }
+            return deletedRecords;
+        });
+        session.endSession();
+        return res;
     });
 };
 
 /**
  * Update data for a single member only
+ * 
+ * @param {filter}: Details about which member/user-record to update
+ * @param {payload}: The new info. for the member
  */
-members.updateMember = async (filter, body, options) => {
-    if (options) {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateOne(filter, body, options).exec());
+members.updateMember = async (filter, payload) => {
+    const memberFields = Object.keys(Member.schema.paths);
+    const userDetailFields = Object.keys(UserDetails.schema.paths);
+    let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
+    let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
+
+    return util.handleWrapper(async () => {
+        const session = await db.startSession();
+        const res = await session.withTransaction(async () => {
+            if (!_.isEmpty(memberSummary)) {
+                memberSummary = await replacePayloadWithIds(memberSummary);
+                await Member.updateOne(filter, memberSummary).session(session).exec();
+            } 
+            if (!_.isEmpty(memberDetails)) {
+                const records = await Member.find(filter).select(["miscDetails"]).session(session).exec();
+                if (records?.length > 0) {
+                    const {miscDetails: memberDetailsId} = records[0];
+                    await UserDetails.updateOne({_id: memberDetailsId}, memberDetails).session(session).exec();
+                }
+            }
         });
-    } else {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateOne(filter, body).exec());
-        });
-    }
+        session.endSession();
+        return res;
+    });
 };
 
 /**
  * Update data for all members
  */
-members.updateAllMembers = async (body, options) => {
-    
-    if (options) {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateMany({}, body, options).exec());
-        });
-    } else {
-        return util.handleWrapper(async () => {
-            body = await replaceBodyWithIds(body);
-            return (await Member.updateMany({}, body).exec());
-        });
-    }
+members.updateAllMembers = async (payload) => {
+    return util.handleWrapper(async () => {
+        payload = await replacePayloadWithIds(payload);
+        return (await Member.updateMany({}, payload).exec());
+    });
 };
 
 /**
@@ -203,53 +240,53 @@ members.updateAllMembers = async (body, options) => {
     Example) {  _id: req.query.id, 
                 "tasks": { "$elemMatch": { "_id": req.body.taskId } }
              }
- * @param {Object} body:   The new status of the task          
+ * @param {Object} payload: The new status of the task          
     Exapmle) { "tasks.$.status": req.body.status }
  */
-members.updateTaskStatus = async (filter, body) => {
+members.updateTaskStatus = async (filter, payload) => {
     return util.handleWrapper(async () => {
-        return (await Member.updateOne(filter, {"$set" : body}, { runValidators: true }).exec());
+        return (await Member.updateOne(filter, {"$set" : payload}, { runValidators: true }).exec());
     });
 };
 
-const replaceBodyWithIds = async (body) => {
-    if (body.interests) {
-        if (Array.isArray(body.interests)) {
-            body.interests = await util.replaceNamesWithIdsArray(body.interests, interests);
+const replacePayloadWithIds = async (payload) => {
+    if (payload.interests) {
+        if (Array.isArray(payload.interests)) {
+            payload.interests = await util.replaceNamesWithIdsArray(payload.interests, interests);
         } else {
             throw Error('interests field must be empty or an array.');
         }
     }
 
-    if (body.skills) {
-        if (Array.isArray(body.skills)) {
-            body.skills = await util.replaceNamesWithIdsArray(body.skills, skills);
+    if (payload.skills) {
+        if (Array.isArray(payload.skills)) {
+            payload.skills = await util.replaceNamesWithIdsArray(payload.skills, skills);
         } else {
             throw Error('skills field must be empty or an array.');
         }
     }
 
-    if (body.subteams) {
-        if (Array.isArray(body.subteams)) {
-            body.subteams = await util.replaceNamesWithIdsArray(body.subteams, subteams);
+    if (payload.subteams) {
+        if (Array.isArray(payload.subteams)) {
+            payload.subteams = await util.replaceNamesWithIdsArray(payload.subteams, subteams);
         } else {
             throw Error('subteams field must be empty or an array.');
         }
     }
 
-    body.memberType ? body.memberType = await util.replaceNameWithId(body.memberType, memberTypes) : null;
+    payload.memberType ? payload.memberType = await util.replaceNameWithId(payload.memberType, memberTypes) : null;
 
-    if (body.projects) {
-        if (Array.isArray(body.projects)) {
-            for (let i = 0; i < body.projects.length; i++) {
-                body.projects[i] = await util.replaceNameWithId(body.projects[i], projects);
+    if (payload.projects) {
+        if (Array.isArray(payload.projects)) {
+            for (let i = 0; i < payload.projects.length; i++) {
+                payload.projects[i] = await util.replaceNameWithId(payload.projects[i], projects);
             }
         } else {
             throw Error('projects field must be empty or an array.');
         }
     }
 
-    return body;
+    return payload;
 };
 
 module.exports = members;
