@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from "next/router";
-import { isEmail } from "validator";
 import { ThemeContext } from "styled-components";
 
 import useLoginTransition from "../../frontend/hooks/useLoginTransition";
@@ -10,12 +9,14 @@ import { updateUser } from "../../frontend/store/reducers/userReducer";
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import { SystemComponent, SystemSpan } from '../../frontend/components/atoms/SystemComponents';
-import Subtitle from "../../frontend/components/atoms/Subtitle";
 import Card from '../../frontend/components/atoms/Card';
 import FieldSection from "../../frontend/components/molecules/Form/FieldSection";
-import SubmitButton from '../../frontend/components/atoms/SubmitButton';
+import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
+import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
+
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
 
 const TERM_STATUSES = [
     'Academic term, active on Waterloop in-person', 
@@ -26,9 +27,9 @@ const TERM_STATUSES = [
     'Other',
 ];
 
-const PREV_TERMS = ['F21', 'S21', 'W21', 'F20', "S20",'W20',];
+const PREV_TERMS = ['F21', 'S21', 'W21', 'F20', "S20",'W20'];
 
-const FUTURE_TERMS = ['W22', 'S22', 'F22', 'W23', "S23",'F23',];
+const FUTURE_TERMS = ['W22', 'S22', 'F22', 'W23', "S23",'F23'];
 
 const MEMBER_TYPES = [
     'Member', 
@@ -45,29 +46,7 @@ const SUBTEAMS = [
     "Infrastructure",
     "Exec",
     "Web"
-]
-
-const FormHeader = ({title, marginBottom}) => {
-    const theme = useContext(ThemeContext);
-    return (
-        <SystemComponent
-            textAlign='center'
-            mb={marginBottom}
-        >
-            <SystemSpan>
-                <Subtitle fontSize={[theme.fontSizes.smallSubtitle, theme.fontSizes.subtitle]}>{title}</Subtitle>
-            </SystemSpan>
-        </SystemComponent>
-    );
-}
-
-const FormFooter = ({handleSubmit, submitDisabled}) => {
-    return (
-        <SystemComponent mt={5} textAlign='center'>
-            <SubmitButton handleClick={(e) => handleSubmit(e)} disabled={submitDisabled}>Submit</SubmitButton>
-        </SystemComponent>
-    );
-}
+];
 
 const RegistrationForm = () => {
     const theme = useContext(ThemeContext);
@@ -110,49 +89,19 @@ const RegistrationForm = () => {
         machineShop: false,
     });
 
-    const clearErrorMessages = (formErrors) => {
-        for (const field of Object.keys(formErrors)) {
-            formErrors[field] = false;
-        }
-    }
-
     const setErrorMessages = (formErrors) => {
-        const {fullName, phoneNumber, email, program, studentId, termStatus, memberType, 
-            subteam, designCentreSafety, whmis, machineShop} = formValues;
-        if (!fullName || fullName.split(/\s+/).length < 2) {
-            formErrors['fullName'] = true;
-        }
-        if (!phoneNumber || phoneNumber.length !== 10) {
-            formErrors['phoneNumber'] = true;
-        }
-        if (!email || !isEmail(email)) {
-            formErrors['email'] = true;
-        }
-        if (!program) {
-            formErrors['program'] = true;
-        }
-        if (!studentId || studentId.length !== 8) {
-            formErrors['studentId'] = true;
-        }
-        if (!termStatus) {
-            formErrors['termStatus'] = true;
-        }
-        if (!memberType) {
-            formErrors['memberType'] = true;
-        }
-        if (!subteam) {
-            formErrors['subteam'] = true;
-        }
-        if (designCentreSafety === null || designCentreSafety === undefined) {
-            formErrors['designCentreSafety'] = true;
-        }
-        if (whmis === null || whmis === undefined) {
-            formErrors['whmis'] = true;
-        }
-        if (machineShop === null || machineShop === undefined) {
-            formErrors['machineShop'] = true;
-        }
-
+        validateField(formValues, formErrors, 'fullName');
+        validateField(formValues, formErrors, 'phoneNumber');
+        validateField(formValues, formErrors, 'email');
+        validateField(formValues, formErrors, 'program');
+        validateField(formValues, formErrors, 'studentId');
+        validateField(formValues, formErrors, 'termStatus');
+        validateField(formValues, formErrors, 'memberType');
+        validateField(formValues, formErrors, 'subteam');
+        validateField(formValues, formErrors, 'designCentreSafety');
+        validateField(formValues, formErrors, 'whmis');
+        validateField(formValues, formErrors, 'machineShop');
+        
         setHasError(formErrors);
     }
 
@@ -197,11 +146,11 @@ const RegistrationForm = () => {
     const handleInputChange = (name, value) => {
         // Prevent user from typing in non-numeric characters.
         if (name === "phoneNumber") {
-            if (value && (!value.match(/^[0-9]*$/) || value.length > 10)) {
+            if (value && isInvalidPhoneNumber(value)) {
                 return;
             }
         } else if (name === "studentId") {
-            if (value && (!value.match(/^[0-9]*$/) || value.length > 8)) {
+            if (value && isInvalidStudentId(value)) {
                 return
             };
         }

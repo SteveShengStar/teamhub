@@ -21,11 +21,15 @@ const UserDetailsSchema = new Schema({
     nextTermRole: {
         type: String
     },
+    nextSchoolTerm: {
+        type: String,
+        required: false
+    },
     termComments: {
         type: String,
         required: false
     },
-    nextTermWork: {
+    desiredWork: {
         type: String,
         required: false
     },
