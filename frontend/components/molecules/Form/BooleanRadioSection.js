@@ -1,5 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
+import React from 'react';
 import RadioSection from './RadioSection';
 
 const BooleanRadioSection = ({name, selectedOption, setSelectedOption}) => {

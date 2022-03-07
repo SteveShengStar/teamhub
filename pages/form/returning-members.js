@@ -1,17 +1,17 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { isEmail } from 'validator';
+import React, { useState, useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import PageTemplate from '../frontend/components/templates/PageTemplate';
+import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import {
-  SystemComponent,
-  SystemSpan,
-} from '../frontend/components/atoms/SystemComponents';
-import Subtitle from '../frontend/components/atoms/Subtitle';
-import Card from '../frontend/components/atoms/Card';
-import FieldSection from '../frontend/components/molecules/Form/FieldSection';
-import Button from '../frontend/components/atoms/Button';
+  SystemComponent
+} from '../../frontend/components/atoms/SystemComponents';
+import Card from '../../frontend/components/atoms/Card';
+import FieldSection from '../../frontend/components/molecules/Form/FieldSection';
+import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
+import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
-const SCHOOL_TERM_LABELS = [
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+
+const SCHOOL_TERMS = [
   '1A Co-op',
   '1B Study',
   '1B Co-op',
@@ -72,7 +72,7 @@ const SUBTEAMS = [
   'Team Hub',
 ];
 
-const ACTIVE_STATUS = [
+const NEXT_TERM_ACTIVITY = [
   'Yes, I will continue on the team, and I will be on campus (or working locally)',
   'Yes, I will continue on the team remotely and can come to campus if needed/possible',
   'Yes, I will continue on the team remotely only',
@@ -80,14 +80,7 @@ const ACTIVE_STATUS = [
   'No, taking the term off',
 ];
 
-const MEMBERSHIP = [
-  'Member',
-  'Exec/lead/advisor',
-  'Coop',
-  'Not active on Waterloop this term',
-];
-
-const CONTINUING_STATUS = [
+const NEXT_TERM_ROLE = [
   'Continue with my sub-team',
   'Transfer to another sub-team (please specify)',
   'Want to take on a leadership role - lead',
@@ -96,96 +89,89 @@ const CONTINUING_STATUS = [
   "I'm undecided or not continuing",
 ];
 
-const FormHeader = ({ title, marginBottom }) => {
-  const theme = useContext(ThemeContext);
-  return (
-    <SystemComponent
-      fontSize={theme.fontSizes.header3}
-      textAlign="center"
-      mb={marginBottom}
-    >
-      <SystemSpan>
-        <Subtitle>{title}</Subtitle>
-      </SystemSpan>
-    </SystemComponent>
-  );
-};
-
 const ReturningMembersForm = () => {
   const theme = useContext(ThemeContext);
 
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, hydrated } = useSelector(state => state.userState);
+
   const [formValues, setFormValues] = useState({
     fullName: '',
-    termDescription: '',
+    nextSchoolTerm: '',
     previousTerms: [],
     futureTerms: [],
     subteam: '',
-    activeStatus: '',
-    continuingStatus: '',
+    nextTermActivity: '',
+    nextTermRole: '',
     email: '',
-    comments: '',
-    futureTasks: '',
+    termComments: '',
+    desiredWork: '',
   });
 
   const [hasError, setHasError] = useState({
     fullName: false,
-    termDescription: false,
+    nextSchoolTerm: false,
     previousTerms: false,
     futureTerms: false,
-    activeStatus: false,
+    nextTermActivity: false,
     subteam: false,
-    activeStatus: false,
-    continuingStatus: false,
+    nextTermRole: false,
     email: false,
   });
 
-  const handleSave = () => {
-    const updatedErrorList = { ...hasError };
+  const setErrorMessages = (formErrors) => {
+    validateField(formValues, formErrors, 'fullName');
+    validateField(formValues, formErrors, 'email');
+    validateField(formValues, formErrors, 'nextSchoolTerm');
+    validateField(formValues, formErrors, 'subteam');
+    validateField(formValues, formErrors, 'nextTermRole');
+    validateField(formValues, formErrors, 'nextTermActivity');
+    validateField(formValues, formErrors, 'futureTerms');
 
-    // this resets all fields to display no errors initially, the errors will update when correcting some fields
-    for (const [name, value] of Object.entries(updatedErrorList)) {
-      updatedErrorList[name] = false;
-    }
+    setHasError(formErrors);
+  }
 
-    if (!formValues.fullName || formValues.fullName.split(' ').length !== 2) {
-      updatedErrorList['fullName'] = true;
-    }
-    if (!formValues.email || !isEmail(formValues.email)) {
-      updatedErrorList['email'] = true;
-    }
-    if (!formValues.termDescription) {
-      updatedErrorList['termDescription'] = true;
-    }
-    if (!formValues.subteam) {
-      updatedErrorList['subteam'] = true;
-    }
-    if (!formValues.continuingStatus) {
-      updatedErrorList['continuingStatus'] = true;
-    }
-    if (!formValues.activeStatus) {
-      updatedErrorList['activeStatus'] = true;
-    }
-    if (!formValues.futureTerms) {
-      updatedErrorList['futureTerms'] = true;
-    }
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const formErrors = { ...hasError };
 
-    setHasError(updatedErrorList);
-    const submissionHasErrors = Object.values(updatedErrorList).some(
-      (hasError) => hasError === true
-    );
-    if (submissionHasErrors) {
-      return;
+    clearErrorMessages(formErrors);
+    setErrorMessages(formErrors);
+
+    const formHasErrors = Object.values(formErrors).some(err => err);
+    if (!formHasErrors) {
+      const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteam, nextTermActivity,
+              nextTermRole, email, termComments, desiredWork} = formValues;
+
+      const fullNameParts = fullName.split(/\s+/);
+      updateUser(dispatch, {
+          name: {
+              first: fullNameParts[0].trim(),
+              last: fullNameParts[fullNameParts.length - 1].trim()
+          },
+          personalEmail: email.trim(),
+          subteams: [subteam], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
+          activeSchoolTerms: [...previousTerms, ...futureTerms],
+          nextSchoolTerm,
+          nextTermActivity,
+          nextTermRole,
+          termComments: termComments.trim(),
+          desiredWork: desiredWork.trim(),
+      }, user._id, router).then(res => {
+          console.log("Update User Info. Completed.");
+          // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
+      });
     }
-    // call onSubmit API route here
   };
 
   const handleInputChange = (name, value) => {
     if (name === 'phoneNumber') {
-      if (value && (!value.match(/^[0-9]*$/) || value.length > 10)) {
+      if (value && isInvalidPhoneNumber(value)) {
         return;
       }
     } else if (name === 'studentId') {
-      if (value && (!value.match(/^[0-9]*$/) || value.length > 8)) {
+      if (value && isInvalidStudentId(value)) {
         return;
       }
     }
@@ -229,12 +215,12 @@ const ReturningMembersForm = () => {
             <FieldSection
               title="This upcoming term, I will be on my"
               type="radio"
-              name="termDescription"
+              name="nextSchoolTerm"
               required={true}
-              options={SCHOOL_TERM_LABELS}
+              options={SCHOOL_TERMS}
               onChange={handleFieldChange}
-              value={formValues.termDescription}
-              hasError={hasError['termDescription']}
+              value={formValues.nextSchoolTerm}
+              hasError={hasError['nextSchoolTerm']}
               errorText="Please select an option."
             />
             <FieldSection
@@ -268,24 +254,24 @@ const ReturningMembersForm = () => {
             />
             <FieldSection
               title="Will you be active on the team this upcoming term?"
-              name="activeStatus"
+              name="nextTermActivity"
               type="radio"
               required={true}
-              options={ACTIVE_STATUS}
-              value={formValues.activeStatus}
+              options={NEXT_TERM_ACTIVITY}
+              value={formValues.nextTermActivity}
               onChange={handleFieldChange}
-              hasError={hasError['activeStatus']}
+              hasError={hasError['nextTermActivity']}
               errorText="Please select an option."
             />
             <FieldSection
               title="If you're continuing, what are you planning to do?"
-              name="continuingStatus"
+              name="nextTermRole"
               type="radio"
               required={true}
-              options={CONTINUING_STATUS}
-              value={formValues.continuingStatus}
+              options={NEXT_TERM_ROLE}
+              value={formValues.nextTermRole}
               onChange={handleFieldChange}
-              hasError={hasError['continuingStatus']}
+              hasError={hasError['nextTermRole']}
               errorText="Please select an option."
             />
             <FieldSection
@@ -299,20 +285,18 @@ const ReturningMembersForm = () => {
             />
             <FieldSection
               title="Any additional comments or thoughts on the term?"
-              name="comments"
-              value={formValues['comments']}
+              name="termComments"
+              value={formValues['termComments']}
               onChange={handleInputChange}
             />
             <FieldSection
               title="Is there anything specific you want to work on next term?"
-              name="futureTasks"
-              value={formValues['futureTasks']}
+              name="desiredWork"
+              value={formValues['desiredWork']}
               onChange={handleInputChange}
             />
-            <SystemComponent>
-              <Button onClick={handleSave}>Submit</Button>
-            </SystemComponent>
           </SystemComponent>
+          <FormFooter handleSubmit={handleSubmit} submitDisabled={!hydrated}/>
         </Card>
       </SystemComponent>
     </PageTemplate>

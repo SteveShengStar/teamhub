@@ -3,7 +3,7 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import TextArea from "../atoms/TextArea";
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {removeBadValuesAndDuplicates} from '../../helpers'
+import {removeBadValuesAndDuplicates} from '../../util'
 import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
@@ -14,7 +14,6 @@ import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import { updateProfileInfo, UserTypes } from "../../store/reducers/userReducer";
 
-import isBefore from 'validator/lib/isBefore';
 import {isEmpty} from 'lodash';
 import theme from '../theme';
 

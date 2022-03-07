@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeBadValuesAndDuplicates } from '../../helpers';
+import { removeBadValuesAndDuplicates } from '../../util';
 
 import MultiSelectInput from '../molecules/MultiSelectInput';
 import { SystemComponent } from '../atoms/SystemComponents';
