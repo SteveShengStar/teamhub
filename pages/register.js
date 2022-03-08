@@ -126,7 +126,6 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
-        
         if (name === "phoneNumber") {
             if (value && (!value.match(/^[0-9]*$/) || value.length > 10)) return;
         } else if (name === "studentId") {

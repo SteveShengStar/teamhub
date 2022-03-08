@@ -206,6 +206,102 @@ members.assignTaskToAllMembers = async (filter, newTask) => {
 }
 
 /**
+ * Add a new user to the database
+ * 
+ * @param {Object} userPayload:    the new user's details
+ */
+members.add = async (userPayload) => {
+    return util.handleWrapper(async () => {
+        // Get fields stored in the Member collection.
+        const userSummaryFields = Object.keys(Member.schema.paths);
+        // Get fields stored in the UserDetails collection.
+        const userDetailFields = Object.keys(UserDetails.schema.paths);
+        // Extract only the fields relevant to the Member collection.
+        let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
+        // Extract only the fields relevant to the UserDetails collection.
+        let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
+
+        const session = await db.startSession();
+        const response = await session.withTransaction(async () => {
+            const userDetailsResponse = await UserDetails.create(userDetails).session(session);
+            userSummary.miscDetails = userDetailsResponse._id;
+            userSummary = await replacePayloadWithIds(userSummary);
+            const res = await Member.create(userSummary).session(session);
+            return res;
+        });
+        session.endSession();
+        return response;
+    });
+};
+
+/**
+ * Delete members from the database
+ * 
+ * @param {Object} filter: details about which member(s) to delete
+ */
+members.delete = async (filter) => {
+    return util.handleWrapper(async () => {
+        const userDetailRecordsToDelete = (await Member.find(filter).exec()).map(r => r.miscDetails);
+        const session = await db.startSession();
+        const res = await session.withTransaction(async () => {
+            const deletedRecords = await Member.deleteMany(filter).session(session).exec();
+            if (userDetailRecordsToDelete.length > 0) {
+                await UserDetails.deleteMany({_id: {$in: userDetailRecordsToDelete}}).session(session).exec();
+            }
+            return deletedRecords;
+        });
+        session.endSession();
+        return res;
+    });
+};
+
+/**
+ * Update data for a single member only
+ * 
+ * @param {filter}: Details about which member/user-record to update
+ * @param {payload}: The new info. for the member
+ */
+members.updateMember = async (filter, payload) => {
+    // Get fields stored in the Member collection.
+    const memberFields = Object.keys(Member.schema.paths);
+    // Get fields stored in the UserDetails collection.
+    const userDetailFields = Object.keys(UserDetails.schema.paths);
+    // Extract only the fields relevant to the Member collection.
+    let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
+    // Extract only the fields relevant to the UserDetails collection.
+    let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
+
+    return util.handleWrapper(async () => {
+        const session = await db.startSession();
+        const res = await session.withTransaction(async () => {
+            if (!_.isEmpty(memberSummary)) {
+                memberSummary = await replacePayloadWithIds(memberSummary);
+                await Member.updateOne(filter, memberSummary).session(session).exec();
+            } 
+            if (!_.isEmpty(memberDetails)) {
+                const records = await Member.find(filter).select(["miscDetails"]).session(session).exec();
+                if (records?.length > 0) {
+                    const {miscDetails: memberDetailsId} = records[0];
+                    await UserDetails.updateOne({_id: memberDetailsId}, memberDetails).session(session).exec();
+                }
+            }
+        });
+        session.endSession();
+        return res;
+    });
+};
+
+/**
+ * Update data for all members
+ */
+members.updateAllMembers = async (payload) => {
+    return util.handleWrapper(async () => {
+        payload = await replacePayloadWithIds(payload);
+        return (await Member.updateMany({}, payload).exec());
+    });
+};
+
+/**
  * Update the status of a task for a single member
  * 
  * @param {Object} filter: Selection criteria for the member to update 
