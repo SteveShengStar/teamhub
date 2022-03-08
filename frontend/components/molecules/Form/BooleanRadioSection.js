@@ -1,9 +1,10 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
+import React from 'react';
 import RadioSection from './RadioSection';
 
+/**
+ * Form section asking a yes/no question, with only 2 radio selections 'Yes' or 'No'
+ */
 const BooleanRadioSection = ({name, selectedOption, setSelectedOption}) => {
-
     const setSelected = (name, value) => {
         if (value === "Yes") {
             setSelectedOption(name, true);

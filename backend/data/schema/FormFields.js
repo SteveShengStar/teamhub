@@ -3,6 +3,9 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
+/**
+ * MongoDB collection for Form Sections (each section asks a question which the user must fill in and answer)
+ */
 const FormFieldsSchema = new Schema({ 
     name: {
         type: String,

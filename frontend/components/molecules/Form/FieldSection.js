@@ -33,7 +33,6 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
-
         switch (type) {
             case 'textbox':
                 return (

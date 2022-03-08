@@ -152,9 +152,13 @@ members.assignTaskToAllMembers = async (filter, newTask) => {
  */
 members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
+        // Get fields stored in the Member collection.
         const userSummaryFields = Object.keys(Member.schema.paths);
+        // Get fields stored in the UserDetails collection.
         const userDetailFields = Object.keys(UserDetails.schema.paths);
+        // Extract only the fields relevant to the Member collection.
         let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
+        // Extract only the fields relevant to the UserDetails collection.
         let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
 
         const session = await db.startSession();
@@ -198,9 +202,13 @@ members.delete = async (filter) => {
  * @param {payload}: The new info. for the member
  */
 members.updateMember = async (filter, payload) => {
+    // Get fields stored in the Member collection.
     const memberFields = Object.keys(Member.schema.paths);
+    // Get fields stored in the UserDetails collection.
     const userDetailFields = Object.keys(UserDetails.schema.paths);
+    // Extract only the fields relevant to the Member collection.
     let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
+    // Extract only the fields relevant to the UserDetails collection.
     let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
 
     return util.handleWrapper(async () => {
