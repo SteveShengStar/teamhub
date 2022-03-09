@@ -19,7 +19,7 @@ const TitleSection = ({text, required}) => {
     )
 } 
 
-const DescriptionSection = ({text}) => {
+const DescriptionSection = ({text}) => { // TODO: incorporate form-section descriptions later.
     return (
         <SystemComponent>
             <Header4>
@@ -29,7 +29,7 @@ const DescriptionSection = ({text}) => {
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError, errorText, options=[] }) => {
+const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
