@@ -32,6 +32,9 @@ export const validateField = (formData, formErrors, field) => {
         case 'program':
         case 'termStatus':
         case 'memberType':
+        case 'nextSchoolTerm':
+        case 'nextTermRole':
+        case 'nextTermActivity':
             validateExists(formData, formErrors, field);
             break;
     }
