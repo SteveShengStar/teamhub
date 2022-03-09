@@ -29,19 +29,11 @@ export const validateField = (formData, formErrors, field) => {
         case 'subteam':
         case 'nextTermRole':
         case 'nextTermActivity':
-        case 'futureTerms':
         case 'program':
         case 'termStatus':
         case 'memberType':
             validateExists(formData, formErrors, field);
             break;
-    }
-    
-} 
-
-export const clearErrorMessages = (formErrors) => {
-    for (const field of Object.keys(formErrors)) {
-        formErrors[field] = false;
     }
 }
 
@@ -60,7 +52,7 @@ export const isInvalidStudentId = (number) => {
 }
 
 const validateExists = (formData, formErrors, field) => {
-    if (!formData[field]) {
+    if (!formData[field].trim()) {
         formErrors[field] = true;
     }
 }
@@ -78,13 +70,13 @@ const validateBoolean = (formData, formErrors, field) => {
 }
 
 const validateName = (formData, formErrors, field) => {
-    if (!formData[field] || formData[field].split(/\s+/).length < 2) {
+    if (!formData[field].trim() || formData[field].trim().split(/\s+/).length < 2) {
         formErrors[field] = true;
     }
 }
 
 const validateEmail = (formData, formErrors, field) => {
-    if (!formData[field] || !isEmail(formData[field])) {
+    if (!formData[field].trim() || !isEmail(formData[field].trim())) {
         formErrors[field] = true;
     }
 }

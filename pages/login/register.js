@@ -82,8 +82,6 @@ const RegistrationForm = () => {
         termStatus: false, 
         memberType: false, 
         subteam: false,
-        previousTerms: false, 
-        futureTerms: false, 
         designCentreSafety: false,
         whmis: false, 
         machineShop: false,
@@ -274,7 +272,6 @@ const RegistrationForm = () => {
                                     value={formValues['previousTerms']}
                                     options={PREV_TERMS}
                                     onChange={handleFieldChange}
-                                    hasError={hasError['previousTerms']}
                                     />
                                 <FieldSection 
                                     title="Future Terms" 
@@ -283,7 +280,6 @@ const RegistrationForm = () => {
                                     value={formValues['futureTerms']}
                                     options={FUTURE_TERMS}
                                     onChange={handleFieldChange}
-                                    hasError={hasError['FUTURE_TERMS']}
                                     />
                                 <FieldSection 
                                     title="Student Design Center Safety Requirements" 

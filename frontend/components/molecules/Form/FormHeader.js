@@ -1,6 +1,7 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { ThemeContext } from 'styled-components';
-import { SystemComponent, SystemSpan, Subtitle } from '../../atoms/SystemComponents';
+import { SystemComponent, SystemSpan} from '../../atoms/SystemComponents';
+import Subtitle from '../../atoms/Subtitle';
 
 const FormHeader = ({ title, marginBottom }) => {
     const theme = useContext(ThemeContext);
