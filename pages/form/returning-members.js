@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from "next/router";
 import { ThemeContext } from 'styled-components';
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import {
@@ -10,6 +12,8 @@ import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
 import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+
+import { updateUser } from "../../frontend/store/reducers/userReducer";
 
 const SCHOOL_TERMS = [
   '1A Co-op',
@@ -112,8 +116,6 @@ const ReturningMembersForm = () => {
   const [hasError, setHasError] = useState({
     fullName: false,
     nextSchoolTerm: false,
-    previousTerms: false,
-    futureTerms: false,
     nextTermActivity: false,
     subteam: false,
     nextTermRole: false,
@@ -127,7 +129,6 @@ const ReturningMembersForm = () => {
     validateField(formValues, formErrors, 'subteam');
     validateField(formValues, formErrors, 'nextTermRole');
     validateField(formValues, formErrors, 'nextTermActivity');
-    validateField(formValues, formErrors, 'futureTerms');
 
     setHasError(formErrors);
   }
@@ -213,7 +214,7 @@ const ReturningMembersForm = () => {
               errorText="Please enter your full name."
             />
             <FieldSection
-              title="This upcoming term, I will be on my"
+              title="This upcoming term, I will be in my"
               type="radio"
               name="nextSchoolTerm"
               required={true}
@@ -221,25 +222,23 @@ const ReturningMembersForm = () => {
               onChange={handleFieldChange}
               value={formValues.nextSchoolTerm}
               hasError={hasError['nextSchoolTerm']}
-              errorText="Please select an option."
+              errorText="Please select an option above."
             />
             <FieldSection
-              title="Previous Terms"
+              title="Previous Terms I worked on Waterloop"
               type="checkbox"
               name="previousTerms"
               value={formValues['previousTerms']}
               options={PREV_TERMS}
               onChange={handleFieldChange}
-              hasError={hasError['previousTerms']}
             />
             <FieldSection
-              title="I will be in Waterloo during"
+              title="I will be on Waterloop during"
               type="checkbox"
               name="futureTerms"
               value={formValues['futureTerms']}
               options={FUTURE_TERMS}
               onChange={handleFieldChange}
-              hasError={hasError['futureTerms']}
             />
             <FieldSection
               title="Your subteam"
@@ -250,7 +249,7 @@ const ReturningMembersForm = () => {
               value={formValues.subteam}
               onChange={handleFieldChange}
               hasError={hasError['subteam']}
-              errorText="Please select an option."
+              errorText="Please select an option above."
             />
             <FieldSection
               title="Will you be active on the team this upcoming term?"
@@ -261,7 +260,7 @@ const ReturningMembersForm = () => {
               value={formValues.nextTermActivity}
               onChange={handleFieldChange}
               hasError={hasError['nextTermActivity']}
-              errorText="Please select an option."
+              errorText="Please select an option above."
             />
             <FieldSection
               title="If you're continuing, what are you planning to do?"
@@ -272,7 +271,7 @@ const ReturningMembersForm = () => {
               value={formValues.nextTermRole}
               onChange={handleFieldChange}
               hasError={hasError['nextTermRole']}
-              errorText="Please select an option."
+              errorText="Please select an option above."
             />
             <FieldSection
               title="Please provide your personal email address"
