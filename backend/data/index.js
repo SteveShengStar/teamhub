@@ -48,5 +48,6 @@ data.auth = require('./handlers/auth');
 data.filters = require('./handlers/filters');
 data.task = require('./handlers/task');
 data.calendar = require('./handlers/calendar')
+data.exportsheet = require('./handlers/exportsheet')
 
 module.exports = data;
