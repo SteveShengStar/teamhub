@@ -31,6 +31,9 @@ module.exports = async (req, res) => {
                 }
                 return await data.members.getAll(fields);
             })));
+        } else {
+            res.statusCode = 401;
+            res.end();
         }
     } else {
         res.statusCode = 404;
