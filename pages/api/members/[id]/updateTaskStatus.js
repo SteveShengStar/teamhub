@@ -50,6 +50,10 @@ module.exports = async (req, res) => {
                                                             }}, 
                                                             {"tasks.$.status": req.body.status});
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

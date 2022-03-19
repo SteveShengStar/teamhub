@@ -9,7 +9,7 @@ module.exports = async (req, res) => {
         const authStatus = await data.auth.checkSpecificUser(`Bearer ${token}`, req.query.id, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
-            
+
             if (!req.query.id) {
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
@@ -21,6 +21,10 @@ module.exports = async (req, res) => {
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 return await data.members.delete({ _id: req.query.id });
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

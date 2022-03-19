@@ -6,10 +6,10 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         
         // Get the Access Token from the request headers
-        // const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
                             
-        if (true) {
+        if (authStatus) {
             const token = req.headers['authorization'].split(' ')[1];
             console.log(token);
             res.setHeader('Content-Type', 'application/json');
@@ -21,7 +21,8 @@ module.exports = async (req, res) => {
             })));
         } else {
             res.statusCode = 401;
-            res.end();
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

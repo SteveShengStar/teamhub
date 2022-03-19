@@ -70,6 +70,10 @@ module.exports = async (req, res) => {
                 const remainingMemberIDs = difference(allMembers.map(m => m._id), relevantMemberIDs);
                 return await data.members.assignTaskToAllMembers( {_id: {$in: remainingMemberIDs}}, { taskId: taskID.toString(), status: "irrelevant" });
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;
