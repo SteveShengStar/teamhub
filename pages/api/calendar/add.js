@@ -17,6 +17,10 @@ module.exports = async (req, res) => {
                 // Call the function which adds a new Google Calendar Event.
                 return await data.calendar.add(token, eventDetails, res);
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;
