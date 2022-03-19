@@ -6,12 +6,10 @@ const Schema = mongoose.Schema;
 
 const Member_Stream = new Schema({
     isCoop: {
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     onStream: {
-        type: Boolean,
-        required: true
+        type: Boolean
     },
     coopStream: {
         type: Map,
@@ -136,6 +134,10 @@ const MemberSchema = new Schema({
     },
     active: {
         type: Boolean,
+    },
+    miscDetails: {
+        type: Schema.Types.ObjectId,
+        ref: 'UserDetails',
     }
 });
 

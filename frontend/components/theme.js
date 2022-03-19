@@ -101,9 +101,12 @@ const theme = {
   colors: {
     theme: themeYellow,
     action: primaryBlue,
+    primaryBlue,
     alertAction: alertRed,
     foreground: black,
     background: white,
+    black,
+    white,
     greys,
     inactive: greys[2],
     messagesBackground: messagesBlue,
@@ -122,6 +125,11 @@ const theme = {
   fonts: {
     title: 'futura-pt',
     body: 'Nunito Sans',
+  },
+  textInputHeight: {
+    small: '26px',
+    medium: '26px',
+    large: '34px',
   },
   fontSizes,
   fontWeights,

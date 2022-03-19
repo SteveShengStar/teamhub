@@ -135,7 +135,7 @@ A JSON object with the results
 		"skills": ["C++", "PCB Design"],
 		"interests": ["Self-Driving Cars"],
 		"subteams": ["Electrical"],
-		"projects": ["Embedded", "Battery Management],
+		"projects": ["Embedded", "Battery Management"],
 		"name": {
 			"display": "DisplayName",
 			"first": "FirstName",

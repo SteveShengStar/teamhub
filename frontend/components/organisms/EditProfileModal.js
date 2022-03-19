@@ -165,7 +165,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         display: dataLoaded && !isEmpty(user) ? user.name.display : "",
         birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
-        term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+        term: (dataLoaded && !isEmpty(user) && !isEmpty(user.stream) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         bio: dataLoaded ? user.bio : ""
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
@@ -194,7 +194,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
             display: dataLoaded && !isEmpty(user) ? user.name.display : "",
             birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-            term: (dataLoaded && !isEmpty(user) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
+            term: (dataLoaded && !isEmpty(user) && !isEmpty(user.stream) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             bio: dataLoaded ? user.bio : ""
         });
 
@@ -340,7 +340,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                             options={
                                 skillOpts ? 
                                 skillOpts.map(skill => 
-                                ({value: skill.name.toLowerCase(), label: skill.name}))
+                                ({value: skill?.name?.toLowerCase(), label: skill.name}))
                                 : 
                                 []
                             }
@@ -354,7 +354,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                             options={
                                 interestOpts ? 
                                 interestOpts.map(interest => 
-                                ({value: interest.name.toLowerCase(), label: interest.name}))
+                                ({value: interest?.name?.toLowerCase(), label: interest.name}))
                                 : 
                                 []
                             }

@@ -18,12 +18,10 @@ module.exports = async (req, res) => {
         // TODO: distinguish better between 5xx and 4xx (use Validation error as a hint)
         res.statusCode = 200;
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
-
-            let payload = req.body;
+            let payload = req.body.data;
             if (!payload.subteams) {
                 payload.subteams = [];
             }
-
             // Get tasks that are relevant to the new member based on subteam(s) they are part of
             let relevantTaskIDs;
             if (payload.subteams.length === 0) {
