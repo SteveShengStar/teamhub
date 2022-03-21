@@ -36,6 +36,9 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
             if (fields['projects']) {
                 query.populate('projects');
             }
+            if (fields['miscDetails']) {
+                query.populate('miscDetails');
+            }
             return (await query.exec());
         } else {
             if (!returnSubteamTaskList) {
