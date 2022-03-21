@@ -20,8 +20,6 @@ exportsheet.readfile = async (token) => {
 }
 
 exportsheet.write = async (token) => {
-
-
     const fieldsToReturn = ["name", "program", "bio", "skills", "interests", "memberType", "subteams", "projects", "email", "stream", "imageUrl", "links", "token", "tokenExpiry", "active", "miscDetails", 'activeSchoolTerms']
     let fields = {};
     for (const field of fieldsToReturn) {
@@ -39,17 +37,17 @@ exportsheet.write = async (token) => {
     let normalizedDatabaseResult = databaseResult.map(dbRow => {
         return {
             fullName: dbRow.name.first + " " + dbRow.name.last,
-            email: dbRow.email,
-            phoneNumber: dbRow.miscDetails.phone ? dbRow.miscDetails.phone : '',
-            memberType: dbRow.memberType?.name ? dbRow.memberType?.name : '',
-            program: dbRow.program,
-            skills: dbRow.skills?.map(skill => skill?.name).join(),
-            subteam: dbRow.subteams[0]?.name,
-            termStatus: dbRow.miscDetails.termStatus, 
-            activeSchoolTerms: dbRow.activeSchoolTerms ? dbRow.activeSchoolTerms.join() : '',
-            ssdc: dbRow.miscDetails.designCentreSafty ? 'yes' : 'no',
-            whmis: dbRow.miscDetails.whmis ? 'yes' : 'no' , 
-            machineShop: dbRow.miscDetails.machineShop ? 'yes' : 'no',
+            email: dbRow.email ?? '',
+            phoneNumber: dbRow.miscDetails?.phone ?? '',
+            memberType: dbRow.memberType?.name ?? '',
+            program: dbRow.program ?? '',
+            skills: dbRow.skills?.map(skill => skill?.name).join() ?? '',
+            subteam: dbRow.subteams[0]?.name ?? '',
+            termStatus: dbRow.miscDetails?.termStatus ?? '', 
+            activeSchoolTerms: dbRow.activeSchoolTerms?.join() ?? '',
+            ssdc: dbRow.miscDetails?.designCentreSafty ? 'yes' : 'no',
+            whmis: dbRow.miscDetails?.whmis ? 'yes' : 'no' , 
+            machineShop: dbRow.miscDetails?.machineShop ? 'yes' : 'no',
         }
     });
     console.log("normalizedDatabaseResult *******************************");
@@ -57,7 +55,7 @@ exportsheet.write = async (token) => {
     console.log(normalizedDatabaseResult[1]);
     console.log(normalizedDatabaseResult[2]);
     
-    let excelSheetData = [['Full Name', 'Email', 'Phone number', 'Membership', 'Program', 'Skills', 'Subteam Membership', 'On campus', 'Active School Terms', 'joinSSDC Code of Conduct', 'WHMIS (send proof to your lead )', 'Machine Shop Orientation' ]];
+    let excelSheetData = [['Full Name', 'Email', 'Phone number', 'Membership', 'Program', 'Skills', 'Subteam Membership', 'On campus', 'Active School Terms', 'SSDC Code of Conduct', 'WHMIS (send proof to your lead )', 'Machine Shop Orientation' ]];
     excelSheetData.push(...normalizedDatabaseResult.map(data => Object.values(data)));
     
     
@@ -116,24 +114,15 @@ exportsheet.writeReturningMembers = async (token) => {
     // Email Address	Name	Phone Number	Program	   On campus	Subteam  	SSDC Code of Conduct	WHMIS (send proof to your lead )	Machine Shop Orientation
     let normalizedDatabaseResult = databaseResult.map(dbRow => {
         return {
-            // email: dbRow.email ? dbRow.email  : '',
-            // upcomingTerm: dbRow.miscDetails.nextSchoolTerm ? dbRow.miscDetails.nextSchoolTerm : '', 
-            // activeSchoolTerms: dbRow.activeSchoolTerms ? dbRow.activeSchoolTerms.join() : '',
-            // subteam: dbRow.subteams[0]?.name ? dbRow.subteams[0].name : '',
-            // nextTermActivity: dbRow.miscDetails.nextTermActivity ? dbRow.miscDetails.nextTermActivity : '', 
-            // nextTermRole: dbRow.miscDetails.nextTermRole ? dbRow.miscDetails.nextTermRole : '', 
-            // personalEmail: dbRow.miscDetails.personalEmail ? dbRow.miscDetails.personalEmail : '', 
-            // termComments: dbRow.miscDetails.termComments ? dbRow.miscDetails.termComments : '', 
-            // desiredWork: dbRow.miscDetails.desiredWork ? dbRow.miscDetails.desiredWork : '', 
-            email: dbRow.email ? dbRow.email  : '',
-            upcomingTerm: dbRow.miscDetails.nextSchoolTerm ? dbRow.miscDetails.nextSchoolTerm : '', 
-            activeSchoolTerms: dbRow.activeSchoolTerms ? dbRow.activeSchoolTerms.join() : '',
-            subteam: dbRow.subteams[0]?.name ? dbRow.subteams[0].name : '',
-            nextTermActivity: dbRow.miscDetails.nextTermActivity ? dbRow.miscDetails.nextTermActivity : '', 
-            nextTermRole: dbRow.miscDetails.nextTermRole ? dbRow.miscDetails.nextTermRole : '', 
-            personalEmail: dbRow.miscDetails.personalEmail ? dbRow.miscDetails.personalEmail : '', 
-            termComments: dbRow.miscDetails.termComments ? dbRow.miscDetails.termComments : '', 
-            desiredWork: dbRow.miscDetails.desiredWork ? dbRow.miscDetails.desiredWork : '', 
+            email: dbRow.email ?? '',
+            upcomingTerm: dbRow.miscDetails.nextSchoolTerm ?? '', 
+            activeSchoolTerms: dbRow.activeSchoolTerms?.join() ?? '',
+            subteam: dbRow.subteams[0]?.name ?? '',
+            nextTermActivity: dbRow.miscDetails.nextTermActivity ?? '', 
+            nextTermRole: dbRow.miscDetails.nextTermRole ?? '', 
+            personalEmail: dbRow.miscDetails.personalEmail ?? '', 
+            termComments: dbRow.miscDetails.termComments ?? '', 
+            desiredWork: dbRow.miscDetails.desiredWork ?? '', 
         }
     });
     console.log("normalizedDatabaseResult *******************************");
