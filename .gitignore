@@ -23,7 +23,6 @@ process.yml
 .DS_Store
 .env*
 .idea
-constants.js
 uploads/*
 *.deb
 pages/caldemo.js
