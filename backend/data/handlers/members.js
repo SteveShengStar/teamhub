@@ -92,6 +92,9 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
             if (fields['tasks']) {
                 query.populate('tasks');
             }
+            if (fields['miscDetails']) {
+                query.populate('miscDetails');
+            }
             if (showToken) {
                 query.select('+token');
             }
