@@ -1,4 +1,4 @@
-const data = require('../../../backend/data/index');
+const data = require('../../../../backend/data/index');
 const cookie = require('cookie');
 
 module.exports = async (req, res) => {
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
             res.statusCode = 200;
             
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.exportsheet.write(token);
+                return await data.exportsheet.writeTeamRoster(token);
             })));
         } else {
             res.statusCode = 401;
