@@ -17,9 +17,7 @@ import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-import { useFormAndUserDetails } from '../../frontend/hooks/forms';
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, getCustomFields, getCustomFieldDefaults} from '../../frontend/util'
-import _ from 'lodash';
+import {validateField, clearErrorMessages, onInputChange} from '../../frontend/form/util'
 
 const FORM_NAME_KEY = 'register';
 
@@ -161,21 +159,8 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
-        clearErrorMessageIfExists(name, hasError, setHasError);
-
-        // Prevent user from typing in non-numeric characters.
-        if (name === "phoneNumber") {
-            if (value && isInvalidPhoneNumber(value)) {
-                return;
-            }
-        } else if (name === "studentId") {
-            if (value && isInvalidStudentId(value)) {
-                return
-            };
-        }
-
-        setFormValues({...formValues, [name]: value});
-    }
+        onInputChange(formValues, setFormValues, name, value);
+    };
 
     const handleFieldChange = (name, value) => {
         setFormValues({...formValues, [name]: value});
@@ -207,26 +192,136 @@ const RegistrationForm = () => {
                                 justifyItems="start"
                                 overflowY="auto"
                             >
-                                {
-                                    formSections.map(s => 
-                                        <FieldSection 
-                                            key={s.name}
-                                            type={s.type} 
-                                            title={s.display}
-                                            required={s.required}                     
-                                            name={s.name}
-                                            value={formValues[s.name]}
-                                            onChange={
-                                                ['text', 'longtext', 'phone', 'numbers', 'email'].includes(s.type) ?
-                                                handleInputChange :
-                                                handleFieldChange
-                                            }
-                                            hasError={hasError[s.name]}
-                                            errorText={s.errorText}
-                                            options={s.options}
-                                        />
-                                    )
-                                }
+                                <FieldSection 
+                                    title='Full Name'
+                                    required={true}                     
+                                    name="fullName"
+                                    value={formValues['fullName']}
+                                    onChange={handleInputChange}
+                                    hasError={hasError['fullName']}
+                                    errorText="Please enter your full name."
+                                    placeholder="First name and Last name"
+                                    />
+                                <FieldSection 
+                                    title='Phone Number'      
+                                    name="phoneNumber"
+                                    required={true}
+                                    value={formValues['phoneNumber']} 
+                                    onChange={handleInputChange}
+                                    hasError={hasError['phoneNumber']}
+                                    errorText="Please enter a valid 10 digit phone number."
+                                    placeholder="10-digit Phone Number"
+                                    />
+                                <FieldSection 
+                                    title='Personal Email Address'                             
+                                    name="email"
+                                    required={true}
+                                    value={formValues['email']}
+                                    onChange={handleInputChange}
+                                    hasError={hasError['email']}
+                                    errorText="Please enter a valid email."
+                                    placeholder="Email address"
+                                    />
+                                <FieldSection 
+                                    title='Program'
+                                    required={true}                     
+                                    name="program"
+                                    value={formValues['program']}
+                                    onChange={handleInputChange}
+                                    hasError={hasError['program']} 
+                                    errorText="Please enter your program."
+                                    description="Format:   2A CS,  1B AFM"
+                                    placeholder="Term and Program of Study"      
+                                    />
+                                <FieldSection 
+                                    title='Waterloo Student ID' 
+                                    required={true}
+                                    name="studentId"
+                                    value={formValues['studentId']}
+                                    onChange={handleInputChange}
+                                    hasError={hasError['studentId']} 
+                                    errorText="Student ID must have 8 digits."  
+                                    placeholder="8-digit Student No." 
+                                    /> 
+                                <FieldSection 
+                                    title="Which describes you best?" 
+                                    type="radio" 
+                                    name="termStatus"
+                                    required={true} 
+                                    options={TERM_STATUSES}
+                                    onChange={handleFieldChange}
+                                    value={formValues.termStatus}
+                                    hasError={hasError['termStatus']}
+                                    errorText="Please select an option above."
+                                    />
+                                <FieldSection 
+                                    title="Subteam" 
+                                    type="radio" 
+                                    name="subteam"
+                                    required={true}
+                                    options={SUBTEAMS}
+                                    onChange={handleFieldChange}
+                                    value={formValues.subteam}
+                                    hasError={hasError['subteam']}
+                                    errorText="Please select an option above."
+                                    />
+                                <FieldSection
+                                    title="Membership Type" 
+                                    name="memberType"
+                                    type="radio" 
+                                    required={true}
+                                    options={MEMBER_TYPES}
+                                    value={formValues.memberType}
+                                    onChange={handleFieldChange}
+                                    hasError={hasError['memberType']}
+                                    errorText="Please select an option above."
+                                    />
+                                <FieldSection 
+                                    title="Previous Terms" 
+                                    type="checkbox" 
+                                    name="previousTerms"
+                                    value={formValues['previousTerms']}
+                                    options={PREV_TERMS}
+                                    onChange={handleFieldChange}
+                                    />
+                                <FieldSection 
+                                    title="Future Terms" 
+                                    type="checkbox" 
+                                    name="futureTerms"
+                                    value={formValues['futureTerms']}
+                                    options={FUTURE_TERMS}
+                                    onChange={handleFieldChange}
+                                    />
+                                <FieldSection 
+                                    title="Student Design Center Safety Requirements" 
+                                    name="designCentreSafety"
+                                    type="boolean" 
+                                    required={true}
+                                    onChange={handleFieldChange}
+                                    value={formValues.designCentreSafety}
+                                    hasError={hasError['designCentreSafety']}
+                                    errorText="Please select an option above."
+                                    />
+                                <FieldSection 
+                                    title="WHIMIS 2015" 
+                                    name="whmis"
+                                    type="boolean" 
+                                    required={true}
+                                    onChange={handleFieldChange}
+                                    value={formValues.whmis}
+                                    hasError={hasError['whmis']}
+                                    errorText="Please select an option above."
+                                    />
+                                <FieldSection 
+                                    title="Machine Shop Orientation" 
+                                    name="machineShop"
+                                    type="boolean" 
+                                    required={true}
+                                    onChange={handleFieldChange}
+                                    value={formValues.machineShop}
+                                    hasError={hasError['machineShop']}
+                                    errorText="Please select an option above."
+                                    />
                             </SystemComponent> 
                             <FormFooter handleSubmit={handleSubmit} submitDisabled={!hydrated}/>
                         </Card>
