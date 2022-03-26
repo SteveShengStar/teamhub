@@ -184,7 +184,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['phoneNumber']}
                                     errorText="Please enter a valid 10 digit phone number."
-                                    placeholder="10-digit Phone Number"
+                                    placeholder="Phone Number"
                                     />
                                 <FieldSection 
                                     title='Personal Email Address'                             
