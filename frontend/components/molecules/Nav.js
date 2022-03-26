@@ -6,20 +6,19 @@ import Logo from '../atoms/Logo';
 import LogoutButton from './LogoutButton';
 import { useRouter } from 'next/router';
 
+const Container = styled(SystemComponent)`
+  position: fixed;
+  top: 0;
+  right: 0; 
+  padding-top: 50px;
+  z-index: 20;
+
+  background-color: ${(props) => props.theme.colors.greys[0]};
+  ${(props) => props.fullWidth && 'width: 100%;'}
+`;
+
 const MyNav = styled(SystemNav)`
-  padding-right: ${(props) => props.theme.space[9]}px;
-  padding-top: ${(props) => props.theme.space[8]}px;
-  padding-bottom: ${(props) => props.theme.space[7]}px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  background-color: ${props => props.theme.colors.greys[0]};
-  shadow: ${props => props.scrolled ? 'default' : 'none'};
-  ${(props) => props.theme.mediaQueries.tablet} {
-    right: 40px;
-    top: 10px;
-    left: 40px;
-  }
+  padding: 0 ${(props) => props.theme.space[4]}px 0 0;
 `;
 const NavOutterLayer = styled.div`
   z-index: 20;
@@ -62,10 +61,15 @@ const Nav = ({ navItems, index }) => {
     return () => window.removeEventListener('scroll', updateNavStyle);
   });
 
+  const isLoggingIn = router.pathname.startsWith('/login');
+
   return (
-    <NavOutterLayer>
+    <Container fullWidth={isLoggingIn} >
       <MyNav
-        scrolled={scrolled}
+        display="flex"
+        flexDirection="column"
+        alignItems="flex-end"
+        shadow={scrolled ? 'default' : 'none'}
       >
         <SystemComponent display="flex" justifyContent="flex-end">
           <NavLogo alignSelf="center" />
@@ -81,6 +85,7 @@ const Nav = ({ navItems, index }) => {
             <a href={link} key={i}>
               <NavLink
                 fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
+                fontWeight="bold"
                 ml={7}
                 color={i === index ? 'theme' : 'foreground'}
                 display={['none', 'block']}
@@ -89,12 +94,10 @@ const Nav = ({ navItems, index }) => {
               </NavLink>
             </a>
           ))}
-          {router.pathname.startsWith('/login') ? null : <LogoutButton />}
+          {isLoggingIn ? null : <LogoutButton />}
         </SystemComponent>
       </MyNav>
-    </NavOutterLayer>
-    
-    
+    </Container>
   );
 };
 
