@@ -1,9 +1,9 @@
-const data = require('../../../backend/data/index');
+const data = require('../../../../backend/data/index');
 const cookie = require('cookie');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    if (req.method === 'GET') {
+    if (req.method === 'POST') {
         
         // Get the Access Token from the request headers
         const token = cookie.parse(req.headers.cookie).token;
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
             res.statusCode = 200;
             
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.exportsheet.readfile(token);
+                return await data.exportsheet.writeReturningMembers(token);
             })));
         } else {
             res.statusCode = 401;

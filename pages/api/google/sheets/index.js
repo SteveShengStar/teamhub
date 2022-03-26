@@ -1,15 +1,15 @@
-const data = require('../../../backend/data/index');
+const data = require('../../../../backend/data/index');
 const cookie = require('cookie');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    if (req.method === 'POST') {
+    if (req.method === 'GET') {
         
         // Get the Access Token from the request headers
-        // const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
                             
-        if (true) {
+        if (authStatus) {
             const token = req.headers['authorization'].split(' ')[1];
             console.log(token);
             res.setHeader('Content-Type', 'application/json');
@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
             res.statusCode = 200;
             
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.exportsheet.writeReturningMembers(token);
+                return await data.exportsheet.readfile(token);
             })));
         } else {
             res.statusCode = 401;
