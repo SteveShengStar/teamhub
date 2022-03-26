@@ -99,20 +99,9 @@ const RegistrationForm = () => {
     }, [hydrated]);
 
     const setErrorMessages = (formErrors) => {
-        clearErrorMessages(formErrors);
-
-        validateField(formValues, formErrors, 'fullName');
-        validateField(formValues, formErrors, 'phoneNumber');
-        validateField(formValues, formErrors, 'personalEmail');
-        validateField(formValues, formErrors, 'program');
-        validateField(formValues, formErrors, 'studentId');
-        validateField(formValues, formErrors, 'termStatus');
-        validateField(formValues, formErrors, 'memberType');
-        validateField(formValues, formErrors, 'subteams');
-        validateField(formValues, formErrors, 'designCentreSafety');
-        validateField(formValues, formErrors, 'whmis');
-        validateField(formValues, formErrors, 'machineShop');
-        
+        Object.keys(formErrors).forEach(key => {
+            validateField(formValues, formErrors, key);
+        });
         setHasError(formErrors);
     }
 

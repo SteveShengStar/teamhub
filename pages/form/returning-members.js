@@ -103,34 +103,30 @@ const ReturningMembersForm = () => {
 
   const [formValues, setFormValues] = useState({
     fullName: '',
+    personalEmail: '',
     nextSchoolTerm: '',
+    nextTermActivity: '',
+    nextTermRole: '',
     previousTerms: [],
     futureTerms: [],
     subteam: '',
-    nextTermActivity: '',
-    nextTermRole: '',
-    email: '',
     termComments: '',
     desiredWork: '',
   });
 
   const [hasError, setHasError] = useState({
     fullName: false,
+    personalEmail: false,
     nextSchoolTerm: false,
     nextTermActivity: false,
-    subteam: false,
     nextTermRole: false,
-    email: false,
+    subteam: false,
   });
 
   const setErrorMessages = (formErrors) => {
-    validateField(formValues, formErrors, 'fullName');
-    validateField(formValues, formErrors, 'email');
-    validateField(formValues, formErrors, 'nextSchoolTerm');
-    validateField(formValues, formErrors, 'subteam');
-    validateField(formValues, formErrors, 'nextTermRole');
-    validateField(formValues, formErrors, 'nextTermActivity');
-
+    Object.keys(formErrors).forEach(key => {
+      validateField(formValues, formErrors, key);
+    });
     setHasError(formErrors);
   }
 
@@ -144,7 +140,7 @@ const ReturningMembersForm = () => {
     const formHasErrors = Object.values(formErrors).some(err => err);
     if (!formHasErrors) {
       const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteam, nextTermActivity,
-              nextTermRole, email, termComments, desiredWork} = formValues;
+              nextTermRole, personalEmail, termComments, desiredWork} = formValues;
 
       const fullNameParts = fullName.split(/\s+/);
       updateUser(dispatch, {
@@ -152,7 +148,7 @@ const ReturningMembersForm = () => {
               first: fullNameParts[0].trim(),
               last: fullNameParts[fullNameParts.length - 1].trim()
           },
-          personalEmail: email.trim(),
+          personalEmail: personalEmail.trim(),
           subteams: [subteam], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
           activeSchoolTerms: [...previousTerms, ...futureTerms],
           nextSchoolTerm,
@@ -268,11 +264,11 @@ const ReturningMembersForm = () => {
             />
             <FieldSection
               title="Please provide your personal email address"
-              name="email"
+              name="personalEmail"
               required={true}
-              value={formValues['email']}
+              value={formValues['personalEmail']}
               onChange={handleInputChange}
-              hasError={hasError['email']}
+              hasError={hasError['personalEmail']}
               errorText="Please enter a valid email."
               placeholder='Email address'
             />
