@@ -16,7 +16,7 @@ import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, onInputChange} from '../../frontend/form/util'
 
 const TERM_STATUSES = [
     'Academic term, active on Waterloop in-person', 
@@ -142,19 +142,8 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
-        // Prevent user from typing in non-numeric characters.
-        if (name === "phoneNumber") {
-            if (value && isInvalidPhoneNumber(value)) {
-                return;
-            }
-        } else if (name === "studentId") {
-            if (value && isInvalidStudentId(value)) {
-                return
-            };
-        }
-
-        setFormValues({...formValues, [name]: value});
-    }
+        onInputChange(formValues, setFormValues, name, value);
+    };
 
     const handleFieldChange = (name, value) => {
         setFormValues({...formValues, [name]: value})
@@ -194,6 +183,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['fullName']}
                                     errorText="Please enter your full name."
+                                    placeholder="First name and Last name"
                                     />
                                 <FieldSection 
                                     title='Phone Number'      
@@ -203,6 +193,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['phoneNumber']}
                                     errorText="Please enter a valid 10 digit phone number."
+                                    placeholder="10-digit Phone Number"
                                     />
                                 <FieldSection 
                                     title='Personal Email Address'                             
@@ -212,6 +203,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['email']}
                                     errorText="Please enter a valid email."
+                                    placeholder="Email address"
                                     />
                                 <FieldSection 
                                     title='Program'
@@ -220,16 +212,19 @@ const RegistrationForm = () => {
                                     value={formValues['program']}
                                     onChange={handleInputChange}
                                     hasError={hasError['program']} 
-                                    errorText="Please enter your program."       
+                                    errorText="Please enter your program."
+                                    description="Format:   2A CS,  1B AFM"
+                                    placeholder="Term and Program of Study"      
                                     />
                                 <FieldSection 
-                                    title='Student ID #' 
+                                    title='Waterloo Student ID' 
                                     required={true}
                                     name="studentId"
                                     value={formValues['studentId']}
                                     onChange={handleInputChange}
                                     hasError={hasError['studentId']} 
-                                    errorText="Student ID must have 8 digits."   
+                                    errorText="Student ID must have 8 digits."  
+                                    placeholder="8-digit Student No." 
                                     /> 
                                 <FieldSection 
                                     title="Which describes you best?" 

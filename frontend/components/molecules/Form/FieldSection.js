@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
@@ -22,14 +22,12 @@ const TitleSection = ({text, required}) => {
 const DescriptionSection = ({text}) => { // TODO: incorporate form-section descriptions later.
     return (
         <SystemComponent>
-            <Header4>
-                {text}
-            </Header4>
+            {text}
         </SystemComponent>
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
+const FieldSection = ({title, description='', placeholder="Your answer", type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
@@ -42,6 +40,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large
                     ]}
+                        placeholder={placeholder}
                         width="98%"
                         name={name}
                         value={value}
@@ -85,6 +84,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
                 <TitleSection text={title} required={required} />
+                <DescriptionSection text={description}/>
             </SystemComponent>
 
             <SystemComponent>

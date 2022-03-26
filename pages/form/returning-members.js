@@ -11,11 +11,12 @@ import FieldSection from '../../frontend/components/molecules/Form/FieldSection'
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, onInputChange} from '../../frontend/form/util'
 
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 
 const SCHOOL_TERMS = [
+  '1A Study',
   '1A Co-op',
   '1B Study',
   '1B Co-op',
@@ -167,16 +168,7 @@ const ReturningMembersForm = () => {
   };
 
   const handleInputChange = (name, value) => {
-    if (name === 'phoneNumber') {
-      if (value && isInvalidPhoneNumber(value)) {
-        return;
-      }
-    } else if (name === 'studentId') {
-      if (value && isInvalidStudentId(value)) {
-        return;
-      }
-    }
-    setFormValues({ ...formValues, [name]: value });
+    onInputChange(formValues, setFormValues, name, value);
   };
 
   const handleFieldChange = (name, value) => {
@@ -212,6 +204,7 @@ const ReturningMembersForm = () => {
               onChange={handleInputChange}
               hasError={hasError['fullName']}
               errorText="Please enter your full name."
+              placeholder='First Name and Last Name'
             />
             <FieldSection
               title="This upcoming term, I will be in my"
@@ -281,6 +274,7 @@ const ReturningMembersForm = () => {
               onChange={handleInputChange}
               hasError={hasError['email']}
               errorText="Please enter a valid email."
+              placeholder='Email address'
             />
             <FieldSection
               title="Any additional comments or thoughts on the term?"
