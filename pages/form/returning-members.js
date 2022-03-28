@@ -66,15 +66,14 @@ const FUTURE_TERMS = [
 ];
 
 const SUBTEAMS = [
-  'Business',
-  'LIM',
-  'Mechanical',
-  'MC',
-  'BMS',
-  'Embedded',
-  'Infrastructure',
-  'Web',
-  'Team Hub',
+  "Software",
+  "Electrical",
+  "Mechanical",
+  "Admin",
+  "Infrastructure",
+  "Exec",
+  "Web",
+  "Business"
 ];
 
 const NEXT_TERM_ACTIVITY = [
@@ -87,7 +86,7 @@ const NEXT_TERM_ACTIVITY = [
 
 const NEXT_TERM_ROLE = [
   'Continue with my sub-team',
-  'Transfer to another sub-team (please specify)',
+  'Transfer to another sub-team',
   'Want to take on a leadership role - lead',
   'Want to take on a leadership role - co-op supervisor',
   'Want to become a co-op',
@@ -270,7 +269,7 @@ const ReturningMembersForm = () => {
               onChange={handleInputChange}
               hasError={hasError['personalEmail']}
               errorText="Please enter a valid email."
-              placeholder='Email address'
+              placeholder='Email Address'
             />
             <FieldSection
               title="Any additional comments or thoughts on the term?"

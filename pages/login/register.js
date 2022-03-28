@@ -23,8 +23,6 @@ const TERM_STATUSES = [
     'Academic term, active on Waterloop remotely', 
     'Co-op term, working on Waterloop remotely', 
     'Co-op term, active on Waterloop in-person', 
-    'Not active on Waterloop this term', 
-    'Other',
 ];
 
 const PREV_TERMS = ['F21', 'S21', 'W21', 'F20', "S20",'W20'];
@@ -35,7 +33,6 @@ const MEMBER_TYPES = [
     'Member', 
     'Exec/lead/advisor', 
     'Coop', 
-    'Not active on Waterloop this term',
 ];
 
 const SUBTEAMS = [
@@ -45,7 +42,8 @@ const SUBTEAMS = [
     "Admin",
     "Infrastructure",
     "Exec",
-    "Web"
+    "Web",
+    "Business"
 ];
 
 const RegistrationForm = () => {
@@ -174,7 +172,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['fullName']}
                                     errorText="Please enter your full name."
-                                    placeholder="First name and Last name"
+                                    placeholder="First Name and Last Name"
                                     />
                                 <FieldSection 
                                     title='Phone Number'      
@@ -194,7 +192,7 @@ const RegistrationForm = () => {
                                     onChange={handleInputChange}
                                     hasError={hasError['email']}
                                     errorText="Please enter a valid email."
-                                    placeholder="Email address"
+                                    placeholder="Email Address"
                                     />
                                 <FieldSection 
                                     title='Program'
@@ -277,7 +275,7 @@ const RegistrationForm = () => {
                                     errorText="Please select an option above."
                                     />
                                 <FieldSection 
-                                    title="WHIMIS 2015" 
+                                    title="WHMIS 2015" 
                                     name="whmis"
                                     type="boolean" 
                                     required={true}
