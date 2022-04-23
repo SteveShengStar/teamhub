@@ -15,6 +15,7 @@ import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 import TeamsSection from './settings/teams';
 import UserProfileSection from './settings/userprofile';
 import LinksSection from './settings/links';
+import useLoadingScreen from '../frontend/hooks/useLoadingScreen';
 
 
 const Frame = styled(Card)`
@@ -31,6 +32,7 @@ const Settings = () => {
     const [ activeModal, setActiveModal ] = useState(false);
     const [ userDataLoaded, setUserDataLoaded ] = useState(false);
     const { hydrated, user } = useSelector(state => state.userState);
+    const [loader, showLoader, hideLoader] = useLoadingScreen();
     
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
@@ -52,7 +54,8 @@ const Settings = () => {
                     userDataLoaded={userDataLoaded}
                 />
                 <SystemComponent display="flex" overflow="hidden">
-                    <Frame>
+                    <Frame position="relative">
+                        {loader}
                         <TeamsSection 
                             sectionTitle="Teams &amp; Responsibilities"
                             setActiveModal={setActiveModal}
