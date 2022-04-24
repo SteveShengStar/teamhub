@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import { useRouter } from "next/router";
 import {useSelector, useDispatch} from 'react-redux';
 import styled from 'styled-components';
@@ -10,6 +10,8 @@ import Header5 from '../atoms/Header5';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import theme from '../theme';
 import {isURL} from 'validator';
+
+import useLoadingScreen from '../../hooks/useLoadingScreen';
 
 const CustomInput = styled(Input)`
     box-sizing: border-box;
@@ -33,18 +35,20 @@ const URLField = ({label, name, placeholder, value, onHandleChange, error, error
     )
 }
 
-const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
+const EditLinksModal = ({visible, handleCloseModal}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user } = useSelector(state => state.userState);
 
-    const facebookUrl = dataLoaded && user.links && user.links.find(l => l.type === "facebook")
+    const [loader, showLoader, hideLoader] = useLoadingScreen(false);
+
+    const facebookUrl = user.links && user.links.find(l => l.type === "facebook")
                             ? user.links.find(l => l.type === "facebook").link : '';
-    const linkedInUrl = dataLoaded && user.links && user.links.find(l => l.type === "linkedin")
+    const linkedInUrl = user.links && user.links.find(l => l.type === "linkedin")
                             ? user.links.find(l => l.type === "linkedin").link : '';
-    const githubUrl = dataLoaded && user.links && user.links.find(l => l.type === "github")
+    const githubUrl = user.links && user.links.find(l => l.type === "github")
                             ? user.links.find(l => l.type === "github").link : '';
-    const websiteUrl = dataLoaded && user.links && user.links.find(l => l.type === "website")
+    const websiteUrl = user.links && user.links.find(l => l.type === "website")
                             ? user.links.find(l => l.type === "website").link : '';
     const [formValues, setFormValues] = useState({
         facebookUrl,
@@ -58,24 +62,6 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
         githubUrl: false,
         websiteUrl: false
     });
-
-    useEffect(() => {
-        if (visible) {
-            setFormValues({
-                facebookUrl,
-                linkedInUrl,
-                githubUrl,
-                websiteUrl
-            });
-
-            setErrors({
-                facebookUrl: false,
-                linkedInUrl: false,
-                githubUrl: false,
-                websiteUrl: false
-            });
-        }
-    }, [dataLoaded, visible])
 
     const validateUrl = (errorList, fieldName, fieldValue, allowedHosts = false) => {
         if(!fieldValue) return;
@@ -114,6 +100,8 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
             linkedInUrl = (!linkedInUrl || linkedInUrl.slice(0, 4) === "http") ? linkedInUrl : "https://".concat(linkedInUrl);
             websiteUrl = (!websiteUrl || websiteUrl.slice(0, 4) === "http") ? websiteUrl : "https://".concat(websiteUrl);
 
+            showLoader();
+
             updateProfileInfo(dispatch, {
                 "links": [
                     {"type": "facebook", "link": facebookUrl},
@@ -128,8 +116,10 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                 }
                 handleCloseModal();
             }).catch((err) => {
-                console.log(err);
+                console.error(err);
                 alert("An error occured when updating your profile information.");
+            }).finally(() => {
+                hideLoader();
             });
         }
     }
@@ -204,6 +194,7 @@ const EditLinksModal = ({dataLoaded, visible, handleCloseModal}) => {
                         />
                     </SystemComponent>
                 </SystemComponent>
+                {loader}
             </EditSettingsModal>
         </>
     )

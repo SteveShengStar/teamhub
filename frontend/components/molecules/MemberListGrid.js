@@ -60,7 +60,7 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                         imageUrl={member.imageUrl} 
                                         isSelected={groupSelectedMembers.includes(member._id)}
                                     />) :
-                                    <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>There is nothing to display here</SystemComponent>
+                                    <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1/-1' mr={4}>This section is empty</SystemComponent>
                             }
                         </SystemComponent>
                         )
@@ -110,7 +110,7 @@ const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, 
                                     isSelected={groupSelectedMembers.includes(member._id)}
                                 />
                             ) : 
-                            <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1 / span 2' mr={4}>There is nothing to display here</SystemComponent>
+                            <SystemComponent backgroundColor="greys.1" padding={4} borderRadius={2} gridColumn='1/-1' mr={4}>This section is empty</SystemComponent>
                         }
                         </SystemComponent>
                         ) : (  

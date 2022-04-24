@@ -12,6 +12,8 @@ import EditSettingsModal from '../molecules/EditSettingsModal';
 
 import { updateProfileInfo, UserTypes } from '../../store/reducers/userReducer';
 import { filter, capitalize } from 'lodash';
+import useLoadingScreen from '../../hooks/useLoadingScreen';
+
 
 // Subteam ID to String Mapping
 const subteamDisplayNames = {
@@ -26,53 +28,44 @@ const subteamDisplayNames = {
   Web: 'web',
 };
 
-const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
+const EditTeamsModal = ({ visible, handleCloseModal }) => {
   const { user } = useSelector((state) => state.userState);
   const { filters } = useSelector((state) => state.membersState);
   const { projects: projectOpts } = filters;
   const router = useRouter();
   const dispatch = useDispatch();
+  const [loader, showLoader, hideLoader] = useLoadingScreen(false);
 
-  const persistedSelectedTeams =
-    dataLoaded && user.subteams ? user.subteams.map((s) => s.name) : [];
+  const persistedSelectedTeams = user.subteams ? user.subteams.map((s) => s.name) : [];
   let persistedNonSelectedteams = filter(
     Object.keys(subteamDisplayNames),
     (team) => persistedSelectedTeams.includes(team) === false
   );
 
-  const [localSelectedTeams, setLocalSelectedTeams] = useState(
-    persistedSelectedTeams
-  );
-  const [selectedProjects, setSelectedProjects] = useState(
-    dataLoaded && user.projects ? user.projects.map((p) => p.name) : []
-  );
-
-  useEffect(() => {
-    if (visible) {
-      setLocalSelectedTeams(persistedSelectedTeams);
-      setSelectedProjects(
-        dataLoaded && user.projects ? user.projects.map((p) => p.name) : []
-      );
-    }
-  }, [dataLoaded, visible]);
+  const [localSelectedTeams, setLocalSelectedTeams] = useState(persistedSelectedTeams);
+  const [selectedProjects, setSelectedProjects] = useState(user.projects ? user.projects.map((p) => p.name) : []);
 
   const handleSave = () => {
+      showLoader();
       updateProfileInfo(
-        dispatch,
-        {
-          projects: removeBadValuesAndDuplicates(selectedProjects),
-          subteams: localSelectedTeams,
-        },
-        user._id,
-        router,
-        false
+          dispatch,
+          {
+            projects: removeBadValuesAndDuplicates(selectedProjects),
+            subteams: localSelectedTeams,
+          },
+          user._id,
+          router,
+          false
       ).then(res => {
-        if (res.success) {
-            dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
-        }
-        handleCloseModal();
-      }).catch(() => {
-        alert("An error occured when updating your profile information.");
+          if (res.success) {
+              dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
+          }
+          handleCloseModal();
+      }).catch((err) => {
+          console.error(err);
+          alert("An error occured when updating your profile information.");
+      }).finally(() => {
+          hideLoader();
       });
   };
 
@@ -143,6 +136,7 @@ const EditTeamsModal = ({ dataLoaded, visible, handleCloseModal }) => {
             />
           </SystemComponent>
         </SystemComponent>
+        {loader}
       </EditSettingsModal>
     </>
   );
