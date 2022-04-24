@@ -16,20 +16,21 @@ export default async (req, res) => {
 
         res.statusCode = 200;
 
-        const lRep = await data.auth.login(req.body);  // NOTE: Sending token directly to backend to be stored on MongoDB.
+        const result = await data.auth.login(req.body);  // NOTE: Sending token directly to backend to be stored on MongoDB.
+        const {userData} = result;
 
-        const user = lRep[0];
-        res.setHeader('Set-Cookie', cookie.serialize("token", user.token, {
+        res.setHeader('Set-Cookie', cookie.serialize("token", userData.token, {
             httpOnly: true,
             sameSite: 'lax',
-            expires: new Date(user.tokenExpiry),
+            expires: new Date(userData.tokenExpiry),
             path: '/'   // default path is current API url path.
         }));
-        // Strip user token info:
-        user.token = undefined;
-        user.tokenExpiry = undefined;
+        // Strip user token info
+        userData.token = undefined;
+        userData.tokenExpiry = undefined;
+        
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
-            return lRep;
+            return result;
         })));
     } else {
         res.statusCode = 404;

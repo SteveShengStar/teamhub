@@ -121,7 +121,7 @@ const EditProfileModal = ({handleCloseModal, visible}) => {
             firstName: !isEmpty(user.name) ? user.name.first : "",
             lastName: !isEmpty(user.name) ? user.name.last : "",
             program: PROGRAM_OPTS.find(opt => opt.value === user.program) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-            bio: user.bio
+            bio: user.bio ? user.bio : ""
         });
 
         setInterests(user.interests ? user.interests.map(i => i.name) : []);
