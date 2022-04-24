@@ -137,7 +137,6 @@ export const updateProfileInfo = async (
 export const getProfileInfo = async function (dispatch, id, router) {
   try {
     const user = await api.members.getMember(id, dispatch, router);
-    // TODO: potentially eliminate this store update afterwards.
     dispatch({ type: UserTypes.UPDATE_INFO, payload: user.body[0] });
     return user.body[0];
   } catch (err) {

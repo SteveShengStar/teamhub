@@ -19,6 +19,7 @@ module.exports = async (req, res) => {
             return;
         }
         res.statusCode = 200;
+        
         res.end(JSON.stringify(await data.util.resWrapper(async () => {
           return await data.members.updateAllMembers({$set: req.body });
         })));
