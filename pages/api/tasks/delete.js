@@ -36,6 +36,10 @@ module.exports = async (req, res) => {
                 await data.members.updateAllMembers({$pull: {tasks: {taskId: taskId}} });
                 return await data.subteams.deleteTaskReference(undefined, [taskId]);
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

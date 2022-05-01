@@ -39,6 +39,10 @@ export default async (req, res) => {
                 const res = await data.auth.logout(userId);
                 return res;
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

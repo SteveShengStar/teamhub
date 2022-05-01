@@ -56,13 +56,8 @@ describe('Testing Utility functions', () => {
         expect(resp[0].length).toBe(24);
     });
 
-
 });
 
 afterAll(() => {
     data.close();
 });
-
-
-
-

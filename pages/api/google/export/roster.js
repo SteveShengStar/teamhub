@@ -1,20 +1,23 @@
-const data = require('../../../backend/data/index.js');
+const data = require('../../../../backend/data/index');
 const cookie = require('cookie');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
-    if (req.method === 'PUT') {
+    if (req.method === 'POST') {
+        
         // Get the Access Token from the request headers
         const token = cookie.parse(req.headers.cookie).token;
-        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res); 
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+                            
         if (authStatus) {
+            const token = req.headers['authorization'].split(' ')[1];
+            console.log(token);
             res.setHeader('Content-Type', 'application/json');
-            res.statusCode = 200;
 
-            const eventDetails = req.body;
-            return res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                // Call the function which updates a Google Calendar Event.
-                return await data.calendar.update(token, eventDetails, res);
+            res.statusCode = 200;
+            
+            res.end(JSON.stringify(await data.util.resWrapper(async () => {
+                return await data.exportsheet.writeTeamRoster(token);
             })));
         } else {
             res.statusCode = 401;
@@ -23,6 +26,6 @@ module.exports = async (req, res) => {
         }
     } else {
         res.statusCode = 404;
-        res.end(JSON.stringify({}));
+        res.end();
     }
 };

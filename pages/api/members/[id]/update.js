@@ -37,6 +37,10 @@ module.exports = async (req, res) => {
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 return await data.members.updateMember({ _id: req.query.id }, payload);
             })));
+        } else {
+            res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

@@ -13,8 +13,9 @@ module.exports = async (req, res) => {
             await data.calendar.listEvents(token);
         } else {
             res.statusCode = 401;
+            res.setHeader('WWW-Authenticate', 'Bearer');
+            res.end('Unauthorized user.');
         }
-        res.end(JSON.stringify({}));
     } else {
         res.statusCode = 404;
         res.end(JSON.stringify({}));

@@ -36,17 +36,11 @@ module.exports = async (req, res) => {
                                         );
             }
 
-            console.log("relevantTaskIDs");
-            console.log(relevantTaskIDs);
-            console.log(relevantTaskIDs.length);
             const pendingTasks = relevantTaskIDs.map(taskId => { return {taskId: taskId, status: "pending"} });
 
             // Assign "irrelevant" status to the remaining tasks
             const allTaskIDs = (await data.task.getAll()).map(task => task.id);
             const irrelevantTaskIDs = allTaskIDs.filter( taskID => !(relevantTaskIDs.includes(taskID)) );
-            console.log("irrelevantTaskIDs");
-            console.log(irrelevantTaskIDs);
-            console.log(irrelevantTaskIDs.length);
             const irrelevantTasks = irrelevantTaskIDs.map(taskId => { return {taskId: taskId, status: "irrelevant"} });
 
             payload.tasks = pendingTasks.concat(irrelevantTasks);
