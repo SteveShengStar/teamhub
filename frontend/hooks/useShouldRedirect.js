@@ -1,3 +1,5 @@
+import { USER_REGISTRATION_REQUIRED_FORM_FIELDS } from '../constants';
+
 /**
  * Redirects the user to the appropriate webpage.
  * 
@@ -13,32 +15,20 @@ const useShouldRedirect = (user, router) => {
         }
         return false
     }
-    if (!user.name || !user.name.display) {
-        // Redirect user to the 2nd step of the signup page
-        if (router.pathname != "/login/name") {
-            router.push("/login/name")
+
+    const userFields = Object.keys(user);
+    if (USER_REGISTRATION_REQUIRED_FORM_FIELDS.some(field => !userFields.includes(field))) { // TODO: add all the necessary checks, to handle page refresh
+        // Redirect user to the 2nd step of the sign-up process
+        if (router.pathname != "/login/register") {
+            router.push("/login/register")
             return true
         }
         return false
     }
-    if (!user.subteams || (user.subteams && user.subteams.length === 0) || !user.memberType) {
-        // Redirect user to the 3rd step of the signup page
-        if (router.pathname != "/login/role") {
-            router.push("/login/role");
-            return true
-        }
-        return false
-    }
-    if (!user.birthday) {
-        // Redirect user to the 4th step of the signup page
-        if (router.pathname != "/login/about") {
-            router.push("/login/about");
-            return true
-        }
-        return false
-    }
+    
+    // TODO: is this needed ?
     if (router.pathname.startsWith("/login")) {
-        // If user entered all required information already (ie. "user" input parameter of this function already has the required fields set), then redirect the user to landing page.
+        // If user entered all required information already, then redirect the user to landing page.
         router.push("/");
         return true
     }

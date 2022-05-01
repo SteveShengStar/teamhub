@@ -3,7 +3,7 @@ import {SystemComponent} from '../atoms/SystemComponents';
 import TextArea from "../atoms/TextArea";
 import {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {removeBadValuesAndDuplicates} from '../../helpers'
+import {removeBadValuesAndDuplicates} from '../../util'
 import { useRouter } from "next/router";
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
@@ -14,7 +14,6 @@ import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import { updateProfileInfo, UserTypes } from "../../store/reducers/userReducer";
 
-import isBefore from 'validator/lib/isBefore';
 import {isEmpty} from 'lodash';
 import theme from '../theme';
 
@@ -154,26 +153,17 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { filters } = useSelector(state => state.membersState);
     const { interests: interestOpts, skills: skillOpts } = filters;
 
-
-    const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
-    const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
-    const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
-
     const [formValues, setFormValues] = useState({
         firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
         lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
-        display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-        birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
         program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
-        term: (dataLoaded && !isEmpty(user) && !isEmpty(user.stream) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
         bio: dataLoaded ? user.bio : ""
     });
     const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
     const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
     const [hasError, setHasError] = useState({
         firstName: false,
-        program: false,
-        birthDate: false
+        program: false
     });
 
     useEffect(() => {
@@ -183,18 +173,11 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     }, [hydrated]);
 
     useEffect(() => {
-        const year = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.year) ? user.birthday.year : "";
-        const month = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.month) ? user.birthday.month : "";
-        const day = (dataLoaded && !isEmpty(user) && !isEmpty(user.birthday) && user.birthday.day) ? user.birthday.day : "";
-
         setFormValues({
             ...formValues, 
             firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
             lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
-            display: dataLoaded && !isEmpty(user) ? user.name.display : "",
-            birthDate: year.toString() + "-" + (month + 1).toString() + "-" + day.toString(),
             program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-            term: (dataLoaded && !isEmpty(user) && !isEmpty(user.stream) && SCHOOL_TERM_OPTS.find(opt => opt.value === user.stream.currentSchoolTerm)) ? {label: SCHOOL_TERM_OPTS.find(opt => opt.value == user.stream.currentSchoolTerm).label, value: user.stream.currentSchoolTerm} : {label: "", value: ""},
             bio: dataLoaded ? user.bio : ""
         });
 
@@ -203,8 +186,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
 
         setHasError({
             firstName: false,
-            program: false,
-            birthDate: false
+            program: false
         });
     }, [dataLoaded]);
 
@@ -217,28 +199,17 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         updatedErrorList['program'] = 
             !formValues['program'].value ||
             !validProgramPattern.test(formValues['program'].value.trim());
-        if ( !isBefore(formValues['birthDate'], Date(Date.now())) ) updatedErrorList['birthDate'] = true;
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
             updateProfileInfo(dispatch, {
                 "name": {
                     "first": formValues.firstName.trim(),
-                    "last": formValues.lastName.trim(),
-                    "display": formValues.display.trim()
-                },
-                "birthday": {
-                    "year": formValues.birthDate.split("-")[0],
-                    "month": formValues.birthDate.split("-")[1] - 1,
-                    "day": formValues.birthDate.split("-")[2]
+                    "last": formValues.lastName.trim()
                 },
                 "program": formValues.program.value.trim(),
                 "interests": removeBadValuesAndDuplicates(interests),
                 "skills": removeBadValuesAndDuplicates(skills),
-                "stream": {
-                    ...user.stream,
-                    "currentSchoolTerm": formValues.term.value, 
-                },
                 "bio": formValues.bio.trim()              
             }, user._id, router, false)
             .then(res => {
@@ -293,23 +264,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                             value={formValues['lastName']}
                             handleChange={handleInputChange} />
                     </SystemComponent>
-                    <SystemComponent>
-                        <InputSegment
-                            label="Display Name" 
-                            name="display"
-                            placeholder="Display Name" 
-                            value={formValues['display']}
-                            handleChange={handleInputChange} />
-                    </SystemComponent>
-                    <SystemComponent>
-                        <DateInputSegment
-                            label="Birth Date" 
-                            name="birthDate"
-                            value={formValues['birthDate']}
-                            handleChange={handleInputChange}
-                            error={hasError['birthDate']}
-                            errorText="Birth Date must be valid." />
-                    </SystemComponent>
                     <SelectSegment 
                         title="Academic Program"
                         name="program"
@@ -320,13 +274,6 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         error={hasError['program']}
                         errorText="Please enter valid Program Name. Special characters allowed are  - ' ,"
                         helpMessage="Type below to create a custom entry."
-                    />
-                    <SelectSegment 
-                        title="School Term"
-                        name="term"
-                        value={schoolTerm}
-                        options={SCHOOL_TERM_OPTS}
-                        handleChange={handleInputChange}
                     />
                 </SystemComponent>
 

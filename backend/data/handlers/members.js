@@ -69,10 +69,6 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
  */
 members.search = async (filter, fields, showToken = false, returnSubteamTaskList = false) => {
     return util.handleWrapper(async () => {
-        const searchByDisplayName = filter ? filter.displayName : null;
-        if (searchByDisplayName) {
-            delete filter.displayName;
-        }
         if (fields) {
             const query = Member.find(filter).select(fields);
             if (fields['skills']) {
@@ -96,13 +92,7 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
             if (showToken) {
                 query.select('+token');
             }
-            let res = (await query.exec());
-            if (searchByDisplayName) {
-                res = res.filter(function (entry) {
-                    return entry.name.display === searchByDisplayName;
-                }).pop();
-            }
-            return res;
+            return await query.exec();
         } else {
             let res;
             if (showToken) {
@@ -122,11 +112,6 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
                     .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
                     .exec());
-            }
-            if (searchByDisplayName) {
-                res = res.filter(function (entry) {
-                    return entry.name.display === searchByDisplayName;
-                }).pop();
             }
             return res;
         }
@@ -161,16 +146,11 @@ members.add = async (userPayload) => {
         // Extract only the fields relevant to the UserDetails collection.
         let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
 
-        const session = await db.startSession();
-        const response = await session.withTransaction(async () => {
-            const userDetailsResponse = await UserDetails.create(userDetails).session(session);
-            userSummary.miscDetails = userDetailsResponse._id;
-            userSummary = await replacePayloadWithIds(userSummary);
-            const res = await Member.create(userSummary).session(session);
-            return res;
-        });
-        session.endSession();
-        return response;
+        const userDetailsResponse = await UserDetails.create(userDetails);
+        userSummary.miscDetails = userDetailsResponse._id;
+        userSummary = await replacePayloadWithIds(userSummary);
+        const res = await Member.create(userSummary);
+        return res;
     });
 };
 
@@ -181,17 +161,12 @@ members.add = async (userPayload) => {
  */
 members.delete = async (filter) => {
     return util.handleWrapper(async () => {
+        const deletedRecords = await Member.deleteMany(filter).exec();
         const userDetailRecordsToDelete = (await Member.find(filter).exec()).map(r => r.miscDetails);
-        const session = await db.startSession();
-        const res = await session.withTransaction(async () => {
-            const deletedRecords = await Member.deleteMany(filter).session(session).exec();
-            if (userDetailRecordsToDelete.length > 0) {
-                await UserDetails.deleteMany({_id: {$in: userDetailRecordsToDelete}}).session(session).exec();
-            }
-            return deletedRecords;
-        });
-        session.endSession();
-        return res;
+        if (userDetailRecordsToDelete.length > 0) {
+            await UserDetails.deleteMany({_id: {$in: userDetailRecordsToDelete}}).exec();
+        }
+        return deletedRecords;
     });
 };
 
@@ -212,22 +187,18 @@ members.updateMember = async (filter, payload) => {
     let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
 
     return util.handleWrapper(async () => {
-        const session = await db.startSession();
-        const res = await session.withTransaction(async () => {
-            if (!_.isEmpty(memberSummary)) {
-                memberSummary = await replacePayloadWithIds(memberSummary);
-                await Member.updateOne(filter, memberSummary).session(session).exec();
-            } 
-            if (!_.isEmpty(memberDetails)) {
-                const records = await Member.find(filter).select(["miscDetails"]).session(session).exec();
-                if (records?.length > 0) {
-                    const {miscDetails: memberDetailsId} = records[0];
-                    await UserDetails.updateOne({_id: memberDetailsId}, memberDetails).session(session).exec();
-                }
+        if (!_.isEmpty(memberSummary)) {
+            memberSummary = await replacePayloadWithIds(memberSummary);
+            await Member.updateOne(filter, memberSummary).exec();
+        }
+        if (!_.isEmpty(memberDetails)) {
+            const records = await Member.find(filter).select(["miscDetails"]).exec();
+            if (records?.length > 0) {
+                const {miscDetails: memberDetailsId} = records[0];
+                await UserDetails.updateOne({_id: memberDetailsId}, memberDetails).exec();
             }
-        });
-        session.endSession();
-        return res;
+        }
+        return {};
     });
 };
 

@@ -29,7 +29,6 @@ For example,
         "Software"
       ],
       "name": {
-        "display": "DisplayName",
         "first": "FirstName",
         "last": "LastName"
       },
@@ -47,11 +46,6 @@ For example,
         "name": "Member"
       },
       "bio": "Here is my bio.",
-      "birthday": {
-        "month": 15,
-        "day": 11,
-        "year": 2001
-      },
       "program": "Software Engineering",
       "stream": {
         "coopStream": {
@@ -137,7 +131,6 @@ A JSON object with the results
 		"subteams": ["Electrical"],
 		"projects": ["Embedded", "Battery Management"],
 		"name": {
-			"display": "DisplayName",
 			"first": "FirstName",
 			"last": "LastName"
 		},
@@ -145,11 +138,6 @@ A JSON object with the results
 		"imageUrl": "https://example.com",
 		"memberType": "Member",
 		"bio": "Here is my bio.",
-		"birthday": {
-			"month": 15,
-			"day": 11,
-			"year": 2001
-		},
 		"program": "Software Engineering",
 		"stream": {
 			"coopStream": {
@@ -193,14 +181,12 @@ A JSON object of the document of the user with its authToken
 - bio
 - skills
 - interests
-- coopExp
 - memberType
 - subteams
 - projects
 - email
 - stream
 - imageUrl
-- birthday
 - links
 
 # Structure of Backend

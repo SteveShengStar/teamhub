@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 
 let config = {};
 
-config.url = process.env.MONGO_URL;
+if (process.env.TEAMHUB_ENV === 'testing') {
+    // Different connection string required for unit tests
+    config = require('./config.tests.json');
+} else if (process.env.TEAMHUB_ENV === 'production' || process.env.TEAMHUB_ENV === 'preview') {
+    config.url = process.env.MONGO_URL;
+} else {
+    config = require('./config.json');
+}
 
 const data = {};
 
@@ -19,6 +26,10 @@ data.init = async () => {
         throw new Error('No URL found in config.');
     }
 
+    console.log(`Disconnecting from db just in case!`);
+    await mongoose.disconnect();
+    data.connected = false;
+
     await mongoose.connect(config.url, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
@@ -30,8 +41,8 @@ data.init = async () => {
 };
 
 data.close = async () => {
-    data.connected = false;
     await mongoose.disconnect();
+    data.connected = false;
 };
 
 data.util = require('./handlers/util');

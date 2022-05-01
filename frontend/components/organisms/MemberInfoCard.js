@@ -17,9 +17,6 @@ import Button from '../atoms/Button';
 import {capitalize} from 'lodash';
 
 const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
-    let birthday = memberData.birthday ? new Date(memberData.birthday.year, memberData.birthday.month, memberData.birthday.day) : new Date();
-    birthday = birthday.toLocaleDateString('en-US', {year: 'numeric', month: 'long', day: 'numeric'});
-
     const memberSubteams = memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams.map(st => st.name) : [];
     const memberProjects = memberData.projects && memberData.projects.length > 0 ? memberData.projects.map(prj => prj.name) : [];
     const subteam = memberSubteams && memberSubteams.length > 0 ? memberSubteams[0] : "";
@@ -51,7 +48,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
             <ContentContainer>
                 <LeftColumn>
                     <Header2 fontSize="smallTitle">
-                        {memberData.name ? `${memberData.name.display || (memberData.name.first + " " + memberData.name.last)}` : ''} 
+                        {memberData.name ? memberData.name.first + " " + memberData.name.last : ''} 
                     </Header2>
                     {
                         memberData.subteams ? (
@@ -126,13 +123,12 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                                     </SystemComponent>)
                                 )
                             }
-                            <Body>{`🎂 ${birthday}`}</Body>
                         </SystemComponent>
                     </PersonalCard>
 
                     {
-                        memberData.stream && memberData.stream.currentSchoolTerm && memberData.program &&
-                        <Header5 mt={5}>{memberData.stream.currentSchoolTerm + " " + memberData.program}</Header5>
+                        memberData.program &&
+                        <Header5 mt={5}>{memberData.program}</Header5>
                     }
                 </RightColumn>
             </ContentContainer>

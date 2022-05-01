@@ -9,11 +9,10 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
 import { userLogin } from '../../store/reducers/userReducer';
 
-const Login = ({shouldHide, onFinish, loginRef}) => {
+const Login = ({onFinish, loginRef}) => {
     const dispatch = useDispatch()
     function responseGoogle(response) {
         if (response.error) return;
-        shouldHide && shouldHide();
         userLogin(response, dispatch).then((user) => {
             onFinish && onFinish(user);
         })

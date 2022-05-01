@@ -1,17 +1,22 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
-import { isEmail } from 'validator';
+import React, { useState, useContext } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from "next/router";
 import { ThemeContext } from 'styled-components';
-import PageTemplate from '../frontend/components/templates/PageTemplate';
+import PageTemplate from '../../frontend/components/templates/PageTemplate';
 import {
-  SystemComponent,
-  SystemSpan,
-} from '../frontend/components/atoms/SystemComponents';
-import Subtitle from '../frontend/components/atoms/Subtitle';
-import Card from '../frontend/components/atoms/Card';
-import FieldSection from '../frontend/components/molecules/Form/FieldSection';
-import Button from '../frontend/components/atoms/Button';
+  SystemComponent
+} from '../../frontend/components/atoms/SystemComponents';
+import Card from '../../frontend/components/atoms/Card';
+import FieldSection from '../../frontend/components/molecules/Form/FieldSection';
+import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
+import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
-const SCHOOL_TERM_LABELS = [
+import {validateField, clearErrorMessages, onInputChange} from '../../frontend/form/util'
+
+import { updateUser } from "../../frontend/store/reducers/userReducer";
+
+const SCHOOL_TERMS = [
+  '1A Study',
   '1A Co-op',
   '1B Study',
   '1B Co-op',
@@ -61,18 +66,17 @@ const FUTURE_TERMS = [
 ];
 
 const SUBTEAMS = [
-  'Business',
-  'LIM',
-  'Mechanical',
-  'MC',
-  'BMS',
-  'Embedded',
-  'Infrastructure',
-  'Web',
-  'Team Hub',
+  "Software",
+  "Electrical",
+  "Mechanical",
+  "Admin",
+  "Infrastructure",
+  "Exec",
+  "Web",
+  "Business"
 ];
 
-const ACTIVE_STATUS = [
+const NEXT_TERM_ACTIVITY = [
   'Yes, I will continue on the team, and I will be on campus (or working locally)',
   'Yes, I will continue on the team remotely and can come to campus if needed/possible',
   'Yes, I will continue on the team remotely only',
@@ -80,116 +84,86 @@ const ACTIVE_STATUS = [
   'No, taking the term off',
 ];
 
-const MEMBERSHIP = [
-  'Member',
-  'Exec/lead/advisor',
-  'Coop',
-  'Not active on Waterloop this term',
-];
-
-const CONTINUING_STATUS = [
+const NEXT_TERM_ROLE = [
   'Continue with my sub-team',
-  'Transfer to another sub-team (please specify)',
+  'Transfer to another sub-team',
   'Want to take on a leadership role - lead',
   'Want to take on a leadership role - co-op supervisor',
   'Want to become a co-op',
   "I'm undecided or not continuing",
 ];
 
-const FormHeader = ({ title, marginBottom }) => {
-  const theme = useContext(ThemeContext);
-  return (
-    <SystemComponent
-      fontSize={theme.fontSizes.header3}
-      textAlign="center"
-      mb={marginBottom}
-    >
-      <SystemSpan>
-        <Subtitle>{title}</Subtitle>
-      </SystemSpan>
-    </SystemComponent>
-  );
-};
-
 const ReturningMembersForm = () => {
   const theme = useContext(ThemeContext);
 
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { user, hydrated } = useSelector(state => state.userState);
+
   const [formValues, setFormValues] = useState({
     fullName: '',
-    termDescription: '',
+    personalEmail: '',
+    nextSchoolTerm: '',
+    nextTermActivity: '',
+    nextTermRole: '',
     previousTerms: [],
     futureTerms: [],
     subteam: '',
-    activeStatus: '',
-    continuingStatus: '',
-    email: '',
-    comments: '',
-    futureTasks: '',
+    termComments: '',
+    desiredWork: '',
   });
 
   const [hasError, setHasError] = useState({
     fullName: false,
-    termDescription: false,
-    previousTerms: false,
-    futureTerms: false,
-    activeStatus: false,
+    personalEmail: false,
+    nextSchoolTerm: false,
+    nextTermActivity: false,
+    nextTermRole: false,
     subteam: false,
-    activeStatus: false,
-    continuingStatus: false,
-    email: false,
   });
 
-  const handleSave = () => {
-    const updatedErrorList = { ...hasError };
+  const setErrorMessages = (formErrors) => {
+    Object.keys(formErrors).forEach(key => {
+      validateField(formValues, formErrors, key);
+    });
+    setHasError(formErrors);
+  }
 
-    // this resets all fields to display no errors initially, the errors will update when correcting some fields
-    for (const [name, value] of Object.entries(updatedErrorList)) {
-      updatedErrorList[name] = false;
-    }
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    const formErrors = { ...hasError };
 
-    if (!formValues.fullName || formValues.fullName.split(' ').length !== 2) {
-      updatedErrorList['fullName'] = true;
-    }
-    if (!formValues.email || !isEmail(formValues.email)) {
-      updatedErrorList['email'] = true;
-    }
-    if (!formValues.termDescription) {
-      updatedErrorList['termDescription'] = true;
-    }
-    if (!formValues.subteam) {
-      updatedErrorList['subteam'] = true;
-    }
-    if (!formValues.continuingStatus) {
-      updatedErrorList['continuingStatus'] = true;
-    }
-    if (!formValues.activeStatus) {
-      updatedErrorList['activeStatus'] = true;
-    }
-    if (!formValues.futureTerms) {
-      updatedErrorList['futureTerms'] = true;
-    }
+    clearErrorMessages(formErrors);
+    setErrorMessages(formErrors);
 
-    setHasError(updatedErrorList);
-    const submissionHasErrors = Object.values(updatedErrorList).some(
-      (hasError) => hasError === true
-    );
-    if (submissionHasErrors) {
-      return;
+    const formHasErrors = Object.values(formErrors).some(err => err);
+    if (!formHasErrors) {
+      const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteam, nextTermActivity,
+              nextTermRole, personalEmail, termComments, desiredWork} = formValues;
+
+      const fullNameParts = fullName.split(/\s+/);
+      updateUser(dispatch, {
+          name: {
+              first: fullNameParts[0].trim(),
+              last: fullNameParts[fullNameParts.length - 1].trim()
+          },
+          personalEmail: personalEmail.trim(),
+          subteams: [subteam], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
+          activeSchoolTerms: [...previousTerms, ...futureTerms],
+          nextSchoolTerm,
+          nextTermActivity,
+          nextTermRole,
+          termComments: termComments.trim(),
+          desiredWork: desiredWork.trim(),
+      }, user._id, router).then(res => {
+          console.log("Update User Info. Completed.");
+          // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
+      });
     }
-    // call onSubmit API route here
   };
 
   const handleInputChange = (name, value) => {
-    if (name === 'phoneNumber') {
-      if (value && (!value.match(/^[0-9]*$/) || value.length > 10)) {
-        return;
-      }
-    } else if (name === 'studentId') {
-      if (value && (!value.match(/^[0-9]*$/) || value.length > 8)) {
-        return;
-      }
-    }
-    setFormValues({ ...formValues, [name]: value });
+    onInputChange(formValues, setFormValues, name, value);
   };
 
   const handleFieldChange = (name, value) => {
@@ -225,35 +199,34 @@ const ReturningMembersForm = () => {
               onChange={handleInputChange}
               hasError={hasError['fullName']}
               errorText="Please enter your full name."
+              placeholder='First Name and Last Name'
             />
             <FieldSection
-              title="This upcoming term, I will be on my"
+              title="This upcoming term, I will be in my"
               type="radio"
-              name="termDescription"
+              name="nextSchoolTerm"
               required={true}
-              options={SCHOOL_TERM_LABELS}
+              options={SCHOOL_TERMS}
               onChange={handleFieldChange}
-              value={formValues.termDescription}
-              hasError={hasError['termDescription']}
-              errorText="Please select an option."
+              value={formValues.nextSchoolTerm}
+              hasError={hasError['nextSchoolTerm']}
+              errorText="Please select an option above."
             />
             <FieldSection
-              title="Previous Terms"
+              title="Previous Terms I worked on Waterloop"
               type="checkbox"
               name="previousTerms"
               value={formValues['previousTerms']}
               options={PREV_TERMS}
               onChange={handleFieldChange}
-              hasError={hasError['previousTerms']}
             />
             <FieldSection
-              title="I will be in Waterloo during"
+              title="I will be on Waterloop during"
               type="checkbox"
               name="futureTerms"
               value={formValues['futureTerms']}
               options={FUTURE_TERMS}
               onChange={handleFieldChange}
-              hasError={hasError['futureTerms']}
             />
             <FieldSection
               title="Your subteam"
@@ -264,55 +237,54 @@ const ReturningMembersForm = () => {
               value={formValues.subteam}
               onChange={handleFieldChange}
               hasError={hasError['subteam']}
-              errorText="Please select an option."
+              errorText="Please select an option above."
             />
             <FieldSection
               title="Will you be active on the team this upcoming term?"
-              name="activeStatus"
+              name="nextTermActivity"
               type="radio"
               required={true}
-              options={ACTIVE_STATUS}
-              value={formValues.activeStatus}
+              options={NEXT_TERM_ACTIVITY}
+              value={formValues.nextTermActivity}
               onChange={handleFieldChange}
-              hasError={hasError['activeStatus']}
-              errorText="Please select an option."
+              hasError={hasError['nextTermActivity']}
+              errorText="Please select an option above."
             />
             <FieldSection
               title="If you're continuing, what are you planning to do?"
-              name="continuingStatus"
+              name="nextTermRole"
               type="radio"
               required={true}
-              options={CONTINUING_STATUS}
-              value={formValues.continuingStatus}
+              options={NEXT_TERM_ROLE}
+              value={formValues.nextTermRole}
               onChange={handleFieldChange}
-              hasError={hasError['continuingStatus']}
-              errorText="Please select an option."
+              hasError={hasError['nextTermRole']}
+              errorText="Please select an option above."
             />
             <FieldSection
               title="Please provide your personal email address"
-              name="email"
+              name="personalEmail"
               required={true}
-              value={formValues['email']}
+              value={formValues['personalEmail']}
               onChange={handleInputChange}
-              hasError={hasError['email']}
+              hasError={hasError['personalEmail']}
               errorText="Please enter a valid email."
+              placeholder='Email Address'
             />
             <FieldSection
               title="Any additional comments or thoughts on the term?"
-              name="comments"
-              value={formValues['comments']}
+              name="termComments"
+              value={formValues['termComments']}
               onChange={handleInputChange}
             />
             <FieldSection
               title="Is there anything specific you want to work on next term?"
-              name="futureTasks"
-              value={formValues['futureTasks']}
+              name="desiredWork"
+              value={formValues['desiredWork']}
               onChange={handleInputChange}
             />
-            <SystemComponent>
-              <Button onClick={handleSave}>Submit</Button>
-            </SystemComponent>
           </SystemComponent>
+          <FormFooter handleSubmit={handleSubmit} submitDisabled={!hydrated}/>
         </Card>
       </SystemComponent>
     </PageTemplate>

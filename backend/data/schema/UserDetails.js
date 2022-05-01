@@ -21,18 +21,22 @@ const UserDetailsSchema = new Schema({
     nextTermRole: {
         type: String
     },
+    nextSchoolTerm: {
+        type: String,
+        required: false
+    },
     termComments: {
         type: String,
         required: false
     },
-    nextTermWork: {
+    desiredWork: {
         type: String,
         required: false
     },
     designCentreSafety: {
         type: Boolean
     },
-    whimis: {
+    whmis: {
         type: Boolean
     },
     machineShop: {
