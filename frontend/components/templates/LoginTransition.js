@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
-import styled, { ThemeContext } from "styled-components";
-import LoadingModal from "../atoms/LoadingModal";
+import React from "react";
+import styled from "styled-components";
 
 /**
  * @param { {children: *, loginTransition: { state: "PRE_TRANSITION" | "SHOWN" | "POST_TRANSITION", hide: (onFinish: () => void) => void}}}

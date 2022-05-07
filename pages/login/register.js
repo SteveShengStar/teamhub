@@ -136,7 +136,10 @@ const RegistrationForm = () => {
                 whmis,
                 machineShop,
             }, user._id, router).then(res => {
-                router.push("/")
+                router.push("/");
+            }).catch((err) => {
+                console.error(err);
+                alert("Failed to submit registration form. Error: " + err);
             });
         }        
     }
