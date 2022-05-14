@@ -1,88 +1,101 @@
-import React, {useState} from 'react';
-import {
-  DndContext, 
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  useSortable
-} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
+import { closestCenter, DndContext, PointerSensor, useSensor } from '@dnd-kit/core';
+import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import React, { useState } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
-function SortableItem(props) {
+const UserComponent = ({
+    id,
+    name,
+    height,
+}) => {
     const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-    } = useSortable({id: props.id});
-    
+        setNodeRef,
+        attributes,
+        listeners,
+        transition,
+        transform,
+        isDragging,
+    } = useSortable({ id: id })
+
     const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      width: '300px',
-      marginBottom: '40px',
-      padding: '50px',
-      backgroundColor: 'grey'
-    };
-    
+        transition,
+        transform: CSS.Transform.toString(transform),
+        border: '2px solid black',
+        marginBottom: 5,
+        marginTop: 5,
+        opacity: isDragging ? 0.5 : 1,
+        height: height
+    }
+
     return (
-      <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-          <div>
-            <button>Click me and you will smile</button>
-          </div>
-          <div>
-            <button>Click me and you will frown</button>
-          </div>
-          <div>HAHA item in here.</div>
-      </div>
-    );
+        <div
+            ref={setNodeRef}
+            {...attributes}
+            {...listeners}
+            style={style}
+        >
+            {name}
+        </div>
+    )
 }
 
 function POC() {
-  const [items, setItems] = useState(['1', '2', '3']);
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
+  const [items, setItems] = useState([
+    {
+      id: "1",
+      name: "Manoj",
+      height: '100px'
+    },
+    {
+      id: "2",
+      name: "John",
+      height: '200px'
+    },
+    {
+      id: "3",
+      name: "Ronaldo",
+      height: '300px'
+    }
+  ])
 
-  return (
-    <DndContext 
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext 
-        items={items}
-        strategy={verticalListSortingStrategy}
-      >
-        {items.map(id => <SortableItem key={id} id={id} />)}
-      </SortableContext>
-    </DndContext>
-  );
-  
-  function handleDragEnd(event) {
-    const {active, over} = event;
-    
+  const sensors = [useSensor(PointerSensor)];
+
+  const handleDragEnd = ({active, over}) => {
     if (active.id !== over.id) {
       setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-        
-        return arrayMove(items, oldIndex, newIndex);
-      });
+        const oldIndex = items.findIndex(item => item.id === active.id)
+        const newIndex = items.findIndex(item => item.id === over.id)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
     }
   }
+
+  return (
+    <div
+      style={{
+        margin: 'auto',
+        width: 200,
+        textAlign: 'center'
+      }}
+    >
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={items.map(item => item.id)}
+          strategy={verticalListSortingStrategy}
+        >
+            <UserComponent {...items[0]} key={items[0].id} />
+            <UserComponent {...items[1]} key={items[1].id} />
+            <UserComponent {...items[2]} key={items[2].id} />
+        </SortableContext>
+      </DndContext>
+    </div>
+  );
 }
 export default POC;
