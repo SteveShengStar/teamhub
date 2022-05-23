@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon ./server.js",
     "build": "next build",
-    "build:docker": "docker build ./docker -t teamhub",
+    "build:docker": "docker build ./ -t teamhub",
     "start:docker": "docker-compose up -d",
     "dev:docker": "docker exec -it teamhub_nodejs npm run dev",
     "docker": "npm run start:docker && npm run dev:docker",
