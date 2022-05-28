@@ -82,7 +82,7 @@ exportsheet.writeTeamRoster = async (token) => {
     //TODO create new sheet
     const createRequestBody = {
         properties: {
-            title,
+            title: `Title of Sashco's spreadsheet`,
         }
     }
     const createRequest = {
