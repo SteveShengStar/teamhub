@@ -81,7 +81,7 @@ exportsheet.writeTeamRoster = async (token) => {
     const request = {
         // The ID of the spreadsheet to update.
         //spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
-        spreadsheetId: driveResponse.Id,
+        spreadsheetId: driveResponse.data.id,
         // The A1 notation of the values to update.
         range: 'Sheet1',  
         // How the input data should be interpreted.
