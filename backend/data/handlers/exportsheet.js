@@ -60,11 +60,28 @@ exportsheet.writeTeamRoster = async (token) => {
     // console.log(spreadsheetData[1]);
     // console.log(spreadsheetData[2]);
 
-    
+    //create new file with drive api
+    const googleDrive = getGoogleDriveClient(token);
+    const fileMetadata = {
+        'name' : 'SashcoSheet',
+        parents :[],
+    };
+    const media = {
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+    };
+    const driveRequest = {
+        resource: fileMetadata,
+        media: media,
+        fields: 'id',
+    }; 
+    const driveResponse = await googleDrive.files.create(driveRequest);
+    console.log(driveResponse);
+    //fill in our sheet via sheets api
     const googleSheets = getGoogleSheetsClient(token);
     const request = {
         // The ID of the spreadsheet to update.
-        spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
+        //spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
+        spreadsheetId: driveResponse.Id,
         // The A1 notation of the values to update.
         range: 'Sheet1',  
         // How the input data should be interpreted.
@@ -135,6 +152,14 @@ const getGoogleSheetsClient = (token) => {
         access_token: token
     });
     return google.sheets({ version: 'v4', auth: client });
+}
+
+const getGoogleDriveClient = (token) => {
+    const client = new OAuth2Client(authConfig['client_id']);
+    client.setCredentials({
+        access_token: token
+    });
+    return google.drive({ version: 'v3', auth: client });
 }
 
 const getFields = (listOfFields) => {
