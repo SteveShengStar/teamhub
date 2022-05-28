@@ -76,8 +76,22 @@ exportsheet.writeTeamRoster = async (token) => {
     }; 
     const driveResponse = await googleDrive.files.create(driveRequest);
     console.log(driveResponse);
+    
     //fill in our sheet via sheets api
     const googleSheets = getGoogleSheetsClient(token);
+    //TODO create new sheet
+    const createRequestBody = {
+        properties: {
+            title,
+        }
+    }
+    const createRequest = {
+        requestBody,
+        fields: driveResponse.data.id
+    }
+    const createResponse = googleSheets.spreadsheets.create(createRequest)
+    console.log(createResponse)
+    //update sheet
     const request = {
         // The ID of the spreadsheet to update.
         //spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
