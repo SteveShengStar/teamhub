@@ -6,10 +6,11 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         
         // Get the Access Token from the request headers
-        const token = cookie.parse(req.headers.cookie).token;
-        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        //const token = cookie.parse(req.headers.cookie).token;
+        //console.log(token)
+        //const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
                             
-        if (authStatus) {
+        if (true) {
             const token = req.headers['authorization'].split(' ')[1];
             console.log(token);
             res.setHeader('Content-Type', 'application/json');
