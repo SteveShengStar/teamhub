@@ -62,7 +62,7 @@ exportsheet.writeTeamRoster = async (token) => {
 
     //create new file with drive api
     const d = new Date()
-    const fileName = `Waterloop Roster - ${d.toUTCString()}` 
+    const fileName = `Waterloop Roster - ${d.toLocaleString('en-CA', { timeZone: 'EST' })}` 
     const googleDrive = getGoogleDriveClient(token);
     const fileMetadata = {
         'name' : fileName,
