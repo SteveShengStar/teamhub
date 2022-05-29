@@ -61,37 +61,23 @@ exportsheet.writeTeamRoster = async (token) => {
     // console.log(spreadsheetData[2]);
 
     //create new file with drive api
+    const d = new Date()
+    const fileName = `Waterloop Roster - ${d.toUTCString()}` 
     const googleDrive = getGoogleDriveClient(token);
     const fileMetadata = {
-        'name' : 'SashcoSheet',
+        'name' : fileName,
         parents :[],
-    };
-    const media = {
         mimeType: 'application/vnd.google-apps.spreadsheet',
     };
     const driveRequest = {
         resource: fileMetadata,
-        media: media,
         fields: 'id',
     }; 
     const driveResponse = await googleDrive.files.create(driveRequest);
     console.log(driveResponse);
     
-    //fill in our sheet via sheets api
-    const googleSheets = getGoogleSheetsClient(token);
-    //TODO create new sheet
-    const createRequestBody = {
-        properties: {
-            title: `Title of Sashco's spreadsheet`,
-        }
-    }
-    const createRequest = {
-        requestBody,
-        fields: driveResponse.data.id
-    }
-    const createResponse = googleSheets.spreadsheets.create(createRequest)
-    console.log(createResponse)
     //update sheet
+    const googleSheets = getGoogleSheetsClient(token);
     const request = {
         // The ID of the spreadsheet to update.
         //spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
