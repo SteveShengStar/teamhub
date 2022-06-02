@@ -93,6 +93,15 @@ const NEXT_TERM_ROLE = [
   "I'm undecided or not continuing",
 ];
 
+const fieldIDs = [
+  'fullName',
+  'nextSchoolTerm',
+  'subteam',
+  'nextTermActivity',
+  'nextTermRole',
+  'email'
+];
+
 const ReturningMembersForm = () => {
   const theme = useContext(ThemeContext);
 
@@ -182,6 +191,18 @@ const ReturningMembersForm = () => {
   const handleFieldChange = (name, value) => {
     setFormValues({ ...formValues, [name]: value });
   };
+
+  useLayoutEffect(()=> {
+    for (var i=0; i < fieldIDs.length; i++) {
+        if (hasError[fieldIDs[i]]) {
+            const element = document.getElementById(fieldIDs[i]);
+            if (element) {
+                element.scrollIntoView({behavior: 'smooth'});
+                break;
+            }
+        }
+    };
+}, [hasError]);
 
   return (
     <PageTemplate>
