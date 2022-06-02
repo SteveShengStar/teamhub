@@ -31,7 +31,6 @@ const DescriptionSection = ({text}) => { // TODO: incorporate form-section descr
 
 const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
     const theme = useContext(ThemeContext);
-
     const renderInputField = (type) => {
 
         switch (type) {
@@ -80,6 +79,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
     return (
         <SystemComponent
             fontSize={theme.fontSizes.header3}
+            id={name}
             textAlign='left'
             width={["98%", "100%", "100%", "600px"]}
         >

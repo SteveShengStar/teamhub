@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from "next/router";
 import { ThemeContext } from "styled-components";
@@ -46,6 +46,20 @@ const SUBTEAMS = [
     "Infrastructure",
     "Exec",
     "Web"
+];
+
+const fieldIDs = [
+    'fullName',
+    'phoneNumber', 
+    'email', 
+    'program', 
+    'studentId',  
+    'termStatus', 
+    'memberType', 
+    'subteam',
+    'designCentreSafety',
+    'whmis', 
+    'machineShop'
 ];
 
 const RegistrationForm = () => {
@@ -103,6 +117,18 @@ const RegistrationForm = () => {
         setHasError(formErrors);
     }
 
+    useLayoutEffect(()=> {
+        for (var i=0; i < fieldIDs.length; i++) {
+            if (hasError[fieldIDs[i]]) {
+                const element = document.getElementById(fieldIDs[i]);
+                if (element) {
+                    element.scrollIntoView({behavior: 'smooth'});
+                    break;
+                }
+            }
+        };
+    }, [hasError]);
+
     const handleSubmit = (evt) => {
         evt.preventDefault();
         console.log(formValues)
@@ -110,7 +136,6 @@ const RegistrationForm = () => {
 
         clearErrorMessages(formErrors);
         setErrorMessages(formErrors);
-
         const formHasErrors = Object.values(formErrors).some(err => err);
         if (!formHasErrors) {
             loginTransition.setVisible(false);
