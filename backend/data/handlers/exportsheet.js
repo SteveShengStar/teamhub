@@ -61,8 +61,8 @@ exportsheet.writeTeamRoster = async (token) => {
     // console.log(spreadsheetData[2]);
 
     //create new file with drive api
-    const d = new Date()
-    const fileName = `Waterloop Roster - ${d.toLocaleString('en-CA', { timeZone: 'EST' })}` 
+    const currentDate = new Date()
+    const fileName = `Waterloop Roster - ${currentDate.toLocaleString('en-CA', { timeZone: 'EST' })}` 
     const googleDrive = getGoogleDriveClient(token);
     const fileMetadata = {
         'name' : fileName,
@@ -80,7 +80,6 @@ exportsheet.writeTeamRoster = async (token) => {
     const googleSheets = getGoogleSheetsClient(token);
     const request = {
         // The ID of the spreadsheet to update.
-        //spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
         spreadsheetId: driveResponse.data.id,
         // The A1 notation of the values to update.
         range: 'Sheet1',  
