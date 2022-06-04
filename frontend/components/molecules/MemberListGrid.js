@@ -22,13 +22,11 @@ const MembersListHeader = (props) => {
 
 const MemberListGrid = ({members, onSelect, className, animRef, fetchedMembers, groupSelectedMembers}) => {
     const { subteams } = useSelector(state => state.membersState.filters);
-
     const normalizedSubteams = subteams && subteams.reduce((accum, subteam) => {
         return { ...accum, [subteam._id]: subteam }
     }, {});
 
     const date = new Date();
-    const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
     return (
         <>

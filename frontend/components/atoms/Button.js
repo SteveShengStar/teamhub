@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../theme';
 import { SystemButton } from './SystemComponents';
 import { variant, color, space } from 'styled-system';
 
@@ -65,7 +66,8 @@ const Button = styled(SystemButton)(
       },
       white: {
         backgroundColor: 'white',
-        color: 'black',
+        border: `2px solid ${theme.colors.action}`,
+        color: 'action',
       },
       lightGrey: {
         backgroundColor: 'greys.0',
