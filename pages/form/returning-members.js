@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from "next/router";
 import { ThemeContext } from 'styled-components';
@@ -11,7 +11,7 @@ import FieldSection from '../../frontend/components/molecules/Form/FieldSection'
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists, scrollToFirstError} from '../../frontend/util'
 
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 
@@ -93,15 +93,6 @@ const NEXT_TERM_ROLE = [
   "I'm undecided or not continuing",
 ];
 
-const fieldIDs = [
-  'fullName',
-  'nextSchoolTerm',
-  'subteam',
-  'nextTermActivity',
-  'nextTermRole',
-  'email'
-];
-
 const ReturningMembersForm = () => {
   const theme = useContext(ThemeContext);
 
@@ -132,6 +123,8 @@ const ReturningMembersForm = () => {
   });
 
   const setErrorMessages = (formErrors) => {
+    clearErrorMessages(formErrors);
+
     validateField(formValues, formErrors, 'fullName');
     validateField(formValues, formErrors, 'email');
     validateField(formValues, formErrors, 'nextSchoolTerm');
@@ -144,12 +137,11 @@ const ReturningMembersForm = () => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
+
     const formErrors = { ...hasError };
-
-    clearErrorMessages(formErrors);
     setErrorMessages(formErrors);
-
     const formHasErrors = Object.values(formErrors).some(err => err);
+
     if (!formHasErrors) {
       const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteam, nextTermActivity,
               nextTermRole, email, termComments, desiredWork} = formValues;
@@ -172,6 +164,8 @@ const ReturningMembersForm = () => {
           console.log("Update User Info. Completed.");
           // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
       });
+    } else {
+      scrollToFirstError(formErrors);
     }
   };
 
@@ -194,18 +188,6 @@ const ReturningMembersForm = () => {
     clearErrorMessageIfExists(name, hasError, setHasError);
     setFormValues({ ...formValues, [name]: value });
   };
-
-  useLayoutEffect(()=> {
-    for (var i=0; i < fieldIDs.length; i++) {
-        if (hasError[fieldIDs[i]]) {
-            const element = document.getElementById(fieldIDs[i]);
-            if (element) {
-                element.scrollIntoView({behavior: 'smooth'});
-                break;
-            }
-        }
-    };
-}, [hasError]);
 
   return (
     <PageTemplate>

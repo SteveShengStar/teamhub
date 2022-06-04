@@ -63,6 +63,18 @@ export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
 }
 
+export const scrollToFirstError = (formErrors) => {
+    for (const [field, hasError] of Object.entries(formErrors)) {
+        if (hasError) {
+            const element = document.getElementById(field);
+            if (element) {   // TODO: what if the ordering is different ?
+                element.scrollIntoView({behavior: 'smooth'});
+                break;
+            }
+        }
+    }
+}
+
 const validateExists = (formData, formErrors, field) => {
     if (!formData[field].trim()) {
         formErrors[field] = true;
