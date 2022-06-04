@@ -16,7 +16,7 @@ import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists} from '../../frontend/util'
 
 const TERM_STATUSES = [
     'Academic term, active on Waterloop in-person', 
@@ -167,6 +167,8 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
+        clearErrorMessageIfExists(name, hasError, setHasError);
+
         // Prevent user from typing in non-numeric characters.
         if (name === "phoneNumber") {
             if (value && isInvalidPhoneNumber(value)) {
@@ -182,6 +184,7 @@ const RegistrationForm = () => {
     }
 
     const handleFieldChange = (name, value) => {
+        clearErrorMessageIfExists(name, hasError, setHasError);
         setFormValues({...formValues, [name]: value})
     }
 

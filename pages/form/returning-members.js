@@ -11,7 +11,7 @@ import FieldSection from '../../frontend/components/molecules/Form/FieldSection'
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists} from '../../frontend/util'
 
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 
@@ -176,6 +176,8 @@ const ReturningMembersForm = () => {
   };
 
   const handleInputChange = (name, value) => {
+    clearErrorMessageIfExists(name, hasError, setHasError);
+
     if (name === 'phoneNumber') {
       if (value && isInvalidPhoneNumber(value)) {
         return;
@@ -189,6 +191,7 @@ const ReturningMembersForm = () => {
   };
 
   const handleFieldChange = (name, value) => {
+    clearErrorMessageIfExists(name, hasError, setHasError);
     setFormValues({ ...formValues, [name]: value });
   };
 
