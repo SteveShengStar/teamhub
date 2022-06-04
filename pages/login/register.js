@@ -223,7 +223,7 @@ const RegistrationForm = () => {
                                     errorText="Please enter your program."       
                                     />
                                 <FieldSection 
-                                    title='Student ID #' 
+                                    title='Student ID No.' 
                                     required={true}
                                     name="studentId"
                                     value={formValues['studentId']}

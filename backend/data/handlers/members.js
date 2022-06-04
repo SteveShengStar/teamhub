@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Member = require('../schema/Member');
 const UserDetails = require('../schema/UserDetails');
 const skills = require('./skills');
@@ -9,8 +7,6 @@ const projects = require('./projects');
 const subteams = require('./subteams');
 const util = require('./util');
 const _ = require('lodash');
-
-const db = mongoose.connection;
 
 const members = {};
 
@@ -131,10 +127,12 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
  */
 members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
-        const userSummaryFields = Object.keys(Member.schema.paths);
-        const userDetailFields = Object.keys(UserDetails.schema.paths);
-        let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
-        let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
+        const memberFields = Object.keys(Member.schema.paths);
+        console.log("Member Fields");
+        let userSummary = _.omit(_.pick(userPayload, memberFields), "_id");
+        console.log(Object.keys(userSummary));
+        let userDetails = _.omit(userPayload, [...memberFields, "_id"]);
+        console.log(Object.keys(userDetails));
 
         const userDetailsResponse = await UserDetails.create(userDetails);
         userSummary.miscDetails = userDetailsResponse._id;
@@ -169,9 +167,11 @@ members.delete = async (filter) => {
  */
 members.updateMember = async (filter, payload) => {
     const memberFields = Object.keys(Member.schema.paths);
-    const userDetailFields = Object.keys(UserDetails.schema.paths);
+    console.log("Member Fields");
     let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
-    let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
+    console.log(Object.keys(memberSummary));
+    let memberDetails = _.omit(payload, [...memberFields, "_id"]);
+    console.log(Object.keys(memberDetails));
 
     return util.handleWrapper(async () => {
         if (!_.isEmpty(memberSummary)) {
