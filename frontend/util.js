@@ -40,6 +40,15 @@ export const validateField = (formData, formErrors, field) => {
     }
 }
 
+export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
+    if (hasError[fieldName]) {
+        setHasError({
+            ...hasError,
+            [fieldName]: false
+        });
+    }
+}
+
 export const clearErrorMessages = (formErrors) => {
     for (const field of Object.keys(formErrors)) {
         formErrors[field] = false;
