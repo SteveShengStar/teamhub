@@ -60,11 +60,27 @@ exportsheet.writeTeamRoster = async (token) => {
     // console.log(spreadsheetData[1]);
     // console.log(spreadsheetData[2]);
 
+    //create new file with drive api
+    const currentDate = new Date()
+    const fileName = `Waterloop Roster - ${currentDate.toLocaleString('en-CA', { timeZone: 'EST' })}` 
+    const googleDrive = getGoogleDriveClient(token);
+    const fileMetadata = {
+        'name' : fileName,
+        parents :[],
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+    };
+    const driveRequest = {
+        resource: fileMetadata,
+        fields: 'id',
+    }; 
+    const driveResponse = await googleDrive.files.create(driveRequest);
+    console.log(driveResponse);
     
+    //update sheet
     const googleSheets = getGoogleSheetsClient(token);
     const request = {
         // The ID of the spreadsheet to update.
-        spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys', 
+        spreadsheetId: driveResponse.data.id,
         // The A1 notation of the values to update.
         range: 'Sheet1',  
         // How the input data should be interpreted.
@@ -135,6 +151,14 @@ const getGoogleSheetsClient = (token) => {
         access_token: token
     });
     return google.sheets({ version: 'v4', auth: client });
+}
+
+const getGoogleDriveClient = (token) => {
+    const client = new OAuth2Client(authConfig['client_id']);
+    client.setCredentials({
+        access_token: token
+    });
+    return google.drive({ version: 'v3', auth: client });
 }
 
 const getFields = (listOfFields) => {
