@@ -68,7 +68,11 @@ export const scrollToFirstError = (formErrors) => {
         if (hasError) {
             const element = document.getElementById(field);
             if (element) {   // TODO: what if the ordering is different ?
-                element.scrollIntoView({behavior: 'smooth'});
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'center'
+                });
                 break;
             }
         }
