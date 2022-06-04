@@ -1,4 +1,4 @@
-import React, { useState, useContext, useLayoutEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from "next/router";
 import { ThemeContext } from "styled-components";
@@ -16,7 +16,7 @@ import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import LoginTransition from "../../frontend/components/templates/LoginTransition";
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, clearErrorMessageIfExists, scrollToFirstError} from '../../frontend/util'
 
 const TERM_STATUSES = [
     'Academic term, active on Waterloop in-person', 
@@ -46,20 +46,6 @@ const SUBTEAMS = [
     "Infrastructure",
     "Exec",
     "Web"
-];
-
-const fieldIDs = [
-    'fullName',
-    'phoneNumber', 
-    'email', 
-    'program', 
-    'studentId',  
-    'termStatus', 
-    'memberType', 
-    'subteam',
-    'designCentreSafety',
-    'whmis', 
-    'machineShop'
 ];
 
 const RegistrationForm = () => {
@@ -102,6 +88,8 @@ const RegistrationForm = () => {
     });
 
     const setErrorMessages = (formErrors) => {
+        clearErrorMessages(formErrors);
+
         validateField(formValues, formErrors, 'fullName');
         validateField(formValues, formErrors, 'phoneNumber');
         validateField(formValues, formErrors, 'email');
@@ -117,26 +105,13 @@ const RegistrationForm = () => {
         setHasError(formErrors);
     }
 
-    useLayoutEffect(()=> {
-        for (var i=0; i < fieldIDs.length; i++) {
-            if (hasError[fieldIDs[i]]) {
-                const element = document.getElementById(fieldIDs[i]);
-                if (element) {
-                    element.scrollIntoView({behavior: 'smooth'});
-                    break;
-                }
-            }
-        };
-    }, [hasError]);
-
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        console.log(formValues)
-        const formErrors = {...hasError};
 
-        clearErrorMessages(formErrors);
+        const formErrors = {...hasError};
         setErrorMessages(formErrors);
         const formHasErrors = Object.values(formErrors).some(err => err);
+
         if (!formHasErrors) {
             loginTransition.setVisible(false);
 
@@ -163,7 +138,9 @@ const RegistrationForm = () => {
             }, user._id, router).then(res => {
                 router.push("/")
             });
-        }        
+        } else {
+            scrollToFirstError(formErrors);
+        }
     }
 
     const handleInputChange = (name, value) => {
