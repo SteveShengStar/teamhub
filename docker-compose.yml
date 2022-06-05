@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.8"
 
 services:
   teamhub:
@@ -19,7 +19,20 @@ services:
   database:
     image: mongo
     container_name: teamhub_mongodb
+    hostname: teamhub_mongodb
+    restart: on-failure 
     volumes:
       - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
     ports:
       - 27017:27017
+    command: mongod --replSet rs0
+  mongoinit:
+    image: mongo
+    restart: "no"
+    depends_on:
+      - database
+    command: >
+      mongo --host teamhub_mongodb:27017 --eval
+      '
+      rs.initiate();
+      '
