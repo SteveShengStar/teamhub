@@ -39,11 +39,6 @@ const FormSectionSchema = new Schema({
         enum: ["text", "numbers", "phone", "checkbox", "radio", "boolean", "longtext", "menu_single", "menu_multi"],
         required: true
     },
-    required: {
-        type: Boolean,
-        description: "Whether the user must answer in this question.",
-        default: false
-    },
     customizable: {
         type: Boolean,
         description: "readonly means admins cannot edit nor remove this form question. edit means admins can edit this form question's description, error text, selectable options, but cannot remove this question from the form. delete means admins can remove this form question from the form.",

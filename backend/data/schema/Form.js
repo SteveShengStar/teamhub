@@ -12,6 +12,11 @@ const FormSectionDetails = new Schema({
     position: {
         type: Number,
         required: true
+    },
+    required: {
+        type: Boolean,
+        description: "Whether the user must answer in this question.",
+        default: false
     }
 });
 
