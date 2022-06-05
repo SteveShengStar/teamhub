@@ -25,7 +25,7 @@ const FormSectionSchema = new Schema({
         type: String,
         required: false,
     },
-    possibleValues: { // TODO: set a character limit later.
+    options: { // TODO: set a character limit later.
         type: [String],
         required: false,
     },
@@ -44,7 +44,7 @@ const FormSectionSchema = new Schema({
         description: "Whether the user must answer in this question.",
         default: false
     },
-    editability: {
+    customizable: {
         type: Boolean,
         description: "readonly means admins cannot edit nor remove this form question. edit means admins can edit this form question's description, error text, selectable options, but cannot remove this question from the form. delete means admins can remove this form question from the form.",
         enum: ["readonly", "edit", "delete"]
