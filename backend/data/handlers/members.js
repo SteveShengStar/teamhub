@@ -136,11 +136,16 @@ members.add = async (userPayload) => {
         let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
         let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
 
-        const userDetailsResponse = await UserDetails.create(userDetails);
-        userSummary.miscDetails = userDetailsResponse._id;
-        userSummary = await replacePayloadWithIds(userSummary);
-        const res = await Member.create(userSummary);
-        return res;
+        const session = await db.startSession()
+        const response = await session.withTransaction(async () => {
+            const userDetailsResponse = await UserDetails.create(userDetails);
+            userSummary.miscDetails = userDetailsResponse._id;
+            userSummary = await replacePayloadWithIds(userSummary);
+            const res = await Member.create(userSummary);
+            return res;
+        });
+        session.endSession();
+        return response;
     });
 };
 
