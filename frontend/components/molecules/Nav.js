@@ -7,18 +7,24 @@ import LogoutButton from './LogoutButton';
 import { useRouter } from 'next/router';
 
 const MyNav = styled(SystemNav)`
-  position: fixed;
-  padding-right: ${(props) => props.theme.space.cardMarginSmall}px;
-  padding-top: ${(props) => props.theme.space[4]}px;
-  z-index: 20;
+  padding-right: ${(props) => props.theme.space[9]}px;
+  padding-top: ${(props) => props.theme.space[8]}px;
+  padding-bottom: ${(props) => props.theme.space[7]}px;
 
   ${(props) => props.theme.mediaQueries.tablet} {
-    right: 0;
-    top: 0;
-    padding: 0;
-    left: 0;
+    right: 40px;
+    top: 10px;
+    left: 40px;
   }
 `;
+const NavOutterLayer = styled.div`
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: 0;
+  color: "grey";
+  position: fixed;
+`
 
 const NavLink = styled(Link)`
   &:hover {
@@ -52,39 +58,43 @@ const Nav = ({ navItems, index }) => {
   });
 
   return (
-    <MyNav
-      display="flex"
-      flexDirection="column"
-      alignItems="flex-end"
-      bg="greys.0"
-      shadow={scrolled ? 'default' : 'none'}
-    >
-      <SystemComponent display="flex" justifyContent="flex-end">
-        <NavLogo alignSelf="center" />
-      </SystemComponent>
-      <SystemComponent
+    <NavOutterLayer>
+      <MyNav
         display="flex"
-        flexWrap="wrap"
-        justifyContent="flex-end"
-        mt={3}
-        width={['80%', '80%', '80%', 'auto']}
+        flexDirection="column"
+        alignItems="flex-end"
+        bg="greys.0"
+        shadow={scrolled ? 'default' : 'none'}
       >
-        {navItems.map(({ name, link }, i) => (
-          <a href={link} key={i}>
-            <NavLink
-              fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
-              fontWeight="bold"
-              ml={7}
-              color={i === index ? 'theme' : 'foreground'}
-              display={['none', 'block']}
-            >
-              {name}
-            </NavLink>
-          </a>
-        ))}
-        {router.pathname.startsWith('/login') ? null : <LogoutButton />}
-      </SystemComponent>
-    </MyNav>
+        <SystemComponent display="flex" justifyContent="flex-end">
+          <NavLogo alignSelf="center" />
+        </SystemComponent>
+        <SystemComponent
+          display="flex"
+          flexWrap="wrap"
+          justifyContent="flex-end"
+          mt={3}
+          width={['80%', '80%', '80%', 'auto']}
+        >
+          {navItems.map(({ name, link }, i) => (
+            <a href={link} key={i}>
+              <NavLink
+                fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
+                fontWeight="bold"
+                ml={7}
+                color={i === index ? 'theme' : 'foreground'}
+                display={['none', 'block']}
+              >
+                {name}
+              </NavLink>
+            </a>
+          ))}
+          {router.pathname.startsWith('/login') ? null : <LogoutButton />}
+        </SystemComponent>
+      </MyNav>
+    </NavOutterLayer>
+    
+    
   );
 };
 
