@@ -9,8 +9,6 @@ module.exports = async (req, res) => {
         const token = cookie.parse(req.headers.cookie).token;
         const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
 
-        // test test
-        // replace true with authStatus                   
         if (authStatus) {
             const token = req.headers['authorization'].split(' ')[1];
             console.log(token);
