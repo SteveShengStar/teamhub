@@ -32,12 +32,10 @@ const FormSchema = new Schema({
     createdDate: {
         type: String,
         required: false, // TODO: make this true later.
-        unique: true
     },
     lastEdited: {
         type: String,
         required: false,
-        unique: true
     }
 });
 
