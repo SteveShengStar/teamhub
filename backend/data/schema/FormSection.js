@@ -13,7 +13,7 @@ const FormSectionSchema = new Schema({
         type: String,
         required: true,
     },
-    placeholder: {
+    placeholderText: {
         type: String,
         required: false,
     },
