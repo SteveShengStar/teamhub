@@ -1,7 +1,7 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
-const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
 
 const forms = {};
 
@@ -13,7 +13,9 @@ const forms = {};
  */
 forms.fetchFormData = async (formId) => {
     return util.handleWrapper(async () => {
-        return await FormSection.find({_id: formId});
+        return await Form.find({_id: formId})
+            .select(['title', 'description', 'sections'])
+            .populate('sections');
     });
 }
 
@@ -22,15 +24,15 @@ forms.fetchFormData = async (formId) => {
  * 
  * @param {Object} formData: form metadata.
  */
-forms.createForm = async (formdata) => {
+forms.createForm = async (formData) => {
     return util.handleWrapper(async () => {
-        formdata.sections.map(s => {
-            return {
+        formData.sections = formData.sections.map(s => {
+            return { 
                 ...s,
-                section: ObjectId(s.section),
-            }}
-        );
-        return await FormSection.create(formdata);
+                section: new mongoose.Types.ObjectId(s.section),
+            }
+        });
+        return await Form.create(formData);
     });
 }
 
@@ -41,7 +43,7 @@ forms.createForm = async (formdata) => {
  */
 forms.updateFormMetadata = async (formId, formData) => {
     return util.handleWrapper(async () => {
-        return await FormSection.updateOne({_id: formId}, formData);
+        return await Form.updateOne({_id: formId}, formData);
     });
 }
 
