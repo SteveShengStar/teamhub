@@ -2,20 +2,48 @@ const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
 const mongoose = require('mongoose');
+const { members } = require('..');
 
 const forms = {};
 
 /**
- * Update a form's metadata.
+ * Fetch Form metadata.
  * 
- * @param {} formId: ID of the form.
- * @param {Object} formData: new metadata for the form.
+ * @param {String} formId: ID of the form.
  */
 forms.fetchFormData = async (formId) => {
     return util.handleWrapper(async () => {
-        return await Form.find({_id: formId})
+        return Form.findOne({_id: formId})
             .select(['title', 'description', 'sections'])
-            .populate('sections');
+            .populate({
+                path : 'sections',
+                populate : {
+                  path : 'section'
+                }
+            });
+    });
+}
+
+/**
+ * Fetch Form and Waterloop Member's data
+ * 
+ * @param {String} userId: user ID
+ * @param {String} formId: ID of the form
+ */
+forms.fetchFormAndMemberData = async (userId, formId) => {
+    return util.handleWrapper(async () => {
+        let response = {};
+        response.form = await Form.findOne({_id: formId})
+            .select(['title', 'description', 'sections'])
+            .populate({
+                path : 'sections',
+                populate : {
+                  path : 'section'
+                }
+            });
+        const selectFields = response.form.sections.map(s => s.section.name);
+        response.member = await members.search({_id: userId}, selectFields);
+        return response
     });
 }
 
@@ -29,9 +57,11 @@ forms.createForm = async (formData) => {
         formData.sections = formData.sections.map(s => {
             return { 
                 ...s,
-                section: new mongoose.Types.ObjectId(s.section),
+                section: new mongoose.Types.ObjectId(s.section._id),
             }
         });
+        // TODO: this should be in a transaction.
+        this.updateFormSections(formData.sections);
         return await Form.create(formData);
     });
 }
@@ -43,12 +73,19 @@ forms.createForm = async (formData) => {
  */
 forms.updateFormMetadata = async (formId, formData) => {
     return util.handleWrapper(async () => {
+        // TODO: this should be in a transaction.
+        this.updateFormSections(formData.sections);
+
+        // Disassociate form sections that were deleted from this form.
+        const existingSections = (await FormSection.find()).map(section => section.name);
+        formData.sections = formData.sections.filter(s => existingSections.includes(s.section.name));
         return await Form.updateOne({_id: formId}, formData);
     });
 }
 
 /**
- * Add multiple form questions/sections.
+ * Create form sections/questions that don't already exist
+ * Modify form sections/questions that exist (upsert)
  * 
  * @param {Array[Object]} sections: details about the form sections/question to add.
  */
