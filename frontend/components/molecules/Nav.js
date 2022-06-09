@@ -10,7 +10,11 @@ const MyNav = styled(SystemNav)`
   padding-right: ${(props) => props.theme.space[9]}px;
   padding-top: ${(props) => props.theme.space[8]}px;
   padding-bottom: ${(props) => props.theme.space[7]}px;
-
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  background-color: ${props => props.theme.colors.greys[0]};
+  shadow: ${props => props.scrolled ? 'default' : 'none'};
   ${(props) => props.theme.mediaQueries.tablet} {
     right: 40px;
     top: 10px;
@@ -27,6 +31,7 @@ const NavOutterLayer = styled.div`
 `
 
 const NavLink = styled(Link)`
+  font-weight: bold;
   &:hover {
     color: ${(props) => props.theme.colors.theme};
   }
@@ -60,11 +65,7 @@ const Nav = ({ navItems, index }) => {
   return (
     <NavOutterLayer>
       <MyNav
-        display="flex"
-        flexDirection="column"
-        alignItems="flex-end"
-        bg="greys.0"
-        shadow={scrolled ? 'default' : 'none'}
+        scrolled={scrolled}
       >
         <SystemComponent display="flex" justifyContent="flex-end">
           <NavLogo alignSelf="center" />
@@ -80,7 +81,6 @@ const Nav = ({ navItems, index }) => {
             <a href={link} key={i}>
               <NavLink
                 fontSize={['smallNav', 'smallNav', 'smallNav', 'nav']}
-                fontWeight="bold"
                 ml={7}
                 color={i === index ? 'theme' : 'foreground'}
                 display={['none', 'block']}
