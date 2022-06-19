@@ -10,8 +10,8 @@ import Card from '../../frontend/components/atoms/Card';
 import Button from '../../frontend/components/atoms/Button';
 
 const EditFormButton = styled(Button)`
+    width: 100%;
     height: 48px;
-    width: 400px;
     margin-bottom: ${props => props.theme.space.headerBottomMargin}px; 
     // ^^^ to fit the figma layout this margin-bottom should actually be 16px instead of 10px i think.
     margin-top: 16px;
@@ -19,7 +19,7 @@ const EditFormButton = styled(Button)`
 `;
 
 const ExportRespButton = styled(Button)`
-    width: 400px;
+    width: 100%;
     height: 48px;
     border-radius: 5px;
 `
@@ -27,10 +27,8 @@ const ExportRespButton = styled(Button)`
 const CheckmarkRow = styled.div`
     display: flex;
     align-items: flex-start;
-    margin-top: 5px;
-    margin-left: 4px;
-    margin-bottom: 24px; 
 `
+
 const Text = styled.div`
     font-family: 'SF Pro';
     font-style: normal;
@@ -39,7 +37,6 @@ const Text = styled.div`
     line-height: 24px;
 
     color: #000000;
-
 `
 
 const BigIconWrapper = styled.div`
@@ -60,14 +57,6 @@ const Svg = styled.img`
     margin-top: 10px;
 `
 
-const IconWrapper = styled.div`
-    margin-right: 16px;
-    display: flex;
-    align-item: flex-start;
-    height: 24px;
-    width: 24px;
-`
-
 const TitleText = styled.div`
     font-family: 'SF Pro';
     font-style: normal;
@@ -83,55 +72,67 @@ const TitleText = styled.div`
 
     color: #000000;
 `
-// const SpecialIcon = styled.div`
-//     font-family: 'Avenir Next Condensed';
-//     font-style: normal;
-//     font-weight: 600;
-//     font-size: 20px;
-//     line-height: 18px;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     margin-top: 20px;
-// `
 
-const FormMetadataSection = ({src, title, descripBullets}) => {
+const FormInfoCard = styled(Card)`
+    padding: 30px;
+    ${props => props.theme.mediaQueries.mobile} {
+        padding: 20px;
+    }
+    @media screen and (min-width: 1400px) {
+        padding: 30px;
+    }
+`
+
+const Bullet = ({text, className}) => {
     return (
-        <Card
+        <CheckmarkRow className={className}>
+            <i className="fa fa-check-circle fa-2x" style={{marginRight: "15px"}}/>
+            <Text>{text}</Text>
+        </CheckmarkRow>
+    );
+}
+
+const BulletOverride = styled(Bullet)`
+    margin-bottom: 10px;
+    &:last-child {
+        margin-bottom: 0;
+    }
+`;
+
+const BulletsSection = styled(SystemComponent)`
+    text-align: left;
+    margin-right: auto;
+    margin-left: auto;
+    height: 200px;
+`;
+
+const FormMetadataSection = ({src, title, bulletPoints}) => {
+    return (
+        <FormInfoCard
             display="flex"
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
+            maxWidth="450px"
+            marginLeft="auto"
+            marginRight="auto"
         >
             <SystemComponent>
                 <BigIconWrapper>
-                    <Svg src = {src}></Svg>
+                    <Svg src={src}></Svg>
                 </BigIconWrapper>
             </SystemComponent>
             <SystemComponent>
                 <TitleText>{title}</TitleText>
             </SystemComponent>
-            <SystemComponent textAlign="left"
-                marginRight="auto"
-                marginLeft="10%"
-            >
-                {descripBullets.map((bullet, i) =>{
-                    console.log(bullet);
-                    return (
-                    <CheckmarkRow>
-                        <IconWrapper>
-                            <i className = "fa fa-check-circle fa-2x"/>
-                        </IconWrapper>
-                        
-                        <Text>{bullet}</Text>
-                    </CheckmarkRow>
-                    )
-                        
-                })}
-            </SystemComponent>
+            <BulletsSection>
+                {bulletPoints.map((bullet, i) => 
+                    <BulletOverride margin="10px" key={i} text={bullet}/>
+                )}
+            </BulletsSection>
             <EditFormButton>Edit Form</EditFormButton>
             <ExportRespButton variant="white">Export Responses</ExportRespButton>
-        </Card>
+        </FormInfoCard>
     )
 }
 
@@ -146,23 +147,19 @@ const Settings = () => {
                 gridRowGap={6}
             >
                 <FormMetadataSection
-                    // faClassName='fa-light fa-user-plus fa-2x'
                     src = "/static/returning-members-icon.jpg"
                     title="Returning Members Form"
-                    descripBullets={["Filled in at the end of the term", "Notify team leads about whether the member wants to continue on Waterloop next term"]}
+                    bulletPoints={["Filled in at the end of the term", "Notify team leads about whether the member wants to continue on Waterloop next term"]}
                 />
                 <FormMetadataSection 
-                    // faClassName='fa-envelope-o'
                     src = "/static/beginning-of-term-icon.jpg"
                     title="Beginning of Term Form"
-                    descripBullets={["Filled in at the beginning of the term", "Notify team leads about a member's plans for this term"]}
-
+                    bulletPoints={["Filled in at the beginning of the term", "Notify team leads about a member's plans for this term"]}
                 />
                 <FormMetadataSection
-                    // faClassName='fa-light fa-user-plus fa-3x' 
                     src = "/static/sign-up-icon.svg"
                     title="Sign-Up Form"
-                    descripBullets={["Filled in only once", "Every user will fill out when logging in to TeamHub"]}
+                    bulletPoints={["Filled in only once", "Every user will fill out when logging in to TeamHub"]}
                 />
             </SystemComponent>
         </PageTemplate>
