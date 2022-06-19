@@ -12,6 +12,7 @@ import Button from "../../../frontend/components/atoms/Button";
 import Select from "../../../frontend/components/atoms/Select";
 import Card from "../../../frontend/components/atoms/Card";
 import Checkbox from "../../../frontend/components/atoms/Checkbox";
+import { gridColumn } from "styled-system";
 
 const ModiferOptions = ({options}) => {
     const theme = useContext(ThemeContext);
@@ -98,7 +99,9 @@ const RegFormEditor = () => {
 
     return (
         <PageTemplate>
-            <SystemComponent>
+            <SystemComponent display='grid'
+                gridRowGap={theme.space[7]}
+            >
                 <Card 
                     display="grid"
                     gridTemplateColumns="7fr 3fr"
@@ -142,15 +145,79 @@ const RegFormEditor = () => {
                         }}
                     />
                     <TextAnswerPlaceholderContainer>
-
-                    </TextAnswerPlaceholderContainer>
-                    <SystemComponent
-                        gridRow="3" 
-                        gridColumn="1/3"
-                        height="40px"
-                        position="relative"
-                    >
                         <TextAnswerPlaceholderComponent text='Short Answer'/>
+                    </TextAnswerPlaceholderContainer> 
+                    <SystemComponent 
+                        gridColumn="1"
+                        gridRow='4'
+                    >
+                        <ModiferOptions
+                            options={["Only allow users to enter numbers for this response"]}
+                        />
+                    </SystemComponent>
+                    <ActionButtonContainer>
+                        <ActionButton>Delete</ActionButton>
+                        <ActionButton>Duplicate</ActionButton>
+                    </ActionButtonContainer>
+                </Card>
+
+
+
+                <Card 
+                    display="grid"
+                    gridTemplateColumns="7fr 3fr"
+                    gridColumnGap={theme.space[5]}
+                    gridRowGap={theme.space[5]}
+                    width={["500px", "700px", "800px"]}
+                    marginRight="auto"
+                    marginLeft="auto"
+                >
+                    <TextField
+                        label="Question"
+                        defaultValue="Question"
+                        variant="filled"
+                        size="normal"
+                    />
+                    <Select
+                        options={[
+                            {label: "Short Answer", value: "text"}, 
+                            {label: "Long Answer", value: "longtext"},
+                            {label: "Phone Number", value: "phone"},
+                            {label: "Multiple Choice", value: "radio"},
+                            {label: "Checkboxes", value: "checkbox"},
+                            {label: "Dropdown Menu", value: "menu"}
+                        ]}
+                        // "text", "numbers", "phone", "checkbox", "radio", "boolean", "longtext", "menu_single", "menu_multi"
+                        styles={{
+                            control: base => ({
+                              ...base,
+                              height: "100%",
+                            })
+                        }}
+                    />
+                    <TextField
+                        label="Help Text for User (Optional)"
+                        defaultValue="Help Text for User (Optional)"
+                        variant="filled"
+                        size="small"
+                        sx={{
+                            gridColumn: '1/3',
+                            gridRow: '2',
+                        }}
+                    />
+                    <SystemComponent gridColumn="1" gridRow="3" display="grid" gridTemplateColumns="auto 30px" gridColumnGap={`${theme.space[3]}px`}>
+                        <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/3">Please Edit Your Options Below:</SystemComponent>
+                        <TextField variant="standard" label="Option 1" 
+                            size="small"
+                            sx={{
+                                width: "100%",
+                                gridColumn: '1',
+                                gridRow: '2'
+                            }}
+                        />
+                        <SystemComponent gridColumn='2' gridRow='2' display='flex' alignItems='end' pb={`${theme.space[2]}px`}>
+                            <span className="fas fa fa-times"/>
+                        </SystemComponent>
                     </SystemComponent> 
                     <SystemComponent 
                         gridColumn="1"
