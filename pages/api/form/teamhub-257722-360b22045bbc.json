@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "teamhub-257722",
+  "private_key_id": "360b22045bbccbd9a631a142d1d8e0523467b1fb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQC4OEBVmGKIVmLX\nQD5r9uWMAhvvXKpCPAL56RKxOvjVvPBGy6ycq3R4wca192T5ef8U21eHkN4jfuS2\ntBvmO5G1ZHNBswTH5jn1RVCSeW39MRNjnbMvKXBSy9/5rLvBZU4Hbd8h9a0k0Oif\nuOh8YYE77LaC9pmCRip4tWuJJii0xOXM3rpGkcHSc6kuj0qVGh6ns52v46u8Yw4A\nLSbWSd2y+DCLxjJc5Vtuv1wx+GLN7iAD6plLRN30yPaq73kYxJ50v1+clG3K5qWB\ncrxrYpLQYYUBWdQ7YJpVJqHmorpOm5vXzEJmLIYnGRcMatpA9HSzI5E3eII1TZMz\njvmJtppdAgMBAAECggEAU9SNOiZJGF+vROKgRUMqPCctjSQu+ksS06TDc9ExMRp0\ngNLobrb7HoSXp3C4C2r/r/8Mes1quN5it92IIKIU8WWPqWMMlubmkv2C59TIP4KY\nnylBRAHoclUCTDzVh/FQq8LM2khRDULfyOc9LHS2eY2DlF8hhg3l/94W3Gd3+KIn\nHOYycjKgTMuPXwRxmukMM2ZE4X31W2iOPmDe0kj9wySp9+mkyjasYLJMUMVFeqiw\njz0umUdXa7kt/AdtAP/FxS15chVyj1/UawIv+iqR4gdRiNTjRuT4oCqGqfCfYsas\n3xm1N2HGUf5IafBtO0BH9Jfs5zde4JtQbtievT71pQKBgQDns01CkkPD8MDe9so+\n+9RxaBb2ZKsHlthh+2/Vg+Lk8vXfkwRT/9uE1P5X7n/vAZOQPNGAxiAAwMqQstFJ\noY14eKDq6l05Jhi2BklDxzJ45RlPdNA/bBDB2ROb+qfLGP+xG+PibaPhyJ7utItW\np927Cop79GSkgJyVt01bzhXipwKBgQDLii/3wbiF8VKLf5OHDx2zQODZzdPvbMxM\nqN9v8ImzuaCjY98bsnq4muGZ8Rop7NWGdvgDt5exzUxnR+BwyT7vn3hQ8GhRUNdY\nZVhMBwKzPa/AvKWh/yX1vwuS3eIDJ7g629oxAdJa8ZWQD8Kt00rWN/OSM1uk+6uv\nWBMLBEbPWwKBgQCK2nZDnfoEc8RyGj3r7ulKqVGRiZTBcJHubkuADpCsGjplKOrg\nGCYK/cYLFkAPEMfJGdmHrbRCH0eF3dP0p19rwgbVoWwKspz+gNfpSXgi4VEAwAWI\n7I9CTIAm6tkhqrKZBhjUelZLGfq9HO+gF+uWiuOhEz45I2Yzhu1SRjfxYwKBgQCT\nt6+GZO6RLwnUOfuMmnjYni5RhCLa8Z/3xtuaNv0JFaAy1ImYZVjRX355pdRyNvLk\nirUGpZiPLsrTbgPCdxuY9qhwPXnIAh63hZ2mV7Qq94r1GzQuNKmNB2DT7vpXhd0b\nwnFA/ex3mjsMeZO1adI3VBYOtf096HS6ZfY0GZ92XwKBgQDURLqFHG9r8Onoh4hB\nhdrNpcqMVyi+PDtvPFdcuhErrWlUeRZ1jsTE1n6SZ8Cm7lBmSvE1kuCteLKnNK7e\nVzmcwaNXWw5iXoAh6UldLmIcGvtPHod258lhOQXJkH/60+HzXoegE5+0u7t8YDT0\n8jsVUaFH/PoxihOvmBvllQr4lw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
+  "client_id": "116789170995502702159",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/teamhubbackend%40teamhub-257722.iam.gserviceaccount.com"
+}
