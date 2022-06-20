@@ -2,6 +2,7 @@ const data = require('../../../backend/data/index');
 const cookie = require('cookie');
 const { OAuth2Client } = require('google-auth-library');
 const {Auth, google} = require('googleapis');
+const fs = require('fs');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -12,7 +13,6 @@ module.exports = async (req, res) => {
         // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
 
         if (true) {
-            // Generate token for service account
             const auth = new Auth.GoogleAuth({
                 keyFile:"teamhub-257722-360b22045bbc.json",
                 scopes:"https://www.googleapis.com/auth/admin.directory.group.readonly",
@@ -21,7 +21,9 @@ module.exports = async (req, res) => {
             // Obtain a new drive client, making sure you pass along the auth client
             const admin = google.admin({ version: 'directory_v1', auth: client });
 
-            const groups = await admin.groups.list();
+            const groups = await admin.groups.list({
+                domain: "waterloop.ca",
+            });
             console.log(groups.data.groups);
             // check for valid group
             //const token = req.headers['authorization'].split(' ')[1];
