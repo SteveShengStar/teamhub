@@ -13,16 +13,23 @@ module.exports = async (req, res) => {
         // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
 
         if (true) {
+            // the api documentation for what we need to provide to impersonate
+            // a service account is really bad
             const auth = new Auth.GoogleAuth({
-                keyFile:"teamhub-257722-360b22045bbc.json",
-                scopes:"https://www.googleapis.com/auth/admin.directory.group.readonly",
+                keyFile:"teamhub-257722-07d1d3b57421.json",
+                scopes:"https://www.googleapis.com/auth/admin.directory.group",
+                clientOptions: {
+                    email:"teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
+                    subject: "steven.x@waterloop.ca",
+                }
             })
             client = await auth.getClient()
             // Obtain a new drive client, making sure you pass along the auth client
             const admin = google.admin({ version: 'directory_v1', auth: client });
 
             const groups = await admin.groups.list({
-                domain: "waterloop.ca",
+                //domain: "waterloop.ca",
+                customer:"C049m7qgz",
             });
             console.log(groups.data.groups);
             // check for valid group

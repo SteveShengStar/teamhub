@@ -32,3 +32,6 @@ backend/data/index.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# google cloud keyfile
+teamhub-257722-07d1d3b57421.json
