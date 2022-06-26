@@ -91,7 +91,7 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
     }
 }
 
-const Selectable = ({type, sectionName, question, helpText, options = [], handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate}) => {
+const Selectable = ({type, sectionName, question, helpText, options = [], canDelete, handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate}) => {
     const theme = useContext(ThemeContext);
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
@@ -100,6 +100,7 @@ const Selectable = ({type, sectionName, question, helpText, options = [], handle
             name={sectionName}
             question={question} 
             helpText={helpText}
+            canDelete={canDelete}
             sectionModifiers={sectionModifiers}
             handleTypeChange={(newType) => {
                 setSectionModifiers(getModifiersBySectionType(newType.value));

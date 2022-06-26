@@ -30,24 +30,28 @@ const RegFormEditor = () => {
             display: 'Personal Email Address',
             description: '',
             type: "email",
+            customizable: 'edit'
         },
         {
             name: 'termStatus',
             display: 'Which describes you best ?',
             options: ["Academic term, active on Waterloop in-person","Academic term, active on Waterloop remotely","Co-op term, working on Waterloop remotely","Co-op term, active on Waterloop in-person","Not active on Waterloop this term","Other"],
             type: "menu_single",
+            customizable: 'edit'
         },
         {
             name: 'previousTerms',
             display: 'Previous Terms I worked on Waterloop',
             options: ["F22","S22","W22"],
             type: "menu_multi",
+            customizable: 'edit'
         },
         {
             name: 'sampleBoolean',
             display: 'True or False Question',
             description: 'same help text',
             type: "boolean",
+            customizable: 'delete'
         },
     ]);
 
@@ -168,6 +172,7 @@ const RegFormEditor = () => {
                             question={section.display} 
                             helpText={section.description} 
                             options={section.options}
+                            canDelete={section.customizable === 'delete'}
                             handleTypeChange={onTypeChange}
                             handleInputChange={onInputChange}
                             handleOptionChange={onOptionChange}

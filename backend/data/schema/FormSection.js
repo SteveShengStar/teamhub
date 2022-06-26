@@ -41,8 +41,8 @@ const FormSectionSchema = new Schema({
     },
     customizable: {
         type: Boolean,
-        description: "readonly means admins cannot edit nor remove this form question. edit means admins can edit this form question's description, error text, selectable options, but cannot remove this question from the form. delete means admins can remove this form question from the form.",
-        enum: ["readonly", "edit", "delete"]
+        description: "delete means the section can be deleted. edit means the section can be edited, but not deleted.",
+        enum: ["edit", "delete"]
     }
 });
 
