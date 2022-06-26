@@ -1,9 +1,10 @@
 import React, {useState, useContext} from 'react';
-import { ThemeContext } from 'styled-components';
+import styled, { ThemeContext } from 'styled-components';
 import BaseSection from './BaseSection';
 
-import { SystemComponent } from '../../atoms/SystemComponents';
+import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import TextField from '@mui/material/TextField';
+import GhostButton from '../../atoms/GhostButton';
 
 const getModifiersBySectionType = (type) => {
     switch(type) {
@@ -21,7 +22,49 @@ const getModifiersBySectionType = (type) => {
     }
 }
 
-const Selectable = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange}) => {
+const RemoveOptionButton = styled(SystemComponent)`
+    grid-column: 3;
+    display: flex;
+    align-items: end;
+    padding-bottom: ${props => props.theme.space[2]}px;
+    cursor: pointer;
+`;
+
+const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete}) => {
+    const theme = useContext(ThemeContext);
+    return (
+        <>
+            <SystemComponent gridColumn='1' display='flex' alignItems='end' pb={`${theme.space[2]}px`}>
+                <SystemSpan fontSize={theme.fontSizes.header4}>{optionIdx + 1}.</SystemSpan>
+            </SystemComponent>
+            <TextField 
+                variant="standard" 
+                value={opt}
+                onChange={(e) => handleOptionChange(optionIdx, e.target.value)}
+                size="small"
+                sx={{
+                    width: "100%",
+                    gridColumn: '2',
+                }}
+            />
+            <RemoveOptionButton>
+                <span className="fas fa fa-times" onClick={() => handleOptionDelete(optionIdx)}/>
+            </RemoveOptionButton>
+        </>
+    );
+}
+
+const AddOptionButton = ({handleOptionAdd}) => {
+    const theme = useContext(ThemeContext);
+    return (
+        <>
+            <SystemComponent/>
+            <GhostButton variant='neutral' onClick={() => handleOptionAdd()}>Add Option</GhostButton>
+        </>
+    )
+}
+
+const Selectable = ({type, sectionName, question, helpText, options = [], handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete}) => {
     const theme = useContext(ThemeContext);
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
@@ -65,17 +108,14 @@ const Selectable = ({type, sectionName, question, helpText, handleTypeChange, ha
                 setSectionModifiers(copyOfSectionModifiers);
             }}
         >
-            <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/3">Please Edit Your Options Below:</SystemComponent>
-            <TextField variant="standard" label="Option 1" 
-                size="small"
-                sx={{
-                    width: "100%",
-                    gridColumn: '1',
-                    gridRow: '2'
-                }}
-            />
-            <SystemComponent gridColumn='2' gridRow='2' display='flex' alignItems='end' pb={`${theme.space[2]}px`}>
-                <span className="fas fa fa-times"/>
+            <SystemComponent display="grid" gridTemplateColumns="12px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
+                <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/4">Edit Your Options Below:</SystemComponent>
+                {
+                    options.map((opt, optionIdx) => 
+                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)} handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)} />
+                    )
+                }
+                <AddOptionButton handleOptionAdd={() => handleOptionAdd(sectionName)}/>
             </SystemComponent>
         </BaseSection>
     );

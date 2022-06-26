@@ -39,7 +39,7 @@ const ActionButtonContainer = styled(SystemComponent)`
 const ModifierOptions = ({options, handleClick}) => {
     const theme = useContext(ThemeContext);
     return (
-        <SystemComponent display="grid" gridRowGap={`${theme.space[4]}px`}>
+        <SystemComponent paddingTop="15px" paddingBottom="15px" display="grid" gridRowGap={`${theme.space[4]}px`}>
             {options.map(
                 option => 
                 <SystemComponent key={option.name} display='flex' height="25px">
@@ -47,7 +47,7 @@ const ModifierOptions = ({options, handleClick}) => {
                         <Checkbox checked={option.selected} handleClick={(option) => handleClick(option, !option.selected)} value={option} />
                     </SystemComponent>
                     <SystemComponent lineHeight="25px">
-                        <SystemSpan display="inline-block" verticalAlign="middle" lineHeight="normal">
+                        <SystemSpan display="inline-block" verticalAlign="middle" lineHeight="normal" fontSize={theme.fontSizes.header4}>
                             {option.label}
                         </SystemSpan>
                     </SystemComponent>
@@ -102,21 +102,21 @@ const BaseSection = ({children, type, name, question, helpText, sectionModifiers
                     gridRow: '2',
                 }}
             />
-            <SystemComponent gridColumn="1" gridRow="3" display="grid" gridTemplateColumns="auto 30px" gridColumnGap={`${theme.space[3]}px`}>
-                {children}
-            </SystemComponent> 
             <SystemComponent 
                 gridColumn="1"
-                gridRow='4'
+                gridRow='3'
             >
                 {
-                    sectionModifiers && 
+                    sectionModifiers && sectionModifiers.length > 0 && 
                     <ModifierOptions
                         options={sectionModifiers}
                         handleClick={handleSelectModifier}
                     />
                 }
             </SystemComponent>
+            <SystemComponent gridColumn="1" gridRow="4">
+                {children}
+            </SystemComponent> 
             <ActionButtonContainer>
                 <ActionButton>Delete</ActionButton>
                 <ActionButton>Duplicate</ActionButton>
