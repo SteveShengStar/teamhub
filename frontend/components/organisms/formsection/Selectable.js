@@ -30,16 +30,17 @@ const RemoveOptionButton = styled(SystemComponent)`
     cursor: pointer;
 `;
 
-const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete}) => {
+const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete, readOnly}) => {
     const theme = useContext(ThemeContext);
     return (
         <>
             <SystemComponent gridColumn='1' display='flex' alignItems='end' pb={`${theme.space[2]}px`}>
-                <SystemSpan fontSize={theme.fontSizes.header4}>{optionIdx + 1}.</SystemSpan>
+                <SystemSpan color={readOnly && `${theme.colors.greys[3]}`} fontSize={theme.fontSizes.header4}>{optionIdx + 1}.</SystemSpan>
             </SystemComponent>
             <TextField 
                 variant="standard" 
                 value={opt}
+                disabled={readOnly}
                 onChange={(e) => handleOptionChange(optionIdx, e.target.value)}
                 size="small"
                 sx={{
@@ -47,21 +48,47 @@ const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete}) => 
                     gridColumn: '2',
                 }}
             />
-            <RemoveOptionButton>
-                <span className="fas fa fa-times" onClick={() => handleOptionDelete(optionIdx)}/>
-            </RemoveOptionButton>
+            {
+                !readOnly &&
+                <RemoveOptionButton>
+                    <span className="fas fa fa-times" onClick={() => handleOptionDelete(optionIdx)}/>
+                </RemoveOptionButton>
+            }
         </>
     );
 }
 
 const AddOptionButton = ({handleOptionAdd}) => {
-    const theme = useContext(ThemeContext);
     return (
         <>
             <SystemComponent/>
             <GhostButton variant='neutral' onClick={() => handleOptionAdd()}>Add Option</GhostButton>
         </>
     )
+}
+
+const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handleOptionDelete}) => {
+    const theme = useContext(ThemeContext);
+    if (type === 'boolean') {
+        return (
+            <>
+                <OptionRow opt='Yes' optionIdx={0} readOnly='true' />
+                <OptionRow opt='No' optionIdx={1} readOnly='true' />
+            </>
+        );
+    } else {
+        return (
+            <>
+                <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/4">Edit Your Options Below:</SystemComponent>
+                {
+                    options.map((opt, optionIdx) => 
+                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)} handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)} />
+                    )
+                }
+                <AddOptionButton handleOptionAdd={() => handleOptionAdd(sectionName)}/>
+            </>
+        )
+    }
 }
 
 const Selectable = ({type, sectionName, question, helpText, options = [], handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete}) => {
@@ -109,13 +136,13 @@ const Selectable = ({type, sectionName, question, helpText, options = [], handle
             }}
         >
             <SystemComponent display="grid" gridTemplateColumns="12px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
-                <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/4">Edit Your Options Below:</SystemComponent>
-                {
-                    options.map((opt, optionIdx) => 
-                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)} handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)} />
-                    )
-                }
-                <AddOptionButton handleOptionAdd={() => handleOptionAdd(sectionName)}/>
+                <OptionsList
+                    options={options}
+                    type={type}
+                    handleOptionAdd={handleOptionAdd}
+                    handleOptionChange={handleOptionChange}
+                    handleOptionDelete={handleOptionDelete}
+                />
             </SystemComponent>
         </BaseSection>
     );
