@@ -61,7 +61,7 @@ const getModifiersBySectionType = (type) => {
     }
 }
 
-const TextSection = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate}) => {
+const TextSection = ({type, sectionName, question, helpText, canDelete, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate}) => {
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
         <BaseSection
@@ -69,6 +69,7 @@ const TextSection = ({type, sectionName, question, helpText, handleTypeChange, h
             name={sectionName} 
             question={question} 
             helpText={helpText} 
+            canDelete={canDelete}
             handleTypeChange={(newType) => {
                 setSectionModifiers(getModifiersBySectionType(newType.value));
                 handleTypeChange(sectionName, newType.value);
