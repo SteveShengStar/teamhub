@@ -2,14 +2,15 @@ import React from 'react';
 import Selectable from './Selectable';
 import TextSection from './TextSection';
 
-const Section = ({type, name, question, helpText, options, handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete}) => {
+const Section = ({type, name, question, helpText, options, handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate}) => {
     switch(type) {
         case "text":
         case "email":
         case "longtext":
         case "numbers":
         case "phone":
-            return <TextSection sectionName={name} type={type} question={question} helpText={helpText} handleTypeChange={handleTypeChange} handleInputChange={handleInputChange}/>
+            return <TextSection sectionName={name} type={type} question={question} helpText={helpText} handleTypeChange={handleTypeChange} handleInputChange={handleInputChange}
+                     handleSectionDelete={handleSectionDelete} handleSectionDuplicate={handleSectionDuplicate} />
         case "checkbox": 
         case "radio": 
         case "boolean": 
@@ -18,6 +19,7 @@ const Section = ({type, name, question, helpText, options, handleTypeChange, han
             return <Selectable sectionName={name} type={type} question={question} helpText={helpText} options={options}
                         handleTypeChange={handleTypeChange} handleInputChange={handleInputChange} 
                         handleOptionChange={handleOptionChange} handleOptionAdd={handleOptionAdd} handleOptionDelete={handleOptionDelete} 
+                        handleSectionDelete={handleSectionDelete} handleSectionDuplicate={handleSectionDuplicate}
                     />
         default:
             return <></>;

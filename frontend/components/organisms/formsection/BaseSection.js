@@ -57,7 +57,7 @@ const ModifierOptions = ({options, handleClick}) => {
     )
 };
 
-const BaseSection = ({children, type, name, question, helpText, sectionModifiers, handleTypeChange, handleInputChange, handleSelectModifier}) => {
+const BaseSection = ({children, type, name, question, helpText, sectionModifiers, handleTypeChange, handleInputChange, handleSelectModifier, handleSectionDelete, handleSectionDuplicate}) => {
     const theme = useContext(ThemeContext);
     return (
         <Card 
@@ -66,6 +66,7 @@ const BaseSection = ({children, type, name, question, helpText, sectionModifiers
             gridColumnGap={theme.space[5]}
             gridRowGap={theme.space[5]}
             width={["500px", "700px", "800px"]}
+            marginBottom={`${theme.space[7]}px`}
             marginRight="auto"
             marginLeft="auto"
         >
@@ -116,8 +117,8 @@ const BaseSection = ({children, type, name, question, helpText, sectionModifiers
                 {children}
             </SystemComponent> 
             <ActionButtonContainer>
-                <ActionButton>Delete</ActionButton>
-                <ActionButton>Duplicate</ActionButton>
+                <ActionButton onClick={() => handleSectionDelete(name)}>Delete</ActionButton>
+                <ActionButton onClick={() => handleSectionDuplicate(name)}>Duplicate</ActionButton>
             </ActionButtonContainer>
         </Card> 
     );
