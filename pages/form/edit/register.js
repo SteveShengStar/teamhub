@@ -24,13 +24,13 @@ const RegFormEditor = () => {
             name: 'termStatus',
             display: 'Which describes you best ?',
             options: ["Academic term, active on Waterloop in-person","Academic term, active on Waterloop remotely","Co-op term, working on Waterloop remotely","Co-op term, active on Waterloop in-person","Not active on Waterloop this term","Other"],
-            type: "radio",
+            type: "menu_single",
         },
         {
             name: 'previousTerms',
             display: 'Previous Terms I worked on Waterloop',
             options: ["F22","S22","W22"],
-            type: "checkbox",
+            type: "menu_multi",
         }
     ]);
 
@@ -48,10 +48,6 @@ const RegFormEditor = () => {
         if (idx === -1) {
             throw new Error("register.js: Could not find the appropriate form section by section name.");
         }
-        console.log('sectionName')
-        console.log(sectionName)
-        console.log('newType')
-        console.log(newType)
 
         const newFormSections = [...formSections];
         newFormSections[idx] = {
@@ -61,10 +57,24 @@ const RegFormEditor = () => {
         setFormSections(newFormSections);
     }
 
+    const onInputChange = (sectionName, inputFieldName, newValue) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newFormSections = [...formSections];
+        newFormSections[idx] = {
+            ...newFormSections[idx],
+            [inputFieldName]: newValue,
+        };
+        setFormSections(newFormSections);
+    }
+
     return (
         <PageTemplate>
             <SystemComponent 
-            display='grid'
+                display='grid'
                 gridRowGap={theme.space[7]}
                 overflow="auto"
             >
@@ -76,7 +86,8 @@ const RegFormEditor = () => {
                             type={section.type} 
                             question={section.display} 
                             helpText={section.description} 
-                            handleTypeChange={onTypeChange} 
+                            handleTypeChange={onTypeChange}
+                            handleInputChange={onInputChange}
                         />
                     )
                 }

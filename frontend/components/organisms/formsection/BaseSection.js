@@ -1,5 +1,7 @@
 import React, {useState, useContext} from 'react';
 import styled, { ThemeContext } from 'styled-components';
+import {getMenuOptionForSectionType} from './util';
+import {FORM_SECTION_TYPES} from './constants';
 
 import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import TextField from '@mui/material/TextField';
@@ -55,7 +57,7 @@ const ModifierOptions = ({options, handleClick}) => {
     )
 };
 
-const BaseSection = ({children, name, question, helpText, sectionModifiers, handleTypeChange, handleSelectModifier}) => {
+const BaseSection = ({children, type, name, question, helpText, sectionModifiers, handleTypeChange, handleInputChange, handleSelectModifier}) => {
     const theme = useContext(ThemeContext);
     return (
         <Card 
@@ -69,32 +71,32 @@ const BaseSection = ({children, name, question, helpText, sectionModifiers, hand
         >
             <TextField
                 label="Question"
-                defaultValue={question}
                 variant="filled"
                 size="normal"
+                value={question}
+                onChange={(e) => {
+                    handleInputChange(name, 'display', e.target.value)
+                }}
             />
             <Select
-                options={[
-                    {label: "Short Answer", value: "text"}, 
-                    {label: "Paragraph", value: "longtext"},
-                    {label: "Email", value: "email"},
-                    {label: "Multiple Choice", value: "radio"},
-                    {label: "Dropdown Menu", value: "menu_single"},
-                    {label: "Phone Number", value: "phone"},
-                ]}
+                options={FORM_SECTION_TYPES}
                 styles={{
                     control: base => ({
                         ...base,
                         height: "100%",
                     })
                 }}
+                value={getMenuOptionForSectionType(type)}
                 onChange={(selectedOption) => handleTypeChange(selectedOption)}
             />
             <TextField
                 label="Help Text for User (Optional)"
-                defaultValue={helpText}
                 variant="filled"
                 size="small"
+                value={helpText}
+                onChange={(e) => {
+                    handleInputChange(name, 'description', e.target.value)
+                }}
                 sx={{
                     gridColumn: '1/3',
                     gridRow: '2',
