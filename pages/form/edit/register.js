@@ -31,7 +31,13 @@ const RegFormEditor = () => {
             display: 'Previous Terms I worked on Waterloop',
             options: ["F22","S22","W22"],
             type: "menu_multi",
-        }
+        },
+        {
+            name: 'sampleBoolean',
+            display: 'True or False Question',
+            description: 'same help text',
+            type: "boolean",
+        },
     ]);
 
     useEffect(() => {

@@ -23,8 +23,10 @@ export function getMenuOptionForSectionType(sectionType) {
             break;
         case "checkbox": 
         case "radio":
-        case "boolean":
             menuOption = 'radio';
+            break; 
+        case "boolean":
+            menuOption = 'boolean';
             break; 
         case "menu_single":
         case "menu_multi":

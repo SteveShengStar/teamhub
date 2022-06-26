@@ -102,19 +102,17 @@ const BaseSection = ({children, type, name, question, helpText, sectionModifiers
                     gridRow: '2',
                 }}
             />
-            <SystemComponent 
-                gridColumn="1"
-                gridRow='3'
-            >
-                {
-                    sectionModifiers && sectionModifiers.length > 0 && 
+            {sectionModifiers && sectionModifiers.length > 0 && 
+                <SystemComponent 
+                    gridColumn="1"
+                >
                     <ModifierOptions
                         options={sectionModifiers}
                         handleClick={handleSelectModifier}
                     />
-                }
-            </SystemComponent>
-            <SystemComponent gridColumn="1" gridRow="4">
+                </SystemComponent>
+            }
+            <SystemComponent gridColumn="1">
                 {children}
             </SystemComponent> 
             <ActionButtonContainer>
