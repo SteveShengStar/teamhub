@@ -1,92 +1,38 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled, { ThemeContext } from 'styled-components';
 
-import TextField from '@mui/material/TextField';
 import {useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import PageTemplate from "../../../frontend/components/templates/PageTemplate";
-import { SystemComponent, SystemSpan } from "../../../frontend/components/atoms/SystemComponents";
+import { SystemComponent } from "../../../frontend/components/atoms/SystemComponents";
 
 import { useFormDetails } from '../../../frontend/store/api/forms';
-import Button from "../../../frontend/components/atoms/Button";
-import Select from "../../../frontend/components/atoms/Select";
-import Card from "../../../frontend/components/atoms/Card";
-import Checkbox from "../../../frontend/components/atoms/Checkbox";
-import { gridColumn } from "styled-system";
-
-const ModiferOptions = ({options}) => {
-    const theme = useContext(ThemeContext);
-
-    return (
-        <SystemComponent display="grid" gridRowGap={`${theme.space[4]}px`}>
-            {options.map(
-                option => 
-                <SystemComponent display='flex' height="25px">
-                    <SystemComponent mr={`${theme.space[7]}px`}>
-                        <Checkbox />
-                    </SystemComponent>
-                    <SystemComponent lineHeight="25px"><SystemSpan display="inline-block" verticalAlign="middle" lineHeight="normal">{option}</SystemSpan></SystemComponent>
-                </SystemComponent>
-            )}
-        </SystemComponent>
-    )
-};
-
-const ActionButton = styled(Button)`
-    background-color: ${props => props.theme.colors.theme};
-    color: #000;
-    font-weight: ${props => props.theme.fontWeights.bold};
-    font-size: ${props => props.theme.fontSizes.header4}px;
-
-    height: 40px;
-    width: 120px;
-`;
-
-const ActionButtonContainer = styled(SystemComponent)`
-    grid-column: 1/3;
-    gridRow: 5;
-    display: flex;
-    flex-direction: row-reverse;
-
-    ${ActionButton} {
-        margin-left: 15px;
-    }
-
-    ${ActionButton}:last-of-type {
-        margin-left: 0;
-    }
-`;
-
-const TextAnswerPlaceholder = ({text, className}) => {
-    const theme = useContext(ThemeContext);
-
-    return (
-        <SystemComponent 
-            borderBottom={`2px dotted ${theme.colors.greys[2]}`} 
-            className={className}
-        >
-            <SystemComponent color={`${theme.colors.greys[3]}`}>{text}</SystemComponent>
-        </SystemComponent>
-    )
-}
-
-const TextAnswerPlaceholderComponent = styled(TextAnswerPlaceholder)`
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-`;
-
-const TextAnswerPlaceholderContainer = styled(SystemComponent)`
-    grid-row: 3; 
-    grid-column: 1/3;
-    height: 40px;
-    position: relative;
-`;
+import Section from "../../../frontend/components/organisms/formsection/Section";
 
 const RegFormEditor = () => {
     const theme = useContext(ThemeContext);
     const dispatch = useDispatch();
     const router = useRouter();
+    const [formSections, setFormSections] = useState([
+        {
+            name: 'personalEmail',
+            display: 'Personal Email Address',
+            description: '',
+            type: "email",
+        },
+        {
+            name: 'termStatus',
+            display: 'Which describes you best ?',
+            options: ["Academic term, active on Waterloop in-person","Academic term, active on Waterloop remotely","Co-op term, working on Waterloop remotely","Co-op term, active on Waterloop in-person","Not active on Waterloop this term","Other"],
+            type: "radio",
+        },
+        {
+            name: 'previousTerms',
+            display: 'Previous Terms I worked on Waterloop',
+            options: ["F22","S22","W22"],
+            type: "checkbox",
+        }
+    ]);
 
     useEffect(() => {
         useFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router)
@@ -97,141 +43,43 @@ const RegFormEditor = () => {
             .catch(e => console.error(e));
     })
 
+    const onTypeChange = (sectionName, newType) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+        console.log('sectionName')
+        console.log(sectionName)
+        console.log('newType')
+        console.log(newType)
+
+        const newFormSections = [...formSections];
+        newFormSections[idx] = {
+            ...newFormSections[idx],
+            type: newType,
+        };
+        setFormSections(newFormSections);
+    }
+
     return (
         <PageTemplate>
-            <SystemComponent display='grid'
+            <SystemComponent 
+            display='grid'
                 gridRowGap={theme.space[7]}
+                overflow="auto"
             >
-                <Card 
-                    display="grid"
-                    gridTemplateColumns="7fr 3fr"
-                    gridColumnGap={theme.space[5]}
-                    gridRowGap={theme.space[5]}
-                    width={["500px", "700px", "800px"]}
-                    marginRight="auto"
-                    marginLeft="auto"
-                >
-                    <TextField
-                        label="Question"
-                        defaultValue="Question"
-                        variant="filled"
-                        size="normal"
-                    />
-                    <Select
-                        options={[
-                            {label: "Short Answer", value: "text"}, 
-                            {label: "Long Answer", value: "longtext"},
-                            {label: "Phone Number", value: "phone"},
-                            {label: "Multiple Choice", value: "radio"},
-                            {label: "Checkboxes", value: "checkbox"},
-                            {label: "Dropdown Menu", value: "menu"}
-                        ]}
-                        // "text", "numbers", "phone", "checkbox", "radio", "boolean", "longtext", "menu_single", "menu_multi"
-                        styles={{
-                            control: base => ({
-                              ...base,
-                              height: "100%",
-                            })
-                        }}
-                    />
-                    <TextField
-                        label="Help Text for User (Optional)"
-                        defaultValue="Help Text for User (Optional)"
-                        variant="filled"
-                        size="small"
-                        sx={{
-                            gridColumn: '1/3',
-                            gridRow: '2',
-                        }}
-                    />
-                    <TextAnswerPlaceholderContainer>
-                        <TextAnswerPlaceholderComponent text='Short Answer'/>
-                    </TextAnswerPlaceholderContainer> 
-                    <SystemComponent 
-                        gridColumn="1"
-                        gridRow='4'
-                    >
-                        <ModiferOptions
-                            options={["Only allow users to enter numbers for this response"]}
+                {
+                    formSections.map(section => 
+                        <Section 
+                            key={section.name}
+                            name={section.name}
+                            type={section.type} 
+                            question={section.display} 
+                            helpText={section.description} 
+                            handleTypeChange={onTypeChange} 
                         />
-                    </SystemComponent>
-                    <ActionButtonContainer>
-                        <ActionButton>Delete</ActionButton>
-                        <ActionButton>Duplicate</ActionButton>
-                    </ActionButtonContainer>
-                </Card>
-
-
-
-                <Card 
-                    display="grid"
-                    gridTemplateColumns="7fr 3fr"
-                    gridColumnGap={theme.space[5]}
-                    gridRowGap={theme.space[5]}
-                    width={["500px", "700px", "800px"]}
-                    marginRight="auto"
-                    marginLeft="auto"
-                >
-                    <TextField
-                        label="Question"
-                        defaultValue="Question"
-                        variant="filled"
-                        size="normal"
-                    />
-                    <Select
-                        options={[
-                            {label: "Short Answer", value: "text"}, 
-                            {label: "Long Answer", value: "longtext"},
-                            {label: "Phone Number", value: "phone"},
-                            {label: "Multiple Choice", value: "radio"},
-                            {label: "Checkboxes", value: "checkbox"},
-                            {label: "Dropdown Menu", value: "menu"}
-                        ]}
-                        // "text", "numbers", "phone", "checkbox", "radio", "boolean", "longtext", "menu_single", "menu_multi"
-                        styles={{
-                            control: base => ({
-                              ...base,
-                              height: "100%",
-                            })
-                        }}
-                    />
-                    <TextField
-                        label="Help Text for User (Optional)"
-                        defaultValue="Help Text for User (Optional)"
-                        variant="filled"
-                        size="small"
-                        sx={{
-                            gridColumn: '1/3',
-                            gridRow: '2',
-                        }}
-                    />
-                    <SystemComponent gridColumn="1" gridRow="3" display="grid" gridTemplateColumns="auto 30px" gridColumnGap={`${theme.space[3]}px`}>
-                        <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/3">Please Edit Your Options Below:</SystemComponent>
-                        <TextField variant="standard" label="Option 1" 
-                            size="small"
-                            sx={{
-                                width: "100%",
-                                gridColumn: '1',
-                                gridRow: '2'
-                            }}
-                        />
-                        <SystemComponent gridColumn='2' gridRow='2' display='flex' alignItems='end' pb={`${theme.space[2]}px`}>
-                            <span className="fas fa fa-times"/>
-                        </SystemComponent>
-                    </SystemComponent> 
-                    <SystemComponent 
-                        gridColumn="1"
-                        gridRow='4'
-                    >
-                        <ModiferOptions
-                            options={["Only allow users to enter numbers for this response"]}
-                        />
-                    </SystemComponent>
-                    <ActionButtonContainer>
-                        <ActionButton>Delete</ActionButton>
-                        <ActionButton>Duplicate</ActionButton>
-                    </ActionButtonContainer>
-                </Card>
+                    )
+                }
             </SystemComponent>
         </PageTemplate>
     );
