@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled, { ThemeContext } from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
 
 import {useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -8,6 +9,16 @@ import { SystemComponent } from "../../../frontend/components/atoms/SystemCompon
 
 import { useFormDetails } from '../../../frontend/store/api/forms';
 import Section from "../../../frontend/components/organisms/formsection/Section";
+
+const Container = styled(SystemComponent)`
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    ${Section}:last-child {
+        margin-bottom: 0;
+    }
+`;
 
 const RegFormEditor = () => {
     const theme = useContext(ThemeContext);
@@ -118,13 +129,36 @@ const RegFormEditor = () => {
         setFormSections(newFormSections);
     }
 
+    const onSectionDelete = (sectionName) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newFormSections = [...formSections];
+        newFormSections.splice(idx, 1);
+        setFormSections(newFormSections);
+    }
+
+    const onSectionDuplicate = (sectionName) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newSection = {
+            ...formSections[idx],
+            name: uuidv4(),
+        }
+        setFormSections([
+            ...formSections,
+            newSection
+        ]);
+    }
+
     return (
         <PageTemplate>
-            <SystemComponent 
-                display='grid'
-                gridRowGap={theme.space[7]}
-                overflow="auto"
-            >
+            <Container>
                 {
                     formSections.map(section => 
                         <Section 
@@ -139,10 +173,12 @@ const RegFormEditor = () => {
                             handleOptionChange={onOptionChange}
                             handleOptionAdd={onOptionAdd}
                             handleOptionDelete={onOptionDelete}
+                            handleSectionDelete={onSectionDelete}
+                            handleSectionDuplicate={onSectionDuplicate}
                         />
                     )
                 }
-            </SystemComponent>
+            </Container>
         </PageTemplate>
     );
 }

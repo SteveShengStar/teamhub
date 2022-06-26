@@ -91,7 +91,7 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
     }
 }
 
-const Selectable = ({type, sectionName, question, helpText, options = [], handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete}) => {
+const Selectable = ({type, sectionName, question, helpText, options = [], handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate}) => {
     const theme = useContext(ThemeContext);
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
@@ -134,6 +134,8 @@ const Selectable = ({type, sectionName, question, helpText, options = [], handle
                 }
                 setSectionModifiers(copyOfSectionModifiers);
             }}
+            handleSectionDelete={handleSectionDelete}
+            handleSectionDuplicate={handleSectionDuplicate}
         >
             <SystemComponent display="grid" gridTemplateColumns="12px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
                 <OptionsList

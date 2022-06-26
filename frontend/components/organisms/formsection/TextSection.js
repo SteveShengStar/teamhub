@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled, { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
 import { capitalize } from 'lodash'; 
@@ -61,7 +61,7 @@ const getModifiersBySectionType = (type) => {
     }
 }
 
-const TextSection = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange}) => {
+const TextSection = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate}) => {
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
         <BaseSection
@@ -97,6 +97,8 @@ const TextSection = ({type, sectionName, question, helpText, handleTypeChange, h
                 }
                 setSectionModifiers(copyOfSectionModifiers);
             }}
+            handleSectionDelete={handleSectionDelete}
+            handleSectionDuplicate={handleSectionDuplicate}
         >
             <Container>
                 <AnswerPlaceholderComponent text={getPlaceholderText(type)}/>
