@@ -52,18 +52,20 @@ const getModifiersBySectionType = (type) => {
         case 'email':
             return [];
         case 'text':
-        case 'numbers':
             return [{name: "numbers", label: "Users can only enter numbers.", selected: false}];
+        case 'numbers':
+            return [{name: "numbers", label: "Users can only enter numbers.", selected: true}];
         case 'longtext':
         default:
             return [];
     }
 }
 
-const TextSection = ({type, sectionName, question, helpText, handleTypeChange}) => {
+const TextSection = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange}) => {
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
-        <BaseSection 
+        <BaseSection
+            type={type} 
             name={sectionName} 
             question={question} 
             helpText={helpText} 
@@ -71,6 +73,7 @@ const TextSection = ({type, sectionName, question, helpText, handleTypeChange}) 
                 setSectionModifiers(getModifiersBySectionType(newType.value));
                 handleTypeChange(sectionName, newType.value);
             }}
+            handleInputChange={handleInputChange}
             sectionModifiers={sectionModifiers}
             handleSelectModifier={(modifier, selected) => {
                 if (modifier.name === 'numbers') {

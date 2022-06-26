@@ -8,21 +8,25 @@ import TextField from '@mui/material/TextField';
 const getModifiersBySectionType = (type) => {
     switch(type) {
         case "checkbox": 
+            return [{name: "multi", label: "Users can select multiple values", selected: true}]
         case "radio": 
-        case "menu_single":
-        case "menu_multi":
             return [{name: "multi", label: "Users can select multiple values", selected: false}]
+        case "menu_single":
+            return [{name: "multi", label: "Users can select multiple values", selected: false}]
+        case "menu_multi":
+            return [{name: "multi", label: "Users can select multiple values", selected: true}]
         case "boolean": 
         default:
             return [];
     }
 }
 
-const Selectable = ({type, sectionName, question, helpText, handleTypeChange}) => {
+const Selectable = ({type, sectionName, question, helpText, handleTypeChange, handleInputChange}) => {
     const theme = useContext(ThemeContext);
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
         <BaseSection 
+            type={type}
             name={sectionName}
             question={question} 
             helpText={helpText}
@@ -31,6 +35,7 @@ const Selectable = ({type, sectionName, question, helpText, handleTypeChange}) =
                 setSectionModifiers(getModifiersBySectionType(newType.value));
                 handleTypeChange(sectionName, newType.value);
             }}
+            handleInputChange={handleInputChange}
             handleSelectModifier={(modifier, selected) => {
                 if (modifier.name === 'multi') {
                     if (selected && type === 'radio') {
