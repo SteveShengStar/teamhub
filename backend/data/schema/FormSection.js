@@ -34,7 +34,7 @@ const FormSectionSchema = new Schema({
         description: "Maximum character limit for answers to this form question.",
         required: false
     },
-    category: {
+    type: {
         type: String,
         enum: ["text", "numbers", "phone", "checkbox", "radio", "boolean", "longtext", "menu_single", "menu_multi"],
         required: true
