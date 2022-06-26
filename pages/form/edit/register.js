@@ -41,7 +41,7 @@ const RegFormEditor = () => {
                 console.log(res.body);
             })
             .catch(e => console.error(e));
-    })
+    }, [])
 
     const onTypeChange = (sectionName, newType) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
@@ -71,6 +71,47 @@ const RegFormEditor = () => {
         setFormSections(newFormSections);
     }
 
+    const onOptionChange = (sectionName, optionIdx, newValue) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newFormSections = [...formSections];
+        newFormSections[idx] = {
+            ...newFormSections[idx],
+            options: 
+                [
+                    ...newFormSections[idx].options.slice(0, optionIdx), 
+                    newValue, 
+                    ...newFormSections[idx].options.slice(optionIdx + 1, newFormSections[idx].options.length)
+                ],
+        };
+        setFormSections(newFormSections);
+    }
+
+    const onOptionAdd = (sectionName) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newFormSections = [...formSections];
+        newFormSections[idx].options.push('');
+        setFormSections(newFormSections);
+    }
+
+    const onOptionDelete = (sectionName, optionIdx) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+        const newFormSections = [...formSections];
+        newFormSections[idx].options.splice(optionIdx, 1);
+        setFormSections(newFormSections);
+    }
+
     return (
         <PageTemplate>
             <SystemComponent 
@@ -86,8 +127,12 @@ const RegFormEditor = () => {
                             type={section.type} 
                             question={section.display} 
                             helpText={section.description} 
+                            options={section.options}
                             handleTypeChange={onTypeChange}
                             handleInputChange={onInputChange}
+                            handleOptionChange={onOptionChange}
+                            handleOptionAdd={onOptionAdd}
+                            handleOptionDelete={onOptionDelete}
                         />
                     )
                 }
