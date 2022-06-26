@@ -2,7 +2,7 @@ const data = require('../../../backend/data/index');
 const cookie = require('cookie');
 const { OAuth2Client } = require('google-auth-library');
 const {Auth, google} = require('googleapis');
-const fs = require('fs');
+const members = require('../../../backend/data/handlers/members');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -11,35 +11,12 @@ module.exports = async (req, res) => {
         // Get the Access Token from the request headers
         // const token = cookie.parse(req.headers.cookie).token;
         // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        // REPLACE WITH ABOVE
 
-        if (true) {
-            // the api documentation for what we need to provide to impersonate
-            // a service account is really bad
-            const auth = new Auth.GoogleAuth({
-                keyFile:"teamhub-257722-07d1d3b57421.json",
-                scopes:"https://www.googleapis.com/auth/admin.directory.group",
-                clientOptions: {
-                    email:"teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
-                    subject: "steven.x@waterloop.ca",
-                }
-            })
-            client = await auth.getClient()
-            // Obtain a new drive client, making sure you pass along the auth client
-            const admin = google.admin({ version: 'directory_v1', auth: client });
+        const authToken = req.headers['authorization'].split(' ')[1];
+        const searchRes = await members.search({ token: authToken });
+        if (searchRes.length != 0 && await isLead(searchRes[0]['email'])) {
 
-            const groups = await admin.groups.list({
-                //domain: "waterloop.ca",
-                customer:"C049m7qgz",
-            });
-            console.log(groups.data.groups);
-            // check for valid group
-            //const token = req.headers['authorization'].split(' ')[1];
-            //const gAdminClient = getGAdminClient(token);
-            // get user ID properly
-            //let groupKeys = await getGroupKeys(gAdminClient, "sashco.m@waterloop.ca");  // Fetch all groups that the user is a member of in Google Groups
-            //let groupIds = await keysToIds(db, groupKeys);  // Translate group keys into groups ids 
-            //console.log(groupKeys)
-            //
             res.setHeader('Content-Type', 'application/json');
 
             res.statusCode = 200;
@@ -58,44 +35,27 @@ module.exports = async (req, res) => {
     }
 };
 
-/*
-const keysToIds = async (db, groupKeys) => {
-    let groupIds = [];
-    if (groupKeys && groupKeys.length > 0) {
-      try {
-        let query = 'SELECT id FROM groups WHERE group_key IN (' + groupKeys.map(_ => '?').join(',') + ');'
-        groupIds = ( await db.raw(query, [...groupKeys] )).rows.map(row => row.id);
-      } catch(e) {
-        console.log(e);
-        groupIds = [];
-      }
-    } 
-    return groupIds;
-}
-*/
+async function isLead(userEmail) {
+    const auth = new Auth.GoogleAuth({
+        keyFile:"teamhub-257722-07d1d3b57421.json",
+        scopes:"https://www.googleapis.com/auth/admin.directory.group",
+        clientOptions: {
+            email:"teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
+            //impersonate steven >:)
+            subject: "steven.x@waterloop.ca",
+        }
+    })
+    client = await auth.getClient()
+    // Obtain a new admin client, making sure you pass along the auth client
+    const admin = google.admin({ version: 'directory_v1', auth: client });
 
-const getGroupKeys = async (gAdminClient, userId) => {
-    try {
-        let res = await gAdminClient.groups.list({
-        userKey: userId
-        })
-        const groupKeys = res.data.groups.map(g => g.id); // These are group_keys
-        return groupKeys;
-    } catch (err) {
-        console.log('Error: Google Admin API groups.list() call returned an error: ', err);   // TODO: handle error properly
-        console.log(gAdminClient);
-        return [];
-    };
-}
-
-const getGAdminClient = (accessToken) => {
-    const client = new OAuth2Client(process.env.client_id);
-    client.setCredentials({
-        access_token: accessToken
+    const groups = await admin.groups.list({
+        //domain: "waterloop.ca",
+        //customer:"C049m7qgz",
+        userKey: userEmail,
     });
-    const gAdminClient = google.admin({
-        version : "directory_v1",
-        auth: client
-    });
-    return gAdminClient;
+    for(const group of groups.data.groups) {
+        if(group.name == 'Leads') return true
+    }    
+    return false
 }
