@@ -82,10 +82,10 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
                 <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/4">Edit Your Options Below:</SystemComponent>
                 {
                     options.map((opt, optionIdx) => 
-                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)} handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)} />
+                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={handleOptionChange} handleOptionDelete={handleOptionDelete} />
                     )
                 }
-                <AddOptionButton handleOptionAdd={() => handleOptionAdd(sectionName)}/>
+                <AddOptionButton handleOptionAdd={handleOptionAdd}/>
             </>
         )
     }
@@ -142,9 +142,9 @@ const Selectable = ({type, sectionName, question, helpText, options = [], canDel
                 <OptionsList
                     options={options}
                     type={type}
-                    handleOptionAdd={handleOptionAdd}
-                    handleOptionChange={handleOptionChange}
-                    handleOptionDelete={handleOptionDelete}
+                    handleOptionAdd={() => handleOptionAdd(sectionName)}
+                    handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)}
+                    handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)}
                 />
             </SystemComponent>
         </BaseSection>
