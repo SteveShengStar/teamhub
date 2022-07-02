@@ -36,7 +36,7 @@ export default class MyDocument extends Document {
                 <Head>
                     <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700,800,900&display=swap" rel="stylesheet" />
                     <link rel="stylesheet" href="https://use.typekit.net/xwr3ezi.css" />
-                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/fontawesome.min.css" />
                     <link rel="apple-touch-icon" sizes="57x57" href="/static/apple-icon-57x57.png"/>
                     <link rel="apple-touch-icon" sizes="60x60" href="/static/apple-icon-60x60.png"/>
                     <link rel="apple-touch-icon" sizes="72x72" href="/static/apple-icon-72x72.png"/>
