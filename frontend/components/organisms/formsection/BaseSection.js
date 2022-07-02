@@ -41,10 +41,20 @@ const ActionButtonContainer = styled(SystemComponent)`
     }
 `;
 
-const ModifierOptions = ({options, handleClick}) => {
+const ModifierOptions = ({options, handleClick, required, handleToggleRequired}) => {
     const theme = useContext(ThemeContext);
     return (
         <SystemComponent paddingTop="15px" paddingBottom="15px" display="grid" gridRowGap={`${theme.space[4]}px`}>
+            <SystemComponent display='flex' height="25px">
+                <SystemComponent mr={`${theme.space[7]}px`}>
+                    <Checkbox checked={required} handleClick={() => handleToggleRequired(!required)}/>
+                </SystemComponent>
+                <SystemComponent lineHeight="25px">
+                    <SystemSpan display="inline-block" verticalAlign="middle" lineHeight="normal" fontSize={theme.fontSizes.header4}>
+                        User must fill in this Question
+                    </SystemSpan>
+                </SystemComponent>
+            </SystemComponent>
             {options.map(
                 option => 
                 <SystemComponent key={option.name} display='flex' height="25px">
@@ -62,7 +72,7 @@ const ModifierOptions = ({options, handleClick}) => {
     )
 };
 
-const BaseSection = ({children, type, name, question, helpText, canDelete, sectionModifiers, handleTypeChange, handleInputChange, handleSelectModifier, handleSectionDelete, handleSectionDuplicate}) => {
+const BaseSection = ({children, type, name, question, helpText, required, canDelete, sectionModifiers, handleTypeChange, handleInputChange, handleSelectModifier, handleSectionDelete, handleSectionDuplicate, handleToggleRequired}) => {
     const theme = useContext(ThemeContext);
     return (
         <Card 
@@ -108,16 +118,16 @@ const BaseSection = ({children, type, name, question, helpText, canDelete, secti
                     gridRow: '2',
                 }}
             />
-            {sectionModifiers && sectionModifiers.length > 0 && 
-                <SystemComponent 
-                    gridColumn="1"
-                >
-                    <ModifierOptions
-                        options={sectionModifiers}
-                        handleClick={handleSelectModifier}
-                    />
-                </SystemComponent>
-            }
+            <SystemComponent 
+                gridColumn="1"
+            >                
+                <ModifierOptions
+                    options={sectionModifiers}
+                    handleClick={handleSelectModifier}
+                    required={required}
+                    handleToggleRequired={(newRequiredState) => handleToggleRequired(name, newRequiredState)}
+                />
+            </SystemComponent>
             <SystemComponent gridColumn="1">
                 {children}
             </SystemComponent> 

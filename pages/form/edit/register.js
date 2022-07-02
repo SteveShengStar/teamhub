@@ -233,10 +233,21 @@ const RegFormEditor = () => {
             ...formSections[idx],
             name: uuidv4(),
         }
-        setFormSections([
-            ...formSections,
-            newSection
-        ]);
+        const newFormSections = [...formSections];
+        newFormSections.splice(idx + 1, 0, newSection);
+        setFormSections(newFormSections);
+    }
+
+    const onToggleRequired = (sectionName, newRequiredState) => {
+        const idx = formSections.findIndex(section => section.name === sectionName)
+        if (idx === -1) {
+            throw new Error("register.js: Could not find the appropriate form section by section name.");
+        }
+
+
+        const newFormSections = [...formSections];
+        newFormSections[idx].required = newRequiredState;
+        setFormSections(newFormSections);
     }
 
     const handleSave = (e) => {
@@ -263,6 +274,7 @@ const RegFormEditor = () => {
                             question={section.display} 
                             helpText={section.description} 
                             options={section.options}
+                            required={section.required}
                             canDelete={section.customizable === 'delete'}
                             handleTypeChange={onTypeChange}
                             handleInputChange={onInputChange}
@@ -271,6 +283,7 @@ const RegFormEditor = () => {
                             handleOptionDelete={onOptionDelete}
                             handleSectionDelete={onSectionDelete}
                             handleSectionDuplicate={onSectionDuplicate}
+                            handleToggleRequired={onToggleRequired}
                         />
                     )
                 }
