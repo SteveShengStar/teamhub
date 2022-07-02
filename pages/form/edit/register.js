@@ -24,11 +24,11 @@ const Container = styled(SystemComponent)`
 `;
 
 const SidebarContainer = styled(SystemComponent)`
-    position: absolute;
+    position: fixed;
     display: grid;
     grid-auto-rows: 60px;
     grid-template-columns: 60px;
-    top: 0;
+    top: 250px;
     right: 0;
 
     z-index: 100;
@@ -41,21 +41,37 @@ const SidebarButtonIcon = styled.img`
 
 const SidebarButtonText = styled(SystemComponent)`
     overflow: hidden;
-`;
-
-const SidebarButton = styled(Button)`
-    display: flex;
-    right: 0;
-    flex-direction: row-reverse;
-    font-size: 1rem;
+    position: absolute;
+    right: 60px;
+    top: 0;
+    width: 0;
+    white-space: nowrap;
+    background-color: ${props => props.theme.colors.black};
+    height: 60px;
+    line-height: 60px;
+    font-size: ${props => props.theme.fontSizes.header3}pt;
+    color: ${props => props.theme.colors.white};
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
 
     -webkit-transition: width 0.2s ease-in-out;
     -moz-transition: width 0.2s ease-in-out;
     -o-transition: width 0.2s ease-in-out;
     transition: width 0.2s ease-in-out;
+`;
+
+const SidebarButton = styled(Button)`
+    box-sizing: border-box;
+    padding: 15px;
+    display: flex;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 
     &:hover {
-        width: 170px;
+        transform: scale(1.0);
+    }
+    &:hover ${SidebarButtonText} {
+        width: 180px;
     }
 `;
 
@@ -66,12 +82,12 @@ const Sidebar = ({options}) => {
             {
                 options.map((opt, i) => (
                     <SidebarButton key={i} variant='neutral'>
-                        <SidebarButtonText>
-                            {opt.label}
-                        </SidebarButtonText>
                         <SystemComponent mt="auto" mb="auto">
                             <SidebarButtonIcon src={'/static/' + opt.iconFileName}/>
                         </SystemComponent>
+                        <SidebarButtonText>
+                            {opt.label}
+                        </SidebarButtonText>
                     </SidebarButton>
                 ))
             }
@@ -209,7 +225,11 @@ const RegFormEditor = () => {
         <PageTemplate>
             <Container>
                 {loader}
-                <Sidebar options={[{label: "Save", iconFileName: 'floppy-disk-solid.png'}, {label: "Add Question", iconFileName: 'plus-solid.png'}]}/>
+                <Sidebar options={[ 
+                    {label: "Add Question", iconFileName: 'plus-solid.png'},
+                    {label: "Save", iconFileName: 'floppy-disk-solid.png'},
+                    {label: "Exit", iconFileName: 'backward-solid.png'},
+                ]}/>
                 {
                     formSections.map(section => 
                         <Section 
