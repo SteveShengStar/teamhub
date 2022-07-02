@@ -42,7 +42,7 @@ const SidebarButtonIcon = styled.img`
 const SidebarButtonText = styled(SystemComponent)`
     overflow: hidden;
     position: absolute;
-    right: 60px;
+    right: 55px;
     top: 0;
     width: 0;
     white-space: nowrap;
@@ -64,14 +64,12 @@ const SidebarButton = styled(Button)`
     box-sizing: border-box;
     padding: 15px;
     display: flex;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
 
     &:hover {
         transform: scale(1.0);
     }
     &:hover ${SidebarButtonText} {
-        width: 180px;
+        width: 185px;
     }
 `;
 
@@ -81,7 +79,7 @@ const Sidebar = ({options}) => {
         <SidebarContainer>
             {
                 options.map((opt, i) => (
-                    <SidebarButton key={i} variant='neutral'>
+                    <SidebarButton key={i} variant='neutral' onClick={(e) => opt.callback(e)}>
                         <SystemComponent mt="auto" mb="auto">
                             <SidebarButtonIcon src={'/static/' + opt.iconFileName}/>
                         </SystemComponent>
@@ -95,6 +93,10 @@ const Sidebar = ({options}) => {
     );
 }
 
+const handleExit = (e, router) => {
+    e.preventDefault();
+    router.push('/'); // TODO: change the router later.
+}
 
 const RegFormEditor = () => {
     const theme = useContext(ThemeContext);
@@ -205,6 +207,22 @@ const RegFormEditor = () => {
         setFormSections(newFormSections);
     }
 
+    const onSectionAdd = (e) => {
+        e.preventDefault();
+        const newSection = {
+            name: uuidv4(),
+            description: '',
+            display: '',
+            type: 'text',
+            customizable: 'delete',
+            options: []
+        };
+        setFormSections([
+            ...formSections,
+            newSection
+        ]);
+    }
+
     const onSectionDuplicate = (sectionName) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
@@ -221,14 +239,20 @@ const RegFormEditor = () => {
         ]);
     }
 
+    const handleSave = (e) => {
+        e.preventDefault();
+
+        console.log("Saving stuff ...");
+    }
+
     return (
         <PageTemplate>
             <Container>
                 {loader}
                 <Sidebar options={[ 
-                    {label: "Add Question", iconFileName: 'plus-solid.png'},
-                    {label: "Save", iconFileName: 'floppy-disk-solid.png'},
-                    {label: "Exit", iconFileName: 'backward-solid.png'},
+                    {label: "Add Question", iconFileName: 'plus-solid.png', callback: onSectionAdd},
+                    {label: "Save", iconFileName: 'floppy-disk-solid.png', callback: handleSave},
+                    {label: "Exit", iconFileName: 'backward-solid.png', callback: (e) => handleExit(e, router)},
                 ]}/>
                 {
                     formSections.map(section => 
