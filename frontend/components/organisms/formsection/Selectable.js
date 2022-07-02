@@ -51,7 +51,7 @@ const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete, read
             {
                 !readOnly &&
                 <RemoveOptionButton>
-                    <span className="fas fa fa-times" onClick={() => handleOptionDelete(optionIdx)}/>
+                    <span className="fa fa-solid fa-xmark" onClick={() => handleOptionDelete(optionIdx)}/>
                 </RemoveOptionButton>
             }
         </>
@@ -72,8 +72,8 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
     if (type === 'boolean') {
         return (
             <>
-                <OptionRow opt='Yes' optionIdx={0} readOnly='true' />
-                <OptionRow opt='No' optionIdx={1} readOnly='true' />
+                <OptionRow opt='Yes' optionIdx={0} readOnly={true} />
+                <OptionRow opt='No' optionIdx={1} readOnly={true} />
             </>
         );
     } else {
