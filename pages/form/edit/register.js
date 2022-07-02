@@ -7,61 +7,106 @@ import { useRouter } from 'next/router';
 import PageTemplate from "../../../frontend/components/templates/PageTemplate";
 import { SystemComponent } from "../../../frontend/components/atoms/SystemComponents";
 
-import { useFormDetails } from '../../../frontend/store/api/forms';
+import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
+import { useFormDetails } from '../../../frontend/hooks/forms';
 import Section from "../../../frontend/components/organisms/formsection/Section";
+import Button from '../../../frontend/components/atoms/Button';
 
 const Container = styled(SystemComponent)`
     display: flex;
     flex-direction: column;
     overflow: auto;
+    position: relative;
 
     ${Section}:last-child {
         margin-bottom: 0;
     }
 `;
 
+const SidebarContainer = styled(SystemComponent)`
+    position: absolute;
+    display: grid;
+    grid-auto-rows: 60px;
+    grid-template-columns: 60px;
+    top: 0;
+    right: 0;
+
+    z-index: 100;
+`;
+
+const SidebarButtonIcon = styled.img`
+    max-width: 100%;
+    max-height: 100%;
+`;
+
+const SidebarButtonText = styled(SystemComponent)`
+    overflow: hidden;
+`;
+
+const SidebarButton = styled(Button)`
+    display: flex;
+    right: 0;
+    flex-direction: row-reverse;
+    font-size: 1rem;
+
+    -webkit-transition: width 0.2s ease-in-out;
+    -moz-transition: width 0.2s ease-in-out;
+    -o-transition: width 0.2s ease-in-out;
+    transition: width 0.2s ease-in-out;
+
+    &:hover {
+        width: 170px;
+    }
+`;
+
+const Sidebar = ({options}) => {
+    console.log(options)
+    return (
+        <SidebarContainer>
+            {
+                options.map((opt, i) => (
+                    <SidebarButton key={i} variant='neutral'>
+                        <SidebarButtonText>
+                            {opt.label}
+                        </SidebarButtonText>
+                        <SystemComponent mt="auto" mb="auto">
+                            <SidebarButtonIcon src={'/static/' + opt.iconFileName}/>
+                        </SystemComponent>
+                    </SidebarButton>
+                ))
+            }
+        </SidebarContainer>
+    );
+}
+
+
 const RegFormEditor = () => {
     const theme = useContext(ThemeContext);
     const dispatch = useDispatch();
     const router = useRouter();
-    const [formSections, setFormSections] = useState([
-        {
-            name: 'personalEmail',
-            display: 'Personal Email Address',
-            description: '',
-            type: "email",
-            customizable: 'edit'
-        },
-        {
-            name: 'termStatus',
-            display: 'Which describes you best ?',
-            options: ["Academic term, active on Waterloop in-person","Academic term, active on Waterloop remotely","Co-op term, working on Waterloop remotely","Co-op term, active on Waterloop in-person","Not active on Waterloop this term","Other"],
-            type: "menu_single",
-            customizable: 'edit'
-        },
-        {
-            name: 'previousTerms',
-            display: 'Previous Terms I worked on Waterloop',
-            options: ["F22","S22","W22"],
-            type: "menu_multi",
-            customizable: 'edit'
-        },
-        {
-            name: 'sampleBoolean',
-            display: 'True or False Question',
-            description: 'same help text',
-            type: "boolean",
-            customizable: 'delete'
-        },
-    ]);
+    const [loader, showLoader, hideLoader] = useLoadingScreen(true);
+    const [formSections, setFormSections] = useState([]);
 
     useEffect(() => {
         useFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router)
             .then(res => {
-                console.log("res.body");
-                console.log(res.body);
+                setFormSections(
+                    res.body.sections.map(obj => {
+                        const sectionDetails = obj.section;
+                        return {
+                            ...obj,
+                            section: undefined,
+                            ...sectionDetails
+                        }
+                    }).sort(
+                        (a, b) => a.position - b.position
+                    )
+                );
             })
-            .catch(e => console.error(e));
+            .catch(e => console.error(e))
+            .finally(() => {
+                hideLoader();
+            });
     }, [])
 
     const onTypeChange = (sectionName, newType) => {
@@ -163,6 +208,8 @@ const RegFormEditor = () => {
     return (
         <PageTemplate>
             <Container>
+                {loader}
+                <Sidebar options={[{label: "Save", iconFileName: 'floppy-disk-solid.png'}, {label: "Add Question", iconFileName: 'plus-solid.png'}]}/>
                 {
                     formSections.map(section => 
                         <Section 
