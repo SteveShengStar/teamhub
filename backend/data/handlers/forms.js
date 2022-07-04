@@ -3,6 +3,7 @@ const Form = require('../schema/Form');
 const util = require('./util');
 const mongoose = require('mongoose');
 const { members } = require('..');
+const _ = require('lodash');
 
 const forms = {};
 
@@ -48,20 +49,62 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
 }
 
 /**
+ * Create form sections/questions that don't already exist
+ * Modify form sections/questions that exist (upsert)
+ * 
+ * @param {Array[Object]} sections: details about the form sections/question to add.
+ */
+ forms.updateFormSections = async (sections) => {
+    return util.handleWrapper(async () => {
+        console.log('********* raw sections *********')
+        console.log(sections)
+        const dbPayload = sections.map(section => {
+            return {
+                updateOne: {
+                    filter: { name: section.name },
+                    update: {
+                        $set: _.omit(section, '_id', 'position', 'required', 'section'),
+                    },
+                    upsert: true
+                }
+            }
+        });
+        FormSection.bulkWrite(dbPayload)
+            .then(console.log.bind(console, 'BULK update OK'))
+            .catch(console.error.bind(console, 'BULK update error'));
+        return {};
+    });
+}
+
+/**
  * Add a new form.
  * 
  * @param {Object} formData: form metadata.
  */
 forms.createForm = async (formData) => {
     return util.handleWrapper(async () => {
-        formData.sections = formData.sections.map(s => {
-            return { 
-                ...s,
-                section: new mongoose.Types.ObjectId(s.section._id),
-            }
-        });
         // TODO: this should be in a transaction.
-        this.updateFormSections(formData.sections);
+        forms.updateFormSections(formData.sections);
+
+        console.log('********* formData.sections *********')
+        console.log(formData)
+
+        const formSections = await FormSection.find();
+        const formSectionNamesByIds = {};
+        formSections.map(
+            s => {
+                formSectionNamesByIds[s.name] = s._id;
+            }
+        );
+
+        formData.sections = formData.sections
+            .map(s => {
+                return {
+                    required: s.required,
+                    position: s.position,
+                    section: formSectionNamesByIds[s.name],
+                }
+            });
         return await Form.create(formData);
     });
 }
@@ -74,38 +117,29 @@ forms.createForm = async (formData) => {
 forms.updateFormMetadata = async (formId, formData) => {
     return util.handleWrapper(async () => {
         // TODO: this should be in a transaction.
-        this.updateFormSections(formData.sections);
+        forms.updateFormSections(formData.sections);
 
-        // Disassociate form sections that were deleted from this form.
-        const existingSections = (await FormSection.find()).map(section => section.name);
-        formData.sections = formData.sections.filter(s => existingSections.includes(s.section.name));
-        return await Form.updateOne({_id: formId}, formData);
-    });
-}
-
-/**
- * Create form sections/questions that don't already exist
- * Modify form sections/questions that exist (upsert)
- * 
- * @param {Array[Object]} sections: details about the form sections/question to add.
- */
-forms.updateFormSections = async (sections) => {
-    return util.handleWrapper(async () => {
-        const dbPayload = sections.map(section => {
-            return {
-                updateOne: {
-                    filter: { name: section.name },
-                    update: {
-                        $set: section,
-                    },
-                    upsert: true
-                }
+        const formSections = await FormSection.find();
+        const formSectionNamesByIds = {};
+        formSections.map(
+            s => {
+                formSectionNamesByIds[s.name] = s._id;
             }
-        });
-        FormSection.bulkWrite(dbPayload)
-            .then(console.log.bind(console, 'BULK update OK'))
-            .catch(console.error.bind(console, 'BULK update error'));
-        return {};
+        );
+
+        // Disassociate form sections that were deleted
+        const sectionNames = Object.keys(formSectionNamesByIds);
+        formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
+            .map(s => {
+                return {
+                    required: s.required,
+                    position: s.position,
+                    section: formSectionNamesByIds[s.name],
+                }
+            });
+        console.log('********* formData.sections *********')
+        console.log(formData)
+        return await Form.updateOne({_id: formId}, _.omit(formData, '_id'));
     });
 }
 

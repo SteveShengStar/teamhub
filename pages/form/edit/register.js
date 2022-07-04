@@ -8,7 +8,7 @@ import PageTemplate from "../../../frontend/components/templates/PageTemplate";
 import { SystemComponent } from "../../../frontend/components/atoms/SystemComponents";
 
 import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
-import { useFormDetails } from '../../../frontend/hooks/forms';
+import { useFormDetails, updateFormDetails } from '../../../frontend/hooks/forms';
 import Section from "../../../frontend/components/organisms/formsection/Section";
 import Button from '../../../frontend/components/atoms/Button';
 
@@ -102,12 +102,19 @@ const RegFormEditor = () => {
     const theme = useContext(ThemeContext);
     const dispatch = useDispatch();
     const router = useRouter();
-    const [loader, showLoader, hideLoader] = useLoadingScreen(true);
+    const [loader, showLoader, hideLoader] = useLoadingScreen(false);
+    const [fromTitle, setFormTitle] = useState('');
+    const [fromDescription, setFormDescription] = useState('');
     const [formSections, setFormSections] = useState([]);
 
-    useEffect(() => {
+    const loadFormSections = () => {
+        showLoader();
         useFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router)
             .then(res => {
+                // TODO: handle error response
+
+                setFormTitle(res.body.title);
+                setFormDescription(res.body.description);
                 setFormSections(
                     res.body.sections.map(obj => {
                         const sectionDetails = obj.section;
@@ -121,10 +128,17 @@ const RegFormEditor = () => {
                     )
                 );
             })
-            .catch(e => console.error(e))
+            .catch(e => {
+                console.error(e);
+                throw new Error(e);
+            })
             .finally(() => {
                 hideLoader();
             });
+    }
+
+    useEffect(() => {
+        loadFormSections();
     }, [])
 
     const onTypeChange = (sectionName, newType) => {
@@ -244,7 +258,6 @@ const RegFormEditor = () => {
             throw new Error("register.js: Could not find the appropriate form section by section name.");
         }
 
-
         const newFormSections = [...formSections];
         newFormSections[idx].required = newRequiredState;
         setFormSections(newFormSections);
@@ -252,8 +265,30 @@ const RegFormEditor = () => {
 
     const handleSave = (e) => {
         e.preventDefault();
+        console.log("Saving form sections ...");
 
-        console.log("Saving stuff ...");
+        const reqBody = {
+            title: fromTitle,
+            description: fromDescription,
+            sections: formSections
+        }
+        updateFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router, reqBody)
+            .then((res) => {
+                console.log('res')
+                console.log(res)
+                if (!res.success) {
+                    // TODO: handle error case
+                    console.error('Error occurred when updating form sections.')
+                    return;
+                }
+
+                loadFormSections();
+                console.log("Finished loading form sections.");
+            }).catch(e => {
+                hideLoader();
+                console.error(e);
+                throw new Error(e);
+            })
     }
 
     return (
