@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             res.statusCode = 200;
 
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.forms.createForm(req.body);
+                return await data.forms.createForm(req.body, res);
             })));
         } else {
             res.statusCode = 401;

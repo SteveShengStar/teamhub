@@ -1,7 +1,6 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
-const mongoose = require('mongoose');
 const { members } = require('..');
 const _ = require('lodash');
 
@@ -54,10 +53,12 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
  * 
  * @param {Array[Object]} sections: details about the form sections/question to add.
  */
- forms.updateFormSections = async (sections) => {
+forms.updateFormSections = async (sections) => {
+    if (!sections || sections.length === 0) {
+        return;
+    }
+
     return util.handleWrapper(async () => {
-        console.log('********* raw sections *********')
-        console.log(sections)
         const dbPayload = sections.map(section => {
             return {
                 updateOne: {
@@ -79,33 +80,42 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
 /**
  * Add a new form.
  * 
- * @param {Object} formData: form metadata.
+ * @param {Object} formData: form metadata
+ * @param {Object} res: REST Response object
  */
-forms.createForm = async (formData) => {
+forms.createForm = async (formData, res) => {
     return util.handleWrapper(async () => {
-        // TODO: this should be in a transaction.
-        forms.updateFormSections(formData.sections);
+        forms.updateFormSections(formData.sections); // TODO: this should be in a transaction.
 
-        console.log('********* formData.sections *********')
-        console.log(formData)
+        if (formData.sections) {
+            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            formData.sections = formData.sections
+                .map(s => {
+                    return {
+                        required: s.required,
+                        position: s.position,
+                        section: formSectionNamesToIds[s.name],
+                    }
+                });
+        }
 
-        const formSections = await FormSection.find();
-        const formSectionNamesByIds = {};
-        formSections.map(
-            s => {
-                formSectionNamesByIds[s.name] = s._id;
+        try {
+            await Form.create(formData);
+        } catch (err) {
+            console.error(err);
+            const { title: titleFieldError, description: descFieldError} = err.errors;
+
+            if (titleFieldError?.kind === 'required' || descFieldError?.kind === 'required') {
+                res.statusCode = 400;
+                throw new Error("Title and Description cannot be blank.");
             }
-        );
-
-        formData.sections = formData.sections
-            .map(s => {
-                return {
-                    required: s.required,
-                    position: s.position,
-                    section: formSectionNamesByIds[s.name],
-                }
-            });
-        return await Form.create(formData);
+            if (titleFieldError?.kind === 'unique') {
+                res.statusCode = 400;
+                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
+            }
+            res.statusCode = 500;
+            throw new Error(err);
+        }
     });
 }
 
@@ -114,33 +124,52 @@ forms.createForm = async (formData) => {
  * 
  * @param {Object} formData: new metadata for the form.
  */
-forms.updateFormMetadata = async (formId, formData) => {
+forms.updateFormMetadata = async (formId, formData, res) => {
     return util.handleWrapper(async () => {
-        // TODO: this should be in a transaction.
-        forms.updateFormSections(formData.sections);
+        forms.updateFormSections(formData.sections);  // TODO: this should be in a transaction.
+        
+        if (formData.sections) {
+            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const sectionNames = Object.keys(formSectionNamesToIds);
+            formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
+                .map(s => {
+                    return {
+                        required: s.required,
+                        position: s.position,
+                        section: formSectionNamesToIds[s.name],
+                    }
+                });
+        }
 
-        const formSections = await FormSection.find();
-        const formSectionNamesByIds = {};
-        formSections.map(
-            s => {
-                formSectionNamesByIds[s.name] = s._id;
+        try {
+            await Form.updateOne({_id: formId}, _.omit(formData, '_id'), { runValidators: true });
+        } catch (err) {
+            console.error(err);
+            const { title: titleFieldError, description: descFieldError} = err.errors;
+
+            if (titleFieldError?.kind === 'required' || descFieldError?.kind === 'required') {
+                res.statusCode = 400;
+                throw new Error("Title and Description cannot be blank.");
             }
-        );
-
-        // Disassociate form sections that were deleted
-        const sectionNames = Object.keys(formSectionNamesByIds);
-        formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
-            .map(s => {
-                return {
-                    required: s.required,
-                    position: s.position,
-                    section: formSectionNamesByIds[s.name],
-                }
-            });
-        console.log('********* formData.sections *********')
-        console.log(formData)
-        return await Form.updateOne({_id: formId}, _.omit(formData, '_id'));
+            if (titleFieldError?.kind === 'unique') {
+                res.statusCode = 400;
+                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
+            }
+            res.statusCode = 500;
+            throw new Error(err);
+        }
     });
+}
+
+const getFormSectionNamesToIds = async () => {
+    const formSections = await FormSection.find();
+    const formSectionNamesToIds = {};
+    formSections.map(
+        s => {
+            formSectionNamesToIds[s.name] = s._id;
+        }
+    );
+    return formSectionNamesToIds;
 }
 
 module.exports = forms;
