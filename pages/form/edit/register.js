@@ -11,6 +11,7 @@ import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
 import { useFormDetails, updateFormDetails } from '../../../frontend/hooks/forms';
 import Section from "../../../frontend/components/organisms/formsection/Section";
 import Button from '../../../frontend/components/atoms/Button';
+import {validateCorrectNumberOfOptions} from '../../../util/validate';
 
 const Container = styled(SystemComponent)`
     display: flex;
@@ -109,24 +110,27 @@ const RegFormEditor = () => {
 
     const loadFormSections = () => {
         showLoader();
-        useFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router)
+        useFormDetails('629c1f09fb67a48828a4ee8b', dispatch, router)
             .then(res => {
-                // TODO: handle error response
-
-                setFormTitle(res.body.title);
-                setFormDescription(res.body.description);
-                setFormSections(
-                    res.body.sections.map(obj => {
-                        const sectionDetails = obj.section;
-                        return {
-                            ...obj,
-                            section: undefined,
-                            ...sectionDetails
-                        }
-                    }).sort(
-                        (a, b) => a.position - b.position
-                    )
-                );
+                if (res.success) {
+                    setFormTitle(res.body.title);
+                    setFormDescription(res.body.description);
+                    setFormSections(
+                        res.body.sections.map(obj => {
+                            const sectionDetails = obj.section;
+                            return {
+                                ...obj,
+                                section: undefined,
+                                ...sectionDetails
+                            }
+                        }).sort(
+                            (a, b) => a.position - b.position
+                        )
+                    );
+                } else {
+                    alert("An error occurred when loading form sections !" + res);
+                    // TODO: handle more appropriately later
+                } 
             })
             .catch(e => {
                 console.error(e);
@@ -263,19 +267,44 @@ const RegFormEditor = () => {
         setFormSections(newFormSections);
     }
 
+    const validateFormSections = () => {
+        if (!formSections || formSections.length === 0) {
+            alert("Please + Add at least 1 section before saving.");
+            return false;
+        } 
+        if (formSections.some(s => !s.name) || formSections.some(s => !s.display)) {
+            alert("You must fill in the \"Question\" part of every section. Right now, one of them is blank.");
+            return false;
+        }
+        if (!validateCorrectNumberOfOptions(formSections)) {
+            alert("One of the Multiple Choice or Dropdown Menu sections has less than two options. Please add more options before saving.");
+            return false;
+        }
+        return true;
+    }
+
     const handleSave = (e) => {
         e.preventDefault();
         console.log("Saving form sections ...");
 
+        if (!validateFormSections()){
+            return;
+        }
+
         const reqBody = {
             title: fromTitle,
             description: fromDescription,
-            sections: formSections
-        }
-        updateFormDetails('629c13c59d0c0a6b357b4e0f', dispatch, router, reqBody)
+            sections: formSections.map(
+                (s, i) => { return {
+                    ...s,
+                    position: i
+                }
+            })
+        };
+        updateFormDetails('629c1f09fb67a48828a4ee8b', dispatch, router, reqBody)
             .then((res) => {
-                console.log('res')
-                console.log(res)
+                // TODO: disable the save button after clicking save.
+                
                 if (!res.success) {
                     // TODO: handle error case
                     console.error('Error occurred when updating form sections.')
@@ -288,7 +317,7 @@ const RegFormEditor = () => {
                 hideLoader();
                 console.error(e);
                 throw new Error(e);
-            })
+            });
     }
 
     return (

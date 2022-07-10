@@ -1,6 +1,7 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
+const {validateCorrectNumberOfOptions} = require('../../../util/validate');
 const { members } = require('..');
 const _ = require('lodash');
 
@@ -52,10 +53,16 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
  * Modify form sections/questions that exist (upsert)
  * 
  * @param {Array[Object]} sections: details about the form sections/question to add.
+ * @param {Array[Object]} res:      HTTP response object
  */
-forms.updateFormSections = async (sections) => {
+forms.updateFormSections = async (sections, res) => {
     if (!sections || sections.length === 0) {
         return;
+    }
+
+    if (!validateCorrectNumberOfOptions(sections)) {
+        res.statusCode = 400;
+        return Promise.reject(Error("A form section has the wrong number of options. Ensure all Checkbox, Radio and Dropdown sections have 2 or more options configured."));
     }
 
     return util.handleWrapper(async () => {
@@ -70,10 +77,7 @@ forms.updateFormSections = async (sections) => {
                 }
             }
         });
-        FormSection.bulkWrite(dbPayload)
-            .then(console.log.bind(console, 'BULK update OK'))
-            .catch(console.error.bind(console, 'BULK update error'));
-        return {};
+        return await FormSection.bulkWrite(dbPayload);
     });
 }
 
@@ -85,7 +89,7 @@ forms.updateFormSections = async (sections) => {
  */
 forms.createForm = async (formData, res) => {
     return util.handleWrapper(async () => {
-        forms.updateFormSections(formData.sections); // TODO: this should be in a transaction.
+        await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
 
         if (formData.sections) {
             const formSectionNamesToIds = await getFormSectionNamesToIds();
@@ -114,7 +118,7 @@ forms.createForm = async (formData, res) => {
                 throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
             }
             res.statusCode = 500;
-            throw new Error(err);
+            throw err;
         }
     });
 }
@@ -126,7 +130,7 @@ forms.createForm = async (formData, res) => {
  */
 forms.updateFormMetadata = async (formId, formData, res) => {
     return util.handleWrapper(async () => {
-        forms.updateFormSections(formData.sections);  // TODO: this should be in a transaction.
+        await forms.updateFormSections(formData.sections, res);  // TODO: this should be in a transaction.
         
         if (formData.sections) {
             const formSectionNamesToIds = await getFormSectionNamesToIds();
@@ -156,7 +160,7 @@ forms.updateFormMetadata = async (formId, formData, res) => {
                 throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
             }
             res.statusCode = 500;
-            throw new Error(err);
+            throw err;
         }
     });
 }
