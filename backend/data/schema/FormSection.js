@@ -43,7 +43,7 @@ const FormSectionSchema = new Schema({
         required: true
     },
     customizable: {
-        type: Boolean,
+        type: String,
         description: "delete means the section can be deleted. edit means the section can be edited, but not deleted.",
         enum: ["edit", "delete"]
     }
