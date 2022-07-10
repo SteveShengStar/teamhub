@@ -1,5 +1,6 @@
 import React from 'react'
 import { initializeStore } from '.'
+import { Provider } from 'react-redux';
 
 const isServer = typeof window === 'undefined'
 const __NEXT_REDUX_STORE__ = '__NEXT_REDUX_STORE__'
@@ -44,7 +45,9 @@ export default App => {
     }
 
     render() {
-      return <App {...this.props} reduxStore={this.reduxStore} />
+      return <Provider store={this.reduxStore}>
+                <App {...this.props} reduxStore={this.reduxStore} />
+             </Provider>;
     }
   }
 }
