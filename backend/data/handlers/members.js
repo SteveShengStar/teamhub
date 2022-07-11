@@ -94,7 +94,7 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
             if (showToken) {
                 query.select('+token');
             }
-            return await query.exec();
+            return await query.lean(); // TODO: regression-test this change.
         } else {
             let res;
             if (showToken) {
