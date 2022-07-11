@@ -2,7 +2,7 @@ const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
 const {validateCorrectNumberOfOptions} = require('../../../util/validate');
-const { members } = require('..');
+const members = require('./members');
 const _ = require('lodash');
 
 const forms = {};
@@ -33,18 +33,34 @@ forms.fetchFormData = async (formId) => {
  */
 forms.fetchFormAndMemberData = async (userId, formId) => {
     return util.handleWrapper(async () => {
-        let response = {};
-        response.form = await Form.findOne({_id: formId})
-            .select(['title', 'description', 'sections'])
-            .populate({
-                path : 'sections',
-                populate : {
-                  path : 'section'
-                }
-            });
-        const selectFields = response.form.sections.map(s => s.section.name);
-        response.member = await members.search({_id: userId}, selectFields);
-        return response
+        const response = {};
+        response.form = await forms.fetchFormData(formId);
+        console.log("response")
+        console.log(response);
+
+        const memberPropsToFetch = response.form.sections.map(s => s.section.name);
+        memberPropsToFetch.push('miscDetails');
+        const idx = memberPropsToFetch.indexOf('fullName');
+        if (idx !== -1) {
+            memberPropsToFetch[idx] = 'name';
+        }
+        const selectList = {};
+        memberPropsToFetch.map(p => { selectList[p] = 1 });
+        let memberData = (await members.search({_id: userId}, selectList))[0];
+        console.log("memberPropsToFetch")
+        console.log(memberPropsToFetch);
+        if (memberData.miscDetails) {
+            Object.keys(memberData.miscDetails)
+                .filter(p => p !== '_id' && p !== '__v' && memberPropsToFetch.includes(p))
+                .map(
+                    p => {
+                        memberData[p] = memberData.miscDetails[p];
+                    }
+                );
+            delete memberData.miscDetails;
+        }
+        response.user = memberData;
+        return response;
     });
 }
 
