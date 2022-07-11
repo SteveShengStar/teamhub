@@ -11,7 +11,7 @@ export const validateField = (formData, formErrors, field) => {
         case 'fullName':
             validateName(formData, formErrors, field);
             break;
-        case 'email':
+        case 'personalEmail':
             validateEmail(formData, formErrors, field);
             break;
         case 'studentId':

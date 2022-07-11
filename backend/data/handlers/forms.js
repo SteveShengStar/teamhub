@@ -1,11 +1,24 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
-const {validateCorrectNumberOfOptions} = require('../../../util/validate');
+// const {validateCorrectNumberOfOptions} = require('../../../util/validate');
 const members = require('./members');
 const _ = require('lodash');
 
 const forms = {};
+
+const validateCorrectNumberOfOptions = (sections) => {
+    return sections.every(s => {
+        switch(s.type) {
+            case 'checkbox':
+            case 'radio':
+            case 'menu_single':
+            case 'menu_multi':
+                return s.options && s.options.length > 1;
+        }
+        return true;
+    });
+};
 
 /**
  * Fetch Form metadata.

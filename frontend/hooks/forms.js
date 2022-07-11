@@ -9,6 +9,15 @@ export const useFormDetails = (formId, dispatch, router) => {
   }, dispatch, router);
 }
 
+export const useFormAndUserDetails = (formId, dispatch, router, userId) => {
+  return refreshable('/api/form/' + formId + '/user/' + userId, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }, dispatch, router);
+}
+
 export const updateFormDetails = (formId, dispatch, router, reqBody) => {
   return refreshable('/api/form/' + formId + '/updateForm', {
     method: "PUT",
