@@ -87,7 +87,7 @@ const FormInfoCard = styled(Card)`
 const Bullet = ({text, className}) => {
     return (
         <CheckmarkRow className={className}>
-            <i className="fa fa-check-circle fa-2x" style={{marginRight: "15px"}}/>
+            <i className="fa fa-solid fa-square-check fa-2x" style={{marginRight: "15px"}}/>
             <Text>{text}</Text>
         </CheckmarkRow>
     );
