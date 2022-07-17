@@ -11,6 +11,18 @@ import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
 import { useFormDetails, updateFormDetails } from '../../../frontend/hooks/forms';
 import Section from "../../../frontend/components/organisms/formsection/Section";
 import Button from '../../../frontend/components/atoms/Button';
+import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
+
+const SaveButton = styled(ActionButton)`
+    background-color: ${props => props.theme.colors.primary};
+    color: ${props => props.theme.colors.white};
+`;
+
+const CancelButton = styled(ActionButton)`
+    background-color: ${props => props.theme.colors.greys[1]};
+    color: ${props => props.theme.colors.black};
+`;
+
 // import {validateCorrectNumberOfOptions} from '../../../util/validate';
 
 const validateCorrectNumberOfOptions = (sections) => {
@@ -78,22 +90,23 @@ const SidebarButton = styled(Button)`
     box-sizing: border-box;
     padding: 15px;
     display: flex;
+    cursor: ${props => props.disabled ? `default` : `pointer`}; 
 
     &:hover {
-        transform: scale(1.0);
+        transform: scale(1.0); /* override the default behaviour of expanding the button */
     }
     &:hover ${SidebarButtonText} {
-        width: 185px;
+        width: ${props => props.disabled ? `0` : `185px`}; /* do not pop out the text when button is disabled */
     }
 `;
 
-const Sidebar = ({options}) => {
-    console.log(options)
+const Sidebar = ({data}) => {
+    console.log(data)
     return (
         <SidebarContainer>
             {
-                options.map((opt, i) => (
-                    <SidebarButton key={i} variant='neutral' onClick={(e) => opt.callback(e)}>
+                data.map((opt, i) => (
+                    <SidebarButton key={i} variant='neutral' onClick={(e) => opt.callback(e)} disabled={opt.disabled}>
                         <SystemComponent mt="auto" mb="auto">
                             <SidebarButtonIcon src={'/static/' + opt.iconFileName}/>
                         </SystemComponent>
@@ -107,12 +120,27 @@ const Sidebar = ({options}) => {
     );
 }
 
-const handleExit = (e, router) => {
-    e.preventDefault();
-    router.push('/'); // TODO: change the router later.
+const ButtonRow = ({saveDisabled, handleSave, handleCancel}) => {
+    const theme = useContext(ThemeContext);
+
+    return (
+        <SystemComponent display="flex" justifyContent='center'>
+            <SaveButton mr={theme.space[2]} onClick={e => handleSave(e)} disabled={saveDisabled}>
+                Save
+            </SaveButton>
+            <CancelButton onClick={e => handleCancel(e)}>
+                Cancel
+            </CancelButton>
+        </SystemComponent>
+    )
 }
 
-const RegFormEditor = () => {
+const handleExit = (e, router) => {
+    e.preventDefault();
+    router.push('/form/admin/');
+}
+
+const FormEditor = () => {
     const theme = useContext(ThemeContext);
     const dispatch = useDispatch();
     const router = useRouter();
@@ -123,7 +151,7 @@ const RegFormEditor = () => {
 
     const loadFormSections = () => {
         showLoader();
-        useFormDetails('629c1f09fb67a48828a4ee8b', dispatch, router)
+        useFormDetails(router.query.formId, dispatch, router)
             .then(res => {
                 if (res.success) {
                     setFormTitle(res.body.title);
@@ -142,12 +170,12 @@ const RegFormEditor = () => {
                     );
                 } else {
                     alert("An error occurred when loading form sections !" + res);
-                    // TODO: handle more appropriately later
+                    // TODO: handle error more appropriately
                 } 
             })
             .catch(e => {
                 console.error(e);
-                throw new Error(e);
+                throw e;
             })
             .finally(() => {
                 hideLoader();
@@ -156,12 +184,12 @@ const RegFormEditor = () => {
 
     useEffect(() => {
         loadFormSections();
-    }, [])
+    }, []);
 
     const onTypeChange = (sectionName, newType) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -175,7 +203,7 @@ const RegFormEditor = () => {
     const onInputChange = (sectionName, inputFieldName, newValue) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -189,7 +217,7 @@ const RegFormEditor = () => {
     const onOptionChange = (sectionName, optionIdx, newValue) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -208,7 +236,7 @@ const RegFormEditor = () => {
     const onOptionAdd = (sectionName) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -219,7 +247,7 @@ const RegFormEditor = () => {
     const onOptionDelete = (sectionName, optionIdx) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -230,7 +258,7 @@ const RegFormEditor = () => {
     const onSectionDelete = (sectionName) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -257,7 +285,7 @@ const RegFormEditor = () => {
     const onSectionDuplicate = (sectionName) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newSection = {
@@ -272,7 +300,7 @@ const RegFormEditor = () => {
     const onToggleRequired = (sectionName, newRequiredState) => {
         const idx = formSections.findIndex(section => section.name === sectionName)
         if (idx === -1) {
-            throw new Error("register.js: Could not find the appropriate form section by section name.");
+            throw new Error(router.asPath + ": Could not find the appropriate form section by section name.");
         }
 
         const newFormSections = [...formSections];
@@ -298,6 +326,7 @@ const RegFormEditor = () => {
 
     const handleSave = (e) => {
         e.preventDefault();
+        showLoader();
         console.log("Saving form sections ...");
 
         if (!validateFormSections()){
@@ -314,10 +343,8 @@ const RegFormEditor = () => {
                 }
             })
         };
-        updateFormDetails('629c1f09fb67a48828a4ee8b', dispatch, router, reqBody)
-            .then((res) => {
-                // TODO: disable the save button after clicking save.
-                
+        updateFormDetails(router.query.formId, dispatch, router, reqBody)
+            .then((res) => {                
                 if (!res.success) {
                     // TODO: handle error case
                     console.error('Error occurred when updating form sections.')
@@ -325,11 +352,12 @@ const RegFormEditor = () => {
                 }
 
                 loadFormSections();
+                hideLoader();
                 console.log("Finished loading form sections.");
             }).catch(e => {
                 hideLoader();
                 console.error(e);
-                throw new Error(e);
+                throw e;
             });
     }
 
@@ -337,10 +365,10 @@ const RegFormEditor = () => {
         <PageTemplate>
             <Container>
                 {loader}
-                <Sidebar options={[ 
-                    {label: "Add Question", iconFileName: 'plus-solid.png', callback: onSectionAdd},
-                    {label: "Save", iconFileName: 'floppy-disk-solid.png', callback: handleSave},
-                    {label: "Exit", iconFileName: 'backward-solid.png', callback: (e) => handleExit(e, router)},
+                <Sidebar data={[ 
+                    {label: "Add Question", iconFileName: 'plus-solid.png', callback: onSectionAdd, disabled: loader},
+                    {label: "Save", iconFileName: 'floppy-disk-solid.png', callback: handleSave, disabled: loader},
+                    {label: "Exit", iconFileName: 'backward-solid.png', callback: (e) => handleExit(e, router), disabled: false},
                 ]}/>
                 {
                     formSections.map(section => 
@@ -364,8 +392,9 @@ const RegFormEditor = () => {
                         />
                     )
                 }
+                <ButtonRow saveDisabled={loader} handleSave={handleSave} handleCancel={e => handleExit(e, router)}/>
             </Container>
         </PageTemplate>
     );
 }
-export default RegFormEditor
+export default FormEditor;

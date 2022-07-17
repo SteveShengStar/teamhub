@@ -140,7 +140,7 @@ const Selectable = ({type, sectionName, question, helpText, options = [], requir
             handleSectionDuplicate={handleSectionDuplicate}
             handleToggleRequired={handleToggleRequired}
         >
-            <SystemComponent display="grid" gridTemplateColumns="12px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
+            <SystemComponent display="grid" gridTemplateColumns="20px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
                 <OptionsList
                     options={options}
                     type={type}
