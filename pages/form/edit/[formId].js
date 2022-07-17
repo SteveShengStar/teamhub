@@ -326,9 +326,6 @@ const FormEditor = () => {
 
     const handleSave = (e) => {
         e.preventDefault();
-        showLoader();
-        console.log("Saving form sections ...");
-
         if (!validateFormSections()){
             return;
         }
@@ -343,6 +340,9 @@ const FormEditor = () => {
                 }
             })
         };
+
+        console.log("Saving form sections ...");
+        showLoader();
         updateFormDetails(router.query.formId, dispatch, router, reqBody)
             .then((res) => {                
                 if (!res.success) {
@@ -352,11 +352,11 @@ const FormEditor = () => {
                 }
 
                 loadFormSections();
-                hideLoader();
                 console.log("Finished loading form sections.");
-            }).catch(e => {
                 hideLoader();
+            }).catch(e => {
                 console.error(e);
+                hideLoader();
                 throw e;
             });
     }
