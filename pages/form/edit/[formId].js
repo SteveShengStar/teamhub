@@ -324,7 +324,7 @@ const FormEditor = () => {
         return true;
     }
 
-    const handleSave = (e) => {
+    const handleSave = (e, exitEditorView = false) => {
         e.preventDefault();
         if (!validateFormSections()){
             return;
@@ -351,13 +351,18 @@ const FormEditor = () => {
                     return;
                 }
 
+                if (exitEditorView) {
+                    hideLoader();
+                    router.push('/form/admin/');
+                    return;
+                }
+
                 loadFormSections();
                 console.log("Finished loading form sections.");
-                hideLoader();
             }).catch(e => {
                 console.error(e);
                 hideLoader();
-                throw e;
+                throw new Error("An Error occurred when saving the form sections" + e);
             });
     }
 
@@ -392,7 +397,7 @@ const FormEditor = () => {
                         />
                     )
                 }
-                <ButtonRow saveDisabled={loader} handleSave={handleSave} handleCancel={e => handleExit(e, router)}/>
+                <ButtonRow saveDisabled={loader} handleSave={(e) => handleSave(e, true)} handleCancel={e => handleExit(e, router)}/>
             </Container>
         </PageTemplate>
     );

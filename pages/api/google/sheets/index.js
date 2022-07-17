@@ -17,7 +17,7 @@ module.exports = async (req, res) => {
             res.statusCode = 200;
             
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.exportsheet.readfile(token);
+                return await data.googlesheets.readfile(token);
             })));
         } else {
             res.statusCode = 401;

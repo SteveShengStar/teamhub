@@ -5,9 +5,9 @@ const {getAll} = require('./members');
 
 const {RETURNING_MEMBERS_FIELDS, TEAM_ROSTER_FIELDS, RETURNING_MEMBERS_SPREADSHEET_HEADERS, TEAM_ROSTER_SPREADSHEET_HEADERS} = require('./constants');
 
-const exportsheet = {};
+const googlesheets = {};
 
-exportsheet.readfile = async (token) => {
+googlesheets.readfile = async (token) => {
     const client = new OAuth2Client(authConfig['client_id']);
     client.setCredentials({
         access_token: token
@@ -21,7 +21,20 @@ exportsheet.readfile = async (token) => {
     return metadata;
 }
 
-exportsheet.writeTeamRoster = async (token) => {
+googlesheets.writefile = async (token, formName) => {
+    switch(formName) {
+        case 'register':
+            exportRegister(token);
+            break;
+        case 'returning':
+            exportReturning(token);
+            break;
+        case 'startofterm':
+            break;
+    }
+}
+
+const exportRegister = async (token) => {
     const fields = getFields(TEAM_ROSTER_FIELDS);
     const userData = (await getAll(fields)).map(row => {
         return {
@@ -73,7 +86,7 @@ exportsheet.writeTeamRoster = async (token) => {
     return response.config.url;
 }
 
-exportsheet.writeReturningMembers = async (token) => {
+const exportReturning = async (token) => {
     const fields = getFields(RETURNING_MEMBERS_FIELDS);
     const userData = (await getAll(fields)).map(row => {
         return {
@@ -91,9 +104,26 @@ exportsheet.writeReturningMembers = async (token) => {
         
     const spreadsheetData = [RETURNING_MEMBERS_SPREADSHEET_HEADERS];
     spreadsheetData.push(...userData.map(data => Object.values(data)));
+
+    //create new file with Drive api
+    const currentDate = new Date()
+    const fileName = `Returning Members Form Responses - ${currentDate.toLocaleString('en-CA', { timeZone: 'EST' })}` 
+    const fileMetadata = {
+        'name' : fileName,
+        parents: [],
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+    };
+    const driveRequest = {
+        resource: fileMetadata,
+        fields: 'id',
+    };
+    const googleDrive = getGoogleDriveClient(token);
+    const driveResponse = await googleDrive.files.create(driveRequest);
+    console.log(driveResponse);
+
     const request = {
-        spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys',
-        range: 'Sheet2',  
+        spreadsheetId: driveResponse.data.id,
+        range: 'Sheet1',  
         valueInputOption: 'USER_ENTERED',
         resource: {
             values: spreadsheetData
@@ -129,4 +159,4 @@ const getFields = (listOfFields) => {
     return fields;
 }
 
-module.exports = exportsheet;
+module.exports = googlesheets;
