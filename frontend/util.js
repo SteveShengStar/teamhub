@@ -26,7 +26,7 @@ export const validateField = (formData, formErrors, field) => {
             validateBoolean(formData, formErrors, field);
             break;
         case 'termDescription':
-        case 'subteam':
+        case 'subteams':
         case 'nextTermRole':
         case 'nextTermActivity':
         case 'program':
@@ -55,7 +55,7 @@ export const isInvalidStudentId = (number) => {
 }
 
 const validateExists = (formData, formErrors, field) => {
-    if (!formData[field].trim()) {
+    if (!formData[field]?.trim()) {
         formErrors[field] = true;
     }
 }

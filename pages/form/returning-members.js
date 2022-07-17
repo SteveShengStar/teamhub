@@ -29,7 +29,7 @@ const ReturningMembersForm = () => {
     nextSchoolTerm: '',
     previousTerms: [],
     futureTerms: [],
-    subteam: '',
+    subteams: '',
     nextTermActivity: '',
     nextTermRole: '',
     personalEmail: '',
@@ -41,7 +41,7 @@ const ReturningMembersForm = () => {
     fullName: false,
     nextSchoolTerm: false,
     nextTermActivity: false,
-    subteam: false,
+    subteams: false,
     nextTermRole: false,
     personalEmail: false,
   });
@@ -78,7 +78,8 @@ const ReturningMembersForm = () => {
                     setFormSections(sections);
                     setFormValues({
                       ...memberData,
-                      fullName: "",
+                      fullName: (memberData.name.first ?? '') + ' ' + (memberData.name.last ?? ''),
+                      subteams: memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams[0].name : '',
                       previousTerms: [],
                       futureTerms: []
                   });
@@ -86,7 +87,7 @@ const ReturningMembersForm = () => {
             })
             .catch(e => {
                 console.error(e);
-                throw new Error(e);
+                throw e;
             })
             .finally(() => {
                 hideLoader();
@@ -98,7 +99,7 @@ const ReturningMembersForm = () => {
     validateField(formValues, formErrors, 'fullName');
     validateField(formValues, formErrors, 'personalEmail');
     validateField(formValues, formErrors, 'nextSchoolTerm');
-    validateField(formValues, formErrors, 'subteam');
+    validateField(formValues, formErrors, 'subteams');
     validateField(formValues, formErrors, 'nextTermRole');
     validateField(formValues, formErrors, 'nextTermActivity');
 
@@ -114,17 +115,18 @@ const ReturningMembersForm = () => {
 
     const formHasErrors = Object.values(formErrors).some(err => err);
     if (!formHasErrors) {
-      const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteam, nextTermActivity,
+      const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteams, nextTermActivity,
               nextTermRole, personalEmail, termComments, desiredWork} = formValues;
 
       const fullNameParts = fullName.split(/\s+/);
       updateUser(dispatch, {
           name: {
               first: fullNameParts[0].trim(),
-              last: fullNameParts[fullNameParts.length - 1].trim()
+              last: fullNameParts[fullNameParts.length - 1].trim(),
+              display: fullName
           },
           personalEmail: personalEmail.trim(),
-          subteams: [subteam], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
+          subteams: [subteams], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
           activeSchoolTerms: [...previousTerms, ...futureTerms],
           nextSchoolTerm,
           nextTermActivity,

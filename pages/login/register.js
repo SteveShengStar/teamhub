@@ -39,7 +39,7 @@ const RegistrationForm = () => {
         studentId: "",  
         termStatus: "", 
         memberType: "", 
-        subteam: "",
+        subteams: "",
         previousTerms: [], 
         futureTerms: [], 
         designCentreSafety: false,
@@ -55,7 +55,7 @@ const RegistrationForm = () => {
         studentId: false,  
         termStatus: false, 
         memberType: false, 
-        subteam: false,
+        subteams: false,
         designCentreSafety: false,
         whmis: false, 
         machineShop: false,
@@ -92,6 +92,7 @@ const RegistrationForm = () => {
                         setFormSections(sections);
                         setFormValues({
                             ...memberData,
+                            subteams: memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams[0].name : '',
                             fullName: "",
                             memberType: "",
                             previousTerms: [],
@@ -117,7 +118,7 @@ const RegistrationForm = () => {
         validateField(formValues, formErrors, 'studentId');
         validateField(formValues, formErrors, 'termStatus');
         validateField(formValues, formErrors, 'memberType');
-        validateField(formValues, formErrors, 'subteam');
+        validateField(formValues, formErrors, 'subteams');
         validateField(formValues, formErrors, 'designCentreSafety');
         validateField(formValues, formErrors, 'whmis');
         validateField(formValues, formErrors, 'machineShop');
@@ -138,7 +139,7 @@ const RegistrationForm = () => {
             loginTransition.setVisible(false);
 
             const {fullName, phoneNumber, personalEmail, program, studentId, termStatus, memberType, 
-                subteam, designCentreSafety, whmis, machineShop, previousTerms, futureTerms} = formValues;
+                subteams, designCentreSafety, whmis, machineShop, previousTerms, futureTerms} = formValues;
 
             const fullNameParts = fullName.split(/\s+/);
             updateUser(dispatch, {
@@ -153,7 +154,7 @@ const RegistrationForm = () => {
                 activeSchoolTerms: [...previousTerms, ...futureTerms],
                 termStatus,
                 memberType,
-                subteams: [subteam], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
+                subteams: [subteams], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
                 designCentreSafety,
                 whmis,
                 machineShop,
