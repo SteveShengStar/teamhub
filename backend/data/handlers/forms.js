@@ -21,6 +21,15 @@ const validateCorrectNumberOfOptions = (sections) => {
 };
 
 /**
+ * Fetch IDs and names of all Waterloop forms
+ */
+forms.getAllForms = async () => {
+    return util.handleWrapper(async () => {
+        return await Form.find({}).select({_id: 1, name: 1}).exec();
+    });
+}
+
+/**
  * Fetch Form metadata.
  * 
  * @param {String} formId: ID of the form.
