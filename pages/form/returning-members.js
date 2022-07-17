@@ -50,6 +50,7 @@ const ReturningMembersForm = () => {
 
   useEffect(() => {
     if (hydrated) {
+        showLoader();
         useFormAndUserDetails('62cb8828c4064c4a26995246', dispatch, router, user._id)
             .then(res => {
                 if (res.success) {
