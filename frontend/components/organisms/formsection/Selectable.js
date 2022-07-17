@@ -26,7 +26,7 @@ const RemoveOptionButton = styled(SystemComponent)`
     grid-column: 3;
     display: flex;
     align-items: end;
-    padding-bottom: ${props => props.theme.space[2]}px;
+    padding-bottom: ${props => props.theme.space[4]}px;
     cursor: pointer;
 `;
 
@@ -51,7 +51,7 @@ const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete, read
             {
                 !readOnly &&
                 <RemoveOptionButton>
-                    <span className="fa fa-solid fa-xmark" onClick={() => handleOptionDelete(optionIdx)}/>
+                    <span className="fa fa-solid fa-xmark fa-lg" onClick={() => handleOptionDelete(optionIdx)}/>
                 </RemoveOptionButton>
             }
         </>

@@ -64,7 +64,7 @@ const ProfileSummary = ({dataLoaded = false,
                         schoolterm = "", 
                         email = ""}) => {
 
-    const faClassnames = ['fa-address-card-o', 'fa-address-card-o', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
+    const faClassnames = ['fa-solid fa-user', 'fa-solid fa-user', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
     const userInformation = {
         firstName: {
             label: 'First Name',
