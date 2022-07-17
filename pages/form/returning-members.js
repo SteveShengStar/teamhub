@@ -62,7 +62,7 @@ const ReturningMembersForm = () => {
                         delete newObj._id;
                         delete newObj.section;
                         return newObj;
-                    }).sort(s => 
+                    }).sort(
                         (a, b) => a.position - b.position
                     );
                     let memberData = res.body.user;
@@ -115,6 +115,7 @@ const ReturningMembersForm = () => {
 
     const formHasErrors = Object.values(formErrors).some(err => err);
     if (!formHasErrors) {
+      showLoader();
       const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteams, nextTermActivity,
               nextTermRole, personalEmail, termComments, desiredWork} = formValues;
 
@@ -133,10 +134,13 @@ const ReturningMembersForm = () => {
           nextTermRole,
           termComments: termComments.trim(),
           desiredWork: desiredWork.trim(),
-      }, user._id, router).then(res => {
-          console.log("Update User Info. Completed.");
-          // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
-      });
+      }, user._id, router)
+        .then(res => {
+            console.log("User Info Update Completed.");
+            // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
+        }).finally(() => {        
+            hideLoader();
+        });
     }
   };
 

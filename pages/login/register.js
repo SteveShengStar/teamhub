@@ -76,29 +76,12 @@ const RegistrationForm = () => {
                             delete newObj._id;
                             delete newObj.section;
                             return newObj;
-                        }).sort(s => 
+                        }).sort(
                             (a, b) => a.position - b.position
                         );
-                        let memberData = res.body.user;
-                        if (memberData.miscDetails) {
-                            memberData = {
-                                ...memberData,
-                                ..._.omit(memberData.miscDetails, '_id')
-                            }
-                            delete memberData.miscDetails;
-                        }
-                        console.log("memberData");
-                        console.log(memberData);
                         setFormSections(sections);
-                        setFormValues({
-                            ...memberData,
-                            subteams: memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams[0].name : '',
-                            fullName: "",
-                            memberType: "",
-                            previousTerms: [],
-                            futureTerms: []
-                        });
                     }
+                    // TODO: handle error case
                 })
                 .catch(e => {
                     console.error(e);
@@ -136,6 +119,7 @@ const RegistrationForm = () => {
 
         const formHasErrors = Object.values(formErrors).some(err => err);
         if (!formHasErrors) {
+            showLoader();
             loginTransition.setVisible(false);
 
             const {fullName, phoneNumber, personalEmail, program, studentId, termStatus, memberType, 
@@ -160,6 +144,8 @@ const RegistrationForm = () => {
                 machineShop,
             }, user._id, router).then(res => {
                 router.push("/")
+            }).finally(() => {
+                hideLoader();
             });
         }        
     }
