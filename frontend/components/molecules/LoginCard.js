@@ -33,6 +33,7 @@ const Login = ({onFinish, loginRef}) => {
                     onSuccess={responseGoogle}
                     onFailure={responseGoogle}
                     cookiePolicy={'single_host_origin'}
+                    prompt='consent'
                     scope="profile email https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive"
                 />
             </SystemComponent>

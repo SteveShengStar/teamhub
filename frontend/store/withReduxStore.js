@@ -45,9 +45,7 @@ export default App => {
     }
 
     render() {
-      return <Provider store={this.reduxStore}>
-                <App {...this.props} reduxStore={this.reduxStore} />
-             </Provider>;
+      return <App {...this.props} reduxStore={this.reduxStore} />;
     }
   }
 }
