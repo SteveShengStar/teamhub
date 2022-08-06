@@ -6,6 +6,7 @@
 import App from 'next/app';
 import React from 'react';
 import withReduxStore from "../frontend/store/withReduxStore"
+import { Provider } from 'react-redux';
 
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -43,7 +44,7 @@ class MyApp extends App {
     }
 
     render () {
-        const { Component, pageProps, router } = this.props;
+        const { Component, pageProps, router, reduxStore } = this.props;
 
         let index = -1;
         if (router && router.route) {
@@ -53,15 +54,17 @@ class MyApp extends App {
         }
         
         return (
-            <ThemeProvider theme={theme}>
-                <PersistGate
-                    loading={<Component {...pageProps} />}
-                    persistor={this.persistor}
-                >
-                    <Nav navItems={router.route.indexOf('/login') === -1 ? navItems : []} index={index}/>
-                    <Component {...pageProps} />
-                </PersistGate>
-            </ThemeProvider>
+            <Provider store={reduxStore}>
+                <ThemeProvider theme={theme}>
+                    <PersistGate
+                        loading={<Component {...pageProps} />}
+                        persistor={this.persistor}
+                    >
+                        <Nav navItems={router.route.indexOf('/login') === -1 ? navItems : []} index={index}/>
+                        <Component {...pageProps} />
+                    </PersistGate>
+                </ThemeProvider>
+            </Provider>
         );
     }
 }
