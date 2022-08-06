@@ -1,5 +1,7 @@
-jest.setTimeout(15000);
+global.TextEncoder = require("util").TextEncoder;
+global.TextDecoder = require("util").TextDecoder;
 
+jest.setTimeout(15000);
 
 const data = require('../backend/data/index');
 const skills = require('../backend/data/handlers/skills');
@@ -9,9 +11,7 @@ beforeAll(async () => {
 });
 
 describe('Testing Utility functions', () => {
-
     it('Test Handle Wrapper', async () => {
-
         const test = async () => {
             return new Promise((resolve => {
                 setTimeout(() => {
@@ -55,7 +55,6 @@ describe('Testing Utility functions', () => {
         // Check if array contains ids
         expect(resp[0].length).toBe(24);
     });
-
 });
 
 afterAll(() => {

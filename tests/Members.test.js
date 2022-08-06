@@ -1,28 +1,12 @@
+global.TextEncoder = require("util").TextEncoder;
+global.TextDecoder = require("util").TextDecoder;
+
 jest.setTimeout(15000);
 
 const data = require('../backend/data/index');
 const Member = require('../backend/data/schema/Member');
 const UserDetails = require('../backend/data/schema/UserDetails');
-
-const addTestMember = async (testData) => {
-    return data.util.resWrapper(async () => {
-        return await data.members.add(testData);
-    });
-};
-
-// Drop member before / after running a test
-const dropTestMember = async (testData) => {
-    console.log("Cleaning up test data");
-
-    // Drop the corresponding UserDetails record first.
-    let {miscDetails} = testData;
-    if (miscDetails) {
-        await UserDetails.deleteMany({'_id' : miscDetails._id});
-    }
-
-    // Then, drop the Member record.
-    return await Member.deleteMany({ '_id': testData._id });
-};
+const _ = require('lodash');
 
 const parseBoolean = (str) => {
     return str && str.toLowerCase() === 'true';
@@ -47,6 +31,29 @@ const verifyKeysNotInObject = (obj, props) => {
     expect(keysNotInObject).toBe(true);    
 }
 
+const addTestMember = async (testData) => {
+    const memberFields = Object.keys(Member.schema.paths);
+    let userSummary = _.omit(_.pick(testData, memberFields), "_id");
+    let userDetails = _.omit(testData, [...memberFields, "_id"]);
+
+    const userDetailsResponse = await UserDetails.create(userDetails);
+    userSummary.miscDetails = userDetailsResponse._id;
+    userSummary = await data.members.replacePayloadWithIds(userSummary);
+    return await Member.create(userSummary);
+};
+
+// Clean Up member data before and after running a test
+const dropTestMember = async (testData) => {
+    console.log("Cleaning up test data");
+
+    // UserDetails collection contains all the misc. data of the user
+    let {miscDetails} = testData;
+    if (miscDetails) {
+        await UserDetails.deleteMany({'_id' : miscDetails._id});
+    }
+    // Member collection contains the core (frequently-queried) user data
+    return await Member.deleteMany({ '_id': testData._id });
+};
 
 beforeAll(async () => {
     await data.initIfNotStarted();
@@ -87,16 +94,18 @@ describe('Testing Add Member', () => {
             'tokenExpiry': "8998999",
         };
 
-        // Add the new member
-        let resp = await addTestMember(memberData);
-        expect(resp.success).toBe(true);
+        // Add a new member
+        let res = await data.util.resWrapper(async () => {
+            return await data.members.add(memberData);
+        });
+        expect(res.success).toBe(true);
 
         // Find the member that was just created
         let memberSummary = await data.members.search({
-            '_id': resp.body._id
+            '_id': res.body._id
         });
 
-        // Test that all member data was stored correctly
+        // Test that the member data was stored/inserted correctly
         memberSummary = memberSummary[0];
         expect(memberSummary.name.first).toBe(memberData.name.first);
         expect(memberSummary.name.last).toBe(memberData.name.last);
@@ -113,15 +122,13 @@ describe('Testing Add Member', () => {
         expect(typeof memberSummary.tokenExpiry).toBe('number');
 
         // Ensure that an empty record was added to UserDetails collection as well.
-        const {miscDetails} = memberSummary;
-        expect(miscDetails).toBeTruthy();
-        let memberDetails = await UserDetails.findOne({_id: miscDetails}).exec();
+        expect(memberSummary.miscDetails).toBeTruthy();
+        const memberDetails = await UserDetails.findOne({_id: memberSummary.miscDetails}).exec();
         expect(memberDetails).toBeTruthy();
         expect(typeof memberDetails).toBe('object');
-
         verifyKeysNotInObject(memberDetails, Object.keys(memberData));
 
-        // Cleanup all test data.
+        // Clean Up test data.
         await dropTestMember(memberSummary);
     });
 
@@ -148,16 +155,18 @@ describe('Testing Add Member', () => {
             machineShop: "false",
         }
 
-        // Test adding the member
-        let resp = await addTestMember({...memberData, ...miscDetails});
-        expect(resp.success).toBe(true);
+        // Test adding a new member
+        const res = await data.util.resWrapper(async () => {
+            return await data.members.add({...memberData, ...miscDetails});
+        });
+        expect(res.success).toBe(true);
 
         // Find the member that was just created
         let memberSummary = await data.members.search({
             'email': 'terry.chow@waterloop-domain.ca'
         });
 
-        // Test that all member data was stored correctly
+        // Verify that all the member data was stored/inserted correctly
         memberSummary = memberSummary[0];
         expect(memberSummary.name.first).toBe(memberData.name.first);
         expect(memberSummary.name.last).toBe(memberData.name.last);
@@ -196,22 +205,17 @@ describe('Testing Delete Member', () => {
             'email': 'testuser2@testing.ca'
         };
 
-        let resp = await data.members.add(memberData);
-        let id = resp._id;
-        let {miscDetails} = resp;
-
-        resp = await data.util.resWrapper(async () => {
+        const {_id: id, miscDetails} = await addTestMember(memberData);
+        const res = await data.util.resWrapper(async () => {
             return await data.members.delete({ 'email': 'testuser2@testing.ca' });
         });
-        expect(resp.success).toBe(true);
+        expect(res.success).toBe(true);
 
-        // Try finding the inserted user
-        let memberSummary = await data.members.search({
+        // Ensure the member was deleted
+        const memberSummary = await data.members.search({
             '_id': id
         });
-        let memberDetails = await UserDetails.findOne({'_id': miscDetails});
-
-        // Ensure member is deleted
+        const memberDetails = await UserDetails.findOne({'_id': miscDetails});
         expect(memberSummary).toStrictEqual([]);
         expect(memberDetails).toBeFalsy();
     });
@@ -228,22 +232,17 @@ describe('Testing Delete Member', () => {
             'termStatus': "Co-op term, working on Waterloop remotely",
         };
 
-        let resp = await data.members.add(memberData);
-        let id = resp._id;
-        let {miscDetails} = resp;
-
-        resp = await data.util.resWrapper(async () => {
+        let {_id: id, miscDetails} = await data.members.add(memberData);
+        const res = await data.util.resWrapper(async () => {
             return await data.members.delete({ 'name.first': 'TestUser2' });
         });
-        expect(resp.success).toBe(true);
+        expect(res.success).toBe(true);
 
-        // Try finding the inserted user
+        // Ensure member was deleted
         let memberSummary = await data.members.search({
             '_id': id
         });
         let memberDetails = await UserDetails.findOne({'_id': miscDetails});
-
-        // Ensure member is deleted
         expect(memberSummary).toStrictEqual([]);
         expect(memberDetails).toBeFalsy();
     });
@@ -260,16 +259,15 @@ describe('Testing Update Member', () => {
             'email': 'jenny.shrin@testing.ca',
             'projects': ['TeamHub', 'Website'],
         };
-        let resp = await addTestMember(memberData);
-        let {miscDetails} = resp;
+        let {miscDetails} = await addTestMember(memberData);
 
-        resp = await data.util.resWrapper(async () => {
+        const res = await data.util.resWrapper(async () => {
             return await data.members.updateMember(
                 { 'email': 'jenny.shrin@testing.ca' }, 
                 { 'name': {'first': 'Cherry'} , 'email': 'cherry.shrin@testing.ca', 'projects': [], 'subteams': ['Electrical'] }
             );
         });
-        expect(resp.success).toBe(true);
+        expect(res.success).toBe(true);
 
         // Check to see if info. was updated
         let memberSummary = await data.members.search({
@@ -302,7 +300,7 @@ describe('Testing Update Member', () => {
         };
         await addTestMember(memberData);
 
-        let resp = await data.util.resWrapper(async () => {
+        const res = await data.util.resWrapper(async () => {
             return await data.members.updateMember(
                 { 'email': 'jenny.shrin@testing.ca' }, 
                 {
@@ -316,7 +314,7 @@ describe('Testing Update Member', () => {
                 }
             );
         });
-        expect(resp.success).toBe(true);
+        expect(res.success).toBe(true);
 
         // Check to see if info. was updated
         let memberSummary = await data.members.search({
