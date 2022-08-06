@@ -136,7 +136,7 @@ members.add = async (userPayload) => {
 
         const userDetailsResponse = await UserDetails.create(userDetails);
         userSummary.miscDetails = userDetailsResponse._id;
-        userSummary = await replacePayloadWithIds(userSummary);
+        userSummary = await members.replacePayloadWithIds(userSummary);
         const res = await Member.create(userSummary);
         return res;
     });
@@ -175,7 +175,7 @@ members.updateMember = async (filter, payload) => {
 
     return util.handleWrapper(async () => {
         if (!_.isEmpty(memberSummary)) {
-            memberSummary = await replacePayloadWithIds(memberSummary);
+            memberSummary = await members.replacePayloadWithIds(memberSummary);
             await Member.updateOne(filter, memberSummary).exec();
         }
         if (!_.isEmpty(memberDetails)) {
@@ -194,7 +194,7 @@ members.updateMember = async (filter, payload) => {
  */
 members.updateAllMembers = async (payload) => {
     return util.handleWrapper(async () => {
-        payload = await replacePayloadWithIds(payload);
+        payload = await members.replacePayloadWithIds(payload);
         return (await Member.updateMany({}, payload).exec());
     });
 };
@@ -205,7 +205,7 @@ members.updateAllMembers = async (payload) => {
  * @param {Object} filter: selection criteria for selecting which members to give the new task to
  * @param {Object} newTask: details describing the new task
  */
- members.assignTaskToAllMembers = async (filter, newTask) => {
+members.assignTaskToAllMembers = async (filter, newTask) => {
     return util.handleWrapper(async () => {
         return await Member.updateMany( filter, { $push: { tasks: newTask }} );
     });
@@ -227,7 +227,7 @@ members.updateTaskStatus = async (filter, payload) => {
     });
 };
 
-const replacePayloadWithIds = async (payload) => {
+members.replacePayloadWithIds = async (payload) => {
     if (payload.interests) {
         if (Array.isArray(payload.interests)) {
             payload.interests = await util.replaceNamesWithIdsArray(payload.interests, interests);
