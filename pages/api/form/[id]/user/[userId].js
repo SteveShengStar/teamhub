@@ -4,7 +4,6 @@ const cookie = require('cookie');
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'GET') {
-        
         // Get the Access Token from the request headers
         const token = cookie.parse(req.headers.cookie).token;
         const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
