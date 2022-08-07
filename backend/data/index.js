@@ -33,6 +33,7 @@ data.init = async () => {
     await mongoose.connect(config.url, {
         useUnifiedTopology: true,
         useNewUrlParser: true,
+        directConnection: true
     });
 
     data.connected = true;
