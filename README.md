@@ -41,7 +41,7 @@ Here are the steps to run locally:
 7. Wait a second then try opening localhost:3000 in your browser
 8. After finishing a work session, you can exit out of the container, press Ctrl + C. Type `exit` in your shell. Then, stop all containers by running `docker-compose stop`
 
-To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
+To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_testing` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_testing` the docker container, it will not connect to the database.
 
 ## Troubleshooting
 
