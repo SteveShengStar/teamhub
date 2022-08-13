@@ -9,6 +9,7 @@ services:
       - .:/usr/src/app
     environment:
       NODE_ENV: development
+      TEAMHUB_ENV: development
     ports:
       - 3000:3000
     links:
@@ -21,5 +22,25 @@ services:
     container_name: teamhub_mongodb
     volumes:
       - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 27017:27017
+  test:
+    image: teamhub
+    container_name: teamhub_testing
+    ports:
+      - 3000:3000
+    build: .
+    volumes:
+      - .:/usr/src/app
+    links:
+      - test-db
+    depends_on:
+      - test-db
+    environment:
+      NODE_ENV: testing
+      TEAMHUB_ENV: testing
+  test-db:
+    image: mongo
+    container_name: teamhub_test_db
     ports:
       - 27017:27017
