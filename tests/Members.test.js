@@ -42,21 +42,17 @@ const addTestMember = async (testData) => {
     return await Member.create(userSummary);
 };
 
-// Clean Up member data before and after running a test
-const dropTestMember = async (testData) => {
-    console.log("Cleaning up test data");
-
-    // UserDetails collection contains all the misc. data of the user
-    let {miscDetails} = testData;
-    if (miscDetails) {
-        await UserDetails.deleteMany({'_id' : miscDetails._id});
-    }
-    // Member collection contains the core (frequently-queried) user data
-    return await Member.deleteMany({ '_id': testData._id });
-};
-
 beforeAll(async () => {
     await data.initIfNotStarted();
+});
+
+afterAll(() => {
+    data.close();
+});
+
+afterEach(async () => {
+    await Member.deleteMany({});
+    await UserDetails.deleteMany({});
 });
 
 describe('Testing Add Member', () => {
@@ -120,6 +116,8 @@ describe('Testing Add Member', () => {
         verifyArrayWithNameProp(memberSummary.subteams, memberData.subteams);
         expect(memberSummary.token).toBeUndefined();
         expect(typeof memberSummary.tokenExpiry).toBe('number');
+        console.log("******")
+        console.log(memberSummary)
 
         // Ensure that an empty record was added to UserDetails collection as well.
         expect(memberSummary.miscDetails).toBeTruthy();
@@ -127,9 +125,6 @@ describe('Testing Add Member', () => {
         expect(memberDetails).toBeTruthy();
         expect(typeof memberDetails).toBe('object');
         verifyKeysNotInObject(memberDetails, Object.keys(memberData));
-
-        // Clean Up test data.
-        await dropTestMember(memberSummary);
     });
 
     it('Add Member data with Miscellaneous details.', async () => {
@@ -188,9 +183,6 @@ describe('Testing Add Member', () => {
 
         verifyKeysNotInObject(memberSummary, Object.keys(miscDetails));
         verifyKeysNotInObject(memberDetails, Object.keys(memberData));
-
-        // Clean up test data
-        await dropTestMember(memberSummary);
     });
 });
 
@@ -232,7 +224,7 @@ describe('Testing Delete Member', () => {
             'termStatus': "Co-op term, working on Waterloop remotely",
         };
 
-        let {_id: id, miscDetails} = await data.members.add(memberData);
+        let {_id: id, miscDetails} = await addTestMember(memberData);
         const res = await data.util.resWrapper(async () => {
             return await data.members.delete({ 'name.first': 'TestUser2' });
         });
@@ -269,8 +261,8 @@ describe('Testing Update Member', () => {
         });
         expect(res.success).toBe(true);
 
-        // Check to see if info. was updated
-        let memberSummary = await data.members.search({
+        // Check to see whether the info was updated
+        const memberSummary = await data.members.search({
             'email': 'cherry.shrin@testing.ca'
         });
 
@@ -279,11 +271,8 @@ describe('Testing Update Member', () => {
         verifyArrayWithNameProp(memberSummary[0].subteams, ['Electrical']);
         verifyArrayWithNameProp(memberSummary[0].projects, []);
 
-        let memberDetails = await UserDetails.findOne({'_id': miscDetails});
+        const memberDetails = await UserDetails.findOne({'_id': miscDetails});
         verifyKeysNotInObject(memberDetails, Object.keys(['name', 'email', 'projects', 'subteams']));
-
-        // Clean up the test data.
-        await dropTestMember(memberSummary[0]);
     });
 
     it('Test updating a member\'s data with misc. details stored in the UserDetails DB. Collection', async () => {
@@ -317,7 +306,7 @@ describe('Testing Update Member', () => {
         expect(res.success).toBe(true);
 
         // Check to see if info. was updated
-        let memberSummary = await data.members.search({
+        const memberSummary = await data.members.search({
             'email': 'jenny.shrin@testing.ca'
         });
         expect(memberSummary[0].name.first).toBe('Jenny');
@@ -325,7 +314,7 @@ describe('Testing Update Member', () => {
         expect(memberSummary[0].email).toBe('jenny.shrin@testing.ca');
         verifyArrayWithNameProp(memberSummary[0].projects, ['BMS', 'TeamHub', 'LIM']);
 
-        let memberDetails = await UserDetails.findOne({_id: memberSummary[0].miscDetails});
+        const memberDetails = await UserDetails.findOne({_id: memberSummary[0].miscDetails});
         expect(memberDetails.studentId).toBe(68934112);
         expect(memberDetails.termStatus).toBe("Not active on Waterloop this term");
         expect(memberDetails.designCentreSafety).toBe(true);
@@ -334,12 +323,5 @@ describe('Testing Update Member', () => {
 
         verifyKeysNotInObject(memberSummary[0], Object.keys(['studentId', 'termStatus', 'designCentreSafety', 'nextTermRole', 'whmis']));
         verifyKeysNotInObject(memberDetails, Object.keys(['name', 'email', 'projects']));
-
-        // Clean up the test data.
-        await dropTestMember(memberSummary[0]);
     });
-});
-
-afterAll(() => {
-    data.close();
 });

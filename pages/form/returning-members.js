@@ -73,8 +73,6 @@ const ReturningMembersForm = () => {
                         }
                         delete memberData.miscDetails;
                     }
-                    console.log("memberData");
-                    console.log(memberData);
                     setFormSections(sections);
                     setFormValues({
                       ...memberData,

@@ -128,14 +128,11 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
 members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
         const memberFields = Object.keys(Member.schema.paths);
-        console.log("Member Fields");
         let userSummary = _.omit(_.pick(userPayload, memberFields), "_id");
-        console.log(Object.keys(userSummary));
         let userDetails = _.omit(userPayload, [...memberFields, "_id"]);
-        console.log(Object.keys(userDetails));
 
-        const userDetailsResponse = await UserDetails.create(userDetails);
-        userSummary.miscDetails = userDetailsResponse._id;
+        const userDetailsResp = await UserDetails.create(userDetails);
+        userSummary.miscDetails = userDetailsResp._id;
         userSummary = await members.replacePayloadWithIds(userSummary);
         const res = await Member.create(userSummary);
         return res;
@@ -167,11 +164,8 @@ members.delete = async (filter) => {
  */
 members.updateMember = async (filter, payload) => {
     const memberFields = Object.keys(Member.schema.paths);
-    console.log("Member Fields");
     let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
-    console.log(Object.keys(memberSummary));
     let memberDetails = _.omit(payload, [...memberFields, "_id"]);
-    console.log(Object.keys(memberDetails));
 
     return util.handleWrapper(async () => {
         if (!_.isEmpty(memberSummary)) {

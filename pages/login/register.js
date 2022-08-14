@@ -113,7 +113,6 @@ const RegistrationForm = () => {
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-
         const formErrors = {...hasError};
         setErrorMessages(formErrors);
         const formHasErrors = Object.values(formErrors).some(err => err);

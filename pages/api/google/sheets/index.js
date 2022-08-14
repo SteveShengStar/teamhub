@@ -11,7 +11,6 @@ module.exports = async (req, res) => {
                             
         if (authStatus) {
             const token = req.headers['authorization'].split(' ')[1];
-            console.log(token);
             res.setHeader('Content-Type', 'application/json');
 
             res.statusCode = 200;
