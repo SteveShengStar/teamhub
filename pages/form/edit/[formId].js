@@ -101,7 +101,6 @@ const SidebarButton = styled(Button)`
 `;
 
 const Sidebar = ({data}) => {
-    console.log(data)
     return (
         <SidebarContainer>
             {

@@ -57,8 +57,6 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
     return util.handleWrapper(async () => {
         const response = {};
         response.form = await forms.fetchFormData(formId);
-        console.log("response")
-        console.log(response);
 
         const memberPropsToFetch = response.form.sections.map(s => s.section.name);
         memberPropsToFetch.push('miscDetails');
@@ -69,8 +67,6 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
         const selectList = {};
         memberPropsToFetch.map(p => { selectList[p] = 1 });
         let memberData = (await members.search({_id: userId}, selectList))[0];
-        console.log("memberPropsToFetch")
-        console.log(memberPropsToFetch);
         if (memberData.miscDetails) {
             Object.keys(memberData.miscDetails)
                 .filter(p => p !== '_id' && p !== '__v' && memberPropsToFetch.includes(p))
@@ -130,7 +126,7 @@ forms.createForm = async (formData, res) => {
         await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
 
         if (formData.sections) {
-            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const formSectionNamesToIds = await getFormSectionNamesToIdsMap();
             formData.sections = formData.sections
                 .map(s => {
                     return {
@@ -171,7 +167,7 @@ forms.updateFormMetadata = async (formId, formData, res) => {
         await forms.updateFormSections(formData.sections, res);  // TODO: this should be in a transaction.
         
         if (formData.sections) {
-            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const formSectionNamesToIds = await getFormSectionNamesToIdsMap();
             const sectionNames = Object.keys(formSectionNamesToIds);
             formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
                 .map(s => {
@@ -193,17 +189,13 @@ forms.updateFormMetadata = async (formId, formData, res) => {
                 res.statusCode = 400;
                 throw new Error("Title and Description cannot be blank.");
             }
-            if (titleFieldError?.kind === 'unique') {
-                res.statusCode = 400;
-                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
-            }
             res.statusCode = 500;
             throw err;
         }
     });
 }
 
-const getFormSectionNamesToIds = async () => {
+const getFormSectionNamesToIdsMap = async () => {
     const formSections = await FormSection.find();
     const formSectionNamesToIds = {};
     formSections.map(
