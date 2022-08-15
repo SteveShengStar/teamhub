@@ -116,8 +116,6 @@ describe('Testing Add Member', () => {
         verifyArrayWithNameProp(memberSummary.subteams, memberData.subteams);
         expect(memberSummary.token).toBeUndefined();
         expect(typeof memberSummary.tokenExpiry).toBe('number');
-        console.log("******")
-        console.log(memberSummary)
 
         // Ensure that an empty record was added to UserDetails collection as well.
         expect(memberSummary.miscDetails).toBeTruthy();
