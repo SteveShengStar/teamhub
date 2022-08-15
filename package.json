@@ -10,7 +10,7 @@
     "dev:docker": "docker exec -it teamhub_nodejs /bin/sh npm run dev",
     "docker": "npm run start:docker && npm run dev:docker",
     "start": "next start",
-    "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest"
+    "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest -i"
   },
   "jest": {
     "testEnvironment": "node",
