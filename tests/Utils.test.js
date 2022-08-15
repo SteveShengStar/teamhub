@@ -5,10 +5,14 @@ jest.setTimeout(15000);
 
 const data = require('../backend/data/index');
 const skills = require('../backend/data/handlers/skills');
-// const Member = require('../backend/data/schema/Member');
+const Member = require('../backend/data/schema/Member');
 
 beforeAll(async () => {
     await data.initIfNotStarted();
+});
+
+afterAll(async () => {
+    await Member.deleteMany({});
 });
 
 describe('Testing Utility functions', () => {
@@ -26,22 +30,22 @@ describe('Testing Utility functions', () => {
 
     it('Tests Res Wrapper', async () => {
 
-        // await Member.create({
-        //     'name': {
-        //         'first': 'Stephane',
-        //         'last': 'Basil',
-        //     },
-        //     'email': 'steph.basil@waterloop.ca'
-        // });
+        await Member.create({
+            'name': {
+                'first': 'Stephane',
+                'last': 'Basil',
+            },
+            'email': 'steph.basil@waterloop.ca'
+        });
 
         const resp = (await data.util.resWrapper(async () => {
             return await data.members.getAll();
         }));
 
         expect(resp.success).toBe(true);
-        expect(resp.body.length).toBeGreaterThan(1); // Check that members were returned
+        expect(resp.body.length).toBeGreaterThan(0); // Check that members were returned
 
-        // await Member.deleteMany({});
+        await Member.deleteMany({});
     });
 
     it('Tests retrieving ID or creating new document', async () => {
