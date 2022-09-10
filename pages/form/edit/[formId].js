@@ -289,6 +289,7 @@ const FormEditor = () => {
 
         const newSection = {
             ...formSections[idx],
+            customizable: 'delete',
             name: uuidv4(),
         }
         const newFormSections = [...formSections];
