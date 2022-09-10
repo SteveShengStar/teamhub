@@ -18,7 +18,7 @@ import LoginTransition from "../../frontend/components/templates/LoginTransition
 import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, getCustomFields, getCustomFieldDefaults} from '../../frontend/util'
 import _ from 'lodash';
 
 const RegistrationForm = () => {
@@ -61,7 +61,7 @@ const RegistrationForm = () => {
         machineShop: false,
     });
 
-    const [formSections, setFormSections] = useState([]);
+    const [formSections, setFormSections] = useState([]); // TODO: should not be state, this should be read-only
 
     useEffect(() => {
         if (hydrated) {
@@ -80,6 +80,11 @@ const RegistrationForm = () => {
                             (a, b) => a.position - b.position
                         );
                         setFormSections(sections);
+                        
+                        setFormValues({
+                            ...formValues,
+                            ...getCustomFieldDefaults(sections)
+                        });
                     }
                     // TODO: handle error case
                 })
@@ -123,9 +128,11 @@ const RegistrationForm = () => {
 
             const {fullName, phoneNumber, personalEmail, program, studentId, termStatus, memberType, 
                 subteams, designCentreSafety, whmis, machineShop, previousTerms, futureTerms} = formValues;
+            const customFields = getCustomFields(formValues);
 
             const fullNameParts = fullName.split(/\s+/);
             updateUser(dispatch, {
+                ...customFields,
                 name: {
                     first: fullNameParts[0].trim(),
                     last: fullNameParts[fullNameParts.length - 1].trim()
@@ -169,8 +176,7 @@ const RegistrationForm = () => {
     }
 
     const handleFieldChange = (name, value) => {
-        clearErrorMessageIfExists(name, hasError, setHasError);
-        setFormValues({...formValues, [name]: value})
+        setFormValues({...formValues, [name]: value});
     }
 
     return (

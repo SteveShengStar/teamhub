@@ -1,4 +1,5 @@
 import { isEmail } from 'validator';
+import { validate as isUuid } from 'uuid';
 
 export const removeBadValuesAndDuplicates = (array) => {
     const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
@@ -63,20 +64,38 @@ export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
 }
 
-export const scrollToFirstError = (formErrors) => {
-    for (const [field, hasError] of Object.entries(formErrors)) {
-        if (hasError) {
-            const element = document.getElementById(field);
-            if (element) {   // TODO: what if the ordering is different ?
-                element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                });
-                break;
-            }
+// Custom Form Field names are V4 UUIDs
+export const getCustomFields = (formValues) => {
+    const customFieldMap = {};
+    for (const [field, value] of Object.entries(formValues)) {
+        if (isUuid(field)) {
+            customFieldMap[field] = value;
         }
     }
+    return customFieldMap;
+}
+
+// Get Default Values for Form Fields based on Field Type
+export const getCustomFieldDefaults = (formSections) => {
+    const defaultVals = {};
+    const customFieldSections = formSections.filter(section => isUuid(section.name));
+    customFieldSections.forEach(section => {
+        switch (section.type) {
+            case "text": 
+            case "longtext": 
+            case "numbers": 
+            case "phone": 
+            case "menu_single":
+            case "menu_multi":
+            case "checkbox":
+            case "radio":
+                defaultVals[section.name] = '';
+                break;
+            case "boolean":
+                defaultVals[section.name] = false;
+        }
+    });
+    return defaultVals;
 }
 
 const validateExists = (formData, formErrors, field) => {
