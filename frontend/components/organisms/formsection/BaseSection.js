@@ -14,6 +14,8 @@ import Card from '../../atoms/Card';
 const ActionButton = styled(Button)`
     background-color: ${props => props.disabled ? props.theme.colors.greys[1] : props.theme.colors.theme};
     color: ${props => props.theme.colors.black};
+
+    ${props => props.disabled && 'cursor: not-allowed;'}
 `;
 
 const ActionButtonContainer = styled(SystemComponent)`
