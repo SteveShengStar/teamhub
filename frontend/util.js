@@ -84,6 +84,7 @@ export const getCustomFieldDefaults = (formSections) => {
                 break;
             case "boolean":
                 defaultVals[section.name] = false;
+                break;
         }
     });
     return defaultVals;
