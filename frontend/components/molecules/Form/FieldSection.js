@@ -42,7 +42,6 @@ const FieldSection = ({title, description='', placeholder="Your answer", type="t
                         theme.textInputHeight.medium, 
                         theme.textInputHeight.large
                     ]}
-                        placeholder={placeholder}
                         width="98%"
                         name={name}
                         value={value}
@@ -59,7 +58,8 @@ const FieldSection = ({title, description='', placeholder="Your answer", type="t
                 )
             case 'radio':
                 return (
-                    <RadioSection options={options}
+                    <RadioSection 
+                        options={options}
                         selectedOption={value}
                         name={name}
                         setSelectedOption={onChange}

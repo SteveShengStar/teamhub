@@ -12,7 +12,7 @@ import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
-import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId} from '../../frontend/util'
+import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, getCustomFields, getCustomFieldDefaults} from '../../frontend/util'
 import { updateUser } from "../../frontend/store/reducers/userReducer";
 import _ from 'lodash';
 
@@ -75,8 +75,10 @@ const ReturningMembersForm = () => {
                         }
                         delete memberData.miscDetails;
                     }
+
                     setFormSections(sections);
                     setFormValues({
+                      ...getCustomFieldDefaults(sections),
                       ...memberData,
                       fullName: (memberData.name.first ?? '') + ' ' + (memberData.name.last ?? ''),
                       subteams: memberData.subteams && memberData.subteams.length > 0 ? memberData.subteams[0].name : '',
@@ -119,9 +121,11 @@ const ReturningMembersForm = () => {
       showLoader();
       const {fullName, nextSchoolTerm, previousTerms, futureTerms, subteams, nextTermActivity,
               nextTermRole, personalEmail, termComments, desiredWork} = formValues;
+      const customFields = getCustomFields(formValues);
 
       const fullNameParts = fullName.split(/\s+/);
       updateUser(dispatch, {
+          ...customFields,
           name: {
               first: fullNameParts[0].trim(),
               last: fullNameParts[fullNameParts.length - 1].trim(),
@@ -133,8 +137,8 @@ const ReturningMembersForm = () => {
           nextSchoolTerm,
           nextTermActivity,
           nextTermRole,
-          termComments: termComments.trim(),
-          desiredWork: desiredWork.trim(),
+          termComments: termComments?.trim(),
+          desiredWork: desiredWork?.trim(),
       }, user._id, router)
         .then(res => {
             console.log("User Info Update Completed.");
