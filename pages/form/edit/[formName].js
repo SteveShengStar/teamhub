@@ -150,7 +150,7 @@ const FormEditor = () => {
 
     const loadFormSections = () => {
         showLoader();
-        useFormDetails(router.query.formId, dispatch, router)
+        useFormDetails(router.query.formName, dispatch, router)
             .then(res => {
                 if (res.success) {
                     setFormTitle(res.body.title);
@@ -343,7 +343,7 @@ const FormEditor = () => {
 
         console.log("Saving form sections ...");
         showLoader();
-        updateFormDetails(router.query.formId, dispatch, router, reqBody)
+        updateFormDetails(router.query.formName, dispatch, router, reqBody)
             .then((res) => {                
                 if (!res.success) {
                     // TODO: handle error case

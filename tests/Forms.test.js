@@ -155,8 +155,8 @@ describe('Forms Unit Tests', () => {
             };
             const formResp = await Form.create(formData);
             const userId = userResp._id;
-            const formId = formResp._id;
-            const {form, user} = await data.forms.fetchFormAndMemberData(userId, formId);
+            const formName = formResp.name;
+            const {form, user} = await data.forms.fetchFormAndMemberData(userId, formName);
 
             expect(form._id).toBeTruthy();
             expect(form.title).toBe("Returning Members Form");
@@ -266,8 +266,8 @@ describe('Forms Unit Tests', () => {
             };
             const formResp = await Form.create(formData);
             const userId = userResp._id;
-            const formId = formResp._id;
-            const {form, user} = await data.forms.fetchFormAndMemberData(userId, formId);
+            const formName = formResp.name;
+            const {form, user} = await data.forms.fetchFormAndMemberData(userId, formName);
 
             expect(form._id).toBeTruthy();
             expect(form.title).toBe("Registration Form");
@@ -676,7 +676,7 @@ describe('Forms Unit Tests', () => {
                     },
                 ]
             };
-            const {_id: formId} = await Form.create(initialFormData);
+            const {name: formName} = await Form.create(initialFormData);
 
             const updatedFormData = {
                 title: "Sign Up Form",
@@ -712,7 +712,7 @@ describe('Forms Unit Tests', () => {
             };
             const res = {statusCode: 200};
 
-            await data.forms.updateFormMetadata(formId.toString(), updatedFormData, res);
+            await data.forms.updateFormMetadata(formName.toString(), updatedFormData, res);
 
             let fetchedFormSections = (await FormSection.find().lean());
             const subteamSectionId = fetchedFormSections.find(s => s.name === 'subteams')._id.toString();

@@ -107,7 +107,7 @@ const BulletsSection = styled(SystemComponent)`
     height: 200px;
 `;
 
-const FormMetadataSection = ({src, title, bulletPoints, formId = '', formName = ''}) => {
+const FormMetadataSection = ({src, title, bulletPoints, formName = ''}) => {
     const router = useRouter();
 
     return (
@@ -136,7 +136,7 @@ const FormMetadataSection = ({src, title, bulletPoints, formId = '', formName = 
             <EditFormButton 
                 onClick={(e) => {
                     e.preventDefault();
-                    router.push('/form/edit/' + formId);
+                    router.push('/form/edit/' + formName);
                 }}
             >
                 Edit Form
@@ -190,21 +190,18 @@ const DashboardPanel = () => {
                     src = "/static/returning-members-icon.jpg"
                     title="Returning Member"
                     bulletPoints={["Filled in end of term", "Members state their goals and intentions for next school term."]}
-                    formId={formData.find(f => f.name === 'returning')?._id}
                     formName={formData.find(f => f.name === 'returning')?.name}
                 />
                 <FormMetadataSection 
                     src = "/static/beginning-of-term-icon.jpg"
                     title="Start of Term"
                     bulletPoints={["Filled in beginning of term", "Members state their availability and goals for this term."]}
-                    formId={formData.find(f => f.name === 'startofterm')?._id}
                     formName={formData.find(f => f.name === 'startofterm')?.name}
                 />
                 <FormMetadataSection
                     src = "/static/sign-up-icon.svg"
                     title="Sign-Up"
                     bulletPoints={["Filled in once during initial team sign-up"]}
-                    formId={formData.find(f => f.name === 'register')?._id}
                     formName={formData.find(f => f.name === 'register')?.name}
                 />
             </SystemComponent>
