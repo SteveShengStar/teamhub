@@ -163,6 +163,7 @@ members.delete = async (filter) => {
  * @param {payload}: The new info. for the member
  */
 members.updateMember = async (filter, payload) => {
+    // Get fields stored in the Member collection.
     const memberFields = Object.keys(Member.schema.paths);
     let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
     let memberDetails = _.omit(payload, [...memberFields, "_id"]);

@@ -159,17 +159,10 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
-        // Prevent user from typing in non-numeric characters.
-        if (name === "phoneNumber") {
-            if (value && isInvalidPhoneNumber(value)) {
-                return;
-            }
-        } else if (name === "studentId") {
-            if (value && isInvalidStudentId(value)) {
-                return
-            };
-        }
+        onInputChange(formValues, setFormValues, name, value);
+    };
 
+    const handleFieldChange = (name, value) => {
         setFormValues({...formValues, [name]: value});
     }
 
