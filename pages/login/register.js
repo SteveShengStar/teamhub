@@ -21,6 +21,8 @@ import { useFormAndUserDetails } from '../../frontend/hooks/forms';
 import {validateField, clearErrorMessages, isInvalidPhoneNumber, isInvalidStudentId, getCustomFields, getCustomFieldDefaults} from '../../frontend/util'
 import _ from 'lodash';
 
+const FORM_NAME_KEY = 'register';
+
 const RegistrationForm = () => {
     const theme = useContext(ThemeContext);
 
@@ -65,7 +67,7 @@ const RegistrationForm = () => {
 
     useEffect(() => {
         if (hydrated) {
-            useFormAndUserDetails('62cb8595c4064c4a26995233', dispatch, router, user._id)
+            useFormAndUserDetails(FORM_NAME_KEY, dispatch, router, user._id)
                 .then(res => {
                     if (res.success) {
                         const sections = res.body.form.sections.map(s => {

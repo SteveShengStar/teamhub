@@ -32,11 +32,11 @@ forms.getAllForms = async () => {
 /**
  * Fetch Form metadata.
  * 
- * @param {String} formId: ID of the form.
+ * @param {String} formName: unique Name key of the form.
  */
-forms.fetchFormData = async (formId) => {
+forms.fetchFormData = async (formName) => {
     return util.handleWrapper(async () => {
-        return Form.findOne({_id: formId})
+        return Form.findOne({name: formName})
             .select(['title', 'description', 'sections'])
             .populate({
                 path : 'sections',
@@ -50,13 +50,13 @@ forms.fetchFormData = async (formId) => {
 /**
  * Fetch Form and Waterloop Member's data
  * 
- * @param {String} userId: user ID
- * @param {String} formId: ID of the form
+ * @param {String} userId:   user ID
+ * @param {String} formName: unique Name key of the form to get the data of
  */
-forms.fetchFormAndMemberData = async (userId, formId) => {
+forms.fetchFormAndMemberData = async (userId, formName) => {
     return util.handleWrapper(async () => {
         const response = {};
-        response.form = await forms.fetchFormData(formId);
+        response.form = await forms.fetchFormData(formName);
 
         const memberPropsToFetch = response.form.sections.map(s => s.section.name);
         memberPropsToFetch.push('miscDetails');
@@ -160,9 +160,10 @@ forms.createForm = async (formData, res) => {
 /**
  * Update a form's metadata.
  * 
+ * @param {Object} formName: Unique name key of the form to update
  * @param {Object} formData: new metadata for the form.
  */
-forms.updateFormMetadata = async (formId, formData, res) => {
+forms.updateFormMetadata = async (formName, formData, res) => {
     return util.handleWrapper(async () => {
         await forms.updateFormSections(formData.sections, res);  // TODO: this should be in a transaction.
         
@@ -180,7 +181,7 @@ forms.updateFormMetadata = async (formId, formData, res) => {
         }
 
         try {
-            await Form.updateOne({_id: formId}, _.omit(formData, '_id'), { runValidators: true });
+            await Form.updateOne({name: formName}, _.omit(formData, '_id'), { runValidators: true });
         } catch (err) {
             console.error(err);
             const { title: titleFieldError, description: descFieldError} = err.errors;

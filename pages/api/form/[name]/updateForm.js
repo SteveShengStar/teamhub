@@ -12,17 +12,17 @@ module.exports = async (req, res) => {
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 
-            if (!req.query.id) {
+            if (!req.query.name) {
                 res.statusCode = 400;
                 res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                    throw Error('id URL param must be specified.');
+                    throw Error('name URL param must be specified.');
                 })));
                 return;
             }
 
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.forms.updateFormMetadata(req.query.id, req.body, res);
+                return await data.forms.updateFormMetadata(req.query.name, req.body, res);
             })));
         } else {
             res.statusCode = 401;
