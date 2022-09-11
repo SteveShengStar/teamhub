@@ -81,8 +81,8 @@ const RegistrationForm = () => {
                         }).sort(
                             (a, b) => a.position - b.position
                         );
+
                         setFormSections(sections);
-                        
                         setFormValues({
                             ...formValues,
                             ...getCustomFieldDefaults(sections)
@@ -159,12 +159,18 @@ const RegistrationForm = () => {
     }
 
     const handleInputChange = (name, value) => {
-        onInputChange(formValues, setFormValues, name, value);
-    };
-
-    const handleFieldChange = (name, value) => {
+        // Prevent user from typing in non-numeric characters.
+        if (name === "phoneNumber") {
+            if (value && isInvalidPhoneNumber(value)) {
+                return;
+            }
+        } else if (name === "studentId") {
+            if (value && isInvalidStudentId(value)) {
+                return;
+            }
+        }
         setFormValues({...formValues, [name]: value});
-    }
+    };
 
     const handleFieldChange = (name, value) => {
         setFormValues({...formValues, [name]: value});
