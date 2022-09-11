@@ -1,26 +1,17 @@
 const data = require('../../../backend/data/index');
 const cookie = require('cookie');
-const { OAuth2Client } = require('google-auth-library');
 const {Auth, google} = require('googleapis');
-const members = require('../../../backend/data/handlers/members');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'PUT') {
-        
         // Get the Access Token from the request headers
-        // const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
-        // REPLACE WITH ABOVE
+        const token = cookie.parse(req.headers.cookie).token;
+        const searchRes = await data.auth.checkAnyUser(`Bearer ${token}`, res);
 
-        const authToken = req.headers['authorization'].split(' ')[1];
-        const searchRes = await members.search({ token: authToken });
         if (searchRes.length != 0 && await isLead(searchRes[0]['email'])) {
-
             res.setHeader('Content-Type', 'application/json');
-
             res.statusCode = 200;
-            
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
                 return await data.forms.updateFormSections(req.body);
             })));
@@ -41,21 +32,25 @@ async function isLead(userEmail) {
         scopes:"https://www.googleapis.com/auth/admin.directory.group",
         clientOptions: {
             email:"teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
-            //impersonate steven >:)
+            // impersonate Steven Xiong, a domain admin user with special previleges
             subject: "steven.x@waterloop.ca",
         }
-    })
-    client = await auth.getClient()
+    });
+
     // Obtain a new admin client, making sure you pass along the auth client
+    client = await auth.getClient();
     const admin = google.admin({ version: 'directory_v1', auth: client });
 
     const groups = await admin.groups.list({
         //domain: "waterloop.ca",
-        //customer:"C049m7qgz",
+        //customer: "C049m7qgz",
         userKey: userEmail,
     });
+
     for(const group of groups.data.groups) {
-        if(group.name == 'Leads') return true
+        if (group.name == 'Leads') { 
+            return true;
+        }
     }    
-    return false
+    return false;
 }

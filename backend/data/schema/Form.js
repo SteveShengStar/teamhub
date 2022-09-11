@@ -20,7 +20,12 @@ const FormSectionDetails = new Schema({
     }
 });
 
-const FormSchema = new Schema({ 
+const FormSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     title: {
         type: String,
         required: true,
@@ -29,7 +34,6 @@ const FormSchema = new Schema({
     description: {
         type: String,
         required: true,
-        unique: true
     },
     sections: [{
         type: FormSectionDetails

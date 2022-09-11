@@ -7,10 +7,15 @@ const BYPASS_AUTH_ORIGINS = ['https://teamwaterloop.ca'];
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
     if (req.method === 'POST') {
+        let authStatus = false;
+
         // Get the Access Token from the request headers
-        const token = cookie.parse(req.headers.cookie).token;
-        const authStatus = BYPASS_AUTH_ORIGINS.includes(req.headers['origin']) 
-                            || await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        if(BYPASS_AUTH_ORIGINS.includes(req.headers['origin'])) {
+            authStatus = true;
+        } else {
+            const token = cookie.parse(req.headers.cookie).token;
+            authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        }
                             
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');

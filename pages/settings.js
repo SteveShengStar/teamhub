@@ -57,7 +57,7 @@ const Settings = () => {
                     activeModal={activeModal}
                     handleCloseModal={handleCloseModal}
                 />
-                <SystemComponent display="flex" overflow="hidden">
+                <SystemComponent display="flex" overflow="hidden" margin="auto">
                     <Frame position="relative">
                         {loader}
                         <TeamsSection 

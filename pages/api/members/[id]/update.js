@@ -6,8 +6,8 @@ module.exports = async (req, res) => {
     if (req.method === 'PUT') {
         // Get the Access Token from the request headers
         const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkSpecificUser(`Bearer ${token}`, req.query.id, res);
-        if (true) {
+        const authStatus = await data.auth.checkSpecificUser(`Bearer ${token}`, req.query.id, res);
+        if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 
             if (!req.query.id) {

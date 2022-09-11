@@ -10,7 +10,7 @@
     "dev:docker": "docker exec -it teamhub_nodejs /bin/sh npm run dev",
     "docker": "npm run start:docker && npm run dev:docker",
     "start": "next start",
-    "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest"
+    "test": "TEAMHUB_ENV=testing next build && TEAMHUB_ENV=testing jest -i"
   },
   "jest": {
     "testEnvironment": "node",
@@ -19,6 +19,9 @@
     }
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/material": "^5.8.3",
     "animejs": "^3.2.1",
     "axios": "^0.22.0",
     "eslint-plugin-react": "^7.26.1",
@@ -40,9 +43,9 @@
     "react-select": "^5.1.0",
     "redux": "^4.1.1",
     "redux-persist": "^6.0.0",
-    "styled-components": "^5.3.1",
+    "styled-components": "^5.3.5",
     "styled-system": "^5.1.5",
-    "validator": "^13.6.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "babel-jest": "^27.2.5",

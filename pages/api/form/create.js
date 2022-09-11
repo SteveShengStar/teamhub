@@ -6,15 +6,14 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         
         // Get the Access Token from the request headers
-        // const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
-                            
-        if (true) {
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);                
+        if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
 
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.forms.createForm(req.body);
+                return await data.forms.createForm(req.body, res);
             })));
         } else {
             res.statusCode = 401;

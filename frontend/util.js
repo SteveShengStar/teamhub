@@ -1,4 +1,5 @@
 import { isEmail } from 'validator';
+import { validate as isUuid } from 'uuid';
 
 export const removeBadValuesAndDuplicates = (array) => {
     const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
