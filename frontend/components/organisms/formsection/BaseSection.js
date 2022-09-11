@@ -7,23 +7,15 @@ import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import TextField from '@mui/material/TextField';
 
 import Checkbox from '../../atoms/Checkbox';
-import Button from '../../atoms/Button';
+import Button from '../../atoms/Form/ActionButton';
 import Select from '../../atoms/Select';
 import Card from '../../atoms/Card';
 
 const ActionButton = styled(Button)`
     background-color: ${props => props.disabled ? props.theme.colors.greys[1] : props.theme.colors.theme};
-    color: #000;
-    font-weight: ${props => props.theme.fontWeights.bold};
-    font-size: ${props => props.theme.fontSizes.header4}px;
+    color: ${props => props.theme.colors.black};
 
-    cursor: ${props => props.disabled && `default`};
-    &:hover {
-        transform: ${props => props.disabled && `none`};
-    }
-
-    height: 40px;
-    width: 120px;
+    ${props => props.disabled && 'cursor: not-allowed;'}
 `;
 
 const ActionButtonContainer = styled(SystemComponent)`
@@ -132,7 +124,7 @@ const BaseSection = ({children, type, name, question, helpText, required, canDel
                 {children}
             </SystemComponent> 
             <ActionButtonContainer>
-                <ActionButton disabled={!canDelete} title={!canDelete && `Section cannot be Deleted`} onClick={() => handleSectionDelete(name)}>Delete</ActionButton>
+                <ActionButton disabled={!canDelete} title={!canDelete && `This Section cannot be Deleted`} onClick={() => handleSectionDelete(name)}>Delete</ActionButton>
                 <ActionButton onClick={() => handleSectionDuplicate(name)}>Duplicate</ActionButton>
             </ActionButtonContainer>
         </Card> 

@@ -1,17 +1,22 @@
-jest.setTimeout(15000);
+global.TextEncoder = require("util").TextEncoder;
+global.TextDecoder = require("util").TextDecoder;
 
+jest.setTimeout(15000);
 
 const data = require('../backend/data/index');
 const skills = require('../backend/data/handlers/skills');
+const Member = require('../backend/data/schema/Member');
 
 beforeAll(async () => {
     await data.initIfNotStarted();
 });
 
+afterAll(async () => {
+    await Member.deleteMany({});
+});
+
 describe('Testing Utility functions', () => {
-
     it('Test Handle Wrapper', async () => {
-
         const test = async () => {
             return new Promise((resolve => {
                 setTimeout(() => {
@@ -25,13 +30,22 @@ describe('Testing Utility functions', () => {
 
     it('Tests Res Wrapper', async () => {
 
+        await Member.create({
+            'name': {
+                'first': 'Stephane',
+                'last': 'Basil',
+            },
+            'email': 'steph.basil@waterloop.ca'
+        });
+
         const resp = (await data.util.resWrapper(async () => {
             return await data.members.getAll();
         }));
 
         expect(resp.success).toBe(true);
-        // Check that members were returned
-        expect(resp.body.length).toBeGreaterThan(1);
+        expect(resp.body.length).toBeGreaterThan(0); // Check that members were returned
+
+        await Member.deleteMany({});
     });
 
     it('Tests retrieving ID or creating new document', async () => {
@@ -55,7 +69,6 @@ describe('Testing Utility functions', () => {
         // Check if array contains ids
         expect(resp[0].length).toBe(24);
     });
-
 });
 
 afterAll(() => {

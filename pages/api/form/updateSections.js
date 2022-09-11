@@ -6,10 +6,10 @@ module.exports = async (req, res) => {
     if (req.method === 'PUT') {
         
         // Get the Access Token from the request headers
-        // const token = cookie.parse(req.headers.cookie).token;
-        // const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        const token = cookie.parse(req.headers.cookie).token;
+        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
                             
-        if (true) {
+        if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
 
             res.statusCode = 200;

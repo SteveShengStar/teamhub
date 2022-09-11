@@ -29,13 +29,16 @@ const DescriptionSection = ({text}) => { // TODO: incorporate form-section descr
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
+const FieldSection = ({title, description='', type="text", required, onChange, name, value, hasError=false, errorText="Incorrect answer provided. Please double-check your answer.", options=[] }) => {
     const theme = useContext(ThemeContext);
 
     const renderInputField = (type) => {
-
         switch (type) {
-            case 'textbox':
+            case 'text':
+            case 'longtext':
+            case 'phone': // TODO: have separate inputs for phone and dropdowns
+            case 'email':
+            case 'numbers':
                 return (
                     <Input height={[
                         theme.textInputHeight.small, 

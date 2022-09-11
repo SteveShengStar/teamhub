@@ -1,20 +1,42 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
-const {validateCorrectNumberOfOptions} = require('../../../util/validate');
-const { members } = require('..');
+// const {validateCorrectNumberOfOptions} = require('../../../util/validate');
+const members = require('./members');
 const _ = require('lodash');
 
 const forms = {};
 
+const validateCorrectNumberOfOptions = (sections) => {
+    return sections.every(s => {
+        switch(s.type) {
+            case 'checkbox':
+            case 'radio':
+            case 'menu_single':
+            case 'menu_multi':
+                return s.options && s.options.length > 1;
+        }
+        return true;
+    });
+};
+
+/**
+ * Fetch IDs and names of all Waterloop forms
+ */
+forms.getAllForms = async () => {
+    return util.handleWrapper(async () => {
+        return await Form.find({}).select({_id: 1, name: 1}).exec();
+    });
+}
+
 /**
  * Fetch Form metadata.
  * 
- * @param {String} formId: ID of the form.
+ * @param {String} formName: unique Name key of the form.
  */
-forms.fetchFormData = async (formId) => {
+forms.fetchFormData = async (formName) => {
     return util.handleWrapper(async () => {
-        return Form.findOne({_id: formId})
+        return Form.findOne({name: formName})
             .select(['title', 'description', 'sections'])
             .populate({
                 path : 'sections',
@@ -28,23 +50,35 @@ forms.fetchFormData = async (formId) => {
 /**
  * Fetch Form and Waterloop Member's data
  * 
- * @param {String} userId: user ID
- * @param {String} formId: ID of the form
+ * @param {String} userId:   user ID
+ * @param {String} formName: unique Name key of the form to get the data of
  */
-forms.fetchFormAndMemberData = async (userId, formId) => {
+forms.fetchFormAndMemberData = async (userId, formName) => {
     return util.handleWrapper(async () => {
-        let response = {};
-        response.form = await Form.findOne({_id: formId})
-            .select(['title', 'description', 'sections'])
-            .populate({
-                path : 'sections',
-                populate : {
-                  path : 'section'
-                }
-            });
-        const selectFields = response.form.sections.map(s => s.section.name);
-        response.member = await members.search({_id: userId}, selectFields);
-        return response
+        const response = {};
+        response.form = await forms.fetchFormData(formName);
+
+        const memberPropsToFetch = response.form.sections.map(s => s.section.name);
+        memberPropsToFetch.push('miscDetails');
+        const idx = memberPropsToFetch.indexOf('fullName');
+        if (idx !== -1) {
+            memberPropsToFetch[idx] = 'name';
+        }
+        const selectList = {};
+        memberPropsToFetch.map(p => { selectList[p] = 1 });
+        let memberData = (await members.search({_id: userId}, selectList))[0];
+        if (memberData.miscDetails) {
+            Object.keys(memberData.miscDetails)
+                .filter(p => p !== '_id' && p !== '__v' && memberPropsToFetch.includes(p))
+                .map(
+                    p => {
+                        memberData[p] = memberData.miscDetails[p];
+                    }
+                );
+            delete memberData.miscDetails;
+        }
+        response.user = memberData;
+        return response;
     });
 }
 
@@ -92,7 +126,7 @@ forms.createForm = async (formData, res) => {
         await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
 
         if (formData.sections) {
-            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const formSectionNamesToIds = await getFormSectionNamesToIdsMap();
             formData.sections = formData.sections
                 .map(s => {
                     return {
@@ -126,14 +160,15 @@ forms.createForm = async (formData, res) => {
 /**
  * Update a form's metadata.
  * 
+ * @param {Object} formName: Unique name key of the form to update
  * @param {Object} formData: new metadata for the form.
  */
-forms.updateFormMetadata = async (formId, formData, res) => {
+forms.updateFormMetadata = async (formName, formData, res) => {
     return util.handleWrapper(async () => {
         await forms.updateFormSections(formData.sections, res);  // TODO: this should be in a transaction.
         
         if (formData.sections) {
-            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const formSectionNamesToIds = await getFormSectionNamesToIdsMap();
             const sectionNames = Object.keys(formSectionNamesToIds);
             formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
                 .map(s => {
@@ -146,7 +181,7 @@ forms.updateFormMetadata = async (formId, formData, res) => {
         }
 
         try {
-            await Form.updateOne({_id: formId}, _.omit(formData, '_id'), { runValidators: true });
+            await Form.updateOne({name: formName}, _.omit(formData, '_id'), { runValidators: true });
         } catch (err) {
             console.error(err);
             const { title: titleFieldError, description: descFieldError} = err.errors;
@@ -155,17 +190,13 @@ forms.updateFormMetadata = async (formId, formData, res) => {
                 res.statusCode = 400;
                 throw new Error("Title and Description cannot be blank.");
             }
-            if (titleFieldError?.kind === 'unique') {
-                res.statusCode = 400;
-                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
-            }
             res.statusCode = 500;
             throw err;
         }
     });
 }
 
-const getFormSectionNamesToIds = async () => {
+const getFormSectionNamesToIdsMap = async () => {
     const formSections = await FormSection.find();
     const formSectionNamesToIds = {};
     formSections.map(

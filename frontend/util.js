@@ -1,4 +1,5 @@
 import { isEmail } from 'validator';
+import { validate as isUuid } from 'uuid';
 
 export const removeBadValuesAndDuplicates = (array) => {
     const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
@@ -11,7 +12,7 @@ export const validateField = (formData, formErrors, field) => {
         case 'fullName':
             validateName(formData, formErrors, field);
             break;
-        case 'email':
+        case 'personalEmail':
             validateEmail(formData, formErrors, field);
             break;
         case 'studentId':
@@ -26,7 +27,7 @@ export const validateField = (formData, formErrors, field) => {
             validateBoolean(formData, formErrors, field);
             break;
         case 'termDescription':
-        case 'subteam':
+        case 'subteams':
         case 'nextTermRole':
         case 'nextTermActivity':
         case 'program':
@@ -54,8 +55,43 @@ export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
 }
 
+// Custom Form Field names are V4 UUIDs
+export const getCustomFields = (formValues) => {
+    const customFieldMap = {};
+    for (const [field, value] of Object.entries(formValues)) {
+        if (isUuid(field)) {
+            customFieldMap[field] = value;
+        }
+    }
+    return customFieldMap;
+}
+
+// Get Default Values for Form Fields based on Field Type
+export const getCustomFieldDefaults = (formSections) => {
+    const defaultVals = {};
+    const customFieldSections = formSections.filter(section => isUuid(section.name));
+    customFieldSections.forEach(section => {
+        switch (section.type) {
+            case "text": 
+            case "longtext": 
+            case "numbers": 
+            case "phone": 
+            case "menu_single":
+            case "menu_multi":
+            case "checkbox":
+            case "radio":
+                defaultVals[section.name] = '';
+                break;
+            case "boolean":
+                defaultVals[section.name] = false;
+                break;
+        }
+    });
+    return defaultVals;
+}
+
 const validateExists = (formData, formErrors, field) => {
-    if (!formData[field].trim()) {
+    if (!formData[field]?.trim()) {
         formErrors[field] = true;
     }
 }
