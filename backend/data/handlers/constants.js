@@ -14,4 +14,8 @@ const TEAM_ROSTER_FIELDS =
 const TEAM_ROSTER_SPREADSHEET_HEADERS = 
     ['Full Name', 'Email', 'Phone number', 'Membership', 'Program', 'Skills', 'Subteam Membership', 'On campus', 'Active School Terms', 'SSDC Code of Conduct', 'WHMIS (send proof to your lead )', 'Machine Shop Orientation' ]
 
-module.exports = {RETURNING_MEMBERS_FIELDS, RETURNING_MEMBERS_SPREADSHEET_HEADERS, TEAM_ROSTER_FIELDS, TEAM_ROSTER_SPREADSHEET_HEADERS}
+const START_TERM_FIELDS = ["name", "phone"];
+
+const START_TERM_SPREADSHEET_HEADERS = ['Full Name', 'Phone number'];
+
+module.exports = {RETURNING_MEMBERS_FIELDS, RETURNING_MEMBERS_SPREADSHEET_HEADERS, TEAM_ROSTER_FIELDS, TEAM_ROSTER_SPREADSHEET_HEADERS, START_TERM_FIELDS, START_TERM_SPREADSHEET_HEADERS}

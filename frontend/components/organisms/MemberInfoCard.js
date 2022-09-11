@@ -23,14 +23,13 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
 
     const terms = ["W", "F", "S"];
     const date = new Date();
-    const code = `${terms[Math.floor(date.getMonth() / 4)]}${date.getFullYear() - 2000}`
 
-    const linkMap = {
-        "website": 'fa-globe',       // CSS Class names of font-awesome icons
-        'linkedin': 'fa-linkedin',
-        'github': 'fa-github',
-        'facebook': 'fa-facebook-square'
-    }
+    const faClassName = {
+        "website": 'fa-globe',
+        'linkedin': 'fa-globe', // Use fa-globe for now since Font Awesome 6 doesn't seem to have certain logos
+        'github': 'fa-globe',
+        'facebook': 'fa-globe'
+    };
 
     return (
         <InfoCard className={className} ref={animRef}>
@@ -118,7 +117,7 @@ const MemberInfoCard = ({memberData, className, onClose, animRef}) => {
                                 memberData.links && memberData.links.map(({type, link}, i) =>
                                     (link &&
                                     <SystemComponent fontSize="16px" ml={1}>
-                                        <i className={`fa ${linkMap[type]}`}/>
+                                        <i className={`fa ${faClassName[type]}`}/>
                                         <Link href={link} key={i} mt={2} ml="4px" target="_blank">{capitalize(type)}</Link>
                                     </SystemComponent>)
                                 )

@@ -7,11 +7,13 @@ const {google} = require('googleapis');
 const auth = {};
 
 /**
- * @param {String} authHeader: authentication token provided by the client
+ * @param {String} authHeader:          authentication token provided by the client
+ * @param {String} res:                 api response object
+ * @param {String} ignoreTokenExpiry:   ignore the token expiry date
  * 
  * @return: information of the user that corresponds to the input token
  */
-auth.checkAnyUser = async (authHeader, res) => {
+auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
     if (!authHeader) {
         res.statusCode = 401;
         res.setHeader('WWW-Authenticate', 'Bearer');
@@ -33,7 +35,7 @@ auth.checkAnyUser = async (authHeader, res) => {
         return false;
     }
     const searchRes = await members.search({ token: authToken });
-    if (!searchRes || searchRes.length == 0 || searchRes[0].tokenExpiry < Date.now()) {
+    if (!searchRes || searchRes.length == 0 || (!ignoreTokenExpiry && searchRes[0].tokenExpiry < Date.now())) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
@@ -92,7 +94,7 @@ auth.login = async (tokenObj) => {
             const searchRes = await members.search({ email: payload['email'] });
             if (!searchRes || searchRes.length === 0) {
                 // Create a new user
-                const res = await members.add({
+                const user = await members.add({
                     name: {
                         first: payload['given_name'],
                         last: payload['family_name']
@@ -103,7 +105,10 @@ auth.login = async (tokenObj) => {
                     tokenExpiry: tokenObj.tokenObj.expires_at,
                     active: true,
                 });
-                return [res];
+                return {
+                    userData: user,
+                    isExistingUser: false,
+                };
             } else {
                 // Update the access token and its expiry date of an existing user
                 await members.updateMember({email: payload['email']}, 
@@ -112,7 +117,11 @@ auth.login = async (tokenObj) => {
                     token: tokenObj.accessToken,
                     tokenExpiry: tokenObj.tokenObj.expires_at
                 });
-                return await members.search({ email: payload['email'] }, false, true);
+                const user = await members.search({ email: payload['email'] }, false, true);
+                return {
+                    userData: user[0],
+                    isExistingUser: true,
+                }
             }
         }
     });

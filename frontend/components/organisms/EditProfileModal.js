@@ -13,6 +13,7 @@ import { getFilters } from '../../store/reducers/membersReducer';
 import Input from '../atoms/Input';
 import Header5 from '../atoms/Header5';
 import { updateProfileInfo, UserTypes } from "../../store/reducers/userReducer";
+import useLoadingScreen from '../../hooks/useLoadingScreen';
 
 import {isEmpty} from 'lodash';
 import theme from '../theme';
@@ -56,76 +57,16 @@ const InputSegment = ({label, name, placeholder, value, handleChange, error = fa
     )
 }
 
-const DateInputSegment = ({label, name, value, handleChange, error = false, errorText = ""}) => {
-    
-    const handleDateChange = (datePart, datePartValue) => {
-        if (!datePartValue) datePartValue = "";
-        if (datePartValue.match(/^[0-9]*$/)) {
-            let fragmentedDate = value.split('-');
-            
-            switch(datePart) {
-                case 'year':
-                    if (datePartValue.length <= 4) fragmentedDate[0] = datePartValue;
-                    break;
-                case 'month':
-                    if (datePartValue.length <= 2) fragmentedDate[1] = datePartValue;
-                    break;
-                case 'day':
-                    if (datePartValue.length <= 2) fragmentedDate[2] = datePartValue;
-                    break;
-            }
-            handleChange(name, fragmentedDate.join('-'));
-        }
-    }
-    
-    return (
-        <>
-            <Header5>{label}</Header5>
-            <SystemComponent display="grid" gridTemplateColumns='1fr 1fr 2fr'>
-                <SystemComponent gridColumn="1 / span 1">
-                    <CustomInput 
-                        placeholder="MM"
-                        maxlength="2"
-                        variant="text"
-                        value={value.split('-')[1]}
-                        onChange={(evt) => handleDateChange('month', evt.target.value) }
-                    />
-                </SystemComponent>
-                <SystemComponent gridColumn="2 / span 1">
-                    <CustomInput 
-                        placeholder="DD"
-                        maxlength="2"
-                        variant="text"
-                        value={value.split('-')[2]}
-                        onChange={(evt) => handleDateChange('day', evt.target.value)} 
-                    />
-                </SystemComponent>
-                <SystemComponent gridColumn="3 / span 1">
-                    <CustomInput 
-                        placeholder="YYYY"
-                        maxlength="4"
-                        variant="text"
-                        value={value.split('-')[0]}
-                        onChange={(evt) => handleDateChange('year', evt.target.value)} 
-                    />
-                </SystemComponent>
-            </SystemComponent>
-            {error && <SystemComponent color={theme.colors.alertAction}>{errorText}</SystemComponent>}
-        </>
-    )
-};
-
 const SelectSegment = ({title,
-    name,
-    handleChange,
-    value,
-    options,
-    allowCustomInput = false,
-    error = false, 
-    errorText = "",
-    helpMessage}) => {
+                        name,
+                        handleChange,
+                        value,
+                        options,
+                        allowCustomInput = false,
+                        error = false,
+                        errorText = "",
+                        helpMessage}) => {
 
-        // TODO: refactor this
         const handleOptChange = (title, val) => {
             handleChange(name, val);
         };
@@ -135,7 +76,7 @@ const SelectSegment = ({title,
                 <SettingsInputPair title={title}
                     value={value}
                     options={options}
-                    onChange={handleOptChange} // TODO: extra parameter passed up.
+                    onChange={handleOptChange}
                     isMulti={false}
                     allowCustomInput={allowCustomInput}
                     helpMessage={helpMessage}
@@ -146,7 +87,7 @@ const SelectSegment = ({title,
 }
 
 const validProgramPattern = /^[A-Za-z,'-\s]*$/;
-const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
+const EditProfileModal = ({handleCloseModal, visible}) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user, hydrated } = useSelector(state => state.userState);
@@ -154,17 +95,19 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     const { interests: interestOpts, skills: skillOpts } = filters;
 
     const [formValues, setFormValues] = useState({
-        firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
-        lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
-        program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
-        bio: dataLoaded ? user.bio : ""
+        firstName: !isEmpty(user.name) ? user.name.first : "",
+        lastName: !isEmpty(user.name) ? user.name.last : "",
+        program: PROGRAM_OPTS.find(opt => opt.value === user.program) ? {label: PROGRAM_OPTS.find(opt => opt.value === user.program).label, value: user.program} : {label: "", value: ""},
+        bio: user.bio
     });
-    const [interests, setInterests] = useState(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
-    const [skills, setSkills] = useState(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
+    const [interests, setInterests] = useState(user.interests ? user.interests.map(i => i.name) : []);
+    const [skills, setSkills] = useState(user.skills ? user.skills.map(s => s.name) : []);
     const [hasError, setHasError] = useState({
         firstName: false,
         program: false
     });
+
+    const [loader, showLoader, hideLoader] = useLoadingScreen(false);
 
     useEffect(() => {
         if (isEmpty(filters)) {
@@ -175,20 +118,20 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
     useEffect(() => {
         setFormValues({
             ...formValues, 
-            firstName: dataLoaded && !isEmpty(user) ? user.name.first : "",
-            lastName: dataLoaded && !isEmpty(user) ? user.name.last : "",
-            program: (dataLoaded && PROGRAM_OPTS.find(opt => opt.value === user.program)) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
-            bio: dataLoaded ? user.bio : ""
+            firstName: !isEmpty(user.name) ? user.name.first : "",
+            lastName: !isEmpty(user.name) ? user.name.last : "",
+            program: PROGRAM_OPTS.find(opt => opt.value === user.program) ? {label: PROGRAM_OPTS.find(opt => opt.value == user.program).label, value: user.program} : {label: "", value: ""},
+            bio: user.bio ? user.bio : ""
         });
 
-        setInterests(dataLoaded && user.interests ? user.interests.map(i => i.name) : []);
-        setSkills(dataLoaded && user.skills ? user.skills.map(s => s.name) : []);
+        setInterests(user.interests ? user.interests.map(i => i.name) : []);
+        setSkills(user.skills ? user.skills.map(s => s.name) : []);
 
         setHasError({
             firstName: false,
             program: false
         });
-    }, [dataLoaded]);
+    }, []);
 
     const handleSave = () => {
         const updatedErrorList = {...hasError};
@@ -202,6 +145,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
         setHasError(updatedErrorList);
 
         if (!Object.values(updatedErrorList).includes(true)) {
+            showLoader();
             updateProfileInfo(dispatch, {
                 "name": {
                     "first": formValues.firstName.trim(),
@@ -217,8 +161,11 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                     dispatch({ type: UserTypes.UPDATE_INFO, payload: res.body[0] });
                 }
                 handleCloseModal();
-            }).catch(() => {
+            }).catch((err) => {
+                console.error(err);
                 alert("An error occured when updating your profile information.");
+            }).finally(() => {
+                hideLoader();
             });
         }
     }
@@ -313,6 +260,7 @@ const EditProfileModal = ({dataLoaded, visible, handleCloseModal}) => {
                         <TextArea value={formValues['bio']} onChange={e => handleInputChange('bio', e.target.value)}></TextArea>
                     </SystemComponent>
                 </SystemComponent>
+                {loader}
             </EditSettingsModal>
         </>
     );

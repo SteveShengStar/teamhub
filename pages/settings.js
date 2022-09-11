@@ -15,6 +15,7 @@ import {getProfileInfo} from '../frontend/store/reducers/userReducer';
 import TeamsSection from './settings/teams';
 import UserProfileSection from './settings/userprofile';
 import LinksSection from './settings/links';
+import useStatelessLoadingScreen from '../frontend/hooks/useStatelessLoadingScreen';
 
 
 const Frame = styled(Card)`
@@ -31,15 +32,21 @@ const Settings = () => {
     const [ activeModal, setActiveModal ] = useState(false);
     const [ userDataLoaded, setUserDataLoaded ] = useState(false);
     const { hydrated, user } = useSelector(state => state.userState);
+    const [loader, showLoader, hideLoader] = useStatelessLoadingScreen(
+        !userDataLoaded, 
+        (showLoader) => setUserDataLoaded(!showLoader)
+    );
     
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
     }
 
-    useEffect(() => {
-        if (hydrated && !userDataLoaded) {
-            getProfileInfo(dispatch, user._id, router);
-            setUserDataLoaded(true);
+    useEffect(async () => {
+        if (hydrated) {
+            // setTimeout(function(){
+            await getProfileInfo(dispatch, user._id, router);
+            hideLoader();
+            // }, 2000);
         }
     }, [hydrated]);
 
@@ -49,10 +56,10 @@ const Settings = () => {
                 <SettingsModalSelector  
                     activeModal={activeModal}
                     handleCloseModal={handleCloseModal}
-                    userDataLoaded={userDataLoaded}
                 />
-                <SystemComponent display="flex" overflow="hidden">
-                    <Frame>
+                <SystemComponent display="flex" overflow="hidden" margin="auto">
+                    <Frame position="relative">
+                        {loader}
                         <TeamsSection 
                             sectionTitle="Teams &amp; Responsibilities"
                             setActiveModal={setActiveModal}

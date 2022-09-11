@@ -10,7 +10,7 @@ const EditableSectionHeader = ({title, handleEditClicked}) => {
     const theme = useContext(ThemeContext);
     
     return (
-        <SystemComponent display='flex' justifyContent='flex-start' flexDirection='row'>
+        <SystemComponent display='flex' justifyContent='space-between'>
             <SystemComponent 
                 style={{ transformOrigin: 'left' }} 
                 mr={theme.space.editableHeaderMargin}

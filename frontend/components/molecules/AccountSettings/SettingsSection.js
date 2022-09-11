@@ -6,7 +6,6 @@ import EditableSectionHeader from './EditableSectionHeader';
 
 
 const SettingsComponentBody = styled(SystemComponent)`
-    padding-left: ${props => props.theme.space.settingsSubsectionPadding}px;
     display: grid;
     grid-row-gap: ${props => props.theme.space[3]}px;
     margin-bottom: ${props => props.theme.space[5]}px;

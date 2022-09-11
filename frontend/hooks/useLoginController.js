@@ -19,21 +19,22 @@ const useLoginController = (loginTransition, dispatch) => {
     useEffect(() => {
         if (hydrated) {
             // Authenticate and check the validity of the user access token
-            api.auth.loginWithToken(dispatch, router).then(user => {
-                dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user }) // Update the Redux Store
+            api.auth.loginWithToken(dispatch, router)
+                .then(user => {
+                    dispatch({ type: UserTypes.RECEIVED_LOGIN, payload: user }) // Update the Redux Store
 
-                // Redirect the user (if necessary) to the appropriate webpage
-                if (!useShouldRedirect(user, router)) {
-                    loginTransition.show()
-                }
-            }).catch(err => {
-                console.error(err);
+                    // Redirect the user (if necessary) to the appropriate webpage
+                    if (!useShouldRedirect(user, router)) {
+                        loginTransition.show()
+                    }
+                }).catch(err => {
+                    console.error(err);
 
-                // Redirect the user (if necessary) to the appropriate webpage
-                if (!useShouldRedirect(user, router)) {
-                    loginTransition.show()
-                }
-            })
+                    // Redirect the user (if necessary) to the appropriate webpage
+                    if (!useShouldRedirect(user, router)) {
+                        loginTransition.show()
+                    }
+                })
             return;
         }
 
