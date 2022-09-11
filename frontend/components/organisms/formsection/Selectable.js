@@ -51,7 +51,7 @@ const OptionRow = ({opt, optionIdx, handleOptionChange, handleOptionDelete, read
             {
                 !readOnly &&
                 <RemoveOptionButton>
-                    <span className="fas fa fa-times" onClick={() => handleOptionDelete(optionIdx)}/>
+                    <span className="fa fa-solid fa-xmark" onClick={() => handleOptionDelete(optionIdx)}/>
                 </RemoveOptionButton>
             }
         </>
@@ -72,8 +72,8 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
     if (type === 'boolean') {
         return (
             <>
-                <OptionRow opt='Yes' optionIdx={0} readOnly='true' />
-                <OptionRow opt='No' optionIdx={1} readOnly='true' />
+                <OptionRow opt='Yes' optionIdx={0} readOnly={true} />
+                <OptionRow opt='No' optionIdx={1} readOnly={true} />
             </>
         );
     } else {
@@ -82,16 +82,16 @@ const OptionsList = ({options, type, handleOptionChange, handleOptionAdd, handle
                 <SystemComponent fontSize={`${theme.fontSizes.body2}px`} gridColumn="1/4">Edit Your Options Below:</SystemComponent>
                 {
                     options.map((opt, optionIdx) => 
-                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)} handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)} />
+                        <OptionRow key={optionIdx} opt={opt} optionIdx={optionIdx} handleOptionChange={handleOptionChange} handleOptionDelete={handleOptionDelete} />
                     )
                 }
-                <AddOptionButton handleOptionAdd={() => handleOptionAdd(sectionName)}/>
+                <AddOptionButton handleOptionAdd={handleOptionAdd}/>
             </>
         )
     }
 }
 
-const Selectable = ({type, sectionName, question, helpText, options = [], canDelete, handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate}) => {
+const Selectable = ({type, sectionName, question, helpText, options = [], required, canDelete, handleTypeChange, handleInputChange, handleOptionChange, handleOptionAdd, handleOptionDelete, handleSectionDelete, handleSectionDuplicate, handleToggleRequired}) => {
     const theme = useContext(ThemeContext);
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
@@ -100,6 +100,7 @@ const Selectable = ({type, sectionName, question, helpText, options = [], canDel
             name={sectionName}
             question={question} 
             helpText={helpText}
+            required={required}
             canDelete={canDelete}
             sectionModifiers={sectionModifiers}
             handleTypeChange={(newType) => {
@@ -137,14 +138,15 @@ const Selectable = ({type, sectionName, question, helpText, options = [], canDel
             }}
             handleSectionDelete={handleSectionDelete}
             handleSectionDuplicate={handleSectionDuplicate}
+            handleToggleRequired={handleToggleRequired}
         >
             <SystemComponent display="grid" gridTemplateColumns="12px auto 12px" gridColumnGap={`${theme.space[3]}px`} gridRowGap={`${theme.space[3]}px`}>
                 <OptionsList
                     options={options}
                     type={type}
-                    handleOptionAdd={handleOptionAdd}
-                    handleOptionChange={handleOptionChange}
-                    handleOptionDelete={handleOptionDelete}
+                    handleOptionAdd={() => handleOptionAdd(sectionName)}
+                    handleOptionChange={(optionIdx, newValue) => handleOptionChange(sectionName, optionIdx, newValue)}
+                    handleOptionDelete={(optionIdx) => handleOptionDelete(sectionName, optionIdx)}
                 />
             </SystemComponent>
         </BaseSection>

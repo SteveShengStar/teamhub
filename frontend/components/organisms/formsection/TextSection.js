@@ -61,7 +61,7 @@ const getModifiersBySectionType = (type) => {
     }
 }
 
-const TextSection = ({type, sectionName, question, helpText, canDelete, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate}) => {
+const TextSection = ({type, sectionName, question, helpText, required, canDelete, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate, handleToggleRequired}) => {
     const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
     return (
         <BaseSection
@@ -69,6 +69,7 @@ const TextSection = ({type, sectionName, question, helpText, canDelete, handleTy
             name={sectionName} 
             question={question} 
             helpText={helpText} 
+            required={required}
             canDelete={canDelete}
             handleTypeChange={(newType) => {
                 setSectionModifiers(getModifiersBySectionType(newType.value));
@@ -100,6 +101,7 @@ const TextSection = ({type, sectionName, question, helpText, canDelete, handleTy
             }}
             handleSectionDelete={handleSectionDelete}
             handleSectionDuplicate={handleSectionDuplicate}
+            handleToggleRequired={handleToggleRequired}
         >
             <Container>
                 <AnswerPlaceholderComponent text={getPlaceholderText(type)}/>

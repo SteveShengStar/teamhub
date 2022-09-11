@@ -1,8 +1,9 @@
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
-const mongoose = require('mongoose');
+const {validateCorrectNumberOfOptions} = require('../../../util/validate');
 const { members } = require('..');
+const _ = require('lodash');
 
 const forms = {};
 
@@ -48,21 +49,77 @@ forms.fetchFormAndMemberData = async (userId, formId) => {
 }
 
 /**
- * Add a new form.
+ * Create form sections/questions that don't already exist
+ * Modify form sections/questions that exist (upsert)
  * 
- * @param {Object} formData: form metadata.
+ * @param {Array[Object]} sections: details about the form sections/question to add.
+ * @param {Array[Object]} res:      HTTP response object
  */
-forms.createForm = async (formData) => {
+forms.updateFormSections = async (sections, res) => {
+    if (!sections || sections.length === 0) {
+        return;
+    }
+
+    if (!validateCorrectNumberOfOptions(sections)) {
+        res.statusCode = 400;
+        return Promise.reject(Error("A form section has the wrong number of options. Ensure all Checkbox, Radio and Dropdown sections have 2 or more options configured."));
+    }
+
     return util.handleWrapper(async () => {
-        formData.sections = formData.sections.map(s => {
-            return { 
-                ...s,
-                section: new mongoose.Types.ObjectId(s.section._id),
+        const dbPayload = sections.map(section => {
+            return {
+                updateOne: {
+                    filter: { name: section.name },
+                    update: {
+                        $set: _.omit(section, '_id', 'position', 'required', 'section'),
+                    },
+                    upsert: true
+                }
             }
         });
-        // TODO: this should be in a transaction.
-        this.updateFormSections(formData.sections);
-        return await Form.create(formData);
+        return await FormSection.bulkWrite(dbPayload);
+    });
+}
+
+/**
+ * Add a new form.
+ * 
+ * @param {Object} formData: form metadata
+ * @param {Object} res: REST Response object
+ */
+forms.createForm = async (formData, res) => {
+    return util.handleWrapper(async () => {
+        await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
+
+        if (formData.sections) {
+            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            formData.sections = formData.sections
+                .map(s => {
+                    return {
+                        required: s.required,
+                        position: s.position,
+                        section: formSectionNamesToIds[s.name],
+                    }
+                });
+        }
+
+        try {
+            await Form.create(formData);
+        } catch (err) {
+            console.error(err);
+            const { title: titleFieldError, description: descFieldError} = err.errors;
+
+            if (titleFieldError?.kind === 'required' || descFieldError?.kind === 'required') {
+                res.statusCode = 400;
+                throw new Error("Title and Description cannot be blank.");
+            }
+            if (titleFieldError?.kind === 'unique') {
+                res.statusCode = 400;
+                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
+            }
+            res.statusCode = 500;
+            throw err;
+        }
     });
 }
 
@@ -71,42 +128,52 @@ forms.createForm = async (formData) => {
  * 
  * @param {Object} formData: new metadata for the form.
  */
-forms.updateFormMetadata = async (formId, formData) => {
+forms.updateFormMetadata = async (formId, formData, res) => {
     return util.handleWrapper(async () => {
-        // TODO: this should be in a transaction.
-        this.updateFormSections(formData.sections);
+        await forms.updateFormSections(formData.sections, res);  // TODO: this should be in a transaction.
+        
+        if (formData.sections) {
+            const formSectionNamesToIds = await getFormSectionNamesToIds();
+            const sectionNames = Object.keys(formSectionNamesToIds);
+            formData.sections = formData.sections.filter(s => sectionNames.includes(s.name))
+                .map(s => {
+                    return {
+                        required: s.required,
+                        position: s.position,
+                        section: formSectionNamesToIds[s.name],
+                    }
+                });
+        }
 
-        // Disassociate form sections that were deleted from this form.
-        const existingSections = (await FormSection.find()).map(section => section.name);
-        formData.sections = formData.sections.filter(s => existingSections.includes(s.section.name));
-        return await Form.updateOne({_id: formId}, formData);
+        try {
+            await Form.updateOne({_id: formId}, _.omit(formData, '_id'), { runValidators: true });
+        } catch (err) {
+            console.error(err);
+            const { title: titleFieldError, description: descFieldError} = err.errors;
+
+            if (titleFieldError?.kind === 'required' || descFieldError?.kind === 'required') {
+                res.statusCode = 400;
+                throw new Error("Title and Description cannot be blank.");
+            }
+            if (titleFieldError?.kind === 'unique') {
+                res.statusCode = 400;
+                throw new Error("Another form already exists with the title: " + titleFieldError.value + ". Please enter a different title.");
+            }
+            res.statusCode = 500;
+            throw err;
+        }
     });
 }
 
-/**
- * Create form sections/questions that don't already exist
- * Modify form sections/questions that exist (upsert)
- * 
- * @param {Array[Object]} sections: details about the form sections/question to add.
- */
-forms.updateFormSections = async (sections) => {
-    return util.handleWrapper(async () => {
-        const dbPayload = sections.map(section => {
-            return {
-                updateOne: {
-                    filter: { name: section.name },
-                    update: {
-                        $set: section,
-                    },
-                    upsert: true
-                }
-            }
-        });
-        FormSection.bulkWrite(dbPayload)
-            .then(console.log.bind(console, 'BULK update OK'))
-            .catch(console.error.bind(console, 'BULK update error'));
-        return {};
-    });
+const getFormSectionNamesToIds = async () => {
+    const formSections = await FormSection.find();
+    const formSectionNamesToIds = {};
+    formSections.map(
+        s => {
+            formSectionNamesToIds[s.name] = s._id;
+        }
+    );
+    return formSectionNamesToIds;
 }
 
 module.exports = forms;

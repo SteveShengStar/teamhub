@@ -19,14 +19,17 @@ const FormSectionSchema = new Schema({
     },
     errorText: {
         type: String,
+        description: 'Custom error message shown when user answers this question wrong.',
         required: false,
     },
     description: { // TODO: set a character limit later.
         type: String,
+        description: 'Help text to display to the user.',
         required: false,
     },
     options: { // TODO: set a character limit later.
         type: [String],
+        description: 'Possible options (for checkbox questions, dropdown menus, etc.) the user can select.',
         required: false,
     },
     maxLength: {
@@ -40,7 +43,7 @@ const FormSectionSchema = new Schema({
         required: true
     },
     customizable: {
-        type: Boolean,
+        type: String,
         description: "delete means the section can be deleted. edit means the section can be edited, but not deleted.",
         enum: ["edit", "delete"]
     }
