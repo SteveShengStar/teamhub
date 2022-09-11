@@ -3,7 +3,7 @@ const authConfig = require('./auth.config.json');
 const {google} = require('googleapis');
 const {getAll} = require('./members');
 
-const {RETURNING_MEMBERS_FIELDS, TEAM_ROSTER_FIELDS, RETURNING_MEMBERS_SPREADSHEET_HEADERS, TEAM_ROSTER_SPREADSHEET_HEADERS} = require('./constants');
+const {RETURNING_MEMBERS_FIELDS, TEAM_ROSTER_FIELDS, START_TERM_FIELDS, RETURNING_MEMBERS_SPREADSHEET_HEADERS, TEAM_ROSTER_SPREADSHEET_HEADERS, START_TERM_SPREADSHEET_HEADERS} = require('./constants');
 
 const googlesheets = {};
 
@@ -26,10 +26,11 @@ googlesheets.writefile = async (token, formName) => {
         case 'register':
             exportRegister(token);
             break;
+        case 'startofterm':
+            exportStartTerm(token);
+            break;
         case 'returning':
             exportReturning(token);
-            break;
-        case 'startofterm':
             break;
     }
 }
@@ -72,6 +73,50 @@ const exportRegister = async (token) => {
     const driveResponse = await googleDrive.files.create(driveRequest);
     console.log(driveResponse);
     
+    // update spreadsheet
+    const request = {
+        spreadsheetId: driveResponse.data.id,
+        range: 'Sheet1',  
+        valueInputOption: 'USER_ENTERED', 
+        resource: {
+            values: spreadsheetData
+        },
+    };
+    const googleSheets = getGoogleSheetsClient(token);
+    const response = await googleSheets.spreadsheets.values.update(request);
+    return response.config.url;
+}
+
+const exportStartTerm = async (token) => {
+    const fields = getFields(START_TERM_FIELDS);
+    const userData = (await getAll(fields)).map(row => {
+        return {
+            fullName: row.name.first + " " + row.name.last,
+            phoneNumber: row.miscDetails?.phone ?? '',
+        }
+    });
+    console.log("1");
+
+    const spreadsheetData = [START_TERM_SPREADSHEET_HEADERS];
+    spreadsheetData.push(...userData.map(data => Object.values(data)));
+
+    //create new file with Drive api
+    const currentDate = new Date()
+    const fileName = `Beginning of Term Form - ${currentDate.toLocaleString('en-CA', { timeZone: 'EST' })}` 
+    const fileMetadata = {
+        'name' : fileName,
+        parents :[],
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+    };
+    const driveRequest = {
+        resource: fileMetadata,
+        fields: 'id',
+    }; 
+    const googleDrive = getGoogleDriveClient(token);
+    const driveResponse = await googleDrive.files.create(driveRequest);
+    console.log('driveResponse');
+    console.log(driveResponse);
+
     // update spreadsheet
     const request = {
         spreadsheetId: driveResponse.data.id,
