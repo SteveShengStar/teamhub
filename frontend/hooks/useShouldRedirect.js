@@ -3,8 +3,9 @@ import { USER_REGISTRATION_REQUIRED_FORM_FIELDS } from '../constants';
 /**
  * Redirects the user to the appropriate webpage.
  * 
- * @param {*} user
- * @param {*} router
+ * @param {*} user            member details
+ * @param {*} router          router object
+ * @param {*} isExistingUser  whether the user is an existing user (not a new user)
  */
 const useShouldRedirect = (user, router, isExistingUser) => {
     if (!isExistingUser) {
