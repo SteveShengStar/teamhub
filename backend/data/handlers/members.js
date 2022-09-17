@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const Member = require('../schema/Member');
 const UserDetails = require('../schema/UserDetails');
 const skills = require('./skills');
@@ -9,8 +7,6 @@ const projects = require('./projects');
 const subteams = require('./subteams');
 const util = require('./util');
 const _ = require('lodash');
-
-const db = mongoose.connection;
 
 const members = {};
 
@@ -98,7 +94,7 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
             if (showToken) {
                 query.select('+token');
             }
-            return await query.exec();
+            return await query.lean(); // TODO: regression-test this change.
         } else {
             let res;
             if (showToken) {
@@ -131,14 +127,13 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
  */
 members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
-        const userSummaryFields = Object.keys(Member.schema.paths);
-        const userDetailFields = Object.keys(UserDetails.schema.paths);
-        let userSummary = _.omit(_.pick(userPayload, userSummaryFields), "_id");
-        let userDetails = _.omit(_.pick(userPayload, userDetailFields), "_id");
+        const memberFields = Object.keys(Member.schema.paths);
+        let userSummary = _.omit(_.pick(userPayload, memberFields), "_id");
+        let userDetails = _.omit(userPayload, [...memberFields, "_id"]);
 
-        const userDetailsResponse = await UserDetails.create(userDetails);
-        userSummary.miscDetails = userDetailsResponse._id;
-        userSummary = await replacePayloadWithIds(userSummary);
+        const userDetailsResp = await UserDetails.create(userDetails);
+        userSummary.miscDetails = userDetailsResp._id;
+        userSummary = await members.replacePayloadWithIds(userSummary);
         const res = await Member.create(userSummary);
         return res;
     });
@@ -168,14 +163,14 @@ members.delete = async (filter) => {
  * @param {payload}: The new info. for the member
  */
 members.updateMember = async (filter, payload) => {
+    // Get fields stored in the Member collection.
     const memberFields = Object.keys(Member.schema.paths);
-    const userDetailFields = Object.keys(UserDetails.schema.paths);
     let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
-    let memberDetails = _.omit(_.pick(payload, userDetailFields), "_id");
+    let memberDetails = _.omit(payload, [...memberFields, "_id"]);
 
     return util.handleWrapper(async () => {
         if (!_.isEmpty(memberSummary)) {
-            memberSummary = await replacePayloadWithIds(memberSummary);
+            memberSummary = await members.replacePayloadWithIds(memberSummary);
             await Member.updateOne(filter, memberSummary).exec();
         }
         if (!_.isEmpty(memberDetails)) {
@@ -194,7 +189,7 @@ members.updateMember = async (filter, payload) => {
  */
 members.updateAllMembers = async (payload) => {
     return util.handleWrapper(async () => {
-        payload = await replacePayloadWithIds(payload);
+        payload = await members.replacePayloadWithIds(payload);
         return (await Member.updateMany({}, payload).exec());
     });
 };
@@ -205,7 +200,7 @@ members.updateAllMembers = async (payload) => {
  * @param {Object} filter: selection criteria for selecting which members to give the new task to
  * @param {Object} newTask: details describing the new task
  */
- members.assignTaskToAllMembers = async (filter, newTask) => {
+members.assignTaskToAllMembers = async (filter, newTask) => {
     return util.handleWrapper(async () => {
         return await Member.updateMany( filter, { $push: { tasks: newTask }} );
     });
@@ -227,7 +222,7 @@ members.updateTaskStatus = async (filter, payload) => {
     });
 };
 
-const replacePayloadWithIds = async (payload) => {
+members.replacePayloadWithIds = async (payload) => {
     if (payload.interests) {
         if (Array.isArray(payload.interests)) {
             payload.interests = await util.replaceNamesWithIdsArray(payload.interests, interests);

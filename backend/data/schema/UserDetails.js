@@ -42,7 +42,7 @@ const UserDetailsSchema = new Schema({
     machineShop: {
         type: Boolean
     }
-});
+}, { strict: false });
 
 let UserDetails;
 try {

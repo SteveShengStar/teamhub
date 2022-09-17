@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
 import Header4 from '../../atoms/Header4';
@@ -22,19 +22,20 @@ const TitleSection = ({text, required}) => {
 const DescriptionSection = ({text}) => { // TODO: incorporate form-section descriptions later.
     return (
         <SystemComponent>
-            <Header4>
-                {text}
-            </Header4>
+            {text}
         </SystemComponent>
     )
 }
 
-const FieldSection = ({title, description='', type="textbox", required, onChange, name, value, hasError=false, errorText, options=[] }) => {
+const FieldSection = ({title, description='', type="text", required, onChange, name, value, hasError=false, errorText="Incorrect answer provided. Please double-check your answer.", options=[] }) => {
     const theme = useContext(ThemeContext);
     const renderInputField = (type) => {
-
         switch (type) {
-            case 'textbox':
+            case 'text':
+            case 'longtext':
+            case 'phone': // TODO: have separate inputs for phone and dropdowns
+            case 'email':
+            case 'numbers':
                 return (
                     <Input height={[
                         theme.textInputHeight.small, 
@@ -57,7 +58,8 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
                 )
             case 'radio':
                 return (
-                    <RadioSection options={options}
+                    <RadioSection 
+                        options={options}
                         selectedOption={value}
                         name={name}
                         setSelectedOption={onChange}
@@ -85,6 +87,7 @@ const FieldSection = ({title, description='', type="textbox", required, onChange
         >
             <SystemComponent textAlign='left' mb={["10px", "15px"]}>
                 <TitleSection text={title} required={required} />
+                <DescriptionSection text={description}/>
             </SystemComponent>
 
             <SystemComponent>

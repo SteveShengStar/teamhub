@@ -6,10 +6,10 @@
 import App from 'next/app';
 import React from 'react';
 import withReduxStore from "../frontend/store/withReduxStore"
+import { Provider } from 'react-redux';
 
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
-import { Provider } from 'react-redux';
 
 import { ThemeProvider } from 'styled-components';
 import theme from '../frontend/components/theme';

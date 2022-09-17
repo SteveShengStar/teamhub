@@ -1,7 +1,7 @@
 const Task = require('../schema/Task');
 const Member = require('../schema/Member');
 const util = require('./util');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectId;
 
 const task = {};
 
@@ -23,7 +23,7 @@ task.getAll = async () => {
  */
 task.get = async (userId, status) => {
     return util.handleWrapper(async () => {
-        const filter = status ? {_id: new ObjectID(userId), "tasks.status": status} : {_id: new ObjectID(userId)};
+        const filter = status ? {_id: new ObjectId(userId), "tasks.status": status} : {_id: new ObjectId(userId)};
 
         const query = Member.find(filter)
                             .select("tasks")

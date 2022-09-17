@@ -1,7 +1,7 @@
-const data = require('../../../backend/data/index');
 import {difference} from 'lodash';
-var ObjectID = require('mongodb').ObjectID;
+const data = require('../../../backend/data/index');
 const cookie = require('cookie');
+const ObjectId = require('mongodb').ObjectId;
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
                     searchBarPlaceholderTexts: searchBarPlaceholderTexts, 
                     documentLinks: documentLinks
                 });
-            const taskID = new ObjectID(queryResponse._id);
+            const taskID = new ObjectId(queryResponse._id);
 
 
             // If no subteams are specified in the payload, associate the new task with every subteam
