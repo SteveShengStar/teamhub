@@ -146,6 +146,8 @@ const ReturningMembersForm = () => {
         }).finally(() => {        
             hideLoader();
         });
+    } else {
+      scrollToFirstError(formSections, formErrors);
     }
   };
 

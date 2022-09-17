@@ -169,7 +169,7 @@ const RegistrationForm = () => {
                 hideLoader();
             });
         } else {
-            scrollToFirstError(formErrors);
+            scrollToFirstError(formSections, formErrors);
         }
     }
 

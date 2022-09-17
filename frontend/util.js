@@ -87,6 +87,32 @@ export const getCustomFieldDefaults = (formSections) => {
     return defaultVals;
 }
 
+export const scrollToFirstError = (formSections, formErrors) => {
+    let minIndex = Number.MAX_VALUE;
+    for (const [sectionName, hasError] of Object.entries(formErrors)) {
+        if (hasError) {
+            const idx = formSections.findIndex(section => section.name === sectionName);
+            if (idx !== -1 && idx < minIndex) {
+                minIndex = idx;  // Update the minimum index.
+            }
+        }
+    }
+
+    if (minIndex === Number.MAX_VALUE) {
+        return;
+    }
+
+    const scrollToSectionName = formSections[minIndex].name;
+    const element = document.getElementById(scrollToSectionName);
+    if (element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
+    }
+}
+
 const validateExists = (formData, formErrors, field) => {
     if (!formData[field]?.trim()) {
         formErrors[field] = true;
