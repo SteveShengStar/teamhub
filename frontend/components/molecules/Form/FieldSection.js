@@ -81,7 +81,7 @@ const FieldSection = ({title, description='', type="text", required, onChange, n
     return (
         <SystemComponent
             fontSize={theme.fontSizes.header3}
-            id={name}
+            id={name}  // Component needs `id` value set since in frontend/util.js#scrollToFirstError, we rely on this id to select the DOM element to scroll up to.
             textAlign='left'
             width={["98%", "100%", "100%", "600px"]}
         >
