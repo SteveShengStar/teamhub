@@ -1,4 +1,3 @@
-const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
 const {google} = require('googleapis');

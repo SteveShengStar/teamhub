@@ -164,11 +164,7 @@ const RegistrationForm = () => {
 
     const handleFieldChange = (name, value) => {
         setFormValues({...formValues, [name]: value});
-    }
-
-    const handleFieldChange = (name, value) => {
-        setFormValues({...formValues, [name]: value});
-    }
+    };
 
     return (
         <>
