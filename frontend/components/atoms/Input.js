@@ -14,18 +14,18 @@ const Input = styled(SystemInput)(
                 transition: 'all 0.2s ease',
                 borderRadius: 'small',
                 '&:hover': {
-                    borderColor: 'greys.4'
+                    borderColor: 'greys.4',
                 },
                 '&:focus': {
                     outline: 'none',
-                    borderColor: 'action' 
+                    borderColor: 'action',
                 },
                 '&::placeholder': {
-                    color: 'greys.2'
+                    color: 'greys.2',
                 },
-                fontSize: 1
-            }
-        }
+                fontSize: 1,
+            },
+        },
     })
 );
 export default Input;

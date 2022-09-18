@@ -1,9 +1,9 @@
-import {SystemComponent} from '../SystemComponents';
+import { SystemComponent } from '../SystemComponents';
 
-
-const BoxedListItem = ({className, variant, text}) => {
+const BoxedListItem = ({ className, variant, text }) => {
     return (
-        <SystemComponent pt={1}
+        <SystemComponent
+            pt={1}
             pb={1}
             bg={variant}
             borderRadius={2}
@@ -13,7 +13,6 @@ const BoxedListItem = ({className, variant, text}) => {
         >
             {text}
         </SystemComponent>
-    )
-}
+    );
+};
 export default BoxedListItem;
-

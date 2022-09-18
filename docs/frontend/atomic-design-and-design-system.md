@@ -4,18 +4,18 @@ The purpose of this document is to outline how exactly Team Hub uses atomic desi
 
 ## Table of Contents
 
-- [Atomic Design & The Design System](#atomic-design--the-design-system)
-  - [Table of Contents](#table-of-contents)
-  - [The Model](#the-model)
-    - [DNA and Theme](#dna-and-theme)
-  - [Atoms](#atoms)
-  - [Molecules](#molecules)
-  - [Organisms](#organisms)
-  - [Templates](#templates)
-  - [Pages](#pages)
-  - [In Combination with Styled Components](#in-combination-with-styled-components)
-  - [Styled System with Styled Components](#styled-system-with-styled-components)
-  - [Final notes](#final-notes)
+-   [Atomic Design & The Design System](#atomic-design--the-design-system)
+    -   [Table of Contents](#table-of-contents)
+    -   [The Model](#the-model)
+        -   [DNA and Theme](#dna-and-theme)
+    -   [Atoms](#atoms)
+    -   [Molecules](#molecules)
+    -   [Organisms](#organisms)
+    -   [Templates](#templates)
+    -   [Pages](#pages)
+    -   [In Combination with Styled Components](#in-combination-with-styled-components)
+    -   [Styled System with Styled Components](#styled-system-with-styled-components)
+    -   [Final notes](#final-notes)
 
 ## The Model
 
@@ -23,11 +23,11 @@ There are many people who have written about atomic design. While we follow the 
 
 We separate our application into 5 main sections
 
-- Atoms
-- Molecules
-- Organisms
-- Templates
-- Pages
+-   Atoms
+-   Molecules
+-   Organisms
+-   Templates
+-   Pages
 
 Each one of these sections are pretty distinctly organized in the code with separate folders for each.
 
@@ -102,21 +102,29 @@ Molecules more complex components that are built strictly from atoms. For exampl
 There isn't much logic present in molecules. They simply take in props to render the correct data and notify it's parent when an action happens. For example, the MemberPreviewComponent is a great example of a molecule:
 
 ```javascript
-const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isOnStream}) => {
+const MemberPreviewComponent = ({
+    name,
+    subteam,
+    role,
+    onClick,
+    imageUrl,
+    term,
+    isOnStream,
+}) => {
     return (
-        <GridLayout 
-            backgroundColor="greys.0"
-            borderRadius="small"
-            height={36} 
+        <GridLayout
+            backgroundColor='greys.0'
+            borderRadius='small'
+            height={36}
             onClick={onClick}
         >
-            <Image 
-                height={36} 
+            <Image
+                height={36}
                 key={0}
-                src={imageUrl || "/static/default-headshot.png"}
-                gridRow="1/3"
-                borderRadius="18px"
-                overflow="visible"
+                src={imageUrl || '/static/default-headshot.png'}
+                gridRow='1/3'
+                borderRadius='18px'
+                overflow='visible'
             />
 
             <RowFlexLayout>
@@ -124,12 +132,13 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, i
                 <Body>{term}</Body>
             </RowFlexLayout>
 
-            <RowFlexLayout gridRow="2/3" gridColumn="2/3">
-                <BorderlessButton variant={'software'}>{subteam && subteam.name || ""}</BorderlessButton>
+            <RowFlexLayout gridRow='2/3' gridColumn='2/3'>
+                <BorderlessButton variant={'software'}>
+                    {(subteam && subteam.name) || ''}
+                </BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
-            <Dot isOnStream={isOnStream}/>
-
+            <Dot isOnStream={isOnStream} />
         </GridLayout>
     );
 };
@@ -171,8 +180,8 @@ We want to access the theme object that's passed into our styled-components as p
 
 ```javascript
 const Component = styled.div`
-    background-color: ${props => props.theme.colors.background};
-`
+    background-color: ${(props) => props.theme.colors.background};
+`;
 ```
 
 There's no magic happening inside of `${props => props.theme.colors.background}`. This is simply an arrow function with parameter props which is whatever props are passed down to the component. `props.theme.colors.background` is just accessing properties of props, and the theme (props and theme are both `object` types).
@@ -182,18 +191,14 @@ Each of our atoms and molecules are designed to be extendable by a styled-compon
 ```javascript
 styled(MyOwnDefinedReactComponent)`
     styles...
-`
+`;
 ```
 
 This will pass a generated className prop to `MyOwnDefinedReactComponent` and apply the new styles to the React component. In the definition of `MyOwnDefinedReactComponent`, you just need to receive the className prop and assign it to a JSX Element:
 
 ```javascript
-function MyOwnDefinedReactComponent({className, ...otherProps}) {
-    return (
-        <div className={className}>
-            {children}
-        </div>
-    );
+function MyOwnDefinedReactComponent({ className, ...otherProps }) {
+    return <div className={className}>{children}</div>;
 }
 ```
 

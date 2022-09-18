@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import LoadingScreen from '../components/organisms/LoadingScreen';
 
 /**
@@ -9,8 +9,8 @@ const useLoadingScreen = (isLoading) => {
 
     return [
         loading ? <LoadingScreen /> : null,
-        () => setLoading(true),     // show the loader
-        () => setLoading(false)     // Hide the loader
+        () => setLoading(true), // show the loader
+        () => setLoading(false), // Hide the loader
     ];
-}
+};
 export default useLoadingScreen;

@@ -1,59 +1,57 @@
 import React from 'react';
-import {startCase} from 'lodash';
+import { startCase } from 'lodash';
 
 import Header4 from '../atoms/Header4';
 import BoxedListItem from '../atoms/AccountSettings/BoxedListItem';
-import {SystemComponent} from '../atoms/SystemComponents';
+import { SystemComponent } from '../atoms/SystemComponents';
 
-
-const ListItemWrapper = ({variant, label}) => (
+const ListItemWrapper = ({ variant, label }) => (
     <SystemComponent mr={5} mb={2}>
-        <BoxedListItem 
-            variant={variant} 
-            text={label}
-        />
+        <BoxedListItem variant={variant} text={label} />
     </SystemComponent>
 );
 
-
-const SettingsSubsection = ({type,
-                            headerText, 
-                            labelValues,
-                            children,
-                            defaultDisplayText = "No entries to show. Click Edit to Add Info here."}) => {
-
+const SettingsSubsection = ({
+    type,
+    headerText,
+    labelValues,
+    children,
+    defaultDisplayText = 'No entries to show. Click Edit to Add Info here.',
+}) => {
     let sectionBody;
 
-    switch(type) {
+    switch (type) {
         case 'normal':
             sectionBody = children;
             break;
         case 'list':
         default:
             if (labelValues.length === 0) {
-                sectionBody = <SystemComponent>{defaultDisplayText}</SystemComponent>
-            }
-            else {
+                sectionBody = (
+                    <SystemComponent>{defaultDisplayText}</SystemComponent>
+                );
+            } else {
                 sectionBody = labelValues.map((labelValue, i) => (
-                    <ListItemWrapper key={i}
-                        variant="lightgrey"
+                    <ListItemWrapper
+                        key={i}
+                        variant='lightgrey'
                         label={startCase(labelValue)}
                     />
                 ));
             }
     }
-    
+
     return (
         <SystemComponent>
-            {headerText &&  
+            {headerText && (
                 <SystemComponent mb={1}>
-                    <Header4 fontSize="16.5px">{headerText}</Header4>
+                    <Header4 fontSize='16.5px'>{headerText}</Header4>
                 </SystemComponent>
-            }
-            <SystemComponent display="flex" flexWrap="wrap">
+            )}
+            <SystemComponent display='flex' flexWrap='wrap'>
                 {sectionBody}
             </SystemComponent>
         </SystemComponent>
     );
-}
+};
 export default SettingsSubsection;

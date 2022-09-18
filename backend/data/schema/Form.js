@@ -7,17 +7,17 @@ const FormSectionDetails = new Schema({
     section: {
         type: Schema.Types.ObjectId,
         ref: 'FormSection',
-        required: true
+        required: true,
     },
     position: {
         type: Number,
-        required: true
+        required: true,
     },
     required: {
         type: Boolean,
-        description: "Whether the user must answer in this question.",
-        default: false
-    }
+        description: 'Whether the user must answer in this question.',
+        default: false,
+    },
 });
 
 const FormSchema = new Schema({
@@ -29,15 +29,17 @@ const FormSchema = new Schema({
     title: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     description: {
         type: String,
         required: true,
     },
-    sections: [{
-        type: FormSectionDetails
-    }],
+    sections: [
+        {
+            type: FormSectionDetails,
+        },
+    ],
     createdDate: {
         type: String,
         required: false, // TODO: make this true later.
@@ -45,7 +47,7 @@ const FormSchema = new Schema({
     lastEdited: {
         type: String,
         required: false,
-    }
+    },
 });
 
 FormSchema.plugin(uniqueValidator);

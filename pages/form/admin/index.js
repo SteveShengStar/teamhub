@@ -2,10 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 import PageTemplate from '../../../frontend/components/templates/PageTemplate';
 import { useDispatch } from 'react-redux';
-import { useRouter } from "next/router";
-import {
-  SystemComponent
-} from '../../../frontend/components/atoms/SystemComponents';
+import { useRouter } from 'next/router';
+import { SystemComponent } from '../../../frontend/components/atoms/SystemComponents';
 import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
 import { useForms } from '../../../frontend/hooks/forms';
 import Card from '../../../frontend/components/atoms/Card';
@@ -14,7 +12,7 @@ import Button from '../../../frontend/components/atoms/Button';
 const EditFormButton = styled(Button)`
     width: 100%;
     height: 48px;
-    margin-bottom: ${props => props.theme.space.headerBottomMargin}px; 
+    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
     margin-top: 16px;
     border-radius: 5px;
 `;
@@ -62,7 +60,7 @@ const TitleText = styled.div`
     font-family: 'SF Pro';
     font-style: normal;
     font-weight: 700;
-    font-size: ${props => props.theme.fontSizes.header2}px;
+    font-size: ${(props) => props.theme.fontSizes.header2}px;
     line-height: 29px;
     /* identical to box height */
 
@@ -76,7 +74,7 @@ const TitleText = styled.div`
 
 const FormInfoCard = styled(Card)`
     padding: 30px;
-    ${props => props.theme.mediaQueries.mobile} {
+    ${(props) => props.theme.mediaQueries.mobile} {
         padding: 20px;
     }
     @media screen and (min-width: 1400px) {
@@ -84,14 +82,17 @@ const FormInfoCard = styled(Card)`
     }
 `;
 
-const Bullet = ({text, className}) => {
+const Bullet = ({ text, className }) => {
     return (
         <CheckmarkRow className={className}>
-            <i className="fa fa-solid fa-square-check fa-2x" style={{marginRight: "15px"}}/>
+            <i
+                className='fa fa-solid fa-square-check fa-2x'
+                style={{ marginRight: '15px' }}
+            />
             <Text>{text}</Text>
         </CheckmarkRow>
     );
-}
+};
 
 const BulletOverride = styled(Bullet)`
     margin-bottom: 10px;
@@ -107,18 +108,18 @@ const BulletsSection = styled(SystemComponent)`
     height: 200px;
 `;
 
-const FormMetadataSection = ({src, title, bulletPoints, formName = ''}) => {
+const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
 
     return (
         <FormInfoCard
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            maxWidth="450px"
-            marginLeft="auto"
-            marginRight="auto"
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            justifyContent='center'
+            maxWidth='450px'
+            marginLeft='auto'
+            marginRight='auto'
         >
             <SystemComponent>
                 <BigIconWrapper>
@@ -129,11 +130,11 @@ const FormMetadataSection = ({src, title, bulletPoints, formName = ''}) => {
                 <TitleText>{title}</TitleText>
             </SystemComponent>
             <BulletsSection>
-                {bulletPoints.map((bullet, i) => 
-                    <BulletOverride margin="10px" key={i} text={bullet}/>
-                )}
+                {bulletPoints.map((bullet, i) => (
+                    <BulletOverride margin='10px' key={i} text={bullet} />
+                ))}
             </BulletsSection>
-            <EditFormButton 
+            <EditFormButton
                 onClick={(e) => {
                     e.preventDefault();
                     router.push('/form/edit/' + formName);
@@ -141,24 +142,24 @@ const FormMetadataSection = ({src, title, bulletPoints, formName = ''}) => {
             >
                 Edit Form
             </EditFormButton>
-            <ExportRespButton 
+            <ExportRespButton
                 onClick={(e) => {
                     e.preventDefault();
                     fetch('/api/google/export/' + formName, {
                         method: 'POST',
                         headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(res => res.json());
+                            Accept: 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                    }).then((res) => res.json());
                 }}
-                variant="white"
+                variant='white'
             >
                 Export Responses
             </ExportRespButton>
         </FormInfoCard>
-    )
-}
+    );
+};
 
 const DashboardPanel = () => {
     const [formData, setFormData] = useState([]);
@@ -169,44 +170,62 @@ const DashboardPanel = () => {
     useEffect(() => {
         showLoader();
         useForms(dispatch, router)
-            .then(res => {
+            .then((res) => {
                 setFormData(res.body);
-            }).finally(() => {
+            })
+            .finally(() => {
                 hideLoader();
             });
     }, []);
 
     return (
-        <PageTemplate title="Waterloop Forms">
+        <PageTemplate title='Waterloop Forms'>
             <SystemComponent
-                display="grid"
-                gridTemplateColumns={["1fr", "repeat(2, 1fr);", "repeat(2, 1fr);", "repeat(3, 1fr);"]}
-                gridAutoRows={"minmax(500px, 500px)"}
+                display='grid'
+                gridTemplateColumns={[
+                    '1fr',
+                    'repeat(2, 1fr);',
+                    'repeat(2, 1fr);',
+                    'repeat(3, 1fr);',
+                ]}
+                gridAutoRows={'minmax(500px, 500px)'}
                 gridColumnGap={5}
                 gridRowGap={6}
             >
                 {loader}
                 <FormMetadataSection
-                    src = "/static/returning-members-icon.jpg"
-                    title="Returning Member"
-                    bulletPoints={["Filled in end of term", "Members state their goals and intentions for next school term."]}
-                    formName={formData.find(f => f.name === 'returning')?.name}
-                />
-                <FormMetadataSection 
-                    src = "/static/beginning-of-term-icon.jpg"
-                    title="Start of Term"
-                    bulletPoints={["Filled in beginning of term", "Members state their availability and goals for this term."]}
-                    formName={formData.find(f => f.name === 'startofterm')?.name}
+                    src='/static/returning-members-icon.jpg'
+                    title='Returning Member'
+                    bulletPoints={[
+                        'Filled in end of term',
+                        'Members state their goals and intentions for next school term.',
+                    ]}
+                    formName={
+                        formData.find((f) => f.name === 'returning')?.name
+                    }
                 />
                 <FormMetadataSection
-                    src = "/static/sign-up-icon.svg"
-                    title="Sign-Up"
-                    bulletPoints={["Filled in once during initial team sign-up"]}
-                    formName={formData.find(f => f.name === 'register')?.name}
+                    src='/static/beginning-of-term-icon.jpg'
+                    title='Start of Term'
+                    bulletPoints={[
+                        'Filled in beginning of term',
+                        'Members state their availability and goals for this term.',
+                    ]}
+                    formName={
+                        formData.find((f) => f.name === 'startofterm')?.name
+                    }
+                />
+                <FormMetadataSection
+                    src='/static/sign-up-icon.svg'
+                    title='Sign-Up'
+                    bulletPoints={[
+                        'Filled in once during initial team sign-up',
+                    ]}
+                    formName={formData.find((f) => f.name === 'register')?.name}
                 />
             </SystemComponent>
         </PageTemplate>
-  );
+    );
 };
 
 export default DashboardPanel;

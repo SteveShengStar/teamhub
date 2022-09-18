@@ -7,11 +7,11 @@ const SkillSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     category: {
-        type: String
-    }
+        type: String,
+    },
 });
 
 SkillSchema.plugin(uniqueValidator);

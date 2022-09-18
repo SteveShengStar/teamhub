@@ -4,13 +4,17 @@ const util = {};
  * check if body is empty
  */
 util.checkIsEmptyBody = async (body) => {
-    return (!body || Object.keys(body).length === 0);
-}
+    return !body || Object.keys(body).length === 0;
+};
 
 /**
- * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist 
+ * For each element in the array, retrieves the ID of a document by the name of the document, or creates a new document and returns its ID if it does not exist
  */
-util.replaceNamesWithIdsArray = async (values, handler, createRecordIfNotFound = true) => {
+util.replaceNamesWithIdsArray = async (
+    values,
+    handler,
+    createRecordIfNotFound = true
+) => {
     if (!values) return values;
     const ids = [];
     if (createRecordIfNotFound) {
@@ -53,7 +57,6 @@ util.replaceNameWithId = async (value, handler) => {
     return (await handler.findOrCreate({ name: value })).id;
 };
 
-
 /**
  * Retrieves the ID of a document by the body of the document, or creates a new document and returns its ID if it does not exist
  */
@@ -66,29 +69,33 @@ util.replaceBodyWithId = async (value, handler) => {
  * Finds a document by its body and returns it, if it does not exist, create it
  */
 util.findOrCreate = async (Model, body) => {
-    return (await (Model.findOneAndUpdate(body, body, { new: true, upsert: true, useFindAndModify: false }).exec()));
+    return await Model.findOneAndUpdate(body, body, {
+        new: true,
+        upsert: true,
+        useFindAndModify: false,
+    }).exec();
 };
 
 util.handleWrapper = async (func) => {
-    return (await func());
+    return await func();
 };
 
 /**
  * Returns an object to be returned by an API endpoint with the success status and the data from a function call
  */
-util.resWrapper =  async (func) => {
+util.resWrapper = async (func) => {
     try {
-        const body = (await func());
-        return ({
+        const body = await func();
+        return {
             success: true,
-            body
-        });
+            body,
+        };
     } catch (error) {
         console.error(error);
-        return ({
+        return {
             success: false,
-            error: error.toString()
-        });
+            error: error.toString(),
+        };
     }
 };
 

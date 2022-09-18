@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import {SystemComponent} from '../atoms/SystemComponents';
+import React from 'react';
+import styled from 'styled-components';
+import { SystemComponent } from '../atoms/SystemComponents';
 import Header3 from '../atoms/Header3';
-import {Background, ContentContainer} from '../atoms/ModalSubComponents';
+import { Background, ContentContainer } from '../atoms/ModalSubComponents';
 import Button from '../atoms/Button';
 import LargeButton from '../atoms/LargeButton';
 
@@ -29,32 +29,41 @@ const CustomContentContainer = styled(ContentContainer)`
         width: 650px;
     }
 `;
-const EditSettingsModal = ({className, children, visible, title, handleCloseModal, handleSave = () => {}}) => {
+const EditSettingsModal = ({
+    className,
+    children,
+    visible,
+    title,
+    handleCloseModal,
+    handleSave = () => {},
+}) => {
     return (
         <Background visible={visible}>
-            <CustomContentContainer 
-                className={className}
-                visible={visible}
-            >
+            <CustomContentContainer className={className} visible={visible}>
                 <SystemComponent>
-                    <Header3>
-                        {title}
-                    </Header3>
+                    <Header3>{title}</Header3>
                 </SystemComponent>
-                <SystemComponent overflowY="auto">
-                    {children}
-                </SystemComponent>
-                <SystemComponent display='flex' 
-                    justifyContent='center' 
+                <SystemComponent overflowY='auto'>{children}</SystemComponent>
+                <SystemComponent
+                    display='flex'
+                    justifyContent='center'
                     alignItems='center'
                     mt={20}
                 >
-                    <LargeButton variant="primary" handleClick={handleSave}>Save</LargeButton>
-                    <Button variant="cancel" display="block" ml={theme.space[5]} onClick={handleCloseModal}>Cancel</Button>
+                    <LargeButton variant='primary' handleClick={handleSave}>
+                        Save
+                    </LargeButton>
+                    <Button
+                        variant='cancel'
+                        display='block'
+                        ml={theme.space[5]}
+                        onClick={handleCloseModal}
+                    >
+                        Cancel
+                    </Button>
                 </SystemComponent>
             </CustomContentContainer>
         </Background>
-    )
-}
+    );
+};
 export default EditSettingsModal;
-

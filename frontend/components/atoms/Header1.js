@@ -7,7 +7,7 @@ Header1.defaultProps = {
     fontSize: 'header1',
     fontWeight: 'regular',
     mt: 0,
-    mb: 0
+    mb: 0,
 };
 
 export default Header1;

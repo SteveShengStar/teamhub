@@ -6,14 +6,14 @@
 
 ## Table of Contents
 
-- [TeamHub Project](#teamhub-project)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Setting up your Development Environment](#setting-up-your-development-environment)
-  - [Troubleshooting](#troubleshooting)
-  - [Contributing](#contributing)
-  - [Documentation](#documentation)
+-   [TeamHub Project](#teamhub-project)
+    -   [Table of Contents](#table-of-contents)
+    -   [Getting Started](#getting-started)
+        -   [Installation](#installation)
+        -   [Setting up your Development Environment](#setting-up-your-development-environment)
+    -   [Troubleshooting](#troubleshooting)
+    -   [Contributing](#contributing)
+    -   [Documentation](#documentation)
 
 ## Getting Started
 
@@ -41,20 +41,22 @@ Here are the steps to run locally:
 7. After finishing a work session, you can exit out of the container, press Ctrl + C. Type `exit` in your shell. Then, stop all containers by running `docker-compose stop`
 
 Additional Notes:
-- To run a command in the docker container, first run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press Ctrl + C.
+
+-   To run a command in the docker container, first run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press Ctrl + C.
 
 ### Running Unit Tests
 
 To run tests locally:
+
 1. Run `docker-compose up -d test`
 2. Run `docker exec -it teamhub_testing /bin/sh` to go into the docker container and access the docker shell
 3. Run `npm run test` to execute all test cases.
 
 ### Troubleshooting
 
-- To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+-   To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
 
-- If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
+-   If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
 

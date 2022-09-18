@@ -1,6 +1,6 @@
 {
-  "env": {
-    "TEAMHUB_ENV": "production",
-    "MONGO_URL": "@teamhub_mongo_url"
-  }
+    "env": {
+        "TEAMHUB_ENV": "production",
+        "MONGO_URL": "@teamhub_mongo_url"
+    }
 }
