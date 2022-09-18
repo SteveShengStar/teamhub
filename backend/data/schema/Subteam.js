@@ -7,15 +7,17 @@ const SubteamSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     description: {
-        type: String
-    }, 
-    tasks: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Task'
-    }]
+        type: String,
+    },
+    tasks: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Task',
+        },
+    ],
 });
 
 SubteamSchema.plugin(uniqueValidator);

@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { variant } from 'styled-system';
-import {SystemTextArea} from './SystemComponents';
+import { SystemTextArea } from './SystemComponents';
 
-const TextArea = styled(SystemTextArea) (
+const TextArea = styled(SystemTextArea)(
     variant({
         variants: {
             default: {
@@ -17,25 +17,25 @@ const TextArea = styled(SystemTextArea) (
                 padding: '8px',
 
                 '&:hover': {
-                    borderColor: 'greys.3'
+                    borderColor: 'greys.3',
                 },
                 '&:focus': {
                     outline: 'none',
-                    borderColor: 'action' 
+                    borderColor: 'action',
                 },
                 '&::placeholder': {
-                    color: 'greys.2'
+                    color: 'greys.2',
                 },
 
                 fontFamily: 'body',
                 fontWeight: 0,
                 fontSize: 1,
-            }
-        }
+            },
+        },
     })
 );
 
 TextArea.defaultProps = {
-    variant: 'default'
-}
+    variant: 'default',
+};
 export default TextArea;

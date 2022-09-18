@@ -2,7 +2,7 @@ const util = require('./util');
 const { OAuth2Client } = require('google-auth-library');
 const authConfig = require('./auth.config.json');
 const members = require('./members');
-const {google} = require('googleapis');
+const { google } = require('googleapis');
 
 const auth = {};
 
@@ -10,7 +10,7 @@ const auth = {};
  * @param {String} authHeader:          authentication token provided by the client
  * @param {String} res:                 api response object
  * @param {String} ignoreTokenExpiry:   ignore the token expiry date
- * 
+ *
  * @return: information of the user that corresponds to the input token
  */
 auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
@@ -35,7 +35,11 @@ auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
         return false;
     }
     const searchRes = await members.search({ token: authToken });
-    if (!searchRes || searchRes.length == 0 || (!ignoreTokenExpiry && searchRes[0].tokenExpiry < Date.now())) {
+    if (
+        !searchRes ||
+        searchRes.length == 0 ||
+        (!ignoreTokenExpiry && searchRes[0].tokenExpiry < Date.now())
+    ) {
         res.statusCode = 403;
         res.end('Token forbidden.');
         return false;
@@ -46,7 +50,7 @@ auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
 /**
  * @param {String} authHeader: authentication token provided by the client
  * @param {String} userId: ID of the user who is attempting to access a secure endpoint or log in
- * 
+ *
  * @return: true only if authentication was successful.
  */
 auth.checkSpecificUser = async (authHeader, userId, res) => {
@@ -97,7 +101,7 @@ auth.login = async (tokenObj) => {
                 const user = await members.add({
                     name: {
                         first: payload['given_name'],
-                        last: payload['family_name']
+                        last: payload['family_name'],
                     },
                     email: payload['email'],
                     imageUrl: payload['picture'],
@@ -111,17 +115,23 @@ auth.login = async (tokenObj) => {
                 };
             } else {
                 // Update the access token and its expiry date of an existing user
-                await members.updateMember({email: payload['email']}, 
-                {
-                    imageUrl: payload['picture'],
-                    token: tokenObj.accessToken,
-                    tokenExpiry: tokenObj.tokenObj.expires_at
-                });
-                const user = await members.search({ email: payload['email'] }, false, true);
+                await members.updateMember(
+                    { email: payload['email'] },
+                    {
+                        imageUrl: payload['picture'],
+                        token: tokenObj.accessToken,
+                        tokenExpiry: tokenObj.tokenObj.expires_at,
+                    }
+                );
+                const user = await members.search(
+                    { email: payload['email'] },
+                    false,
+                    true
+                );
                 return {
                     userData: user[0],
                     isExistingUser: true,
-                }
+                };
             }
         }
     });
@@ -132,14 +142,16 @@ auth.logout = async (userId) => {
         // Reference: https://developers.google.com/identity/sign-in/web/sign-in#sign_out_a_user
         const searchRes = await members.search({ _id: userId });
         if (searchRes && searchRes.length === 1) {
-            const res = await members.updateMember({_id: userId},
-            {
-                token: "",
-                tokenExpiry: null
-            });
+            const res = await members.updateMember(
+                { _id: userId },
+                {
+                    token: '',
+                    tokenExpiry: null,
+                }
+            );
             return res;
         } else {
-            throw new Error("Failed to log the user out properly.");
+            throw new Error('Failed to log the user out properly.');
         }
     });
 };

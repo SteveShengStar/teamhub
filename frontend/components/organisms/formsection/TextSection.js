@@ -1,22 +1,24 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 import { SystemComponent } from '../../atoms/SystemComponents';
-import { capitalize } from 'lodash'; 
+import { capitalize } from 'lodash';
 
-import BaseSection from "./BaseSection";
+import BaseSection from './BaseSection';
 
-const AnswerPlaceholder = ({text, className}) => {
+const AnswerPlaceholder = ({ text, className }) => {
     const theme = useContext(ThemeContext);
 
     return (
-        <SystemComponent 
-            borderBottom={`2px dotted ${theme.colors.greys[2]}`} 
+        <SystemComponent
+            borderBottom={`2px dotted ${theme.colors.greys[2]}`}
             className={className}
         >
-            <SystemComponent color={`${theme.colors.greys[3]}`}>{capitalize(text)}</SystemComponent>
+            <SystemComponent color={`${theme.colors.greys[3]}`}>
+                {capitalize(text)}
+            </SystemComponent>
         </SystemComponent>
-    )
-}
+    );
+};
 
 const AnswerPlaceholderComponent = styled(AnswerPlaceholder)`
     position: absolute;
@@ -25,14 +27,14 @@ const AnswerPlaceholderComponent = styled(AnswerPlaceholder)`
 `;
 
 const Container = styled(SystemComponent)`
-    grid-row: 3; 
+    grid-row: 3;
     grid-column: 1/3;
     height: 40px;
     position: relative;
 `;
 
 const getPlaceholderText = (type) => {
-    switch(type) {
+    switch (type) {
         case 'email':
             return 'email address';
         case 'text':
@@ -45,30 +47,56 @@ const getPlaceholderText = (type) => {
         default:
             return '';
     }
-}
+};
 
 const getModifiersBySectionType = (type) => {
-    switch(type) {
+    switch (type) {
         case 'email':
             return [];
         case 'text':
-            return [{name: "numbers", label: "Users can only enter numbers.", selected: false}];
+            return [
+                {
+                    name: 'numbers',
+                    label: 'Users can only enter numbers.',
+                    selected: false,
+                },
+            ];
         case 'numbers':
-            return [{name: "numbers", label: "Users can only enter numbers.", selected: true}];
+            return [
+                {
+                    name: 'numbers',
+                    label: 'Users can only enter numbers.',
+                    selected: true,
+                },
+            ];
         case 'longtext':
         default:
             return [];
     }
-}
+};
 
-const TextSection = ({type, sectionName, question, helpText, required, canDelete, handleTypeChange, handleInputChange, handleSectionDelete, handleSectionDuplicate, handleToggleRequired}) => {
-    const [sectionModifiers, setSectionModifiers] = useState(getModifiersBySectionType(type))
+const TextSection = ({
+    type,
+    sectionName,
+    question,
+    helpText,
+    required,
+    canDelete,
+    handleTypeChange,
+    handleInputChange,
+    handleSectionDelete,
+    handleSectionDuplicate,
+    handleToggleRequired,
+}) => {
+    const [sectionModifiers, setSectionModifiers] = useState(
+        getModifiersBySectionType(type)
+    );
     return (
         <BaseSection
-            type={type} 
-            name={sectionName} 
-            question={question} 
-            helpText={helpText} 
+            type={type}
+            name={sectionName}
+            question={question}
+            helpText={helpText}
             required={required}
             canDelete={canDelete}
             handleTypeChange={(newType) => {
@@ -88,15 +116,19 @@ const TextSection = ({type, sectionName, question, helpText, required, canDelete
                     }
                 }
 
-                const idx = sectionModifiers.findIndex(m => m.name === modifier.name);
+                const idx = sectionModifiers.findIndex(
+                    (m) => m.name === modifier.name
+                );
                 if (idx === -1) {
-                    throw new Error("TextSection.js: Could not find the appropriate section modifier.");
+                    throw new Error(
+                        'TextSection.js: Could not find the appropriate section modifier.'
+                    );
                 }
                 const copyOfSectionModifiers = [...sectionModifiers];
                 copyOfSectionModifiers[idx] = {
                     ...copyOfSectionModifiers[idx],
-                    selected: selected
-                }
+                    selected: selected,
+                };
                 setSectionModifiers(copyOfSectionModifiers);
             }}
             handleSectionDelete={handleSectionDelete}
@@ -104,9 +136,9 @@ const TextSection = ({type, sectionName, question, helpText, required, canDelete
             handleToggleRequired={handleToggleRequired}
         >
             <Container>
-                <AnswerPlaceholderComponent text={getPlaceholderText(type)}/>
+                <AnswerPlaceholderComponent text={getPlaceholderText(type)} />
             </Container>
         </BaseSection>
     );
-}
+};
 export default TextSection;

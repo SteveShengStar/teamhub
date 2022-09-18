@@ -8,8 +8,8 @@ import LoadingScreen from '../components/organisms/LoadingScreen';
 const useStatelessLoadingScreen = (isLoading, setIsLoading) => {
     return [
         isLoading ? <LoadingScreen /> : null,
-        () => setIsLoading(true),     // show the loader
-        () => setIsLoading(false)     // Hide the loader
+        () => setIsLoading(true), // show the loader
+        () => setIsLoading(false), // Hide the loader
     ];
-}
+};
 export default useStatelessLoadingScreen;

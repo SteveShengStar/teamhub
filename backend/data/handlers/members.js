@@ -27,7 +27,10 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
                 query.populate('memberType');
             }
             if (fields['subteams']) {
-                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
+                query.populate(
+                    'subteams',
+                    returnSubteamTaskList ? '' : '-tasks'
+                );
             }
             if (fields['projects']) {
                 query.populate('projects');
@@ -35,38 +38,43 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
             if (fields['miscDetails']) {
                 query.populate('miscDetails');
             }
-            return (await query.exec());
+            return await query.exec();
         } else {
             if (!returnSubteamTaskList) {
-                return (await (Member.find({})
+                return await Member.find({})
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
                     .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
-                    .exec()));
+                    .exec();
             }
-            return (await (Member.find({})
+            return await Member.find({})
                 .populate('skills')
                 .populate('interests')
                 .populate('memberType')
                 .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                 .populate('projects')
-                .exec()));
+                .exec();
         }
     });
 };
 
-/** 
+/**
  * Returns all members (and their associated information) that match the filter criteria specified in input params
- * 
+ *
  * @param {Object} filter: selection criteria for selecting members to return (ie. {email: 'steven.x@waterloop.ca'} return the member with 'steven.x@waterloop.ca' as email)
  * @param {Object} fields: specifies which fields to return
  * @param {boolean} showToken: whether or not to return the access token and expiry date of token
  * @param {boolean} returnSubteamTaskList: whether or not to return the tasks that should be completed by the member(s)
- * 
+ *
  */
-members.search = async (filter, fields, showToken = false, returnSubteamTaskList = false) => {
+members.search = async (
+    filter,
+    fields,
+    showToken = false,
+    returnSubteamTaskList = false
+) => {
     return util.handleWrapper(async () => {
         if (fields) {
             const query = Member.find(filter).select(fields);
@@ -80,7 +88,10 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
                 query.populate('memberType');
             }
             if (fields['subteams']) {
-                query.populate('subteams', returnSubteamTaskList ? '' : '-tasks');
+                query.populate(
+                    'subteams',
+                    returnSubteamTaskList ? '' : '-tasks'
+                );
             }
             if (fields['projects']) {
                 query.populate('projects');
@@ -98,22 +109,22 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
         } else {
             let res;
             if (showToken) {
-                res = await (Member.find(filter)
+                res = await Member.find(filter)
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
                     .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
                     .select('+token')
-                    .exec());
+                    .exec();
             } else {
-                res = await (Member.find(filter)
+                res = await Member.find(filter)
                     .populate('skills')
                     .populate('interests')
                     .populate('memberType')
                     .populate('subteams', returnSubteamTaskList ? '' : '-tasks')
                     .populate('projects')
-                    .exec());
+                    .exec();
             }
             return res;
         }
@@ -122,14 +133,14 @@ members.search = async (filter, fields, showToken = false, returnSubteamTaskList
 
 /**
  * Add a new user to the database
- * 
+ *
  * @param {Object} userPayload:    the new user's details
  */
 members.add = async (userPayload) => {
     return util.handleWrapper(async () => {
         const memberFields = Object.keys(Member.schema.paths);
-        let userSummary = _.omit(_.pick(userPayload, memberFields), "_id");
-        let userDetails = _.omit(userPayload, [...memberFields, "_id"]);
+        let userSummary = _.omit(_.pick(userPayload, memberFields), '_id');
+        let userDetails = _.omit(userPayload, [...memberFields, '_id']);
 
         const userDetailsResp = await UserDetails.create(userDetails);
         userSummary.miscDetails = userDetailsResp._id;
@@ -141,14 +152,18 @@ members.add = async (userPayload) => {
 
 /**
  * Delete members from the database
- * 
+ *
  * @param {Object} filter: details about which member(s) to delete
  */
 members.delete = async (filter) => {
     return util.handleWrapper(async () => {
-        const miscDetailRecordsToDelete = (await Member.find(filter).exec()).map(r => r.miscDetails);
+        const miscDetailRecordsToDelete = (
+            await Member.find(filter).exec()
+        ).map((r) => r.miscDetails);
         if (miscDetailRecordsToDelete.length > 0) {
-            await UserDetails.deleteMany({_id: {$in: miscDetailRecordsToDelete}}).exec();
+            await UserDetails.deleteMany({
+                _id: { $in: miscDetailRecordsToDelete },
+            }).exec();
         }
 
         const deletedRecords = await Member.deleteMany(filter).exec();
@@ -158,15 +173,15 @@ members.delete = async (filter) => {
 
 /**
  * Update data for a single member only
- * 
+ *
  * @param {filter}: Details about which member/user-record to update
  * @param {payload}: The new info. for the member
  */
 members.updateMember = async (filter, payload) => {
     // Get fields stored in the Member collection.
     const memberFields = Object.keys(Member.schema.paths);
-    let memberSummary = _.omit(_.pick(payload, memberFields), "_id");
-    let memberDetails = _.omit(payload, [...memberFields, "_id"]);
+    let memberSummary = _.omit(_.pick(payload, memberFields), '_id');
+    let memberDetails = _.omit(payload, [...memberFields, '_id']);
 
     return util.handleWrapper(async () => {
         if (!_.isEmpty(memberSummary)) {
@@ -174,10 +189,15 @@ members.updateMember = async (filter, payload) => {
             await Member.updateOne(filter, memberSummary).exec();
         }
         if (!_.isEmpty(memberDetails)) {
-            const records = await Member.find(filter).select(["miscDetails"]).exec();
+            const records = await Member.find(filter)
+                .select(['miscDetails'])
+                .exec();
             if (records?.length > 0) {
-                const {miscDetails: memberDetailsId} = records[0];
-                await UserDetails.updateOne({_id: memberDetailsId}, memberDetails).exec();
+                const { miscDetails: memberDetailsId } = records[0];
+                await UserDetails.updateOne(
+                    { _id: memberDetailsId },
+                    memberDetails
+                ).exec();
             }
         }
         return {};
@@ -190,21 +210,21 @@ members.updateMember = async (filter, payload) => {
 members.updateAllMembers = async (payload) => {
     return util.handleWrapper(async () => {
         payload = await members.replacePayloadWithIds(payload);
-        return (await Member.updateMany({}, payload).exec());
+        return await Member.updateMany({}, payload).exec();
     });
 };
 
 /**
  * Assign a task to all members
- * 
+ *
  * @param {Object} filter: selection criteria for selecting which members to give the new task to
  * @param {Object} newTask: details describing the new task
  */
 members.assignTaskToAllMembers = async (filter, newTask) => {
     return util.handleWrapper(async () => {
-        return await Member.updateMany( filter, { $push: { tasks: newTask }} );
+        return await Member.updateMany(filter, { $push: { tasks: newTask } });
     });
-}
+};
 
 /**
  * Update the status of a task for a single member
@@ -218,14 +238,21 @@ members.assignTaskToAllMembers = async (filter, newTask) => {
  */
 members.updateTaskStatus = async (filter, payload) => {
     return util.handleWrapper(async () => {
-        return (await Member.updateOne(filter, {"$set" : payload}, { runValidators: true }).exec());
+        return await Member.updateOne(
+            filter,
+            { $set: payload },
+            { runValidators: true }
+        ).exec();
     });
 };
 
 members.replacePayloadWithIds = async (payload) => {
     if (payload.interests) {
         if (Array.isArray(payload.interests)) {
-            payload.interests = await util.replaceNamesWithIdsArray(payload.interests, interests);
+            payload.interests = await util.replaceNamesWithIdsArray(
+                payload.interests,
+                interests
+            );
         } else {
             throw Error('interests field must be an array or empty.');
         }
@@ -233,7 +260,10 @@ members.replacePayloadWithIds = async (payload) => {
 
     if (payload.skills) {
         if (Array.isArray(payload.skills)) {
-            payload.skills = await util.replaceNamesWithIdsArray(payload.skills, skills);
+            payload.skills = await util.replaceNamesWithIdsArray(
+                payload.skills,
+                skills
+            );
         } else {
             throw Error('skills field must be an array or empty.');
         }
@@ -241,7 +271,10 @@ members.replacePayloadWithIds = async (payload) => {
 
     if (payload.subteams) {
         if (Array.isArray(payload.subteams)) {
-            payload.subteams = await util.replaceNamesWithIdsArray(payload.subteams, subteams);
+            payload.subteams = await util.replaceNamesWithIdsArray(
+                payload.subteams,
+                subteams
+            );
         } else {
             throw Error('subteams field must be an array or empty.');
         }
@@ -249,13 +282,21 @@ members.replacePayloadWithIds = async (payload) => {
 
     if (payload.projects) {
         if (Array.isArray(payload.projects)) {
-            payload.projects = await util.replaceNamesWithIdsArray(payload.projects, projects);
+            payload.projects = await util.replaceNamesWithIdsArray(
+                payload.projects,
+                projects
+            );
         } else {
             throw Error('projects field must be an array or empty.');
         }
     }
 
-    payload.memberType ? payload.memberType = await util.replaceNameWithId(payload.memberType, memberTypes) : null;
+    payload.memberType
+        ? (payload.memberType = await util.replaceNameWithId(
+              payload.memberType,
+              memberTypes
+          ))
+        : null;
 
     return payload;
 };

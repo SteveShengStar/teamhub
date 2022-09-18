@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SystemComponent } from '../atoms/SystemComponents';
 import { useDispatch } from 'react-redux';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 import Button from '../atoms/Button';
 import { userLogout } from '../../store/reducers/userReducer';
 import { useSelector } from 'react-redux';
@@ -11,13 +11,13 @@ import useShouldRedirect from '../../hooks/useShouldRedirect';
 const LogoutButton = () => {
     const dispatch = useDispatch();
     const router = useRouter();
-    const { hydrated, user } = useSelector(state => state.userState)
+    const { hydrated, user } = useSelector((state) => state.userState);
 
     const logOut = () => {
-        console.log("Logging Out - Begin");
+        console.log('Logging Out - Begin');
         userLogout(user._id, dispatch, router).then(() => {
             useShouldRedirect({}, router);
-            console.log("Logging Out - Complete");
+            console.log('Logging Out - Complete');
         });
     };
 

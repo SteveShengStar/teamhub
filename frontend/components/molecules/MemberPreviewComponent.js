@@ -11,13 +11,13 @@ const GridLayout = styled(SystemComponent)`
     display: grid;
     grid-template-rows: 18px 18px;
     grid-template-columns: auto 1fr 20px;
-    grid-column-gap: ${props => props.theme.space[4]}px;
-    padding: ${props => props.theme.space[3]}px;
+    grid-column-gap: ${(props) => props.theme.space[4]}px;
+    padding: ${(props) => props.theme.space[3]}px;
     cursor: pointer;
-    transition: ${props => props.theme.transitions.default};
+    transition: ${(props) => props.theme.transitions.default};
     &:hover {
         transform: scale(1.01);
-        background-color: ${props => props.theme.colors.greys[1]};
+        background-color: ${(props) => props.theme.colors.greys[1]};
     }
     &:active {
         transform: scale(1.025);
@@ -29,21 +29,29 @@ const RowFlexLayout = styled(SystemComponent)`
     justify-content: space-between;
 `;
 
-const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, isSelected}) => {
+const MemberPreviewComponent = ({
+    name,
+    subteam,
+    role,
+    onClick,
+    imageUrl,
+    term,
+    isSelected,
+}) => {
     return (
-        <GridLayout 
-            backgroundColor={isSelected ? "greys.2" : "greys.0"}
-            borderRadius="small" 
-            height={36} 
+        <GridLayout
+            backgroundColor={isSelected ? 'greys.2' : 'greys.0'}
+            borderRadius='small'
+            height={36}
             onClick={onClick}
         >
-            <Image 
-                height={36} 
+            <Image
+                height={36}
                 key={0}
-                src={imageUrl || "/static/default-headshot.png"}
-                gridRow="1/3"
-                borderRadius="18px"
-                overflow="visible"
+                src={imageUrl || '/static/default-headshot.png'}
+                gridRow='1/3'
+                borderRadius='18px'
+                overflow='visible'
             />
 
             <RowFlexLayout>
@@ -51,11 +59,15 @@ const MemberPreviewComponent = ({name, subteam, role, onClick, imageUrl, term, i
                 <Body>{term}</Body>
             </RowFlexLayout>
 
-            <RowFlexLayout gridRow="2/3" gridColumn="2/3">
-                <BorderlessButton variant='software'>{subteam && subteam.name || ""}</BorderlessButton>
+            <RowFlexLayout gridRow='2/3' gridColumn='2/3'>
+                <BorderlessButton variant='software'>
+                    {(subteam && subteam.name) || ''}
+                </BorderlessButton>
                 <Body>{role}</Body>
             </RowFlexLayout>
-            <SystemComponent>{isSelected && <i class="fa fas fa-check"/>}</SystemComponent>
+            <SystemComponent>
+                {isSelected && <i class='fa fas fa-check' />}
+            </SystemComponent>
         </GridLayout>
     );
 };

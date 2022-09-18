@@ -2,13 +2,13 @@ import { isEmail } from 'validator';
 import { validate as isUuid } from 'uuid';
 
 export const removeBadValuesAndDuplicates = (array) => {
-    const uniqueSet = new Set(array.map(i => i.trim().toLowerCase()))
-    return [...uniqueSet].filter(i => i);
-}
+    const uniqueSet = new Set(array.map((i) => i.trim().toLowerCase()));
+    return [...uniqueSet].filter((i) => i);
+};
 
 // form validation utility methods
 export const validateField = (formData, formErrors, field) => {
-    switch(field) {
+    switch (field) {
         case 'fullName':
             validateName(formData, formErrors, field);
             break;
@@ -39,30 +39,30 @@ export const validateField = (formData, formErrors, field) => {
             validateExists(formData, formErrors, field);
             break;
     }
-}
+};
 
 export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
     if (hasError[fieldName]) {
         setHasError({
             ...hasError,
-            [fieldName]: false
+            [fieldName]: false,
         });
     }
-}
+};
 
 export const clearErrorMessages = (formErrors) => {
     for (const field of Object.keys(formErrors)) {
         formErrors[field] = false;
     }
-}
+};
 
 export const isInvalidPhoneNumber = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 10;
-}
+};
 
 export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
-}
+};
 
 // Custom Form Field names are V4 UUIDs
 export const getCustomFields = (formValues) => {
@@ -73,39 +73,43 @@ export const getCustomFields = (formValues) => {
         }
     }
     return customFieldMap;
-}
+};
 
 // Get Default Values for Form Fields based on Field Type
 export const getCustomFieldDefaults = (formSections) => {
     const defaultVals = {};
-    const customFieldSections = formSections.filter(section => isUuid(section.name));
-    customFieldSections.forEach(section => {
+    const customFieldSections = formSections.filter((section) =>
+        isUuid(section.name)
+    );
+    customFieldSections.forEach((section) => {
         switch (section.type) {
-            case "text": 
-            case "longtext": 
-            case "numbers": 
-            case "phone": 
-            case "menu_single":
-            case "menu_multi":
-            case "checkbox":
-            case "radio":
+            case 'text':
+            case 'longtext':
+            case 'numbers':
+            case 'phone':
+            case 'menu_single':
+            case 'menu_multi':
+            case 'checkbox':
+            case 'radio':
                 defaultVals[section.name] = '';
                 break;
-            case "boolean":
+            case 'boolean':
                 defaultVals[section.name] = false;
                 break;
         }
     });
     return defaultVals;
-}
+};
 
 export const scrollToFirstError = (formSections, formErrors) => {
     let minIndex = Number.MAX_VALUE;
     for (const [sectionName, hasError] of Object.entries(formErrors)) {
         if (hasError) {
-            const idx = formSections.findIndex(section => section.name === sectionName);
+            const idx = formSections.findIndex(
+                (section) => section.name === sectionName
+            );
             if (idx !== -1 && idx < minIndex) {
-                minIndex = idx;  // Update the minimum index.
+                minIndex = idx; // Update the minimum index.
             }
         }
     }
@@ -120,37 +124,40 @@ export const scrollToFirstError = (formSections, formErrors) => {
         element.scrollIntoView({
             behavior: 'smooth',
             block: 'center',
-            inline: 'center'
+            inline: 'center',
         });
     }
-}
+};
 
 const validateExists = (formData, formErrors, field) => {
     if (!formData[field]?.trim()) {
         formErrors[field] = true;
     }
-}
+};
 
 const validateNumber = (formData, formErrors, field, digitsRequired) => {
     if (!formData[field] || formData[field].length !== digitsRequired) {
         formErrors[field] = true;
     }
-}
+};
 
 const validateBoolean = (formData, formErrors, field) => {
     if (formData[field] === undefined || formData[field] === null) {
         formErrors[field] = true;
     }
-}
+};
 
 const validateName = (formData, formErrors, field) => {
-    if (!formData[field].trim() || formData[field].trim().split(/\s+/).length < 2) {
+    if (
+        !formData[field].trim() ||
+        formData[field].trim().split(/\s+/).length < 2
+    ) {
         formErrors[field] = true;
     }
-}
+};
 
 const validateEmail = (formData, formErrors, field) => {
     if (!formData[field].trim() || !isEmail(formData[field].trim())) {
         formErrors[field] = true;
     }
-}
+};

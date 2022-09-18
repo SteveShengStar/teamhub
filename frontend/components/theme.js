@@ -3,11 +3,11 @@
  */
 const white = '#FFFFFF';
 const greys = [
-  '#F1F1F1', // light
-  '#D6D6D6', // light grey
-  '#B4B4B4', // greyed text
-  '#888888', // grey
-  '#333333', // dark grey
+    '#F1F1F1', // light
+    '#D6D6D6', // light grey
+    '#B4B4B4', // greyed text
+    '#888888', // grey
+    '#333333', // dark grey
 ];
 const black = '#131313';
 const frostyBlue = '#d7e8f5';
@@ -34,10 +34,10 @@ const webTeal = '#63c986';
 const breakpoints = ['576px', '768px', '992px', '1200px'];
 
 const mediaQueries = {
-  mobile: `@media screen and (min-width: ${breakpoints[0]})`,
-  tablet: `@media screen and (min-width: ${breakpoints[1]})`,
-  smallDesktop: `@media screen and (min-width: ${breakpoints[2]})`,
-  desktop: `@media screen and (min-width: ${breakpoints[3]})`,
+    mobile: `@media screen and (min-width: ${breakpoints[0]})`,
+    tablet: `@media screen and (min-width: ${breakpoints[1]})`,
+    smallDesktop: `@media screen and (min-width: ${breakpoints[2]})`,
+    desktop: `@media screen and (min-width: ${breakpoints[3]})`,
 };
 
 /**
@@ -82,10 +82,10 @@ cornerRadius.default = cornerRadius[2];
 cornerRadius.rounded = cornerRadius[3];
 
 const shadows = [
-  'none',
-  '0 2px 5px 0 rgba(0,0,0,0.05)',
-  '0 2px 10px 0 rgba(0,0,0,0.1)',
-  '0 2px 18px 0 rgba(0,0,0,0.2)',
+    'none',
+    '0 2px 5px 0 rgba(0,0,0,0.05)',
+    '0 2px 10px 0 rgba(0,0,0,0.1)',
+    '0 2px 18px 0 rgba(0,0,0,0.2)',
 ];
 shadows.none = shadows[0];
 shadows.light = shadows[1];
@@ -98,47 +98,47 @@ transitions.none = transitions[0];
 transitions.default = transitions[1];
 
 const theme = {
-  colors: {
-    theme: themeYellow,
-    action: primaryBlue,
-    primaryBlue,
-    alertAction: alertRed,
-    foreground: black,
-    background: white,
-    black,
-    white,
-    greys,
-    inactive: greys[2],
-    messagesBackground: messagesBlue,
-    listBackgroundBlue: frostyBlue,
-    clickUp: clickUpPurple,
-    business: businessBlue,
-    lim: limEarth,
-    software: softwareMagenta,
-    mechanical: mechRed,
-    electrical: electricalGreen,
-    admin: adminPurple,
-    exec: execYellow,
-    infrastructure: infraOrange,
-    web: webTeal,
-  },
-  fonts: {
-    title: 'futura-pt',
-    body: 'Nunito Sans',
-  },
-  textInputHeight: {
-    small: '26px',
-    medium: '26px',
-    large: '34px',
-  },
-  fontSizes,
-  fontWeights,
-  space,
-  radii: cornerRadius,
-  shadows,
-  breakpoints,
-  mediaQueries,
-  transitions,
+    colors: {
+        theme: themeYellow,
+        action: primaryBlue,
+        primaryBlue,
+        alertAction: alertRed,
+        foreground: black,
+        background: white,
+        black,
+        white,
+        greys,
+        inactive: greys[2],
+        messagesBackground: messagesBlue,
+        listBackgroundBlue: frostyBlue,
+        clickUp: clickUpPurple,
+        business: businessBlue,
+        lim: limEarth,
+        software: softwareMagenta,
+        mechanical: mechRed,
+        electrical: electricalGreen,
+        admin: adminPurple,
+        exec: execYellow,
+        infrastructure: infraOrange,
+        web: webTeal,
+    },
+    fonts: {
+        title: 'futura-pt',
+        body: 'Nunito Sans',
+    },
+    textInputHeight: {
+        small: '26px',
+        medium: '26px',
+        large: '34px',
+    },
+    fontSizes,
+    fontWeights,
+    space,
+    radii: cornerRadius,
+    shadows,
+    breakpoints,
+    mediaQueries,
+    transitions,
 };
 
 export default theme;

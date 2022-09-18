@@ -1,11 +1,9 @@
 import styled from 'styled-components';
 import ReactSelect from 'react-select';
-import CSelect from "react-select/creatable";
+import CSelect from 'react-select/creatable';
 import { composition, themeDefaultProps } from './SystemComponents';
 
-const Select = styled(ReactSelect)(
-    composition
-);
+const Select = styled(ReactSelect)(composition);
 
 const CreatableSelect = styled(CSelect)(composition);
 
@@ -14,6 +12,4 @@ CreatableSelect.defaultProps = themeDefaultProps;
 
 export default Select;
 
-export {
-    CreatableSelect
-}
+export { CreatableSelect };

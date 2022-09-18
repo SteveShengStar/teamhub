@@ -1,6 +1,7 @@
-import * as members from "./members";
-import * as auth from "./auth";
+import * as members from './members';
+import * as auth from './auth';
 
 export default {
-    members, auth
-}
+    members,
+    auth,
+};

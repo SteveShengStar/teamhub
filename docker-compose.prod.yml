@@ -1,11 +1,11 @@
 version: '2.1'
 
 services:
-  teamhub:
-    image: teamhub
-    build: .
-    environment:
-      NODE_ENV: production
-      TEAMHUB_ENV: production
-    ports:
-      - 3000:3000
+    teamhub:
+        image: teamhub
+        build: .
+        environment:
+            NODE_ENV: production
+            TEAMHUB_ENV: production
+        ports:
+            - 3000:3000

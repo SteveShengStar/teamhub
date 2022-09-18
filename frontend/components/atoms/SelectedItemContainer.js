@@ -1,5 +1,5 @@
 import styled, { ThemeContext } from 'styled-components';
-import {SystemSpan, SystemComponent} from './SystemComponents';
+import { SystemSpan, SystemComponent } from './SystemComponents';
 import { useContext } from 'react';
 
 export const CrossIcon = styled(SystemSpan)`
@@ -8,7 +8,7 @@ export const CrossIcon = styled(SystemSpan)`
 `;
 
 const CrossIconWrapper = styled(SystemComponent)`
-    text-align: center;    
+    text-align: center;
     cursor: pointer;
     width: 30px;
     -webkit-border-top-right-radius: inherit;
@@ -17,24 +17,23 @@ const CrossIconWrapper = styled(SystemComponent)`
     -moz-border-radius-bottomright: inherit;
     border-bottom-right-radius: inherit;
     border-top-right-radius: inherit;
-    background-color: ${props => props.theme.colors.white};
-
+    background-color: ${(props) => props.theme.colors.white};
 
     &:hover {
         ${CrossIcon} {
-            color: ${props => props.theme.colors.alertAction};
+            color: ${(props) => props.theme.colors.alertAction};
         }
 
-        background-color: ${props => props.theme.colors.inactive};
+        background-color: ${(props) => props.theme.colors.inactive};
     }
 `;
 
-const SelectedItemContainer = ({itemName, handleDeselect}) => {
+const SelectedItemContainer = ({ itemName, handleDeselect }) => {
     const theme = useContext(ThemeContext);
 
     return (
-        <SystemComponent 
-            display='flex' 
+        <SystemComponent
+            display='flex'
             flexDirection='row'
             mt={0}
             mr={4}
@@ -46,9 +45,13 @@ const SelectedItemContainer = ({itemName, handleDeselect}) => {
             borderRadius={theme.radii[2]}
             backgroundColor={theme.colors.listBackgroundBlue}
         >
-            <SystemComponent pr={1} paddingY={1}>{itemName}</SystemComponent>
+            <SystemComponent pr={1} paddingY={1}>
+                {itemName}
+            </SystemComponent>
             <CrossIconWrapper onClick={() => handleDeselect(itemName)}>
-                <CrossIcon><span className="fas fa fa-times"></span></CrossIcon>
+                <CrossIcon>
+                    <span className='fas fa fa-times'></span>
+                </CrossIcon>
             </CrossIconWrapper>
         </SystemComponent>
     );

@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import Button from '../Button';
 
 const ActionButton = styled(Button)`
-    font-weight: ${props => props.theme.fontWeights.bold};
-    font-size: ${props => props.theme.fontSizes.header4}px;
+    font-weight: ${(props) => props.theme.fontWeights.bold};
+    font-size: ${(props) => props.theme.fontSizes.header4}px;
 
-    cursor: ${props => props.disabled && `default`};
+    cursor: ${(props) => props.disabled && `default`};
     &:hover {
-        transform: ${props => props.disabled && `none`};
+        transform: ${(props) => props.disabled && `none`};
     }
 
     height: 40px;

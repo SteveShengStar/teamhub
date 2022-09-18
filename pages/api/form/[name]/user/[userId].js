@@ -13,23 +13,38 @@ module.exports = async (req, res) => {
 
             if (!req.query.name) {
                 res.statusCode = 400;
-                res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                    throw Error('name URL param must be specified.');
-                })));
+                res.end(
+                    JSON.stringify(
+                        await data.util.resWrapper(async () => {
+                            throw Error('name URL param must be specified.');
+                        })
+                    )
+                );
                 return;
             }
             if (!req.query.userId) {
                 res.statusCode = 400;
-                res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                    throw Error('userId URL param must be specified.');
-                })));
+                res.end(
+                    JSON.stringify(
+                        await data.util.resWrapper(async () => {
+                            throw Error('userId URL param must be specified.');
+                        })
+                    )
+                );
                 return;
             }
 
             res.statusCode = 200;
-            res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.forms.fetchFormAndMemberData(req.query.userId, req.query.name);
-            })));
+            res.end(
+                JSON.stringify(
+                    await data.util.resWrapper(async () => {
+                        return await data.forms.fetchFormAndMemberData(
+                            req.query.userId,
+                            req.query.name
+                        );
+                    })
+                )
+            );
         } else {
             res.statusCode = 401;
             res.setHeader('WWW-Authenticate', 'Bearer');

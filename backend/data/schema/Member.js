@@ -7,12 +7,12 @@ const Schema = mongoose.Schema;
 const Member_NameSchema = new Schema({
     first: {
         type: String,
-        required: true
+        required: true,
     },
     last: {
         type: String,
-        required: true
-    }
+        required: true,
+    },
 });
 
 const Member_Link = new Schema({
@@ -30,12 +30,12 @@ const Member_Task = new Schema({
     taskId: {
         type: Schema.Types.ObjectId,
         required: true,
-        ref: 'Task'
+        ref: 'Task',
     },
     status: {
         type: String,
         required: true,
-        enum: ['pending', 'complete', 'irrelevant']
+        enum: ['pending', 'complete', 'irrelevant'],
     },
 });
 
@@ -45,54 +45,64 @@ const MemberSchema = new Schema({
         required: true,
     },
     program: {
-        type: String
+        type: String,
     },
     bio: {
-        type: String
+        type: String,
     },
-    skills: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    interests: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Interest'
-    }],
+    skills: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Skill',
+        },
+    ],
+    interests: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Interest',
+        },
+    ],
     memberType: {
         type: Schema.Types.ObjectId,
-        ref: 'MemberType'
+        ref: 'MemberType',
     },
-    subteams: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Subteam',
-    }],
-    projects: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Project',
-    }],
+    subteams: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Subteam',
+        },
+    ],
+    projects: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Project',
+        },
+    ],
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
-    activeSchoolTerms: [{
-        type: String
-    }],
+    activeSchoolTerms: [
+        {
+            type: String,
+        },
+    ],
     imageUrl: {
-        type: String
+        type: String,
     },
     links: {
-        type: [Member_Link]
+        type: [Member_Link],
     },
     token: {
         type: String,
-        select: false
+        select: false,
     },
     tokenExpiry: {
         type: Number,
     },
     tasks: {
-        type: [Member_Task]
+        type: [Member_Task],
     },
     active: {
         type: Boolean,
@@ -100,7 +110,7 @@ const MemberSchema = new Schema({
     miscDetails: {
         type: Schema.Types.ObjectId,
         ref: 'UserDetails',
-    }
+    },
 });
 
 MemberSchema.plugin(uniqueValidator);

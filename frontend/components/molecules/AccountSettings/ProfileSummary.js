@@ -2,8 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
-import {SystemComponent} from '../../atoms/SystemComponents';
-import {SCHOOL_TERM_OPTS} from '../../organisms/EditProfileModal';
+import { SystemComponent } from '../../atoms/SystemComponents';
+import { SCHOOL_TERM_OPTS } from '../../organisms/EditProfileModal';
 
 import theme from '../../theme';
 
@@ -13,11 +13,11 @@ const Grid = styled(SystemComponent)`
     display: grid;
     width: 85vw;
     grid-template-columns: 100%;
-    grid-template-rows: ${props => props.leftColumnWidth};
+    grid-template-rows: ${(props) => props.leftColumnWidth};
     justify-items: center;
     & table {
         width: 80vw;
-        margin-top: ${props => props.theme.space[3]}px;
+        margin-top: ${(props) => props.theme.space[3]}px;
     }
     & .avatarContainer {
         width: 100%;
@@ -33,7 +33,7 @@ const Grid = styled(SystemComponent)`
     ${theme.mediaQueries.mobile} {
         & table {
             width: 340px;
-            margin-top: ${props => props.theme.space[0]}px;
+            margin-top: ${(props) => props.theme.space[0]}px;
             position: static;
         }
         & .avatarContainer {
@@ -41,15 +41,15 @@ const Grid = styled(SystemComponent)`
         }
         width: inherit;
 
-        grid-template-columns: ${props => props.leftColumnWidth} auto;
-        grid-template-rows: ${props => props.leftColumnWidth};
+        grid-template-columns: ${(props) => props.leftColumnWidth} auto;
+        grid-template-rows: ${(props) => props.leftColumnWidth};
     }
 `;
 
 const AvatarWrapperComponent = ({ children }) => {
     return (
-        <Grid leftColumnWidth="140px">
-            <SystemComponent className="avatarContainer">
+        <Grid leftColumnWidth='140px'>
+            <SystemComponent className='avatarContainer'>
                 {children[0]}
             </SystemComponent>
             <SystemComponent>{children[1]}</SystemComponent>
@@ -57,58 +57,74 @@ const AvatarWrapperComponent = ({ children }) => {
     );
 };
 
-const ProfileSummary = ({dataLoaded = false, 
-                        firstname = "", 
-                        lastname = "", 
-                        program = "", 
-                        schoolterm = "", 
-                        email = ""}) => {
-
-    const faClassnames = ['fa-solid fa-user', 'fa-solid fa-user', 'fa-graduation-cap', 'fa-graduation-cap', 'fa-envelope']
+const ProfileSummary = ({
+    dataLoaded = false,
+    firstname = '',
+    lastname = '',
+    program = '',
+    schoolterm = '',
+    email = '',
+}) => {
+    const faClassnames = [
+        'fa-solid fa-user',
+        'fa-solid fa-user',
+        'fa-graduation-cap',
+        'fa-graduation-cap',
+        'fa-envelope',
+    ];
     const userInformation = {
         firstName: {
             label: 'First Name',
-            value: firstname
+            value: firstname,
         },
         lastName: {
-            label: "Last Name",
-            value: lastname
+            label: 'Last Name',
+            value: lastname,
         },
         program: {
-            label: "Program",
-            value: program
+            label: 'Program',
+            value: program,
         },
         term: {
-            label: "Term",
-            value: (dataLoaded && SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm)) ? SCHOOL_TERM_OPTS.find(opt => opt.value === schoolterm).label : ''
+            label: 'Term',
+            value:
+                dataLoaded &&
+                SCHOOL_TERM_OPTS.find((opt) => opt.value === schoolterm)
+                    ? SCHOOL_TERM_OPTS.find((opt) => opt.value === schoolterm)
+                          .label
+                    : '',
         },
         email: {
-            label: "Email",
-            value: email
-        }
+            label: 'Email',
+            value: email,
+        },
     };
 
     return (
         <AvatarWrapperComponent>
             <Image
                 height='100%'
-                src={imageUrl || "/static/default-headshot.png"}
-                borderRadius="18px"
+                src={imageUrl || '/static/default-headshot.png'}
+                borderRadius='18px'
             />
             <SystemComponent overflowY='auto'>
                 <table>
                     <tbody>
-                        {Object.values(userInformation).map((fieldInfo, i) =>
+                        {Object.values(userInformation).map((fieldInfo, i) => (
                             <tr key={i}>
-                                <td className={"fa " + faClassnames[i]}></td>
-                                <td><Header5>{fieldInfo.label}</Header5></td>
-                                <td style={{textAlign: 'right'}}>{fieldInfo.value}</td>
+                                <td className={'fa ' + faClassnames[i]}></td>
+                                <td>
+                                    <Header5>{fieldInfo.label}</Header5>
+                                </td>
+                                <td style={{ textAlign: 'right' }}>
+                                    {fieldInfo.value}
+                                </td>
                             </tr>
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </SystemComponent>
         </AvatarWrapperComponent>
     );
-}
+};
 export default ProfileSummary;

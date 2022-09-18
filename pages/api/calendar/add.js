@@ -9,14 +9,22 @@ module.exports = async (req, res) => {
         const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
-            
+
             res.statusCode = 200;
 
             const eventDetails = req.body;
-            return res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                // Call the function which adds a new Google Calendar Event.
-                return await data.calendar.add(token, eventDetails, res);
-            })));
+            return res.end(
+                JSON.stringify(
+                    await data.util.resWrapper(async () => {
+                        // Call the function which adds a new Google Calendar Event.
+                        return await data.calendar.add(
+                            token,
+                            eventDetails,
+                            res
+                        );
+                    })
+                )
+            );
         } else {
             res.statusCode = 401;
             res.setHeader('WWW-Authenticate', 'Bearer');
