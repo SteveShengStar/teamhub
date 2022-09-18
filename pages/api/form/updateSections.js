@@ -1,6 +1,7 @@
 const data = require('../../../backend/data/index');
 const cookie = require('cookie');
-const {Auth, google} = require('googleapis');
+const {google} = require('googleapis');
+const {JWT} = require('google-auth-library');
 
 module.exports = async (req, res) => {
     await data.initIfNotStarted();
@@ -9,7 +10,7 @@ module.exports = async (req, res) => {
         const token = cookie.parse(req.headers.cookie).token;
         const searchRes = await data.auth.checkAnyUser(`Bearer ${token}`, res);
 
-        if (searchRes.length != 0 && await isLead(searchRes[0]['email'])) {
+        if (searchRes && await isAdmin(searchRes['email'])) {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
             res.end(JSON.stringify(await data.util.resWrapper(async () => {
@@ -26,29 +27,24 @@ module.exports = async (req, res) => {
     }
 };
 
-async function isLead(userEmail) {
-    const auth = new Auth.GoogleAuth({
-        keyFile:"teamhub-257722-07d1d3b57421.json",
-        scopes:"https://www.googleapis.com/auth/admin.directory.group",
-        clientOptions: {
-            email:"teamhubbackend@teamhub-257722.iam.gserviceaccount.com",
-            // impersonate Steven Xiong, a domain admin user with special previleges
-            subject: "steven.x@waterloop.ca",
-        }
+async function isAdmin(userEmail) {
+    // Service Account configurations can be found at https://console.cloud.google.com/iam-admin/serviceaccounts?project=teamhub-257722
+    const jwtClient = new JWT({
+        scopes: ["https://www.googleapis.com/auth/admin.directory.group"],
+        email: "teamhubbackend@teamhub-257722.iam.gserviceaccount.com",  // the Service Account used to execute Google Admin SDK functions
+        key: "", // TODO: Private Key cannot be committed to remote.
+        subject: "steven.x@waterloop.ca"  // Make the Service Account impersonate "steven.x@waterloop.ca", a previleged admin user, since the Google Admin SDK requires the highest-level permissions
+                                          // For reference, look inside the constructor definition/documentation of "JWT" and refer to:
+                                          // 1. https://cloud.google.com/iam/docs/impersonating-service-accounts
+                                          // 2. https://levelup.gitconnected.com/service-account-authentication-on-gcp-via-node-js-app-34b3cc759bc4
     });
 
-    // Obtain a new admin client, making sure you pass along the auth client
-    client = await auth.getClient();
-    const admin = google.admin({ version: 'directory_v1', auth: client });
-
-    const groups = await admin.groups.list({
-        //domain: "waterloop.ca",
-        //customer: "C049m7qgz",
+    const adminClient = google.admin({ version: 'directory_v1', auth: jwtClient });
+    const groups = await adminClient.groups.list({
         userKey: userEmail,
     });
-
     for(const group of groups.data.groups) {
-        if (group.name == 'Leads') { 
+        if (group.name === 'Leads') {  // If current user belongs to the Leads group in Google Groups, grant them permission to execute this endpoint.
             return true;
         }
     }    
