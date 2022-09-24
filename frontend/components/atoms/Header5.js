@@ -6,7 +6,7 @@ Header5.defaultProps = {
     fontFamily: 'body',
     fontSize: 'header5',
     mb: 0,
-    mt: 0
+    mt: 0,
 };
 
 export default Header5;

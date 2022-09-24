@@ -1,5 +1,5 @@
 import React from 'react';
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { SystemComponent } from '../atoms/SystemComponents';
 
 /**
@@ -73,9 +73,10 @@ const DotPulseAnimation = styled(SystemComponent)`
     color: #9880ff;
     box-shadow: 9999px 0 0 -5px #9880ff;
     animation: ${Pulsate} 1.5s infinite linear;
-    animation-delay: .25s;
+    animation-delay: 0.25s;
 
-    &::before, &::after {
+    &::before,
+    &::after {
         content: '';
         display: inline-block;
         position: absolute;
@@ -96,7 +97,7 @@ const DotPulseAnimation = styled(SystemComponent)`
     &::after {
         box-shadow: 10014px 0 0 -5px #9880ff;
         animation: ${PulsateAfter} 1.5s infinite linear;
-        animation-delay: .5s;
+        animation-delay: 0.5s;
     }
 `;
 
@@ -105,10 +106,10 @@ const LoadingScreen = () => {
         <Container>
             <InnerBox>
                 <SystemComponent display='flex' justifyContent='center'>
-                    <DotPulseAnimation/>
+                    <DotPulseAnimation />
                 </SystemComponent>
             </InnerBox>
         </Container>
-    )
-}
+    );
+};
 export default LoadingScreen;

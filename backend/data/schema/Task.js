@@ -3,28 +3,30 @@ const uniqueValidator = require('mongoose-unique-validator');
 
 const Schema = mongoose.Schema;
 
-
-const DocumentLinksSchema  = new Schema({
+const DocumentLinksSchema = new Schema({
     displayTitle: String,
     url: String,
-    type: String
+    type: String,
 });
 
-const TaskSchema  = new Schema({
+const TaskSchema = new Schema({
     title: {
         type: String,
         required: true,
     },
     description: {
-        type: String
+        type: String,
     },
     searchBarPlaceholderTexts: [String],
     documentLinks: [DocumentLinksSchema],
-    subteams: [{    // TODO: remove this array later
-        type: Schema.Types.ObjectId,
-        ref: 'Subteam',
-        required: true,
-    }],
+    subteams: [
+        {
+            // TODO: remove this array later
+            type: Schema.Types.ObjectId,
+            ref: 'Subteam',
+            required: true,
+        },
+    ],
 });
 
 TaskSchema.plugin(uniqueValidator);

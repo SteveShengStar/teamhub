@@ -7,11 +7,11 @@ const InterestSchema = new Schema({
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
     },
     category: {
-        type: String
-    }
+        type: String,
+    },
 });
 
 InterestSchema.plugin(uniqueValidator);

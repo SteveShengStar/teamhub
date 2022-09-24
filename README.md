@@ -6,14 +6,14 @@
 
 ## Table of Contents
 
-- [TeamHub Project](#teamhub-project)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-    - [Installation](#installation)
-    - [Setting up your Development Environment](#setting-up-your-development-environment)
-  - [Troubleshooting](#troubleshooting)
-  - [Contributing](#contributing)
-  - [Documentation](#documentation)
+-   [TeamHub Project](#teamhub-project)
+    -   [Table of Contents](#table-of-contents)
+    -   [Getting Started](#getting-started)
+        -   [Installation](#installation)
+        -   [Setting up your Development Environment](#setting-up-your-development-environment)
+    -   [Troubleshooting](#troubleshooting)
+    -   [Contributing](#contributing)
+    -   [Documentation](#documentation)
 
 ## Getting Started
 
@@ -35,19 +35,28 @@ Here are the steps to run locally:
 1. Install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)
 2. Copy the contents of `/backend/data/config.template.json` into `/backend/data/config.json`
 3. Install MongoDB and MongoDB Compass
-4. Go to the root directory and run `docker build ./docker -t teamhub` or `npm run build:docker`
-5. To start the server, simply go to the root directory and run `docker-compose up -d`
-6. To run a command in the docker container, first run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press Ctrl + C.
-7. Now, you can run all your typical npm commands. Please run `npm ci`, `npm run dev`. Wait a few moments. You should get a message saying `Successfully Compiled ...`
-8. After finishing a work session, you can exit out of the container, press Ctrl + C. Type `exit` in your shell. Then, stop all containers by running `docker-compose stop`
+4. Go to the root directory and run `npm run build:docker`
+5. To start the server, simply go to the root directory and run `docker-compose up -d teamhub`
+6. Wait a second then try opening localhost:3000 in your browser
+7. After finishing a work session, you can exit out of the container, press Ctrl + C. Type `exit` in your shell. Then, stop all containers by running `docker-compose stop`
 
-To run tests locally, use the command `npm run test` **when you are in a shell inside `teamhub_nodejs` the docker container** to ensure there were no breaking changes (see step 5 above). If you are not inside the `teamhub_nodejs` the docker container, it will not connect to the database.
+Additional Notes:
 
-## Troubleshooting
+-   To run a command in the docker container, first run `docker exec -it teamhub_nodejs /bin/sh`, which will open up a shell into the container and then you can run whichever commands you wish. To exit out of the container, press Ctrl + C.
 
-- To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+### Running Unit Tests
 
-- If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
+To run tests locally:
+
+1. Run `docker-compose up -d test`
+2. Run `docker exec -it teamhub_testing /bin/sh` to go into the docker container and access the docker shell
+3. Run `npm run test` to execute all test cases.
+
+### Troubleshooting
+
+-   To use the MongoDB Compass desktop app, use `localhost` as the hostname and the default port 27017.
+
+-   If the DB did not load successfully from the dump and is empty, run `docker-compose rm` and then restart the server with `docker-compose up`.
 
 ### If Installing Docker Doesn't Work
 

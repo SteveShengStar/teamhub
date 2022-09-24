@@ -1,4 +1,4 @@
-import {SystemComponent, SystemSpan} from './SystemComponents';
+import { SystemComponent, SystemSpan } from './SystemComponents';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -24,7 +24,7 @@ class SuggestionBox extends React.Component {
     }
 
     render() {
-        const {value, visible, handleClick} = this.props;
+        const { value, visible, handleClick } = this.props;
 
         if (value && visible) {
             return (
@@ -39,7 +39,7 @@ class SuggestionBox extends React.Component {
 }
 
 SuggestionBox.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
 };
 
 export default SuggestionBox;

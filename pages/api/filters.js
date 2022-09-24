@@ -10,9 +10,13 @@ module.exports = async (req, res) => {
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
-            res.end(JSON.stringify(await data.util.resWrapper(async () => {
-                return await data.filters.getAll();
-            })));
+            res.end(
+                JSON.stringify(
+                    await data.util.resWrapper(async () => {
+                        return await data.filters.getAll();
+                    })
+                )
+            );
         } else {
             res.statusCode = 401;
             res.setHeader('WWW-Authenticate', 'Bearer');

@@ -7,7 +7,7 @@ const ProjectSchema = new Schema({
     name: {
         type: String,
         required: true,
-    }
+    },
 });
 
 ProjectSchema.plugin(uniqueValidator);

@@ -10,13 +10,11 @@ const Image = styled(SystemImage)(
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                zIndex: -1
-            }
-        }
+                zIndex: -1,
+            },
+        },
     })
 );
-Image.defaultProps = {
-
-};
+Image.defaultProps = {};
 
 export default Image;

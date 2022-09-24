@@ -1,25 +1,46 @@
-version: "2.1"
+version: '2.1'
 
 services:
-  teamhub:
-    image: teamhub
-    container_name: teamhub_nodejs
-    build: .
-    volumes:
-      - .:/usr/src/app
-    environment:
-      NODE_ENV: development
-    ports:
-      - 3000:3000
-    links:
-      - database
-    depends_on:
-      - database
-    tty: true
-  database:
-    image: mongo
-    container_name: teamhub_mongodb
-    volumes:
-      - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-    ports:
-      - 27017:27017
+    teamhub:
+        image: teamhub
+        container_name: teamhub_nodejs
+        build: .
+        volumes:
+            - .:/usr/src/app
+        environment:
+            NODE_ENV: development
+            TEAMHUB_ENV: development
+        ports:
+            - 3000:3000
+        links:
+            - database
+        depends_on:
+            - database
+        tty: true
+    database:
+        image: mongo
+        container_name: teamhub_mongodb
+        volumes:
+            - ./docker/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        ports:
+            - 27017:27017
+    test:
+        image: teamhub
+        container_name: teamhub_testing
+        ports:
+            - 3000:3000
+        build: .
+        volumes:
+            - .:/usr/src/app
+        links:
+            - test-db
+        depends_on:
+            - test-db
+        environment:
+            NODE_ENV: testing
+            TEAMHUB_ENV: testing
+    test-db:
+        image: mongo
+        container_name: teamhub_test_db
+        ports:
+            - 27017:27017

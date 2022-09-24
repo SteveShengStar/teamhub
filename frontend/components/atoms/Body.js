@@ -10,15 +10,15 @@ const Body = styled(SystemBody)(
         variants: {
             default: {},
             big: {
-                fontSize: 1
-            }
-        }
+                fontSize: 1,
+            },
+        },
     }),
     space
 );
 
 Body.defaultProps = {
-    variant: 'default'
+    variant: 'default',
 };
 
 export default Body;

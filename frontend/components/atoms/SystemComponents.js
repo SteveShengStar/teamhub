@@ -1,20 +1,42 @@
 import styled from 'styled-components';
-import { grid, color, space, layout, typography, flexbox, compose, shadow, border, position, system } from 'styled-system';
+import {
+    grid,
+    color,
+    space,
+    layout,
+    typography,
+    flexbox,
+    compose,
+    shadow,
+    border,
+    position,
+    system,
+} from 'styled-system';
 
 const transition = system({
     prop: 'transition',
     cssProperty: 'transition',
-    scale: 'transitions'
+    scale: 'transitions',
 });
 
-export const composition = compose(grid, color, space, flexbox, layout, typography, shadow, border, position, transition);
+export const composition = compose(
+    grid,
+    color,
+    space,
+    flexbox,
+    layout,
+    typography,
+    shadow,
+    border,
+    position,
+    transition
+);
 export const themeDefaultProps = {
     fontFamily: 'body',
     fontSize: 'body',
     fontWeight: 'regular',
-    color: 'foreground'
+    color: 'foreground',
 };
-
 
 export const SystemComponent = styled.div(composition);
 export const SystemSpan = styled.span(composition);
@@ -24,7 +46,7 @@ export const SystemHeader = {
     H3: styled.h3(composition),
     H4: styled.h4(composition),
     H5: styled.h5(composition),
-    H6: styled.h6(composition)
+    H6: styled.h6(composition),
 };
 export const SystemBody = styled.p(composition);
 export const SystemLink = styled.a(composition);

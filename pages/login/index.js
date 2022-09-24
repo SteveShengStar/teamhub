@@ -5,22 +5,24 @@ import Login from '../../frontend/components/molecules/LoginCard';
 import { useRouter } from 'next/router';
 import useShouldRedirect from '../../frontend/hooks/useShouldRedirect';
 
-
 export default () => {
     const router = useRouter();
 
     return (
         <>
             <PageTemplate>
-                <Login 
+                <Login
                     onFinish={(user) => {
                         if (user) {
-                            useShouldRedirect(user.userData, router, user.isExistingUser)
+                            useShouldRedirect(
+                                user.userData,
+                                router,
+                                user.isExistingUser
+                            );
                         }
-                    }} 
+                    }}
                 />
             </PageTemplate>
         </>
-    )
-}
-    
+    );
+};
