@@ -37,8 +37,12 @@ Here are the steps to run locally:
 3. Install MongoDB and MongoDB Compass
 4. Go to the root directory and run `npm run build:docker`
 5. To start the server, simply go to the root directory and run `docker-compose up -d teamhub`
-6. Wait a second then try opening localhost:3000 in your browser
-7. After finishing a work session, you can exit out of the container, press Ctrl + C. Type `exit` in your shell. Then, stop all containers by running `docker-compose stop`
+6. If this is your first time setting up, run `npm ci`. Wait for the installation to finish.
+7. Wait a second then try opening localhost:3000 in your browser
+8. If this is your first time setting up, you may need to populate the database with mock data.
+   Do this by running `mongorestore -d teamhub docker/mongodb/docker-entrypoint-initdb.d/dump` from the teamhub directory
+
+After finishing a work session, you can stop all containers by running `docker-compose stop`
 
 Additional Notes:
 
