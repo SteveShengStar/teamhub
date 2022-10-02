@@ -450,10 +450,10 @@ const FormEditor = () => {
         if (active.id !== over.id) {
             setFormSections((sections) => {
                 const oldIndex = sections.findIndex(
-                    (section) => section.id === active.id
+                    (section) => section.name === active.id
                 );
                 const newIndex = sections.findIndex(
-                    (section) => section.id === over.id
+                    (section) => section.name === over.id
                 );
 
                 return arrayMove(sections, oldIndex, newIndex);
