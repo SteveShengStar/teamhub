@@ -3,6 +3,7 @@ import Selectable from './Selectable';
 import TextSection from './TextSection';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import Button from '../../atoms/Form/ActionButton';
 
 const Section = ({
     type,
@@ -33,10 +34,7 @@ const Section = ({
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
-        border: '2px solid black',
-        marginBottom: 5,
-        marginTop: 5,
-        opacity: isDragging ? 0.5 : 1,
+        // opacity: isDragging ? 0.5 : 1,
     };
 
     switch (type) {
@@ -48,10 +46,13 @@ const Section = ({
             return (
                 <div
                     ref={setNodeRef}
-                    {...attributes}
-                    {...listeners}
+                    // {...attributes}
+                    // {...listeners}
                     style={style}
                 >
+                    <Button {...attributes} {...listeners}>
+                        Drag Me
+                    </Button>
                     <TextSection
                         sectionName={name}
                         type={type}
@@ -73,12 +74,10 @@ const Section = ({
         case 'menu_single':
         case 'menu_multi':
             return (
-                <div
-                    ref={setNodeRef}
-                    {...attributes}
-                    {...listeners}
-                    style={style}
-                >
+                <div ref={setNodeRef} style={style}>
+                    <Button {...attributes} {...listeners}>
+                        Drag Me
+                    </Button>
                     <Selectable
                         sectionName={name}
                         type={type}
