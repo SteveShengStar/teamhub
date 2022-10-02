@@ -16,6 +16,18 @@ import Section from '../../../frontend/components/organisms/formsection/Section'
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
 
+import {
+    closestCenter,
+    DndContext,
+    PointerSensor,
+    useSensor,
+} from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+
 const SaveButton = styled(ActionButton)`
     background-color: ${(props) => props.theme.colors.primary};
     color: ${(props) => props.theme.colors.white};
@@ -432,6 +444,23 @@ const FormEditor = () => {
             });
     };
 
+    const sensors = [useSensor(PointerSensor)];
+
+    const handleDragEnd = ({ active, over }) => {
+        if (active.id !== over.id) {
+            setFormSections((sections) => {
+                const oldIndex = sections.findIndex(
+                    (section) => section.id === active.id
+                );
+                const newIndex = sections.findIndex(
+                    (section) => section.id === over.id
+                );
+
+                return arrayMove(sections, oldIndex, newIndex);
+            });
+        }
+    };
+
     return (
         <PageTemplate>
             <Container>
@@ -458,26 +487,37 @@ const FormEditor = () => {
                         },
                     ]}
                 />
-                {formSections.map((section) => (
-                    <Section
-                        key={section.name}
-                        name={section.name}
-                        type={section.type}
-                        question={section.display}
-                        helpText={section.description}
-                        options={section.options}
-                        required={section.required}
-                        canDelete={section.customizable === 'delete'}
-                        handleTypeChange={onTypeChange}
-                        handleInputChange={onInputChange}
-                        handleOptionChange={onOptionChange}
-                        handleOptionAdd={onOptionAdd}
-                        handleOptionDelete={onOptionDelete}
-                        handleSectionDelete={onSectionDelete}
-                        handleSectionDuplicate={onSectionDuplicate}
-                        handleToggleRequired={onToggleRequired}
-                    />
-                ))}
+                <DndContext
+                    sensors={sensors}
+                    collisionDetection={closestCenter}
+                    onDragEnd={handleDragEnd}
+                >
+                    <SortableContext
+                        items={formSections.map((section) => section.name)}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {formSections.map((section) => (
+                            <Section
+                                key={section.name}
+                                name={section.name}
+                                type={section.type}
+                                question={section.display}
+                                helpText={section.description}
+                                options={section.options}
+                                required={section.required}
+                                canDelete={section.customizable === 'delete'}
+                                handleTypeChange={onTypeChange}
+                                handleInputChange={onInputChange}
+                                handleOptionChange={onOptionChange}
+                                handleOptionAdd={onOptionAdd}
+                                handleOptionDelete={onOptionDelete}
+                                handleSectionDelete={onSectionDelete}
+                                handleSectionDuplicate={onSectionDuplicate}
+                                handleToggleRequired={onToggleRequired}
+                            />
+                        ))}
+                    </SortableContext>
+                </DndContext>
                 <ButtonRow
                     saveDisabled={loader}
                     handleSave={(e) => handleSave(e, true)}
