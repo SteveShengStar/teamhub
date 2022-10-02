@@ -10,7 +10,6 @@ services:
         environment:
             NODE_ENV: development
             TEAMHUB_ENV: development
-            CHOKIDAR_USEPOLLING: true
         ports:
             - 3000:3000
         links:
@@ -40,7 +39,6 @@ services:
         environment:
             NODE_ENV: testing
             TEAMHUB_ENV: testing
-            CHOKIDAR_USEPOLLING: true
     test-db:
         image: mongo
         container_name: teamhub_test_db
