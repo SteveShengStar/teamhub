@@ -16,6 +16,8 @@ import Section from '../../../frontend/components/organisms/formsection/Section'
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
 
+import FormConfirmationDialog from '../../../frontend/components/organisms/FormConfirmationDialog';
+
 const SaveButton = styled(ActionButton)`
     background-color: ${(props) => props.theme.colors.primary};
     color: ${(props) => props.theme.colors.white};
@@ -160,6 +162,8 @@ const FormEditor = () => {
     const [fromTitle, setFormTitle] = useState('');
     const [fromDescription, setFormDescription] = useState('');
     const [formSections, setFormSections] = useState([]);
+    const [saveSuccess, setSaveSuccess] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const loadFormSections = () => {
         showLoader();
@@ -422,14 +426,30 @@ const FormEditor = () => {
 
                 loadFormSections();
                 console.log('Finished loading form sections.');
+                setSaveSuccess(true);
             })
             .catch((e) => {
                 console.error(e);
                 hideLoader();
+                setSaveSuccess(false);
                 throw new Error(
                     'An Error occurred when saving the form sections' + e
                 );
             });
+        toggleDialog(true);
+    };
+
+    const exitEditor = () => {
+        toggleDialog(false);
+        hideLoader();
+        router.push('/form/admin/');
+        return;
+    };
+
+    const toggleDialog = (specificSetting) => {
+        if (specificSetting != true || specificSetting != false)
+            setDialogOpen(!dialogOpen);
+        else setDialogOpen(specificSetting);
     };
 
     return (
@@ -480,8 +500,14 @@ const FormEditor = () => {
                 ))}
                 <ButtonRow
                     saveDisabled={loader}
-                    handleSave={(e) => handleSave(e, true)}
+                    handleSave={(e) => handleSave(e, false)}
                     handleCancel={(e) => handleExit(e, router)}
+                />
+                <FormConfirmationDialog
+                    handleContinueEditing={toggleDialog}
+                    handleReturnToMain={exitEditor}
+                    visible={dialogOpen}
+                    success={saveSuccess}
                 />
             </Container>
         </PageTemplate>
