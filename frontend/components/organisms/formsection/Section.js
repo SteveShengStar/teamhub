@@ -1,9 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
 import Selectable from './Selectable';
 import TextSection from './TextSection';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import Button from '../../atoms/Form/ActionButton';
+import { SystemComponent } from '../../atoms/SystemComponents';
+
+const DragSection = styled(SystemComponent)`
+    display: flex;
+    justify-content: center;
+`;
 
 const Section = ({
     type,
@@ -34,7 +40,6 @@ const Section = ({
     const style = {
         transition,
         transform: CSS.Transform.toString(transform),
-        // opacity: isDragging ? 0.5 : 1,
     };
 
     switch (type) {
@@ -44,15 +49,10 @@ const Section = ({
         case 'numbers':
         case 'phone':
             return (
-                <div
-                    ref={setNodeRef}
-                    // {...attributes}
-                    // {...listeners}
-                    style={style}
-                >
-                    <Button {...attributes} {...listeners}>
-                        Drag Me
-                    </Button>
+                <div ref={setNodeRef} style={style}>
+                    <DragSection {...attributes} {...listeners}>
+                        <i className='fa-solid fa-grip' style={{ cursor: 'move' }}/>
+                    </DragSection>
                     <TextSection
                         sectionName={name}
                         type={type}
@@ -75,9 +75,9 @@ const Section = ({
         case 'menu_multi':
             return (
                 <div ref={setNodeRef} style={style}>
-                    <Button {...attributes} {...listeners}>
-                        Drag Me
-                    </Button>
+                    <DragSection {...attributes} {...listeners}>
+                        <i className='fa-solid fa-grip' style={{ cursor: 'move' }}/>
+                    </DragSection>
                     <Selectable
                         sectionName={name}
                         type={type}

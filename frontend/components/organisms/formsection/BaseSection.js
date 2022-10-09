@@ -123,10 +123,6 @@ const BaseSection = ({
             marginRight='auto'
             marginLeft='auto'
         >
-            <div style={{ height: '30px;' }}>
-                This is the draggable handle. Use me to drag this entire
-                section.
-            </div>
             <TextField
                 label='Question'
                 variant='filled'
