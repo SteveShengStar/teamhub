@@ -10,6 +10,7 @@ import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
+import ConfirmationBanner from '../../frontend/components/ConfirmationBanner';
 import {
     validateField,
     clearErrorMessages,
@@ -22,6 +23,7 @@ import {
 } from '../../frontend/util';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import _ from 'lodash';
+import ErrorBanner from '../../frontend/components/ErrorBanner';
 
 const FORM_NAME_KEY = 'returning';
 
@@ -32,6 +34,8 @@ const ReturningMembersForm = () => {
     const router = useRouter();
     const { user, hydrated } = useSelector((state) => state.userState);
     const [loader, showLoader, hideLoader] = useLoadingScreen(true);
+    const [displayBanner, setDisplayBanner] = useState(false);
+    const [displayErrorBanner, setDisplayErrorBanner] = useState(false);
 
     const [formValues, setFormValues] = useState({
         fullName: '',
@@ -132,6 +136,10 @@ const ReturningMembersForm = () => {
 
         const formHasErrors = Object.values(formErrors).some((err) => err);
         if (!formHasErrors) {
+            setDisplayBanner(true);
+            setTimeout(() => {
+                setDisplayBanner(false);
+            }, 7000);
             showLoader();
             const {
                 fullName,
@@ -178,6 +186,10 @@ const ReturningMembersForm = () => {
                 });
         } else {
             scrollToFirstError(formSections, formErrors);
+            setDisplayErrorBanner(true);
+            setTimeout(() => {
+                setDisplayErrorBanner(false);
+            }, 7000);
         }
     };
 
@@ -204,6 +216,8 @@ const ReturningMembersForm = () => {
     return (
         <PageTemplate>
             <SystemComponent>
+                <ConfirmationBanner displayBanner={displayBanner} />
+                <ErrorBanner displayErrorBanner={displayErrorBanner} />
                 <Card
                     width={['100%', '768px']}
                     margin={['cardMarginSmall', 'auto']}
