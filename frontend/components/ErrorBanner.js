@@ -42,7 +42,7 @@ const BannerHeadingSection = styled.div`
     align-items: center;
     align-self: flex-start;
 `;
-const ErrorBanner = ({ displayErrorBanner }) => {
+const ErrorBanner = ({ displayErrorBanner, text }) => {
     return (
         <div>
             <Banner style={{ display: displayErrorBanner ? 'flex' : 'none' }}>
@@ -59,10 +59,7 @@ const ErrorBanner = ({ displayErrorBanner }) => {
                     <BannerSubtitle>Error</BannerSubtitle>
                 </BannerHeadingSection>
                 <Text>
-                    <Bannertext>
-                        Error occurred during form Submission. Please contact
-                        Waterloop web team for assistance.
-                    </Bannertext>
+                    <Bannertext>{text}</Bannertext>
                 </Text>
             </Banner>
         </div>

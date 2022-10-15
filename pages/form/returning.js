@@ -216,8 +216,16 @@ const ReturningMembersForm = () => {
     return (
         <PageTemplate>
             <SystemComponent>
-                <ConfirmationBanner displayBanner={displayBanner} />
-                <ErrorBanner displayErrorBanner={displayErrorBanner} />
+                <ConfirmationBanner
+                    displayBanner={displayBanner}
+                    text={['Form has been successfully submitted !']}
+                />
+                <ErrorBanner
+                    displayErrorBanner={displayErrorBanner}
+                    text={[
+                        'Error occurred during form Submission. Please contact Waterloop web team for assistance.',
+                    ]}
+                />
                 <Card
                     width={['100%', '768px']}
                     margin={['cardMarginSmall', 'auto']}

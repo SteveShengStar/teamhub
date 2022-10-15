@@ -42,15 +42,14 @@ const BannerHeadingSection = styled.div`
     align-items: center;
     align-self: flex-start;
 `;
-const ConfirmationBanner = ({ displayBanner }) => {
+const ConfirmationBanner = ({ displayBanner, text }) => {
     return (
         <div>
             <div>
                 <Banner style={{ display: displayBanner ? 'flex' : 'none' }}>
                     <BannerHeadingSection>
                         <i
-                            class='fa fa-exclamation-circle'
-                            aria-hidden='true'
+                            class='fa-solid fa-circle-check'
                             style={{
                                 color: 'purple',
                                 padding: '0 15px',
@@ -60,9 +59,7 @@ const ConfirmationBanner = ({ displayBanner }) => {
                         <BannerSubtitle>Success</BannerSubtitle>
                     </BannerHeadingSection>
                     <Text>
-                        <Bannertext>
-                            Form has been successfully submitted !
-                        </Bannertext>
+                        <Bannertext>{text}</Bannertext>
                     </Text>
                 </Banner>
             </div>
