@@ -16,6 +16,8 @@ import TeamsSection from './settings/teams';
 import UserProfileSection from './settings/userprofile';
 import LinksSection from './settings/links';
 import useStatelessLoadingScreen from '../frontend/hooks/useStatelessLoadingScreen';
+import ConfirmationBanner from '../frontend/components/ConfirmationBanner';
+import ErrorBanner from '../frontend/components/ErrorBanner';
 
 const Frame = styled(Card)`
     box-sizing: border-box;
@@ -31,6 +33,8 @@ const Settings = () => {
     const [activeModal, setActiveModal] = useState(false);
     const [userDataLoaded, setUserDataLoaded] = useState(false);
     const { hydrated, user } = useSelector((state) => state.userState);
+    const [displayBanner, setDisplayBanner] = useState(false);
+    const [displayErrorBanner, setDisplayErrorBanner] = useState(false);
     const [loader, showLoader, hideLoader] = useStatelessLoadingScreen(
         !userDataLoaded,
         (showLoader) => setUserDataLoaded(!showLoader)
@@ -39,7 +43,18 @@ const Settings = () => {
     const handleCloseModal = () => {
         setActiveModal(ACTIVE_MODAL.NONE);
     };
-
+    const handleConfirmationBanner = () => {
+        setDisplayBanner(true);
+        setTimeout(() => {
+            setDisplayBanner(false);
+        }, 7000);
+    };
+    const handleErrorBanner = () => {
+        setDisplayErrorBanner(true);
+        setTimeout(() => {
+            setDisplayErrorBanner(false);
+        }, 7000);
+    };
     useEffect(async () => {
         if (hydrated) {
             // setTimeout(function(){
@@ -52,9 +67,21 @@ const Settings = () => {
     return (
         <PageTemplate title='Profile Settings'>
             <>
+                <ConfirmationBanner
+                    displayBanner={displayBanner}
+                    text={['Profile Information successfully updated !']}
+                />
+                <ErrorBanner
+                    displayErrorBanner={displayErrorBanner}
+                    text={[
+                        'Failed to save information. Please contact Waterloop web team for assistance',
+                    ]}
+                />
                 <SettingsModalSelector
                     activeModal={activeModal}
                     handleCloseModal={handleCloseModal}
+                    handleConfirmationBanner={handleConfirmationBanner}
+                    handleErrorBanner={handleErrorBanner}
                 />
                 <SystemComponent display='flex' overflow='hidden' margin='auto'>
                     <Frame position='relative'>

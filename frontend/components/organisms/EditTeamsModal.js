@@ -27,7 +27,12 @@ const subteamDisplayNames = {
     Web: 'web',
 };
 
-const EditTeamsModal = ({ visible, handleCloseModal }) => {
+const EditTeamsModal = ({
+    visible,
+    handleCloseModal,
+    handleConfirmationBanner,
+    handleErrorBanner,
+}) => {
     const { user } = useSelector((state) => state.userState);
     const { filters } = useSelector((state) => state.membersState);
     const { projects: projectOpts } = filters;
@@ -70,12 +75,14 @@ const EditTeamsModal = ({ visible, handleCloseModal }) => {
                     });
                 }
                 handleCloseModal();
+                handleConfirmationBanner();
             })
             .catch((err) => {
                 console.error(err);
                 alert(
                     'An error occured when updating your profile information.'
                 );
+                handleErrorBanner();
             })
             .finally(() => {
                 hideLoader();
