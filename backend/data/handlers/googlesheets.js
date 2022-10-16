@@ -31,14 +31,11 @@ googlesheets.readfile = async (token) => {
 googlesheets.writefile = async (token, formName) => {
     switch (formName) {
         case 'register':
-            exportRegister(token);
-            break;
+            return exportRegister(token);
         case 'startofterm':
-            exportStartTerm(token);
-            break;
+            return exportStartTerm(token);
         case 'returning':
-            exportReturning(token);
-            break;
+            return exportReturning(token);
     }
 };
 

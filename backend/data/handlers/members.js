@@ -61,10 +61,10 @@ members.getAll = async (fields, returnSubteamTaskList = false) => {
 };
 
 /**
- * Returns all members (and their associated information) that match the filter criteria specified in input params
+ * Returns all members that match the filter criteria specified in the input params
  *
- * @param {Object} filter: selection criteria for selecting members to return (ie. {email: 'steven.x@waterloop.ca'} return the member with 'steven.x@waterloop.ca' as email)
- * @param {Object} fields: specifies which fields to return
+ * @param {Object} filter: selection criteria for members to return (ie. {email: 'steven.x@waterloop.ca'} returns the member with 'steven.x@waterloop.ca' as email)
+ * @param {Object} fields: specifies which members fields to return
  * @param {boolean} showToken: whether or not to return the access token and expiry date of token
  * @param {boolean} returnSubteamTaskList: whether or not to return the tasks that should be completed by the member(s)
  *
