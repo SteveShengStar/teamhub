@@ -6,7 +6,7 @@ module.exports = async (req, res) => {
     if (req.method === 'POST') {
         // Get the Access Token from the request headers
         const token = cookie.parse(req.headers.cookie).token;
-        const authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+        const authStatus = await data.auth.checkAnyUser(token, res);
         if (authStatus) {
             res.setHeader('Content-Type', 'application/json');
             res.statusCode = 200;
@@ -18,10 +18,6 @@ module.exports = async (req, res) => {
                     })
                 )
             );
-        } else {
-            res.statusCode = 401;
-            res.setHeader('WWW-Authenticate', 'Bearer');
-            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

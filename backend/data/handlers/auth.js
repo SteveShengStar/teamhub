@@ -7,37 +7,23 @@ const { google } = require('googleapis');
 const auth = {};
 
 /**
- * @param {String} authHeader:          authentication token provided by the client
+ * @param {String} token:               user session token
  * @param {String} res:                 api response object
  * @param {String} ignoreTokenExpiry:   ignore the token expiry date
  *
  * @return: information of the user that corresponds to the input token
  */
-auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
-    if (!authHeader) {
-        res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Bearer');
-        res.end('No auth header found.');
-        return false;
-    }
-    const authType = authHeader.split(' ')[0];
-    if (authType !== 'Bearer') {
+auth.checkAnyUser = async (token, res, ignoreTokenExpiry = false) => {
+    if (!token) {
         res.statusCode = 401;
         res.setHeader('WWW-Authenticate', 'Bearer');
         res.end('No bearer token found.');
         return false;
     }
-    const authToken = authHeader.split(' ')[1];
-    if (!authToken) {
-        res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Bearer');
-        res.end('No bearer token found.');
-        return false;
-    }
-    const searchRes = await members.search({ token: authToken });
+    const searchRes = await members.search({ token: token });
     if (
         !searchRes ||
-        searchRes.length == 0 ||
+        searchRes.length === 0 ||
         (!ignoreTokenExpiry && searchRes[0].tokenExpiry < Date.now())
     ) {
         res.statusCode = 403;
@@ -48,27 +34,19 @@ auth.checkAnyUser = async (authHeader, res, ignoreTokenExpiry = false) => {
 };
 
 /**
- * @param {String} authHeader: authentication token provided by the client
+ * @param {String} token:  user session token
  * @param {String} userId: ID of the user who is attempting to access a secure endpoint or log in
  *
  * @return: true only if authentication was successful.
  */
-auth.checkSpecificUser = async (authHeader, userId, res) => {
-    if (!authHeader) {
-        res.statusCode = 401;
-        res.setHeader('WWW-Authenticate', 'Bearer');
-        res.end('No auth header found.');
-        return false;
-    }
-    const authType = authHeader.split(' ')[0];
-    if (authType !== 'Bearer') {
+auth.checkSpecificUser = async (token, userId, res) => {
+    if (!token) {
         res.statusCode = 401;
         res.setHeader('WWW-Authenticate', 'Bearer');
         res.end('No bearer token found.');
         return false;
     }
-    const authToken = authHeader.split(' ')[1];
-    const searchRes = await members.search({ token: authToken });
+    const searchRes = await members.search({ token: token });
     if (!searchRes || searchRes.length == 0 || searchRes[0].id != userId) {
         res.statusCode = 403;
         res.end('Token forbidden.');

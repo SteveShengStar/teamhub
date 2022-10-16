@@ -7,7 +7,7 @@ module.exports = async (req, res) => {
         // Get the Access Token from the request header
         const token = cookie.parse(req.headers.cookie).token;
         const authStatus = await data.auth.checkSpecificUser(
-            'Bearer ' + token,
+            token,
             req.query.id,
             res
         );
@@ -60,10 +60,6 @@ module.exports = async (req, res) => {
                     })
                 )
             );
-        } else {
-            res.statusCode = 401;
-            res.setHeader('WWW-Authenticate', 'Bearer');
-            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;

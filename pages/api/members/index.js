@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
             authStatus = true;
         } else {
             const token = cookie.parse(req.headers.cookie).token;
-            authStatus = await data.auth.checkAnyUser(`Bearer ${token}`, res);
+            authStatus = await data.auth.checkAnyUser(token, res);
         }
 
         if (authStatus) {
@@ -59,10 +59,6 @@ module.exports = async (req, res) => {
                     })
                 )
             );
-        } else {
-            res.statusCode = 401;
-            res.setHeader('WWW-Authenticate', 'Bearer');
-            res.end('Unauthorized user.');
         }
     } else {
         res.statusCode = 404;
