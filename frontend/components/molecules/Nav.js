@@ -19,14 +19,6 @@ const Container = styled(SystemComponent)`
 const MyNav = styled(SystemNav)`
     padding: 0 ${(props) => props.theme.space[4]}px 0 0;
 `;
-const NavOutterLayer = styled.div`
-    z-index: 20;
-    left: 0;
-    right: 0;
-    top: 0;
-    color: 'grey';
-    position: fixed;
-`;
 
 const NavLink = styled(Link)`
     &:hover {

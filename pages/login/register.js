@@ -33,29 +33,7 @@ import {
 } from '../../frontend/util';
 import _ from 'lodash';
 
-const TERM_STATUSES = [
-    'Academic term, active on Waterloop in-person',
-    'Academic term, active on Waterloop remotely',
-    'Co-op term, working on Waterloop remotely',
-    'Co-op term, active on Waterloop in-person',
-];
-
-const PREV_TERMS = ['F21', 'S21', 'W21', 'F20', 'S20', 'W20'];
-
-const FUTURE_TERMS = ['W22', 'S22', 'F22', 'W23', 'S23', 'F23'];
-
-const MEMBER_TYPES = ['Member', 'Exec/lead/advisor', 'Coop'];
-
-const SUBTEAMS = [
-    'Software',
-    'Electrical',
-    'Mechanical',
-    'Admin',
-    'Infrastructure',
-    'Exec',
-    'Web',
-    'Business',
-];
+const FORM_NAME_KEY = 'register';
 
 const RegistrationForm = () => {
     const theme = useContext(ThemeContext);
@@ -216,6 +194,8 @@ const RegistrationForm = () => {
     };
 
     const handleInputChange = (name, value) => {
+        clearErrorMessageIfExists(name, hasError, setHasError);
+
         // Prevent user from typing in non-numeric characters.
         if (name === 'phoneNumber') {
             if (value && isInvalidPhoneNumber(value)) {
