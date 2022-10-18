@@ -47,12 +47,7 @@ const URLField = ({
     );
 };
 
-const EditLinksModal = ({
-    visible,
-    handleCloseModal,
-    handleConfirmationBanner,
-    handleErrorBanner,
-}) => {
+const EditLinksModal = ({ visible, handleCloseModal }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.userState);
@@ -176,7 +171,6 @@ const EditLinksModal = ({
                             type: UserTypes.UPDATE_INFO,
                             payload: res.body[0],
                         });
-                        handleConfirmationBanner();
                     }
                     handleCloseModal();
                 })
@@ -185,7 +179,6 @@ const EditLinksModal = ({
                     alert(
                         'An error occured when updating your profile information.'
                     );
-                    handleErrorBanner();
                 })
                 .finally(() => {
                     hideLoader();

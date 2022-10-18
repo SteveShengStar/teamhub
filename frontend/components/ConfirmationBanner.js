@@ -7,6 +7,8 @@ const Banner = styled.div`
     padding: 15px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    flex-direction: column;
     position: fixed;
     left: 0;
     right: 0;
@@ -26,6 +28,7 @@ const Text = styled.div`
 `;
 const Bannertext = styled.h4`
     font-family: 'Nunito Sans';
+    padding-left: 5px;
     margin: 0;
 `;
 
@@ -37,6 +40,7 @@ const BannerSubtitle = styled.h5`
 const BannerHeadingSection = styled.div`
     display: flex;
     align-items: center;
+    align-self: flex-start;
 `;
 const ConfirmationBanner = ({ displayBanner, text }) => {
     return (
@@ -52,9 +56,9 @@ const ConfirmationBanner = ({ displayBanner, text }) => {
                                 fontSize: '20px',
                             }}
                         ></i>
+                        <BannerSubtitle>Success</BannerSubtitle>
                     </BannerHeadingSection>
                     <Text>
-                        <BannerSubtitle>Success</BannerSubtitle>
                         <Bannertext>{text}</Bannertext>
                     </Text>
                 </Banner>

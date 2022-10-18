@@ -105,12 +105,7 @@ const SelectSegment = ({
 };
 
 const validProgramPattern = /^[A-Za-z,'-\s]*$/;
-const EditProfileModal = ({
-    handleCloseModal,
-    visible,
-    handleConfirmationBanner,
-    handleErrorBanner,
-}) => {
+const EditProfileModal = ({ handleCloseModal, visible }) => {
     const router = useRouter();
     const dispatch = useDispatch();
     const { user, hydrated } = useSelector((state) => state.userState);
@@ -208,7 +203,6 @@ const EditProfileModal = ({
                             type: UserTypes.UPDATE_INFO,
                             payload: res.body[0],
                         });
-                        handleConfirmationBanner();
                     }
                     handleCloseModal();
                 })
@@ -217,7 +211,6 @@ const EditProfileModal = ({
                     alert(
                         'An error occured when updating your profile information.'
                     );
-                    handleErrorBanner();
                 })
                 .finally(() => {
                     hideLoader();
