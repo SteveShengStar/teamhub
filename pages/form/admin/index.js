@@ -8,6 +8,8 @@ import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
 import { useForms } from '../../../frontend/hooks/forms';
 import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
+import ConfirmationBanner from '../../../frontend/components/ConfirmationBanner';
+import ErrorBanner from '../../../frontend/components/ErrorBanner';
 
 const EditFormButton = styled(Button)`
     width: 100%;
@@ -110,6 +112,8 @@ const BulletsSection = styled(SystemComponent)`
 
 const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
+    const [displayBanner, setDisplayBanner] = useState(false);
+    const [displayErrorBanner, setDisplayErrorBanner] = useState(false);
 
     return (
         <FormInfoCard
@@ -121,6 +125,18 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
             marginLeft='auto'
             marginRight='auto'
         >
+            <ConfirmationBanner
+                displayBanner={displayBanner}
+                text={[
+                    'Form responses successfully exported to {insert link here}',
+                ]}
+            />
+            <ErrorBanner
+                displayErrorBanner={displayErrorBanner}
+                text={[
+                    'Form responses failed to be exported. Please contact Waterloop web team for assistance',
+                ]}
+            />
             <SystemComponent>
                 <BigIconWrapper>
                     <Svg src={src}></Svg>
@@ -144,14 +160,26 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
             </EditFormButton>
             <ExportRespButton
                 onClick={(e) => {
-                    e.preventDefault();
-                    fetch('/api/google/export/' + formName, {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    }).then((res) => res.json());
+                    try {
+                        e.preventDefault();
+                        fetch('/api/google/export/' + formName, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                        }).then((res) => res.json());
+                        setDisplayBanner(true);
+                        setTimeout(() => {
+                            setDisplayBanner(false);
+                        }, 7000);
+                    } catch (err) {
+                        console.log(err);
+                        setDisplayErrorBanner(true);
+                        setTimeout(() => {
+                            setDisplayErrorBanner(false);
+                        }, 7000);
+                    }
                 }}
                 variant='white'
             >
