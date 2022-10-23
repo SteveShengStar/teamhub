@@ -22,6 +22,10 @@ const navItems = [
         link: '/dashboard',
     },
     {
+        name: 'My Forms',
+        link: '/form/admin',
+    },
+    {
         name: 'My Team',
         link: '/',
     },

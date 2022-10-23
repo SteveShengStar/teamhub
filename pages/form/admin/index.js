@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import PageTemplate from '../../../frontend/components/templates/PageTemplate';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -73,12 +73,12 @@ const TitleText = styled.div`
 `;
 
 const FormInfoCard = styled(Card)`
-    padding: 30px;
+    padding: 90px 30px 30px 30px;
     ${(props) => props.theme.mediaQueries.mobile} {
-        padding: 20px;
+        padding: 90px 20px 20px 20px;
     }
     @media screen and (min-width: 1400px) {
-        padding: 30px;
+        padding: 90px 30px 30px 30px;
     }
 `;
 
@@ -171,7 +171,7 @@ const DashboardPanel = () => {
         showLoader();
         useForms(dispatch, router)
             .then((res) => {
-                setFormData(res.body);
+                setFormData(res.body ? res.body : []);
             })
             .finally(() => {
                 hideLoader();
@@ -197,7 +197,7 @@ const DashboardPanel = () => {
                     src='/static/returning-members-icon.jpg'
                     title='Returning Member'
                     bulletPoints={[
-                        'Filled in end of term',
+                        'Filled in End of Term',
                         'Members state their goals and intentions for next school term.',
                     ]}
                     formName={
@@ -208,7 +208,7 @@ const DashboardPanel = () => {
                     src='/static/beginning-of-term-icon.jpg'
                     title='Start of Term'
                     bulletPoints={[
-                        'Filled in beginning of term',
+                        'Filled in Start of Term',
                         'Members state their availability and goals for this term.',
                     ]}
                     formName={
@@ -218,9 +218,7 @@ const DashboardPanel = () => {
                 <FormMetadataSection
                     src='/static/sign-up-icon.svg'
                     title='Sign-Up'
-                    bulletPoints={[
-                        'Filled in once during initial team sign-up',
-                    ]}
+                    bulletPoints={['Filled in during Initial Team Sign-up']}
                     formName={formData.find((f) => f.name === 'register')?.name}
                 />
             </SystemComponent>
