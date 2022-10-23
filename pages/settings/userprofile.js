@@ -44,21 +44,18 @@ const UserProfileSection = ({
             <SettingsSubsection
                 headerText='My Skills'
                 type='list'
-                isLabelListSection={true}
                 labelValues={skills}
                 defaultDisplayText='No Skills to show. Click Edit to add skills.'
             />
             <SettingsSubsection
                 headerText='My Interests'
                 type='list'
-                isLabelListSection={true}
                 labelValues={interests}
                 defaultDisplayText='No Interests to show. Click Edit to add personal interests.'
             />
             <SettingsSubsection
                 headerText='Short Bio'
                 type='normal'
-                isLabelListSection={false}
                 defaultDisplayText='Click Edit to add a bio about yourself.'
             >
                 {user.bio ? user.bio : 'Click Edit (above) to add a short bio.'}

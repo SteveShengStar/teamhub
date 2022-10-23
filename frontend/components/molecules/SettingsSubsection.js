@@ -1,5 +1,5 @@
 import React from 'react';
-import { startCase } from 'lodash';
+import { capitalize } from 'lodash';
 
 import Header4 from '../atoms/Header4';
 import BoxedListItem from '../atoms/AccountSettings/BoxedListItem';
@@ -35,7 +35,7 @@ const SettingsSubsection = ({
                     <ListItemWrapper
                         key={i}
                         variant='lightgrey'
-                        label={startCase(labelValue)}
+                        label={capitalize(labelValue)}
                     />
                 ));
             }

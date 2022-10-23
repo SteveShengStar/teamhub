@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import Header5 from '../atoms/Header5';
 import { SystemComponent } from '../atoms/SystemComponents';
 
@@ -7,17 +6,16 @@ import Creatable from 'react-select/creatable';
 const MultiSelectInput = ({
     title,
     setSelectedItems,
+    selectedItems,
     options,
     helpMessage,
 }) => {
-    const handleSelectItems = (selectedItems) => {
-        if (!selectedItems) {
+    const handleSelectItems = (items) => {
+        if (!items) {
             setSelectedItems([]);
             return;
         }
-        setSelectedItems(
-            selectedItems.map((selectedItem) => selectedItem.value)
-        );
+        setSelectedItems(items);
     };
 
     return (
@@ -32,6 +30,7 @@ const MultiSelectInput = ({
                     isMulti
                     onChange={handleSelectItems}
                     options={options}
+                    value={selectedItems}
                 />
             </SystemComponent>
         </SystemComponent>

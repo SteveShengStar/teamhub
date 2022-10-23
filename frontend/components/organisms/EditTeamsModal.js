@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeBadValuesAndDuplicates } from '../../util';
-
-import MultiSelectInput from '../molecules/MultiSelectInput';
-import { SystemComponent } from '../atoms/SystemComponents';
 import { useRouter } from 'next/router';
+import { removeDuplicates } from '../../util';
 
+import { SystemComponent } from '../atoms/SystemComponents';
 import Header5 from '../atoms/Header5';
 import ToggleListItem from '../atoms/ToggleListItem';
+import MultiSelectInput from '../molecules/MultiSelectInput';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 
 import { updateProfileInfo, UserTypes } from '../../store/reducers/userReducer';
-import { filter, capitalize } from 'lodash';
+import { getFilters } from '../../store/reducers/membersReducer';
 import useLoadingScreen from '../../hooks/useLoadingScreen';
+import { filter, capitalize, isEmpty } from 'lodash';
 
 // Subteam ID to String Mapping
 const subteamDisplayNames = {
@@ -28,7 +28,7 @@ const subteamDisplayNames = {
 };
 
 const EditTeamsModal = ({ visible, handleCloseModal }) => {
-    const { user } = useSelector((state) => state.userState);
+    const { user, hydrated } = useSelector((state) => state.userState);
     const { filters } = useSelector((state) => state.membersState);
     const { projects: projectOpts } = filters;
     const router = useRouter();
@@ -47,15 +47,30 @@ const EditTeamsModal = ({ visible, handleCloseModal }) => {
         persistedSelectedTeams
     );
     const [selectedProjects, setSelectedProjects] = useState(
-        user.projects ? user.projects.map((p) => p.name) : []
+        user.projects
+            ? user.projects.map((i) => {
+                  return {
+                      label: capitalize(i.name),
+                      value: i.name,
+                  };
+              })
+            : []
     );
+
+    useEffect(() => {
+        if (hydrated && isEmpty(filters)) {
+            getFilters(dispatch, router);
+        }
+    }, [hydrated]);
 
     const handleSave = () => {
         showLoader();
         updateProfileInfo(
             dispatch,
             {
-                projects: removeBadValuesAndDuplicates(selectedProjects),
+                projects: removeDuplicates(
+                    selectedProjects.map((p) => p.value)
+                ),
                 subteams: localSelectedTeams,
             },
             user._id,
@@ -143,6 +158,7 @@ const EditTeamsModal = ({ visible, handleCloseModal }) => {
                             setSelectedItems={(list) =>
                                 setSelectedProjects(list)
                             }
+                            selectedItems={selectedProjects}
                             options={
                                 projectOpts
                                     ? projectOpts.map((project) => ({

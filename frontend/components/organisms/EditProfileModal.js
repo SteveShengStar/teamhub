@@ -3,7 +3,7 @@ import { SystemComponent } from '../atoms/SystemComponents';
 import TextArea from '../atoms/TextArea';
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeBadValuesAndDuplicates } from '../../util';
+import { removeDuplicates } from '../../util';
 import { useRouter } from 'next/router';
 import EditSettingsModal from '../molecules/EditSettingsModal';
 import SettingsInputPair from '../molecules/AccountSettings/SettingsInputPair';
@@ -15,7 +15,7 @@ import Header5 from '../atoms/Header5';
 import { updateProfileInfo, UserTypes } from '../../store/reducers/userReducer';
 import useLoadingScreen from '../../hooks/useLoadingScreen';
 
-import { isEmpty } from 'lodash';
+import { isEmpty, capitalize } from 'lodash';
 import theme from '../theme';
 
 export const SCHOOL_TERM_OPTS = [
@@ -138,7 +138,7 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
 
     useEffect(() => {
-        if (isEmpty(filters)) {
+        if (hydrated && isEmpty(filters)) {
             getFilters(dispatch, router);
         }
     }, [hydrated]);
@@ -159,8 +159,26 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
             bio: user.bio ? user.bio : '',
         });
 
-        setInterests(user.interests ? user.interests.map((i) => i.name) : []);
-        setSkills(user.skills ? user.skills.map((s) => s.name) : []);
+        setInterests(
+            user.interests
+                ? user.interests.map((i) => {
+                      return {
+                          label: capitalize(i.name),
+                          value: i.name,
+                      };
+                  })
+                : []
+        );
+        setSkills(
+            user.skills
+                ? user.skills.map((i) => {
+                      return {
+                          label: capitalize(i.name),
+                          value: i.name,
+                      };
+                  })
+                : []
+        );
 
         setHasError({
             firstName: false,
@@ -189,8 +207,8 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
                         last: formValues.lastName.trim(),
                     },
                     program: formValues.program.value.trim(),
-                    interests: removeBadValuesAndDuplicates(interests),
-                    skills: removeBadValuesAndDuplicates(skills),
+                    interests: removeDuplicates(interests.map((i) => i.value)),
+                    skills: removeDuplicates(skills.map((i) => i.value)),
                     bio: formValues.bio.trim(),
                 },
                 user._id,
@@ -285,6 +303,7 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
                         <MultiSelectInput
                             title='Skills'
                             setSelectedItems={setSkills}
+                            selectedItems={skills}
                             options={
                                 skillOpts
                                     ? skillOpts.map((skill) => ({
@@ -300,6 +319,7 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
                         <MultiSelectInput
                             title='Interests'
                             setSelectedItems={setInterests}
+                            selectedItems={interests}
                             options={
                                 interestOpts
                                     ? interestOpts.map((interest) => ({
