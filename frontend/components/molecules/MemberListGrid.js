@@ -99,9 +99,8 @@ const MemberListGrid = ({
                                     padding={4}
                                     borderRadius={2}
                                     gridColumn='1/-1'
-                                    mr={4}
                                 >
-                                    This section is empty
+                                    No Team Leads to Show.
                                 </SystemComponent>
                             )}
                         </SystemComponent>
@@ -187,7 +186,7 @@ const MemberListGrid = ({
                                     gridColumn='1/-1'
                                     mr={4}
                                 >
-                                    This section is empty
+                                    No Team Members to Show.
                                 </SystemComponent>
                             )}
                         </SystemComponent>

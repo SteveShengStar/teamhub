@@ -339,7 +339,7 @@ const TodoList = () => {
                                     gridColumn='1 / span 2'
                                     mr={4}
                                 >
-                                    There are no tasks to show.
+                                    There are no Tasks to Show.
                                 </SystemComponent>
                             </SystemComponent>
                         </Card>
