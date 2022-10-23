@@ -30,13 +30,9 @@ const UserProfileSection = ({
             <SystemComponent mb={2}>
                 {userDataLoaded && (
                     <ProfileSummary
-                        dataLoaded={userDataLoaded}
                         firstname={user.name && user.name.first}
                         lastname={user.name && user.name.last}
                         program={user.program}
-                        schoolterm={
-                            user.stream ? user.stream.currentSchoolTerm : ''
-                        }
                         email={user.email}
                     />
                 )}

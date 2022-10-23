@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Header5 from '../../atoms/Header5';
 import Image from '../../atoms/Image';
 import { SystemComponent } from '../../atoms/SystemComponents';
-import { SCHOOL_TERM_OPTS } from '../../organisms/EditProfileModal';
 
 import theme from '../../theme';
 
@@ -58,11 +57,9 @@ const AvatarWrapperComponent = ({ children }) => {
 };
 
 const ProfileSummary = ({
-    dataLoaded = false,
     firstname = '',
     lastname = '',
     program = '',
-    schoolterm = '',
     email = '',
 }) => {
     const faClassnames = [
@@ -84,15 +81,6 @@ const ProfileSummary = ({
         program: {
             label: 'Program',
             value: program,
-        },
-        term: {
-            label: 'Term',
-            value:
-                dataLoaded &&
-                SCHOOL_TERM_OPTS.find((opt) => opt.value === schoolterm)
-                    ? SCHOOL_TERM_OPTS.find((opt) => opt.value === schoolterm)
-                          .label
-                    : '',
         },
         email: {
             label: 'Email',

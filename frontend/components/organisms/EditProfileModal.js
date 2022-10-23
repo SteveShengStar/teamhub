@@ -18,17 +18,6 @@ import useLoadingScreen from '../../hooks/useLoadingScreen';
 import { isEmpty, capitalize } from 'lodash';
 import theme from '../theme';
 
-export const SCHOOL_TERM_OPTS = [
-    { value: '1A', label: '1A' },
-    { value: '1B', label: '1B' },
-    { value: '2A', label: '2A' },
-    { value: '2B', label: '2B' },
-    { value: '3A', label: '3A' },
-    { value: '3B', label: '3B' },
-    { value: '4A', label: '4A' },
-    { value: '4B', label: '4B' },
-    { value: '0', label: 'Unspecified' },
-];
 export const PROGRAM_OPTS = [
     { value: 'engineering', label: 'Engineering' },
     { value: 'computer science', label: 'Computer Science' },
@@ -242,11 +231,6 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
         }
         setFormValues({ ...formValues, [name]: value });
     };
-
-    let schoolTerm = SCHOOL_TERM_OPTS.find(
-        (opt) => opt.value === formValues['term']
-    );
-    if (!schoolTerm) schoolTerm = formValues['term'];
 
     return (
         <>
