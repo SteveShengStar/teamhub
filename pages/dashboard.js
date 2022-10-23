@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 import Button from '../frontend/components/atoms/Button';
 import Card from '../frontend/components/atoms/Card';
 import DocsIcon from '../frontend/components/atoms/Icons/DocsIcon';
@@ -13,7 +11,6 @@ import LinkTree from '../frontend/components/organisms/LinkTree';
 import styled from 'styled-components';
 import { SystemComponent } from '../frontend/components/atoms/SystemComponents';
 import theme from '../frontend/components/theme';
-import api from '../frontend/store/api';
 
 const populateLinks = (description) => {
     // Get all indices of <a> tags
@@ -257,41 +254,23 @@ const TodoListBody = ({
 };
 
 const TodoList = () => {
-    const dispatch = useDispatch();
-    const router = useRouter();
     const [showPendingTasks, setShowPendingTasks] = useState(true); // Whether the pending tasks or completed tasks are showing.
-    const [tasks, setTasks] = useState([]);
-    const [isDataLoaded, setIsDataLoaded] = useState(false);
-    const [bufferedItemIds, setBufferedItemIds] = useState([]);
-    const {
-        user: { _id },
-        hydrated,
-    } = useSelector((state) => state.userState);
 
     const handleButtonToggle = () => {
         setShowPendingTasks(!showPendingTasks);
     };
 
-    const getStatus = () => {
-        return showPendingTasks ? 'pending' : 'complete';
-    };
-
-    const getOppositeStatus = () => {
-        // Get the opposite of the current status
-        return showPendingTasks ? 'complete' : 'pending';
-    };
-
-    const getTasks = async () => {
+    /* const getTasks = async () => {
         const res = await api.members.getMemberTasks(
             _id,
             undefined,
             dispatch,
             router
-        );
-        if (res) setTasks(res.body.length > 0 ? res.body[0].tasks : []);
+        ); 
+        if (res) setTasks( res.body.length > 0 ? res.body[0].tasks : []);
 
         if (!isDataLoaded) setIsDataLoaded(true);
-    };
+    }; 
 
     const handleToggleCheck = async (taskId) => {
         const taskToUpdate = tasks.find((task) => task._id === taskId);
@@ -307,18 +286,11 @@ const TodoList = () => {
 
         if (res.success) {
             console.log('Successfully updated task status.');
-            getTasks(); // Fetch task data from the back end to make sure the front end is showing the most recent task-related details
         } else {
             console.error("Error: Failed to update the task's status");
         }
         setBufferedItemIds(bufferedItemIds.filter((i) => taskId !== i));
-    };
-
-    useEffect(() => {
-        if (hydrated) {
-            getTasks();
-        }
-    }, [hydrated]);
+    }; */ // As of 2022, we are no longer showing tasks on this page.
 
     return (
         <PageTemplate title='Dashboard'>
@@ -349,44 +321,28 @@ const TodoList = () => {
                             justifyContent='space-between'
                         >
                             <Header3>My Tasks</Header3>
-                            <SwitchButton
-                                textLeft='Unfinished'
-                                textRight='Completed'
-                                selected={showPendingTasks}
-                                onToggle={handleButtonToggle}
-                            />
                         </SystemComponent>
-
-                        {isDataLoaded ? (
-                            <TodoListBody
-                                taskStatus={getStatus()}
-                                tasks={tasks}
-                                handleButtonClick={handleToggleCheck}
-                                bufferedItemIds={bufferedItemIds}
-                            />
-                        ) : (
-                            <Card
-                                display='grid'
-                                gridRowGap={4}
-                                gridTemplateColumns='1fr'
-                                overflowY={['hidden', 'hidden', 'auto']}
-                                overflowX='hidden'
-                                padding='15px'
-                                backgroundColor={theme.colors.background}
-                            >
-                                <SystemComponent>
-                                    <SystemComponent
-                                        backgroundColor='greys.1'
-                                        padding={4}
-                                        borderRadius={2}
-                                        gridColumn='1 / span 2'
-                                        mr={4}
-                                    >
-                                        Data is being loaded. Please wait ...
-                                    </SystemComponent>
+                        <Card
+                            display='grid'
+                            gridRowGap={4}
+                            gridTemplateColumns='1fr'
+                            overflowY={['hidden', 'hidden', 'auto']}
+                            overflowX='hidden'
+                            padding='15px'
+                            backgroundColor={theme.colors.background}
+                        >
+                            <SystemComponent>
+                                <SystemComponent
+                                    backgroundColor='greys.1'
+                                    padding={4}
+                                    borderRadius={2}
+                                    gridColumn='1 / span 2'
+                                    mr={4}
+                                >
+                                    There are no tasks to show.
                                 </SystemComponent>
-                            </Card>
-                        )}
+                            </SystemComponent>
+                        </Card>
                     </SystemComponent>
                 </SystemComponent>
             </>
