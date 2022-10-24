@@ -5,7 +5,7 @@ import Checkbox from '../../atoms/Checkbox';
 const CheckboxSection = ({
     options,
     name,
-    selectedOptions,
+    selectedOptions = [],
     setSelectedOptions,
 }) => {
     const toggleOption = (value) => {

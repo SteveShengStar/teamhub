@@ -6,6 +6,7 @@ import Input from '../../atoms/Input';
 import RadioSection from '../../molecules/Form/RadioSection';
 import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
+import MenuSection from '../../molecules/Form/MenuSection';
 
 const TitleSection = ({ text, required }) => {
     return (
@@ -80,6 +81,35 @@ const FieldSection = ({
                         selectedOption={value}
                         name={name}
                         setSelectedOption={onChange}
+                    />
+                );
+            case 'menu_single':
+                return (
+                    <MenuSection
+                        name={name}
+                        options={options.map((opt) => {
+                            return {
+                                value: opt,
+                                label: opt,
+                            };
+                        })}
+                        setSelectedValue={onChange}
+                        selectedValue={value}
+                    />
+                );
+            case 'menu_multi':
+                return (
+                    <MenuSection
+                        isMulti
+                        name={name}
+                        options={options.map((opt) => {
+                            return {
+                                value: opt,
+                                label: opt,
+                            };
+                        })}
+                        setSelectedValue={onChange}
+                        selectedValue={value}
                     />
                 );
             default:
