@@ -134,7 +134,11 @@ const ButtonRow = ({ saveDisabled, handleSave, handleCancel }) => {
     const theme = useContext(ThemeContext);
 
     return (
-        <SystemComponent display='flex' justifyContent='center'>
+        <SystemComponent
+            id='submitSection'
+            display='flex'
+            justifyContent='center'
+        >
             <SaveButton
                 mr={theme.space[2]}
                 onClick={(e) => handleSave(e)}
@@ -153,7 +157,6 @@ const handleExit = (e, router) => {
 };
 
 const FormEditor = () => {
-    const theme = useContext(ThemeContext);
     const dispatch = useDispatch();
     const router = useRouter();
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
@@ -323,6 +326,15 @@ const FormEditor = () => {
             options: [],
         };
         setFormSections([...formSections, newSection]);
+
+        const element = document.getElementById('submitSection');
+        if (element) {
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+                inline: 'center',
+            });
+        }
     };
 
     const onSectionDuplicate = (sectionName) => {
