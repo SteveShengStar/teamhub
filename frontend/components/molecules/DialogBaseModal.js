@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { SystemComponent } from '../atoms/SystemComponents';
+import Header2 from '../atoms/Header2';
 import Header4 from '../atoms/Header4';
 import { Background, ContentContainer } from '../atoms/ModalSubComponents';
 import Button from '../atoms/Button';
@@ -15,7 +16,6 @@ const CustomContentContainer = styled(ContentContainer)`
     max-height: 90vh;
     overflow: auto;
     min-height: 0vh;
-    text-align: center;
 
     padding: 25px;
 
@@ -43,9 +43,21 @@ const DialogBaseModal = ({
             <CustomContentContainer className={className} visible={visible}>
                 <SystemComponent>
                     {success ? (
-                        <i class='fa-regular fa-circle-check fa-2xl'></i>
+                        <Header2>
+                            <i
+                                class='fa-solid fa-circle-check'
+                                style={{ color: '#007F00' }}
+                            ></i>
+                            &nbsp;Success
+                        </Header2>
                     ) : (
-                        <i class='fa-regular fa-circle-xmark fa-2xl'></i>
+                        <Header2>
+                            <i
+                                class='fa-solid fa-circle-xmark'
+                                style={{ color: '#b30000' }}
+                            ></i>
+                            &nbsp;Error
+                        </Header2>
                     )}
                 </SystemComponent>
                 <SystemComponent>
@@ -62,17 +74,17 @@ const DialogBaseModal = ({
                     alignItems='center'
                     mt={20}
                 >
-                    <LargeButton variant='primary' handleClick={handleSave}>
-                        Return to Main
-                    </LargeButton>
                     <Button
                         variant='cancel'
                         display='block'
-                        ml={theme.space[5]}
+                        mr={theme.space[5]}
                         onClick={handleCloseModal}
                     >
                         Continue Editing
                     </Button>
+                    <LargeButton variant='primary' handleClick={handleSave}>
+                        Return to Main
+                    </LargeButton>
                 </SystemComponent>
             </CustomContentContainer>
         </Background>
