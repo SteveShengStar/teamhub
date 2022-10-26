@@ -27,11 +27,13 @@ const Text = styled.div`
 const Bannertext = styled.h4`
     font-family: 'Nunito Sans';
     margin: 0;
+    font-size: 12px;
 `;
 
 const BannerSubtitle = styled.h5`
     font-family: 'Nunito Sans';
     margin: 0;
+    font-size: 16px;
 `;
 
 const BannerHeadingSection = styled.div`
