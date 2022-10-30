@@ -62,7 +62,6 @@ const TitleText = styled.div`
     font-weight: 700;
     font-size: ${(props) => props.theme.fontSizes.header2}px;
     line-height: 29px;
-    /* identical to box height */
 
     text-align: center;
     letter-spacing: -0.01em;
@@ -73,6 +72,17 @@ const TitleText = styled.div`
 `;
 
 const FormInfoCard = styled(Card)`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+
     padding: 90px 30px 30px 30px;
     ${(props) => props.theme.mediaQueries.mobile} {
         padding: 90px 20px 20px 20px;
@@ -112,15 +122,7 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
 
     return (
-        <FormInfoCard
-            display='flex'
-            flexDirection='column'
-            alignItems='center'
-            justifyContent='center'
-            maxWidth='450px'
-            marginLeft='auto'
-            marginRight='auto'
-        >
+        <FormInfoCard>
             <SystemComponent>
                 <BigIconWrapper>
                     <Svg src={src}></Svg>
