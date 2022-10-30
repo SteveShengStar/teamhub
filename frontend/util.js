@@ -12,6 +12,7 @@ export const validateField = (formData, formErrors, field) => {
         case 'fullName':
             validateName(formData, formErrors, field);
             break;
+        case 'email':
         case 'personalEmail':
             validateEmail(formData, formErrors, field);
             break;
@@ -36,7 +37,7 @@ export const validateField = (formData, formErrors, field) => {
         case 'nextSchoolTerm':
         case 'nextTermRole':
         case 'nextTermActivity':
-            validateExists(formData, formErrors, field);
+            validateNotEmpty(formData, formErrors, field);
             break;
     }
 };
@@ -129,27 +130,33 @@ export const scrollToFirstError = (formSections, formErrors) => {
     }
 };
 
-const validateExists = (formData, formErrors, field) => {
+const validateNotEmpty = (formData, formErrors, field) => {
     if (!formData[field]?.trim()) {
         formErrors[field] = true;
     }
 };
 
 const validateNumber = (formData, formErrors, field, digitsRequired) => {
-    if (!formData[field] || formData[field].length !== digitsRequired) {
+    if (
+        !formData[field] ||
+        typeof formData[field] !== 'string' ||
+        !formData[field].match(/^[0-9]*$/) ||
+        formData[field].length !== digitsRequired
+    ) {
         formErrors[field] = true;
     }
 };
 
 const validateBoolean = (formData, formErrors, field) => {
-    if (formData[field] === undefined || formData[field] === null) {
+    if (typeof formData[field] !== 'boolean') {
         formErrors[field] = true;
     }
 };
 
 const validateName = (formData, formErrors, field) => {
     if (
-        !formData[field].trim() ||
+        typeof formData[field] !== 'string' ||
+        !formData[field]?.trim() ||
         formData[field].trim().split(/\s+/).length < 2
     ) {
         formErrors[field] = true;
@@ -157,7 +164,11 @@ const validateName = (formData, formErrors, field) => {
 };
 
 const validateEmail = (formData, formErrors, field) => {
-    if (!formData[field].trim() || !isEmail(formData[field].trim())) {
+    if (
+        typeof formData[field] !== 'string' ||
+        !formData[field]?.trim() ||
+        !isEmail(formData[field].trim())
+    ) {
         formErrors[field] = true;
     }
 };

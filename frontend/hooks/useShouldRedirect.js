@@ -1,4 +1,4 @@
-import { USER_REGISTRATION_REQUIRED_FORM_FIELDS } from '../constants';
+import { USER_REGISTRATION_REQUIRED_FIELDS } from '../constants';
 
 /**
  * Redirects the user to the appropriate webpage.
@@ -20,7 +20,7 @@ const useShouldRedirect = (user, router, isExistingUser) => {
 
         const userFields = Object.keys(user);
         if (
-            USER_REGISTRATION_REQUIRED_FORM_FIELDS.some(
+            USER_REGISTRATION_REQUIRED_FIELDS.some(
                 (field) => !userFields.includes(field)
             )
         ) {

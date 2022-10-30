@@ -54,12 +54,7 @@ class MyApp extends App {
 
         let index = -1;
         if (router && router.route) {
-            const split = router.route.split('/')[1];
-            if (split)
-                index = navItems.findIndex(
-                    (item) => item.link === '/' + split[1]
-                );
-            else index = navItems.findIndex((item) => item.link === '/');
+            index = navItems.findIndex((item) => item.link === router.route);
         }
 
         return (

@@ -74,30 +74,17 @@ const ReturningMembersForm = () => {
                                 return newObj;
                             })
                             .sort((a, b) => a.position - b.position);
-                        let memberData = res.body.user;
-                        if (memberData.miscDetails) {
-                            memberData = {
-                                ...memberData,
-                                ..._.omit(memberData.miscDetails, '_id'),
-                            };
-                            delete memberData.miscDetails;
-                        }
 
+                        const memberData = res.body.user;
                         setFormSections(sections);
                         setFormValues({
                             ...getCustomFieldDefaults(sections),
-                            ...memberData,
+                            ...formValues,
                             fullName:
                                 (memberData.name.first ?? '') +
                                 ' ' +
                                 (memberData.name.last ?? ''),
-                            subteams:
-                                memberData.subteams &&
-                                memberData.subteams.length > 0
-                                    ? memberData.subteams[0].name
-                                    : '',
-                            previousTerms: [],
-                            futureTerms: [],
+                            personalEmail: memberData.personalEmail,
                         });
                     }
                 })

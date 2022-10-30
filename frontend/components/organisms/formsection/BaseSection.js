@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import styled, { ThemeContext } from 'styled-components';
 import { getMenuOptionForSectionType } from './util';
 import { FORM_SECTION_TYPES } from './constants';
+import { READ_ONLY_FORM_SECTIONS } from '../../../../frontend/constants';
 
 import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
 import TextField from '@mui/material/TextField';
@@ -34,6 +35,21 @@ const ActionButtonContainer = styled(SystemComponent)`
     ${ActionButton}:last-of-type {
         margin-left: 0;
     }
+`;
+
+const GhostOverlay = styled(SystemComponent)`
+    position: relative;
+    top: -100%; /* a hack to get this Ghost Overlay to be on top of the form section component */
+    opacity: 50%;
+    cursor: not-allowed;
+    margin-right: auto;
+    margin-left: auto;
+
+    z-index: 200;
+    height: calc(100% - ${(props) => props.theme.space[7]}px);
+
+    border-radius: 5px;
+    background-color: ${(props) => props.theme.colors.white};
 `;
 
 const ModifierOptions = ({
@@ -113,73 +129,83 @@ const BaseSection = ({
 }) => {
     const theme = useContext(ThemeContext);
     return (
-        <Card
-            display='grid'
-            gridTemplateColumns='7fr 3fr'
-            gridColumnGap={theme.space[5]}
-            gridRowGap={theme.space[5]}
-            width={['500px', '700px', '800px']}
-            marginBottom={`${theme.space[7]}px`}
-            marginRight='auto'
-            marginLeft='auto'
-        >
-            <TextField
-                label='Question'
-                variant='filled'
-                size='normal'
-                value={question}
-                onChange={(e) => {
-                    handleInputChange(name, 'display', e.target.value);
-                }}
-            />
-            <Select
-                options={FORM_SECTION_TYPES}
-                styles={{
-                    control: (base) => ({
-                        ...base,
-                        height: '100%',
-                    }),
-                }}
-                value={getMenuOptionForSectionType(type)}
-                onChange={(selectedOption) => handleTypeChange(selectedOption)}
-            />
-            <TextField
-                label='Help Text for User (Optional)'
-                variant='filled'
-                size='small'
-                value={helpText}
-                onChange={(e) => {
-                    handleInputChange(name, 'description', e.target.value);
-                }}
-                sx={{
-                    gridColumn: '1/3',
-                    gridRow: '2',
-                }}
-            />
-            <SystemComponent gridColumn='1'>
-                <ModifierOptions
-                    options={sectionModifiers}
-                    handleClick={handleSelectModifier}
-                    required={required}
-                    handleToggleRequired={(newRequiredState) =>
-                        handleToggleRequired(name, newRequiredState)
+        <SystemComponent>
+            <Card
+                display='grid'
+                gridTemplateColumns='7fr 3fr'
+                gridColumnGap={theme.space[5]}
+                gridRowGap={theme.space[5]}
+                width={['500px', '700px', '800px']}
+                marginBottom={`${theme.space[7]}px`}
+                marginRight='auto'
+                marginLeft='auto'
+            >
+                <TextField
+                    label='Question'
+                    variant='filled'
+                    size='normal'
+                    value={question}
+                    onChange={(e) => {
+                        handleInputChange(name, 'display', e.target.value);
+                    }}
+                />
+                <Select
+                    options={FORM_SECTION_TYPES}
+                    styles={{
+                        control: (base) => ({
+                            ...base,
+                            height: '100%',
+                        }),
+                    }}
+                    value={getMenuOptionForSectionType(type)}
+                    onChange={(selectedOption) =>
+                        handleTypeChange(selectedOption)
                     }
                 />
-            </SystemComponent>
-            <SystemComponent gridColumn='1'>{children}</SystemComponent>
-            <ActionButtonContainer>
-                <ActionButton
-                    disabled={!canDelete}
-                    title={!canDelete && `This Section cannot be Deleted`}
-                    onClick={() => handleSectionDelete(name)}
-                >
-                    Delete
-                </ActionButton>
-                <ActionButton onClick={() => handleSectionDuplicate(name)}>
-                    Duplicate
-                </ActionButton>
-            </ActionButtonContainer>
-        </Card>
+                <TextField
+                    label='Help Text for User (Optional)'
+                    variant='filled'
+                    size='small'
+                    value={helpText}
+                    onChange={(e) => {
+                        handleInputChange(name, 'description', e.target.value);
+                    }}
+                    sx={{
+                        gridColumn: '1/3',
+                        gridRow: '2',
+                    }}
+                />
+                <SystemComponent gridColumn='1'>
+                    <ModifierOptions
+                        options={sectionModifiers}
+                        handleClick={handleSelectModifier}
+                        required={required}
+                        handleToggleRequired={(newRequiredState) =>
+                            handleToggleRequired(name, newRequiredState)
+                        }
+                    />
+                </SystemComponent>
+                <SystemComponent gridColumn='1'>{children}</SystemComponent>
+                <ActionButtonContainer>
+                    <ActionButton
+                        disabled={!canDelete}
+                        title={!canDelete && `This Section cannot be Deleted`}
+                        onClick={() => handleSectionDelete(name)}
+                    >
+                        Delete
+                    </ActionButton>
+                    <ActionButton onClick={() => handleSectionDuplicate(name)}>
+                        Duplicate
+                    </ActionButton>
+                </ActionButtonContainer>
+            </Card>
+            {READ_ONLY_FORM_SECTIONS.includes(name) && (
+                <GhostOverlay
+                    title='Cannot be Modified'
+                    width={['500px', '700px', '800px']}
+                />
+            )}
+        </SystemComponent>
     );
 };
 export default BaseSection;
