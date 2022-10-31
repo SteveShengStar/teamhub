@@ -107,13 +107,12 @@ const EditLinksModal = ({ visible, handleCloseModal }) => {
     const handleSave = (evt) => {
         evt.preventDefault();
 
-        const errors = { ...hasError };
-
         let facebookUrl = formValues['facebookUrl'].trim();
         let githubUrl = formValues['githubUrl'].trim();
         let linkedInUrl = formValues['linkedInUrl'].trim();
         let websiteUrl = formValues['websiteUrl'].trim();
 
+        const errors = { ...hasError };
         validateUrl(errors, 'facebookUrl', facebookUrl, [
             'www.facebook.com',
             'facebook.com',
@@ -127,11 +126,9 @@ const EditLinksModal = ({ visible, handleCloseModal }) => {
             'linkedin.com',
         ]);
         validateUrl(errors, 'websiteUrl', websiteUrl);
-
         setErrors(errors);
 
-        let dataIsValid = !Object.values(errors).includes(true);
-
+        const dataIsValid = !Object.values(errors).includes(true);
         if (dataIsValid) {
             facebookUrl =
                 !facebookUrl || facebookUrl.slice(0, 4) === 'http'
@@ -177,7 +174,7 @@ const EditLinksModal = ({ visible, handleCloseModal }) => {
                 .catch((err) => {
                     console.error(err);
                     alert(
-                        'An error occured when updating your profile information.'
+                        'Save not successful. Please contact Waterloop Web Team for assistance.'
                     );
                 })
                 .finally(() => {
