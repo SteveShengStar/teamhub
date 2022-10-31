@@ -216,7 +216,7 @@ const EditProfileModal = ({ handleCloseModal, visible }) => {
                 .catch((err) => {
                     console.error(err);
                     alert(
-                        'An error occured when updating your profile information.'
+                        'Save not successful. Please contact Waterloop Web Team for assistance.'
                     );
                 })
                 .finally(() => {

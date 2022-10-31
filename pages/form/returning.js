@@ -9,6 +9,7 @@ import FieldSection from '../../frontend/components/molecules/Form/FieldSection'
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
 import FormFooter from '../../frontend/components/molecules/Form/FormFooter';
 import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
+import usePopupBanner from '../../frontend/hooks/usePopupBanner';
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
 import {
     validateField,
@@ -24,6 +25,10 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import _ from 'lodash';
 
 const FORM_NAME_KEY = 'returning';
+const SUBMIT_SUCCESS_MSG =
+    'Form successfully submitted. Taking you back to Home Page in 5 seconds.';
+const SUBMIT_ERROR_MSG =
+    'Error occurred. Please contact Waterloop Web Team for assistance.';
 
 const ReturningMembersForm = () => {
     const theme = useContext(ThemeContext);
@@ -56,6 +61,12 @@ const ReturningMembersForm = () => {
     });
 
     const [formSections, setFormSections] = useState([]);
+    const {
+        renderSuccessBanner,
+        renderErrorBanner,
+        showSuccessBanner,
+        showErrorBanner,
+    } = usePopupBanner(SUBMIT_SUCCESS_MSG, SUBMIT_ERROR_MSG);
 
     useEffect(() => {
         if (hydrated) {
@@ -156,9 +167,13 @@ const ReturningMembersForm = () => {
                 user._id,
                 router
             )
-                .then((res) => {
-                    console.log('User Info Update Completed.');
+                .then(() => {
+                    showSuccessBanner(() => router.push('/')); // Redirect to home page.
                     // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
+                })
+                .catch((e) => {
+                    console.error(e);
+                    showErrorBanner();
                 })
                 .finally(() => {
                     hideLoader();
@@ -191,6 +206,8 @@ const ReturningMembersForm = () => {
     return (
         <PageTemplate>
             <SystemComponent>
+                {renderSuccessBanner()}
+                {renderErrorBanner()}
                 <Card
                     width={['100%', '768px']}
                     margin={['cardMarginSmall', 'auto']}
