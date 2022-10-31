@@ -88,6 +88,7 @@ export const userLogout = async (userId, dispatch, router) => {
 };
 
 /**
+ * Update user info
  *
  * @param {*} options
  * @param {string} id
@@ -114,6 +115,7 @@ export const updateUser = async (dispatch, options, id, router) => {
 };
 
 /**
+ * Update user info
  *
  * @param {*} options
  * @param {string} id
@@ -132,6 +134,9 @@ export const updateProfileInfo = async (dispatch, options, id, router) => {
     }
 };
 
+/**
+ * Get user profile info
+ */
 export const getProfileInfo = async function (dispatch, id, router) {
     try {
         const user = await api.members.getMember(id, dispatch, router);
