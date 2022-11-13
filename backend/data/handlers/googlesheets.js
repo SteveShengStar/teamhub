@@ -80,7 +80,6 @@ const exportRegister = async (token) => {
     };
     const googleDrive = getGoogleDriveClient(token);
     const driveResponse = await googleDrive.files.create(driveRequest);
-    console.log(driveResponse);
 
     // update spreadsheet
     const request = {
@@ -104,7 +103,6 @@ const exportStartTerm = async (token) => {
             phoneNumber: row.miscDetails?.phone ?? '',
         };
     });
-    console.log('1');
 
     const spreadsheetData = [START_TERM_SPREADSHEET_HEADERS];
     spreadsheetData.push(...userData.map((data) => Object.values(data)));
@@ -126,8 +124,6 @@ const exportStartTerm = async (token) => {
     };
     const googleDrive = getGoogleDriveClient(token);
     const driveResponse = await googleDrive.files.create(driveRequest);
-    console.log('driveResponse');
-    console.log(driveResponse);
 
     // update spreadsheet
     const request = {
@@ -182,7 +178,6 @@ const exportReturning = async (token) => {
     };
     const googleDrive = getGoogleDriveClient(token);
     const driveResponse = await googleDrive.files.create(driveRequest);
-    console.log(driveResponse);
 
     const request = {
         spreadsheetId: driveResponse.data.id,

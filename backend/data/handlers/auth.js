@@ -16,7 +16,7 @@ async function isAdmin(userEmail) {
     const jwtClient = new JWT({
         scopes: ['https://www.googleapis.com/auth/admin.directory.group'],
         email: 'teamhubbackend@teamhub-257722.iam.gserviceaccount.com', // the Service Account used to execute Google Admin SDK functions
-        key: '', // TODO: Private Key cannot be committed to remote.
+        key: process.env.SERVICE_ACCOUNT_KEY, // TODO: Private Key cannot be committed to remote.
         subject: 'steven.x@waterloop.ca', // Make the Service Account impersonate "steven.x@waterloop.ca", a previleged admin user, since the Google Admin SDK requires the highest-level permissions
         // For reference, look inside the constructor definition/documentation of "JWT" and refer to:
         // 1. https://cloud.google.com/iam/docs/impersonating-service-accounts
