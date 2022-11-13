@@ -8,6 +8,7 @@ import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
 import { useForms } from '../../../frontend/hooks/forms';
 import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
+import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
 
 const EditFormButton = styled(Button)`
     width: 100%;
@@ -118,48 +119,69 @@ const BulletsSection = styled(SystemComponent)`
     height: 200px;
 `;
 
+const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
+const EXPORT_ERROR_MSG =
+    'Error occurred. Please contact Waterloop Web Team for assistance.';
+
 const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
+    const {
+        renderSuccessBanner,
+        renderErrorBanner,
+        showSuccessBanner,
+        showErrorBanner,
+    } = usePopupBanner(EXPORT_SUCCESS_MSG, EXPORT_ERROR_MSG);
 
     return (
-        <FormInfoCard>
-            <SystemComponent>
-                <BigIconWrapper>
-                    <Svg src={src}></Svg>
-                </BigIconWrapper>
-            </SystemComponent>
-            <SystemComponent>
-                <TitleText>{title}</TitleText>
-            </SystemComponent>
-            <BulletsSection>
-                {bulletPoints.map((bullet, i) => (
-                    <BulletOverride margin='10px' key={i} text={bullet} />
-                ))}
-            </BulletsSection>
-            <EditFormButton
-                onClick={(e) => {
-                    e.preventDefault();
-                    router.push('/form/edit/' + formName);
-                }}
-            >
-                Edit Form
-            </EditFormButton>
-            <ExportRespButton
-                onClick={(e) => {
-                    e.preventDefault();
-                    fetch('/api/google/export/' + formName, {
-                        method: 'POST',
-                        headers: {
-                            Accept: 'application/json',
-                            'Content-Type': 'application/json',
-                        },
-                    }).then((res) => res.json());
-                }}
-                variant='white'
-            >
-                Export Responses
-            </ExportRespButton>
-        </FormInfoCard>
+        <>
+            {renderSuccessBanner()}
+            {renderErrorBanner()}
+            <FormInfoCard>
+                <SystemComponent>
+                    <BigIconWrapper>
+                        <Svg src={src}></Svg>
+                    </BigIconWrapper>
+                </SystemComponent>
+                <SystemComponent>
+                    <TitleText>{title}</TitleText>
+                </SystemComponent>
+                <BulletsSection>
+                    {bulletPoints.map((bullet, i) => (
+                        <BulletOverride margin='10px' key={i} text={bullet} />
+                    ))}
+                </BulletsSection>
+                <EditFormButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        router.push('/form/edit/' + formName);
+                    }}
+                >
+                    Edit Form
+                </EditFormButton>
+                <ExportRespButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fetch('/api/google/export/' + formName, {
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then((res) => {
+                                showSuccessBanner();
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                                showErrorBanner();
+                            });
+                    }}
+                    variant='white'
+                >
+                    Export Responses
+                </ExportRespButton>
+            </FormInfoCard>
+        </>
     );
 };
 

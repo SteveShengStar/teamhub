@@ -8,6 +8,7 @@ import PageTemplate from '../../../frontend/components/templates/PageTemplate';
 import { SystemComponent } from '../../../frontend/components/atoms/SystemComponents';
 
 import useLoadingScreen from '../../../frontend/hooks/useLoadingScreen';
+import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
 import {
     useFormDetails,
     updateFormDetails,
@@ -140,13 +141,19 @@ const ButtonRow = ({ saveDisabled, handleSave, handleCancel }) => {
             justifyContent='center'
         >
             <SaveButton
+                title='Save Changes'
                 mr={theme.space[2]}
                 onClick={(e) => handleSave(e)}
                 disabled={saveDisabled}
             >
                 Save
             </SaveButton>
-            <CancelButton onClick={(e) => handleCancel(e)}>Cancel</CancelButton>
+            <CancelButton
+                title='Exit without Saving'
+                onClick={(e) => handleCancel(e)}
+            >
+                Cancel
+            </CancelButton>
         </SystemComponent>
     );
 };
@@ -156,6 +163,10 @@ const handleExit = (e, router) => {
     router.push('/form/admin/');
 };
 
+const SAVE_SUCCESS_MSG = 'Save was Successful.';
+const SAVE_ERROR_MSG =
+    'Error occurred. Please contact Waterloop Web Team for assistance.';
+
 const FormEditor = () => {
     const dispatch = useDispatch();
     const router = useRouter();
@@ -163,6 +174,12 @@ const FormEditor = () => {
     const [fromTitle, setFormTitle] = useState('');
     const [fromDescription, setFormDescription] = useState('');
     const [formSections, setFormSections] = useState([]);
+    const {
+        renderSuccessBanner,
+        renderErrorBanner,
+        showSuccessBanner,
+        showErrorBanner,
+    } = usePopupBanner(SAVE_SUCCESS_MSG, SAVE_ERROR_MSG);
 
     const loadFormSections = () => {
         showLoader();
@@ -184,9 +201,8 @@ const FormEditor = () => {
                             .sort((a, b) => a.position - b.position)
                     );
                 } else {
-                    alert(
-                        'An error occurred when loading form sections !' + res
-                    );
+                    alert('An error occurred when loading form sections!');
+                    console.error(res);
                     // TODO: handle error more appropriately
                 }
             })
@@ -414,18 +430,15 @@ const FormEditor = () => {
             }),
         };
 
-        console.log('Saving form sections ...');
         showLoader();
         updateFormDetails(router.query.formName, dispatch, router, reqBody)
             .then((res) => {
                 if (!res.success) {
-                    // TODO: handle error case
-                    console.error(
-                        'Error occurred when updating form sections.'
-                    );
+                    showErrorBanner();
                     return;
                 }
 
+                showSuccessBanner();
                 if (exitEditorView) {
                     hideLoader();
                     router.push('/form/admin/');
@@ -438,9 +451,7 @@ const FormEditor = () => {
             .catch((e) => {
                 console.error(e);
                 hideLoader();
-                throw new Error(
-                    'An Error occurred when saving the form sections' + e
-                );
+                showErrorBanner();
             });
     };
 
@@ -448,6 +459,8 @@ const FormEditor = () => {
         <PageTemplate>
             <Container>
                 {loader}
+                {renderSuccessBanner()}
+                {renderErrorBanner()}
                 <Sidebar
                     data={[
                         {
