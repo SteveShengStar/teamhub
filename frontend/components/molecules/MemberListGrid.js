@@ -184,7 +184,6 @@ const MemberListGrid = ({
                                     padding={4}
                                     borderRadius={2}
                                     gridColumn='1/-1'
-                                    mr={4}
                                 >
                                     No Team Members to Show.
                                 </SystemComponent>
