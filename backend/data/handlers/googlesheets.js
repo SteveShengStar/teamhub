@@ -54,7 +54,7 @@ const exportRegister = async (token) => {
                     : '',
             termStatus: row.miscDetails?.termStatus ?? '',
             activeSchoolTerms: row.activeSchoolTerms?.join() ?? '',
-            ssdc: row.miscDetails?.designCentreSafty ? 'yes' : 'no',
+            ssdc: row.miscDetails?.designCentreSafety ? 'yes' : 'no',
             whmis: row.miscDetails?.whmis ? 'yes' : 'no',
             machineShop: row.miscDetails?.machineShop ? 'yes' : 'no',
         };
