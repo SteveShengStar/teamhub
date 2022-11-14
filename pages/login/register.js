@@ -48,7 +48,6 @@ const RegistrationForm = () => {
     const [formValues, setFormValues] = useState({
         fullName: '',
         phoneNumber: '',
-        personalEmail: '',
         program: '',
         studentId: '',
         termStatus: '',
@@ -64,7 +63,6 @@ const RegistrationForm = () => {
     const [hasError, setHasError] = useState({
         fullName: false,
         phoneNumber: false,
-        personalEmail: false,
         program: false,
         studentId: false,
         termStatus: false,
@@ -117,7 +115,6 @@ const RegistrationForm = () => {
 
         validateField(formValues, formErrors, 'fullName');
         validateField(formValues, formErrors, 'phoneNumber');
-        validateField(formValues, formErrors, 'personalEmail');
         validateField(formValues, formErrors, 'program');
         validateField(formValues, formErrors, 'studentId');
         validateField(formValues, formErrors, 'termStatus');
@@ -144,7 +141,6 @@ const RegistrationForm = () => {
             const {
                 fullName,
                 phoneNumber,
-                personalEmail,
                 program,
                 studentId,
                 termStatus,
@@ -169,7 +165,6 @@ const RegistrationForm = () => {
                     },
                     phone: phoneNumber.trim(),
                     program: program.trim(),
-                    personalEmail: personalEmail.trim(),
                     studentId: studentId.trim(),
                     activeSchoolTerms: [...previousTerms, ...futureTerms],
                     termStatus,
