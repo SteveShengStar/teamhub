@@ -40,7 +40,7 @@ const ActionButtonContainer = styled(SystemComponent)`
 const GhostOverlay = styled(SystemComponent)`
     position: relative;
     top: -100%; /* a hack to get this Ghost Overlay to be on top of the form section component */
-    opacity: 50%;
+    opacity: 40%;
     cursor: not-allowed;
     margin-right: auto;
     margin-left: auto;
@@ -201,7 +201,7 @@ const BaseSection = ({
             </Card>
             {READ_ONLY_FORM_SECTIONS.includes(name) && (
                 <GhostOverlay
-                    title='Cannot be Modified'
+                    title='This Section cannot be modified'
                     width={['500px', '700px', '800px']}
                 />
             )}
