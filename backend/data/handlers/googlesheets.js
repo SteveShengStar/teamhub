@@ -1,32 +1,16 @@
-const { OAuth2Client } = require('google-auth-library');
-const authConfig = require('./auth.config.json');
+const { JWT } = require('google-auth-library');
 const { google } = require('googleapis');
 const { getAll } = require('./members');
 
 const {
     RETURNING_MEMBERS_FIELDS,
     TEAM_ROSTER_FIELDS,
-    START_TERM_FIELDS,
     RETURNING_MEMBERS_SPREADSHEET_HEADERS,
     TEAM_ROSTER_SPREADSHEET_HEADERS,
-    START_TERM_SPREADSHEET_HEADERS,
+    MEMBER_RESPONSES_FOLDER_ID,
 } = require('./constants');
 
 const googlesheets = {};
-
-googlesheets.readfile = async (token) => {
-    const client = new OAuth2Client(authConfig['client_id']);
-    client.setCredentials({
-        access_token: token,
-    });
-    const googleSheets = google.sheets({ version: 'v4', auth: client });
-
-    const metadata = await googleSheets.spreadsheets.values.get({
-        spreadsheetId: '1vijuMLNCltfCWTEPAyxs47-MccvnvXI7wlC-ziS50Ys',
-        range: 'Sheet1',
-    });
-    return metadata;
-};
 
 googlesheets.writefile = async (token, formName) => {
     switch (formName) {
@@ -70,15 +54,18 @@ const exportRegister = async (token) => {
     })}`;
     const fileMetadata = {
         name: fileName,
-        parents: [],
+        parents: [MEMBER_RESPONSES_FOLDER_ID],
         mimeType: 'application/vnd.google-apps.spreadsheet',
     };
     const driveRequest = {
         resource: fileMetadata,
         fields: 'id',
+        supportsAllDrives: true,
     };
     const googleDrive = getGoogleDriveClient(token);
     const driveResponse = await googleDrive.files.create(driveRequest);
+    console.log('driveResponse');
+    console.log(driveResponse);
 
     // update spreadsheet
     const request = {
@@ -124,12 +111,13 @@ const exportReturning = async (token) => {
     )}`;
     const fileMetadata = {
         name: fileName,
-        parents: [],
+        parents: [MEMBER_RESPONSES_FOLDER_ID],
         mimeType: 'application/vnd.google-apps.spreadsheet',
     };
     const driveRequest = {
         resource: fileMetadata,
         fields: 'id',
+        supportsAllDrives: true,
     };
     const googleDrive = getGoogleDriveClient(token);
     const driveResponse = await googleDrive.files.create(driveRequest);
@@ -148,18 +136,20 @@ const exportReturning = async (token) => {
     return response.config.url;
 };
 
-const getGoogleSheetsClient = (token) => {
-    const client = new OAuth2Client(authConfig['client_id']);
-    client.setCredentials({
-        access_token: token,
+const getGoogleSheetsClient = () => {
+    const client = new JWT({
+        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+        email: 'teamhubbackend@teamhub-257722.iam.gserviceaccount.com',
+        key: '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQcY0JI2qovIje\n0CRbYd3JV2890/4Evea+JcskaiwxjC1dNhnYglSinQp+ELsT1ExJQ1ht3o/b6YLh\npfMvkwV0Pig4WRUJrbvv2KugZaFansxbJIqRlmPOZ7p4FYHruVxsyx+DsepOLwkB\nk1xuzAXIm+DA3kjX0b1pOF/b5KxDYbM2uJ//2JiX+hwvSJZpEenm2XhCQ3+iNyxN\nSaXVfMFVKeN13XYBlmYM4gF47VrwvKWYqtbuHnzkW1k8+BozwyKyCl1axIa5vo3w\n+bbw2GWy73DEGjVXG2mzyrTYj3iGXW6pSjq0RLbsZCNW1/nHPlVIQazUnHYiVlmA\nYEo2ohNpAgMBAAECggEADarXCw7Z8FdwXV+7dTciYjshQvtn+qqdpcEiTpscQQwb\nxggFQ3zZjNIMPT4z7gsWYhq618q8lw2ldHiQ91Zws0cHacPEN96+5cKeD5sqVx/2\nGVHOONk/ZmocasGfmQkN5jT0C4q6aMb3vwqJCIYd06IOPMc2coRA+FRnIKrKoB5P\nnTIlBSLKbgVz3tDgOl3hN0f+BL+GPxh0M65ErXN6lXGE7S2tDuMkxLf2CT7ncHDd\nrEWeDsz1+kal1fOYMlT1wk1BFbNM0jPiOtZS5FiOrP9QdJOUWool6Wq/tcfzM6fY\ngHnH5TtqtuOaoC3jK4YI3aBOH5hwowzkolL56McQiQKBgQD8C17PhyALaNcc0vNv\ngCbIjGsqZB3hRrvQ4l+Qk3Wv7zEtiehFH0bNJi77UAQ4X/xHde0F1TBD9LvN9KKZ\n4DMPnASdgkkk8Z+WWmhM999WbEomfHqhspdJ/tmgchY/wKKYKoZRYWZU3rzhEr1J\nXhnaZnBMBFB10XSzYTaFiaeTZQKBgQDTtwHKZe02DFzC1lNm4MUvwraCkQ4yQ0ry\nAMt138VGs7MgOFDXcxV7vOeA7gZ0T3W5du6l3w2cgAYBQ2IxEUHjVOl/hzMtRFc4\nFXe5TiWmTZYuVgnIHs/Q0RxXwcqIFEFyOQHJblBSXfrj37D2w12CTKdnO9WX/gWe\n5ntSP5oZtQKBgAv9xn79IMsqK8HVT3uojy/PbnHP3ZQQN3NSsdVBDsJWEPLnssNH\nH6k2/dk7D1hXSLtlouc6I1e4Vw8PaoUDo6pEc/vCbRRy4nLWzkuLJ3cHI+f82CDF\nTGla1KPLib9yvMmcjFNm3OWAy1+x8ouBDJ3VbdZQBjv0wSafo2ZrDCv5AoGAbsxl\n2YDCRfjuSuFTwJF9YONsFKTJYzCodkJIOKYlXj0JT6FpXXfTFHDmTylCo3g6Shee\nCZzUSMUPX3XeW4OGkeyMTrt44wXTB3zkrUvilEgigplwgRTu+X+Wb67xyYmgPqDq\n+HoM+y5H8R3ORTY1J83qBjLgM60zT9ebTo4OnckCgYEA2jIBh6Rk6eayIcaeUEzQ\nUgdNXYe9chWKz0S7EzZms7Qdr9BlYtz0ZTEqCX9wQn3fTkSqNpJYG9mk6c/LkNsC\nZsfivQU4Kmp812T96dhQ4I/AJ1ZfmSgKIKmEvWCRe/18SU2CcINsZJIEXP9nZcTC\nk+PZEd6GDf8EqtTUezgky4M=\n-----END PRIVATE KEY-----\n', //process.env.SERVICE_ACCOUNT_PRIVATE_KEY,
     });
     return google.sheets({ version: 'v4', auth: client });
 };
 
-const getGoogleDriveClient = (token) => {
-    const client = new OAuth2Client(authConfig['client_id']);
-    client.setCredentials({
-        access_token: token,
+const getGoogleDriveClient = () => {
+    const client = new JWT({
+        scopes: ['https://www.googleapis.com/auth/drive'],
+        email: 'teamhubbackend@teamhub-257722.iam.gserviceaccount.com',
+        key: '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDQcY0JI2qovIje\n0CRbYd3JV2890/4Evea+JcskaiwxjC1dNhnYglSinQp+ELsT1ExJQ1ht3o/b6YLh\npfMvkwV0Pig4WRUJrbvv2KugZaFansxbJIqRlmPOZ7p4FYHruVxsyx+DsepOLwkB\nk1xuzAXIm+DA3kjX0b1pOF/b5KxDYbM2uJ//2JiX+hwvSJZpEenm2XhCQ3+iNyxN\nSaXVfMFVKeN13XYBlmYM4gF47VrwvKWYqtbuHnzkW1k8+BozwyKyCl1axIa5vo3w\n+bbw2GWy73DEGjVXG2mzyrTYj3iGXW6pSjq0RLbsZCNW1/nHPlVIQazUnHYiVlmA\nYEo2ohNpAgMBAAECggEADarXCw7Z8FdwXV+7dTciYjshQvtn+qqdpcEiTpscQQwb\nxggFQ3zZjNIMPT4z7gsWYhq618q8lw2ldHiQ91Zws0cHacPEN96+5cKeD5sqVx/2\nGVHOONk/ZmocasGfmQkN5jT0C4q6aMb3vwqJCIYd06IOPMc2coRA+FRnIKrKoB5P\nnTIlBSLKbgVz3tDgOl3hN0f+BL+GPxh0M65ErXN6lXGE7S2tDuMkxLf2CT7ncHDd\nrEWeDsz1+kal1fOYMlT1wk1BFbNM0jPiOtZS5FiOrP9QdJOUWool6Wq/tcfzM6fY\ngHnH5TtqtuOaoC3jK4YI3aBOH5hwowzkolL56McQiQKBgQD8C17PhyALaNcc0vNv\ngCbIjGsqZB3hRrvQ4l+Qk3Wv7zEtiehFH0bNJi77UAQ4X/xHde0F1TBD9LvN9KKZ\n4DMPnASdgkkk8Z+WWmhM999WbEomfHqhspdJ/tmgchY/wKKYKoZRYWZU3rzhEr1J\nXhnaZnBMBFB10XSzYTaFiaeTZQKBgQDTtwHKZe02DFzC1lNm4MUvwraCkQ4yQ0ry\nAMt138VGs7MgOFDXcxV7vOeA7gZ0T3W5du6l3w2cgAYBQ2IxEUHjVOl/hzMtRFc4\nFXe5TiWmTZYuVgnIHs/Q0RxXwcqIFEFyOQHJblBSXfrj37D2w12CTKdnO9WX/gWe\n5ntSP5oZtQKBgAv9xn79IMsqK8HVT3uojy/PbnHP3ZQQN3NSsdVBDsJWEPLnssNH\nH6k2/dk7D1hXSLtlouc6I1e4Vw8PaoUDo6pEc/vCbRRy4nLWzkuLJ3cHI+f82CDF\nTGla1KPLib9yvMmcjFNm3OWAy1+x8ouBDJ3VbdZQBjv0wSafo2ZrDCv5AoGAbsxl\n2YDCRfjuSuFTwJF9YONsFKTJYzCodkJIOKYlXj0JT6FpXXfTFHDmTylCo3g6Shee\nCZzUSMUPX3XeW4OGkeyMTrt44wXTB3zkrUvilEgigplwgRTu+X+Wb67xyYmgPqDq\n+HoM+y5H8R3ORTY1J83qBjLgM60zT9ebTo4OnckCgYEA2jIBh6Rk6eayIcaeUEzQ\nUgdNXYe9chWKz0S7EzZms7Qdr9BlYtz0ZTEqCX9wQn3fTkSqNpJYG9mk6c/LkNsC\nZsfivQU4Kmp812T96dhQ4I/AJ1ZfmSgKIKmEvWCRe/18SU2CcINsZJIEXP9nZcTC\nk+PZEd6GDf8EqtTUezgky4M=\n-----END PRIVATE KEY-----\n',
     });
     return google.drive({ version: 'v3', auth: client });
 };
