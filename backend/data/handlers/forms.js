@@ -1,3 +1,4 @@
+const UserDetails = require('../schema/UserDetails');
 const FormSection = require('../schema/FormSection');
 const Form = require('../schema/Form');
 const util = require('./util');
@@ -188,6 +189,36 @@ forms.createForm = async (formData, res) => {
  * @param {Object} formData: new metadata for the form.
  */
 forms.updateFormMetadata = async (formName, formData, res) => {
+    const currentFormSectionIds = (
+        await Form.findOne({ name: formName })
+    ).sections.map((section) => section.section);
+    const currentFormSectionNames = (
+        await FormSection.find({
+            _id: { $in: currentFormSectionIds },
+        }).select(['name'])
+    ).map((section) => section.name);
+    const newFormSectionNames = formData.sections.map(
+        (section) => section.name
+    );
+
+    const sectionsToDelete = _.difference(
+        currentFormSectionNames,
+        newFormSectionNames
+    );
+    const toDelete = {};
+    sectionsToDelete.forEach((section) => {
+        toDelete[section] = '';
+    });
+    await UserDetails.update(
+        {},
+        {
+            $unset: toDelete,
+        },
+        {
+            multi: true,
+        }
+    ).exec();
+
     return util.handleWrapper(async () => {
         await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
 
