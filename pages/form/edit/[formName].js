@@ -16,6 +16,12 @@ import {
 import Section from '../../../frontend/components/organisms/formsection/Section';
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
+import Card from '../../../frontend/components/atoms/Card';
+import Select from '../../../frontend/components/atoms/Select';
+import { FORM_SECTION_TYPES } from '../../../frontend/components/organisms/formsection/constants';
+import { getMenuOptionForSectionType } from '../../../frontend/components/organisms/formsection/util';
+import TextField from '@mui/material/TextField';
+import { set } from 'lodash';
 
 const SaveButton = styled(ActionButton)`
     background-color: ${(props) => props.theme.colors.primary};
@@ -172,7 +178,7 @@ const FormEditor = () => {
     const router = useRouter();
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
     const [fromTitle, setFormTitle] = useState('');
-    const [fromDescription, setFormDescription] = useState('');
+    const [formDescription, setFormDescription] = useState('');
     const [formSections, setFormSections] = useState([]);
     const {
         renderSuccessBanner,
@@ -455,6 +461,8 @@ const FormEditor = () => {
             });
     };
 
+    const theme = useContext(ThemeContext);
+
     return (
         <PageTemplate>
             <Container>
@@ -483,6 +491,42 @@ const FormEditor = () => {
                         },
                     ]}
                 />
+                <Card
+                    width={['500px', '700px', '800px']}
+                    marginBottom={`${theme.space[7]}px`}
+                    marginRight='auto'
+                    marginLeft='auto'
+                    display='flex'
+                    justifyContent='space-between'
+                >
+                    <div>
+                        <TextField
+                            id='filled-basic'
+                            label='Form Title'
+                            variant='filled'
+                            value={fromTitle}
+                            onChange={(e) => {
+                                setFormTitle(e.target.value);
+                            }}
+                            sx={{
+                                width: '45ch',
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            label='Description'
+                            variant='filled'
+                            value={formDescription}
+                            onChange={(e) => {
+                                setFormDescription(e.target.value);
+                            }}
+                            sx={{
+                                width: '45ch',
+                            }}
+                        />
+                    </div>
+                </Card>
                 {formSections.map((section) => (
                     <Section
                         key={section.name}
