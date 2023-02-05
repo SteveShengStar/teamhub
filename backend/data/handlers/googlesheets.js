@@ -6,12 +6,8 @@ const { getAll: getAllMembersData } = require('./members');
 const { fetchFormAndMemberData } = require('./forms');
 
 const {
-    RETURNING_MEMBERS_FIELDS,
     TEAM_ROSTER_FIELDS,
-    START_TERM_FIELDS,
-    RETURNING_MEMBERS_SPREADSHEET_HEADERS,
     TEAM_ROSTER_SPREADSHEET_HEADERS,
-    START_TERM_SPREADSHEET_HEADERS,
 } = require('./constants');
 
 const googlesheets = {};
@@ -106,7 +102,11 @@ const exportDataToGoogleSheets = async (userId, token, formName) => {
     console.log(memberData);
     const spreadsheetData = [headerText, ...memberData];
 
-    return await createGoogleSheetsFile(spreadsheetData, token);
+    return await createGoogleSheetsFile(
+        formAndMemberData.form.title,
+        spreadsheetData,
+        token
+    );
 };
 
 const getFormsAndMembersData = async (formAndMemberData) => {
@@ -169,10 +169,10 @@ const getFormsAndMembersData = async (formAndMemberData) => {
     return formattedUserData;
 };
 
-const createGoogleSheetsFile = async (spreadsheetData, token) => {
+const createGoogleSheetsFile = async (formTitle, spreadsheetData, token) => {
     // Create new file using Google Drive API
     const currentDate = new Date();
-    const fileName = `Returning Members Form Responses - ${currentDate.toLocaleString(
+    const fileName = `${formTitle} Responses - ${currentDate.toLocaleString(
         'en-CA',
         { timeZone: 'EST' }
     )}`;
