@@ -189,7 +189,7 @@ const BaseSection = ({
                 <ActionButtonContainer>
                     <ActionButton
                         disabled={!canDelete}
-                        title={!canDelete && `This Section cannot be Deleted`}
+                        title={!canDelete && `This section cannot be deleted`}
                         onClick={() => handleSectionDelete(name)}
                     >
                         Delete
@@ -201,7 +201,7 @@ const BaseSection = ({
             </Card>
             {READ_ONLY_FORM_SECTIONS.includes(name) && (
                 <GhostOverlay
-                    title='This Section cannot be modified'
+                    title='This section cannot be modified'
                     width={['500px', '700px', '800px']}
                 />
             )}

@@ -16,6 +16,7 @@ export const formatFormValues = (formValues) => {
             first: fullNameParts[0].trim(),
             last: fullNameParts[fullNameParts.length - 1].trim(),
         },
+        fullName: undefined,
     };
 };
 
@@ -96,10 +97,12 @@ export const getFieldDefaultValues = (formSections) => {
             case 'numbers':
             case 'phone':
             case 'menu_single':
-            case 'menu_multi':
-            case 'checkbox':
             case 'radio':
                 defaultVals[section.name] = '';
+                break;
+            case 'menu_multi':
+            case 'checkbox':
+                defaultVals[section.name] = [];
                 break;
             case 'boolean':
                 defaultVals[section.name] = false;

@@ -41,7 +41,7 @@ const FieldSection = ({
         switch (type) {
             case 'text':
             case 'longtext':
-            case 'phone': // TODO: have separate inputs for phone and dropdowns
+            case 'phone':
             case 'email':
             case 'numbers':
                 return (
@@ -122,7 +122,7 @@ const FieldSection = ({
             fontSize={theme.fontSizes.header3}
             id={name} // Component needs `id` value set since in frontend/util.js#scrollToFirstError, we rely on this id to select the DOM element to scroll up to.
             textAlign='left'
-            width={['98%', '100%', '100%', '600px']}
+            width={['98%', '100%', '100%', '100%']}
         >
             <SystemComponent textAlign='left' mb={['10px', '15px']}>
                 <TitleSection text={title} required={required} />

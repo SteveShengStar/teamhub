@@ -35,6 +35,8 @@ const Form = () => {
     const router = useRouter();
     const { user, hydrated } = useSelector((state) => state.userState);
     const [loader, showLoader, hideLoader] = useLoadingScreen(true);
+    const [formTitle, setFormTitle] = useState('');
+    const [formDescription, setFormDescription] = useState('');
     const [formValues, setFormValues] = useState({});
     const [hasError, setHasError] = useState({});
     const [formSections, setFormSections] = useState([]);
@@ -69,6 +71,8 @@ const Form = () => {
                             })
                             .sort((a, b) => a.position - b.position);
 
+                        setFormTitle(res.body.form.title);
+                        setFormDescription(res.body.form.description);
                         setFormSections(sections);
                         setFormValues(getFieldDefaultValues(sections));
                         setHasError(initHasErrorsToFalse(sections));
@@ -164,7 +168,8 @@ const Form = () => {
                     ]}
                 >
                     <FormHeader
-                        title='Tell us more About You'
+                        title={formTitle}
+                        description={formDescription}
                         marginBottom={theme.space.titleBottomMargin}
                     />
                     <SystemComponent

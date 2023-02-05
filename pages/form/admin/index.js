@@ -113,9 +113,7 @@ const BulletOverride = styled(Bullet)`
 `;
 
 const BulletsSection = styled(SystemComponent)`
-    text-align: left;
-    margin-right: auto;
-    margin-left: auto;
+    align-self: start; /* this section's text should be left-aligned */
     height: 200px;
 `;
 

@@ -1,7 +1,9 @@
 const { OAuth2Client } = require('google-auth-library');
+const Member = require('../schema/Member');
 const authConfig = require('./auth.config.json');
 const { google } = require('googleapis');
-const { getAll } = require('./members');
+const { getAll: getAllMembersData } = require('./members');
+const { fetchFormAndMemberData } = require('./forms');
 
 const {
     RETURNING_MEMBERS_FIELDS,
@@ -28,13 +30,13 @@ googlesheets.readfile = async (token) => {
     return metadata;
 };
 
-googlesheets.writefile = async (token, formName) => {
+googlesheets.writefile = async (userId, token, formName) => {
     switch (formName) {
         case 'register':
         case 'startofterm':
-            return exportRegister(token);
+        // return exportRegister(userId, token, formName);
         case 'returning':
-            return exportReturning(token);
+            return exportDataToGoogleSheets(userId, token, formName);
     }
 };
 
@@ -94,29 +96,81 @@ const exportRegister = async (token) => {
     return response.config.url;
 };
 
-const exportReturning = async (token) => {
-    const fields = getFields(RETURNING_MEMBERS_FIELDS);
-    const userData = (await getAll(fields)).map((row) => {
-        return {
-            email: row.email ?? '',
-            upcomingTerm: row.miscDetails?.nextSchoolTerm ?? '',
-            activeSchoolTerms: row.activeSchoolTerms?.join() ?? '',
-            subteam:
-                row.subteams && row.subteams.length > 0
-                    ? row.subteams[0].name
-                    : '',
-            nextTermActivity: row.miscDetails?.nextTermActivity ?? '',
-            nextTermRole: row.miscDetails?.nextTermRole ?? '',
-            personalEmail: row.miscDetails?.personalEmail ?? '',
-            termComments: row.miscDetails?.termComments ?? '',
-            desiredWork: row.miscDetails?.desiredWork ?? '',
-        };
+const exportDataToGoogleSheets = async (userId, token, formName) => {
+    const formAndMemberData = await fetchFormAndMemberData(userId, formName);
+    const headerText = formAndMemberData.form.sections.map(
+        (section) => section.section.display
+    );
+    const memberData = await getFormsAndMembersData(formAndMemberData);
+    console.log('memberData');
+    console.log(memberData);
+    const spreadsheetData = [headerText, ...memberData];
+
+    return await createGoogleSheetsFile(spreadsheetData, token);
+};
+
+const getFormsAndMembersData = async (formAndMemberData) => {
+    const fieldNamesToDataTypes = {};
+    formAndMemberData.form.sections.map((section) => {
+        fieldNamesToDataTypes[section.section.name] = section.section.type;
     });
 
-    const spreadsheetData = [RETURNING_MEMBERS_SPREADSHEET_HEADERS];
-    spreadsheetData.push(...userData.map((data) => Object.values(data)));
+    const memberFieldNames = new Set(
+        Object.keys(Member.schema.paths).filter(
+            (fieldName) => fieldName !== '_id' && fieldName !== '__v'
+        )
+    );
+    let selectFieldNames = new Set();
+    const actualFieldNames = [];
+    Object.keys(fieldNamesToDataTypes).map((fieldName) => {
+        if (fieldName === 'fullName') {
+            selectFieldNames.add('name');
+            actualFieldNames.push('fullName');
+        } else if (memberFieldNames.has(fieldName)) {
+            selectFieldNames.add(fieldName);
+            actualFieldNames.push(fieldName);
+        } else {
+            selectFieldNames.add('miscDetails');
+            actualFieldNames.push(fieldName);
+        }
+    });
+    selectFieldNames = getFields(selectFieldNames);
 
-    //create new file with Drive api
+    const formattedUserData = (await getAllMembersData(selectFieldNames)).map(
+        (member) => {
+            const formattedValues = actualFieldNames.map((field) => {
+                if (field === 'fullName') {
+                    return member.name.first + ' ' + member.name.last;
+                } else if (field === 'subteams') {
+                    return member.subteams && member.subteams.length > 0
+                        ? member.subteams
+                              .map((subteam) => subteam.name)
+                              .join(', ')
+                        : '';
+                }
+
+                let rawValue;
+                if (member[field]) {
+                    rawValue = member[field];
+                } else if (member.miscDetails && member.miscDetails[field]) {
+                    rawValue = member.miscDetails[field];
+                }
+                if (rawValue === undefined || rawValue === null) {
+                    return '';
+                } else if (Array.isArray(rawValue)) {
+                    return rawValue.join(', ');
+                } else {
+                    return rawValue;
+                }
+            });
+            return formattedValues;
+        }
+    );
+    return formattedUserData;
+};
+
+const createGoogleSheetsFile = async (spreadsheetData, token) => {
+    // Create new file using Google Drive API
     const currentDate = new Date();
     const fileName = `Returning Members Form Responses - ${currentDate.toLocaleString(
         'en-CA',
