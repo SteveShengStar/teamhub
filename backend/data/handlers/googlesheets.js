@@ -5,11 +5,6 @@ const { google } = require('googleapis');
 const { getAll: getAllMembersData } = require('./members');
 const { fetchFormAndMemberData } = require('./forms');
 
-const {
-    TEAM_ROSTER_FIELDS,
-    TEAM_ROSTER_SPREADSHEET_HEADERS,
-} = require('./constants');
-
 const googlesheets = {};
 
 googlesheets.readfile = async (token) => {
@@ -27,69 +22,7 @@ googlesheets.readfile = async (token) => {
 };
 
 googlesheets.writefile = async (userId, token, formName) => {
-    switch (formName) {
-        case 'register':
-        case 'startofterm':
-        // return exportRegister(userId, token, formName);
-        case 'returning':
-            return exportDataToGoogleSheets(userId, token, formName);
-    }
-};
-
-const exportRegister = async (token) => {
-    const fields = getFields(TEAM_ROSTER_FIELDS);
-    const userData = (await getAll(fields)).map((row) => {
-        return {
-            fullName: row.name.first + ' ' + row.name.last,
-            email: row.email ?? '',
-            phoneNumber: row.miscDetails?.phone ?? '',
-            memberType: row.memberType?.name ?? '',
-            program: row.program ?? '',
-            skills: row.skills?.map((skill) => skill.name).join() ?? '',
-            subteam:
-                row.subteams && row.subteams.length > 0
-                    ? row.subteams[0].name
-                    : '',
-            termStatus: row.miscDetails?.termStatus ?? '',
-            activeSchoolTerms: row.activeSchoolTerms?.join() ?? '',
-            ssdc: row.miscDetails?.designCentreSafety ? 'yes' : 'no',
-            whmis: row.miscDetails?.whmis ? 'yes' : 'no',
-            machineShop: row.miscDetails?.machineShop ? 'yes' : 'no',
-        };
-    });
-
-    const spreadsheetData = [TEAM_ROSTER_SPREADSHEET_HEADERS];
-    spreadsheetData.push(...userData.map((data) => Object.values(data)));
-
-    //create new file with Drive api
-    const currentDate = new Date();
-    const fileName = `Waterloop Roster - ${currentDate.toLocaleString('en-CA', {
-        timeZone: 'EST',
-    })}`;
-    const fileMetadata = {
-        name: fileName,
-        parents: [],
-        mimeType: 'application/vnd.google-apps.spreadsheet',
-    };
-    const driveRequest = {
-        resource: fileMetadata,
-        fields: 'id',
-    };
-    const googleDrive = getGoogleDriveClient(token);
-    const driveResponse = await googleDrive.files.create(driveRequest);
-
-    // update spreadsheet
-    const request = {
-        spreadsheetId: driveResponse.data.id,
-        range: 'Sheet1',
-        valueInputOption: 'USER_ENTERED',
-        resource: {
-            values: spreadsheetData,
-        },
-    };
-    const googleSheets = getGoogleSheetsClient(token);
-    const response = await googleSheets.spreadsheets.values.update(request);
-    return response.config.url;
+    return exportDataToGoogleSheets(userId, token, formName);
 };
 
 const exportDataToGoogleSheets = async (userId, token, formName) => {
@@ -120,23 +53,23 @@ const getFormsAndMembersData = async (formAndMemberData) => {
             (fieldName) => fieldName !== '_id' && fieldName !== '__v'
         )
     );
-    let selectFieldNames = new Set();
+    let fieldsSelectList = new Set();
     const actualFieldNames = [];
     Object.keys(fieldNamesToDataTypes).map((fieldName) => {
         if (fieldName === 'fullName') {
-            selectFieldNames.add('name');
+            fieldsSelectList.add('name');
             actualFieldNames.push('fullName');
         } else if (memberFieldNames.has(fieldName)) {
-            selectFieldNames.add(fieldName);
+            fieldsSelectList.add(fieldName);
             actualFieldNames.push(fieldName);
         } else {
-            selectFieldNames.add('miscDetails');
+            fieldsSelectList.add('miscDetails');
             actualFieldNames.push(fieldName);
         }
     });
-    selectFieldNames = getFields(selectFieldNames);
+    fieldsSelectList = getFields(fieldsSelectList);
 
-    const formattedUserData = (await getAllMembersData(selectFieldNames)).map(
+    const formattedUserData = (await getAllMembersData(fieldsSelectList)).map(
         (member) => {
             const formattedValues = actualFieldNames.map((field) => {
                 if (field === 'fullName') {
@@ -147,6 +80,12 @@ const getFormsAndMembersData = async (formAndMemberData) => {
                               .map((subteam) => subteam.name)
                               .join(', ')
                         : '';
+                } else if (field === 'skills') {
+                    return member.skills && member.skills.length > 0
+                        ? member.skills.map((skill) => skill.name).join(', ')
+                        : '';
+                } else if (field === 'memberType') {
+                    return member.memberType?.name;
                 }
 
                 let rawValue;
@@ -159,6 +98,8 @@ const getFormsAndMembersData = async (formAndMemberData) => {
                     return '';
                 } else if (Array.isArray(rawValue)) {
                     return rawValue.join(', ');
+                } else if (typeof rawValue === 'boolean') {
+                    return rawValue ? 'Yes' : 'No';
                 } else {
                     return rawValue;
                 }
