@@ -1,5 +1,4 @@
 import { isEmail } from 'validator';
-import { validate as isUuid } from 'uuid';
 
 export const removeDuplicates = (array) => {
     const uniqueSet = new Set(array.map((i) => i.trim().toLowerCase()));
@@ -62,29 +61,12 @@ export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
     }
 };
 
-export const clearErrorMessages = (formErrors) => {
-    for (const field of Object.keys(formErrors)) {
-        formErrors[field] = false;
-    }
-};
-
 export const isInvalidPhoneNumber = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 10;
 };
 
 export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
-};
-
-// Custom Form Field names are V4 UUIDs
-export const getCustomFields = (formValues) => {
-    const customFieldMap = {};
-    for (const [field, value] of Object.entries(formValues)) {
-        if (isUuid(field)) {
-            customFieldMap[field] = value;
-        }
-    }
-    return customFieldMap;
 };
 
 // Get Default Values for Form Fields based on Field Type

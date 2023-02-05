@@ -111,11 +111,10 @@ const Form = () => {
     const handleSubmit = (evt) => {
         evt.preventDefault();
         const formErrorsList = setErrorMessages();
-
         const formHasErrors = Object.values(formErrorsList).some((err) => err);
+
         if (!formHasErrors) {
             showLoader();
-
             updateUser(dispatch, formatFormValues(formValues), user._id, router)
                 .then(() => {
                     showSuccessBanner(() => router.push('/')); // Redirect to home page.
