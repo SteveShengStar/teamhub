@@ -166,7 +166,8 @@ const RegistrationForm = () => {
                     phone: phoneNumber.trim(),
                     program: program.trim(),
                     studentId: studentId.trim(),
-                    activeSchoolTerms: [...previousTerms, ...futureTerms],
+                    previousTerms,
+                    futureTerms,
                     termStatus,
                     memberType,
                     subteams: [subteams], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.

@@ -6,40 +6,50 @@ export const removeDuplicates = (array) => {
     return [...uniqueSet].filter((i) => i);
 };
 
+export const formatFormValues = (formValues) => {
+    const fullNameParts = formValues.fullName
+        ? formValues.fullName.split(/(\s+)/).filter((e) => e.trim().length > 0)
+        : ['', ''];
+    return {
+        ...formValues,
+        name: {
+            first: fullNameParts[0].trim(),
+            last: fullNameParts[fullNameParts.length - 1].trim(),
+        },
+    };
+};
+
 // form validation utility methods
-export const validateField = (formData, formErrors, field) => {
-    switch (field) {
-        case 'fullName':
-            validateName(formData, formErrors, field);
-            break;
-        case 'email':
-        case 'personalEmail':
-            validateEmail(formData, formErrors, field);
-            break;
-        case 'studentId':
-            validateNumber(formData, formErrors, field, 8);
-            break;
-        case 'phoneNumber':
-            validateNumber(formData, formErrors, field, 10);
-            break;
-        case 'designCentreSafety':
-        case 'whmis':
-        case 'machineShop':
-            validateBoolean(formData, formErrors, field);
-            break;
-        case 'termDescription':
-        case 'subteams':
-        case 'nextTermRole':
-        case 'nextTermActivity':
-        case 'program':
-        case 'termStatus':
-        case 'memberType':
-        case 'nextSchoolTerm':
-        case 'nextTermRole':
-        case 'nextTermActivity':
-            validateNotEmpty(formData, formErrors, field);
-            break;
-    }
+export const validateFields = (formValues, sectionMetadataByName) => {
+    const validationResult = {};
+    Object.keys(sectionMetadataByName).map((sectionName) => {
+        const { type: dataType, required } = sectionMetadataByName[sectionName];
+        const value = formValues[sectionName];
+
+        if (required) {
+            const validationPassed = validateNotEmpty(value);
+            if (!validationPassed) {
+                validationResult[sectionName] = false;
+                return;
+            }
+        }
+
+        switch (dataType) {
+            case 'email':
+                validationResult[sectionName] = validateEmail(value);
+                break;
+            case 'numbers':
+                validationResult[sectionName] = validateNumber(value);
+                break;
+            case 'phone':
+                validationResult[sectionName] = validateNumber(value, 10);
+                break;
+            case 'boolean':
+                validationResult[sectionName] = validateBoolean(value);
+                break;
+        }
+    });
+    return validationResult;
 };
 
 export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
@@ -77,12 +87,9 @@ export const getCustomFields = (formValues) => {
 };
 
 // Get Default Values for Form Fields based on Field Type
-export const getCustomFieldDefaults = (formSections) => {
+export const getFieldDefaultValues = (formSections) => {
     const defaultVals = {};
-    const customFieldSections = formSections.filter((section) =>
-        isUuid(section.name)
-    );
-    customFieldSections.forEach((section) => {
+    formSections.forEach((section) => {
         switch (section.type) {
             case 'text':
             case 'longtext':
@@ -100,6 +107,14 @@ export const getCustomFieldDefaults = (formSections) => {
         }
     });
     return defaultVals;
+};
+
+export const initHasErrorsToFalse = (formSections) => {
+    const hasError = {};
+    formSections.forEach((section) => {
+        hasError[section.name] = false;
+    });
+    return hasError;
 };
 
 export const scrollToFirstError = (formSections, formErrors) => {
@@ -130,45 +145,44 @@ export const scrollToFirstError = (formSections, formErrors) => {
     }
 };
 
-const validateNotEmpty = (formData, formErrors, field) => {
-    if (!formData[field]?.trim()) {
-        formErrors[field] = true;
+const validateNotEmpty = (value) => {
+    if (Array.isArray(value)) {
+        return value && value.length > 0;
     }
+
+    return value?.trim() ? true : false;
 };
 
-const validateNumber = (formData, formErrors, field, digitsRequired) => {
+const validateNumber = (value, digitsRequired) => {
     if (
-        !formData[field] ||
-        typeof formData[field] !== 'string' ||
-        !formData[field].match(/^[0-9]*$/) ||
-        formData[field].length !== digitsRequired
+        !value ||
+        typeof value !== 'string' ||
+        !value.match(/^[0-9]*$/) ||
+        (digitsRequired && value.length !== digitsRequired)
     ) {
-        formErrors[field] = true;
+        return false;
     }
+    return true;
 };
 
-const validateBoolean = (formData, formErrors, field) => {
-    if (typeof formData[field] !== 'boolean') {
-        formErrors[field] = true;
-    }
+const validateBoolean = (value) => {
+    return typeof value === 'boolean';
 };
 
-const validateName = (formData, formErrors, field) => {
+const validateName = (value) => {
     if (
-        typeof formData[field] !== 'string' ||
-        !formData[field]?.trim() ||
-        formData[field].trim().split(/\s+/).length < 2
+        typeof value !== 'string' ||
+        !value?.trim() ||
+        value.trim().split(/\s+/).length < 2
     ) {
-        formErrors[field] = true;
+        return false;
     }
+    return true;
 };
 
-const validateEmail = (formData, formErrors, field) => {
-    if (
-        typeof formData[field] !== 'string' ||
-        !formData[field]?.trim() ||
-        !isEmail(formData[field].trim())
-    ) {
-        formErrors[field] = true;
+const validateEmail = (value) => {
+    if (typeof value !== 'string' || !value?.trim() || !isEmail(value.trim())) {
+        return false;
     }
+    return true;
 };
