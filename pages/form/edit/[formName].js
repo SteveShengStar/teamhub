@@ -16,6 +16,8 @@ import {
 import Section from '../../../frontend/components/organisms/formsection/Section';
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
+import Card from '../../../frontend/components/atoms/Card'
+import TextField from '@mui/material/TextField';
 
 const SaveButton = styled(ActionButton)`
     background-color: ${(props) => props.theme.colors.primary};
@@ -412,6 +414,8 @@ const FormEditor = () => {
         }
         return true;
     };
+
+    const theme = useContext(ThemeContext);
 
     const handleSave = (e, exitEditorView = false) => {
         e.preventDefault();
