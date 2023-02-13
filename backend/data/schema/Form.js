@@ -35,6 +35,12 @@ const FormSchema = new Schema({
         type: String,
         required: true,
     },
+    imageSrc: {
+        type: String,
+    },
+    bulletPoints: {
+        type: Array,
+    },
     sections: [
         {
             type: FormSectionDetails,

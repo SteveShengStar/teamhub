@@ -215,34 +215,14 @@ const DashboardPanel = () => {
                 gridRowGap={6}
             >
                 {loader}
-                <FormMetadataSection
-                    src='/static/returning-members-icon.jpg'
-                    title='Returning Member'
-                    bulletPoints={[
-                        'Filled in End of Term',
-                        'Members state their goals and intentions for next school term.',
-                    ]}
-                    formName={
-                        formData.find((f) => f.name === 'returning')?.name
-                    }
-                />
-                <FormMetadataSection
-                    src='/static/beginning-of-term-icon.jpg'
-                    title='Start of Term'
-                    bulletPoints={[
-                        'Filled in Start of Term',
-                        'Members state their availability and goals for this term.',
-                    ]}
-                    formName={
-                        formData.find((f) => f.name === 'startofterm')?.name
-                    }
-                />
-                <FormMetadataSection
-                    src='/static/sign-up-icon.svg'
-                    title='Sign-Up'
-                    bulletPoints={['Filled in during Initial Team Sign-up']}
-                    formName={formData.find((f) => f.name === 'register')?.name}
-                />
+                {formData?.map((data) => (
+                    <FormMetadataSection
+                        src={data.imageSrc}
+                        title={data.title}
+                        bulletPoints={data.bulletPoints}
+                        formName={data.name}
+                    />
+                ))}
             </SystemComponent>
         </PageTemplate>
     );
