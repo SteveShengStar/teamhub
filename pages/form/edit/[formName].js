@@ -406,7 +406,7 @@ const FormEditor = () => {
         }
         if (!validateCorrectNumberOfOptions(formSections)) {
             alert(
-                'One of the Multiple Choice or Dropdown Menu sections has less than 2 options. Please add more options before saving.'
+                'One of the Multiple Choice or Dropdown Menu questions has less than 2 options. Please add more options before saving.'
             );
             return false;
         }

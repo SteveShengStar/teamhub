@@ -128,7 +128,7 @@ const Form = () => {
                     hideLoader();
                 });
         } else {
-            scrollToFirstError(formSections, hasError);
+            scrollToFirstError(formSections, formErrorsList);
         }
     };
 

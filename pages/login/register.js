@@ -9,10 +9,7 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
-import {
-    SystemComponent,
-    SystemSpan,
-} from '../../frontend/components/atoms/SystemComponents';
+import { SystemComponent } from '../../frontend/components/atoms/SystemComponents';
 import Card from '../../frontend/components/atoms/Card';
 import FieldSection from '../../frontend/components/molecules/Form/FieldSection';
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
@@ -22,6 +19,7 @@ import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
 import {
+    validateFields,
     isInvalidPhoneNumber,
     isInvalidStudentId,
     clearErrorMessageIfExists,
@@ -125,7 +123,7 @@ const RegistrationForm = () => {
                     hideLoader();
                 });
         } else {
-            scrollToFirstError(formSections, formErrors);
+            scrollToFirstError(formSections, formErrorsList);
         }
     };
 

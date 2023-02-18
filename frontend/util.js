@@ -27,8 +27,8 @@ export const validateFields = (formValues, sectionMetadataByName) => {
         const value = formValues[sectionName];
 
         if (required) {
-            const validationPassed = validateNotEmpty(value);
-            if (!validationPassed) {
+            const isValid = validateNotEmpty(value);
+            if (!isValid) {
                 validationResult[sectionName] = false;
                 return;
             }
@@ -135,12 +135,23 @@ const validateNotEmpty = (value) => {
         return value && value.length > 0;
     }
 
-    return value?.trim() ? true : false;
+    if (value === undefined || value === null) {
+        return false;
+    }
+
+    if (typeof value === 'string') {
+        return value.trim();
+    }
+
+    return true;
 };
 
 const validateNumber = (value, digitsRequired) => {
+    if (!value) {
+        return true;
+    }
+
     if (
-        !value ||
         typeof value !== 'string' ||
         !value.match(/^[0-9]*$/) ||
         (digitsRequired && value.length !== digitsRequired)
@@ -166,8 +177,8 @@ const validateName = (value) => {
 };
 
 const validateEmail = (value) => {
-    if (typeof value !== 'string' || !value?.trim() || !isEmail(value.trim())) {
-        return false;
+    if (!value) {
+        return true;
     }
-    return true;
+    return isEmail(value.trim());
 };

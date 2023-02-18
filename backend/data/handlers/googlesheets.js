@@ -7,6 +7,9 @@ const { fetchFormAndMemberData } = require('./forms');
 
 const googlesheets = {};
 
+/**
+ * Note: This function is currently not in use. It is here just for tesing purposes.
+ */
 googlesheets.readfile = async (token) => {
     const client = new OAuth2Client(authConfig['client_id']);
     client.setCredentials({
@@ -31,8 +34,6 @@ const exportDataToGoogleSheets = async (userId, token, formName) => {
         (section) => section.section.display
     );
     const memberData = await getFormsAndMembersData(formAndMemberData);
-    console.log('memberData');
-    console.log(memberData);
     const spreadsheetData = [headerText, ...memberData];
 
     return await createGoogleSheetsFile(
@@ -89,9 +90,12 @@ const getFormsAndMembersData = async (formAndMemberData) => {
                 }
 
                 let rawValue;
-                if (member[field]) {
+                if (member[field] !== undefined) {
                     rawValue = member[field];
-                } else if (member.miscDetails && member.miscDetails[field]) {
+                } else if (
+                    member.miscDetails &&
+                    member.miscDetails[field] !== undefined
+                ) {
                     rawValue = member.miscDetails[field];
                 }
                 if (rawValue === undefined || rawValue === null) {
