@@ -491,7 +491,6 @@ const FormEditor = () => {
                 <Card 
                     display='grid'
                     gridTemplateColumns='1fr'
-                    gridColumnGap={theme.space[5]}
                     gridRowGap={theme.space[5]}
                     width={['500px', '700px', '800px']}
                     marginBottom={`${theme.space[7]}px`}
