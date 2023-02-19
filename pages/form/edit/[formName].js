@@ -483,6 +483,38 @@ const FormEditor = () => {
                         },
                     ]}
                 />
+
+                <Card 
+                    display='grid'
+                    gridTemplateColumns='1fr'
+                    gridColumnGap={theme.space[5]}
+                    gridRowGap={theme.space[5]}
+                    width={['500px', '700px', '800px']}
+                    marginBottom={`${theme.space[7]}px`}
+                    marginRight='auto'
+                    marginLeft='auto'
+                >
+                    <TextField
+                        label='Title'
+                        variant='filled'
+                        size='normal'
+                        value={fromTitle}
+                        onChange={(e) => {
+                            setFormTitle(e.target.value);
+                        }}
+                    />
+                    <TextField
+                        label='Description'
+                        variant='filled'
+                        size='normal'
+                        value={fromDescription}
+                        onChange={(e) => {
+                            setFormDescription(e.target.value);
+                        }}
+                    />
+
+                </Card>
+
                 {formSections.map((section) => (
                     <Section
                         key={section.name}
