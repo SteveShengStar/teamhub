@@ -269,4 +269,53 @@ const getFormSectionNamesToIdsMap = async () => {
     return formSectionNamesToIds;
 };
 
+
+/**
+ * Delete a form.
+ *
+ * @param {Object} formName: Unique name key of the form to update
+ * @param {Object} formData: new metadata for the form.
+ */
+forms.deleteForm = async(formName, res) => {
+
+    const formSections = await Form.findOne({name: formName}, {sections: 1, _id: 0 } ).exec();
+    const otherForms = (await Form.find( {name: { $ne: formName} }, {sections: 1, _id: 0 } ).exec());
+    const otherFormSections = otherForms.reduce((acc, curr) => {
+        return acc.concat(
+            curr.sections.map( (section) => section.section.toString())
+        );
+    }, []);
+
+    //set of all existing formSections in all forms except formToDelete
+    const otherFormSectionSet = new Set(otherFormSections);
+
+    return util.handleWrapper(async () => {
+ 
+        //formSections that are not in any other forms, must be deleted 
+        const formSectionsToDelete = formSections.sections.filter((value) => 
+            !otherFormSectionSet.has(value.section.toString()
+        )).map( formSection => formSection.section);
+
+        FormSection.deleteMany({_id : {$in: formSectionsToDelete} }, (err) => {
+            if (err) {
+                console.error(err);
+                res.statusCode = 500;
+                throw err;
+
+            } 
+        });
+        
+        Form.deleteOne( {name: formName} , (err) => {
+            if (err) {
+                console.error(err);
+                res.statusCode = 500;
+                throw err;
+            }
+        })
+
+    });
+
+
+};
+
 module.exports = forms;
