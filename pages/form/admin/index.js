@@ -19,11 +19,29 @@ const EditFormButton = styled(Button)`
 `;
 
 const ExportRespButton = styled(Button)`
-    width: 100%;
+    width: 225px;
     height: 48px;
     border-radius: 5px;
+    float: left;
 `;
 
+const CopyLinkButton = styled(Button)`
+    width: 163px;
+    height: 48px;
+    left: 289px;
+    top: 619px;
+    border-radius: 5px;
+    border: 2px solid #2c8dff;
+    float: left;
+    background-color: #ffffff;
+    color: #2c8dff;
+`;
+
+const Container = styled.div`
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+`;
 const CheckmarkRow = styled.div`
     display: flex;
     align-items: flex-start;
@@ -117,9 +135,9 @@ const BulletsSection = styled(SystemComponent)`
     height: 200px;
 `;
 
-const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
+const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
 const EXPORT_ERROR_MSG =
-    'Error occurred. Please contact Waterloop Web Team for assistance.';
+    'Form could not be exported. Please contact Waterloop Web Team for assistance.';
 
 const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
@@ -154,30 +172,45 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                         router.push('/form/edit/' + formName);
                     }}
                 >
+                    <i className='fa-solid fa-pen-to-square' />
                     Edit Form
                 </EditFormButton>
-                <ExportRespButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        fetch('/api/google/export/' + formName, {
-                            method: 'POST',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                            .then((res) => {
-                                showSuccessBanner();
+                <Container>
+                    <ExportRespButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            fetch('/api/google/export/' + formName, {
+                                method: 'POST',
+                                headers: {
+                                    Accept: 'application/json',
+                                    'Content-Type': 'application/json',
+                                },
                             })
-                            .catch((e) => {
-                                console.error(e);
-                                showErrorBanner();
-                            });
-                    }}
-                    variant='white'
-                >
-                    Export Responses
-                </ExportRespButton>
+                                .then((res) => {
+                                    showSuccessBanner();
+                                })
+                                .catch((e) => {
+                                    console.error(e);
+                                    showErrorBanner();
+                                });
+                        }}
+                        variant='white'
+                    >
+                        <i className='fa-solid fa-file-export' />
+                        Export Responses
+                    </ExportRespButton>
+                    <CopyLinkButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigator.clipboard.writeText(
+                                'localhost:3000/form/' + formName
+                            );
+                        }}
+                    >
+                        <i className='fa-solid fa-link' />
+                        Copy Link
+                    </CopyLinkButton>
+                </Container>
             </FormInfoCard>
         </>
     );
