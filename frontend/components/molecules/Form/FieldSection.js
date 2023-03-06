@@ -7,6 +7,7 @@ import RadioSection from '../../molecules/Form/RadioSection';
 import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
 import MenuSection from '../../molecules/Form/MenuSection';
+import { getDefaultErrorText } from '../../../util';
 
 const TitleSection = ({ text, required }) => {
     return (
@@ -36,27 +37,7 @@ const FieldSection = ({
     errorText,
     options = [],
 }) => {
-    // checks for errorText first if its undefined. If it is, then figure out the type and set the errorMessage based off the type. If errorText is defined
-    // then no need to check for type, it has a specific message from backend
-    if (typeof errorText === 'undefined') {
-        switch (type) {
-            case 'email':
-                errorText = 'Please enter a valid email.';
-                break;
-            case 'phone':
-                errorText = 'Please enter a valid 10 digit phone number.';
-                break;
-            case 'text':
-                errorText = 'Please provide a response to this question.';
-                break;
-            case 'radio':
-                errorText = 'Please select an option above.';
-                break;
-            case 'boolean':
-                errorText = 'Please select an option above.';
-                break;
-        }
-    }
+    const errorMessage = errorText ?? getDefaultErrorText(type, errorText);
     const theme = useContext(ThemeContext);
     const renderInputField = (type) => {
         switch (type) {
@@ -153,7 +134,7 @@ const FieldSection = ({
             <SystemComponent>{renderInputField(type)}</SystemComponent>
             {hasError && (
                 <SystemComponent textAlign='left' color='red'>
-                    {errorText}
+                    {errorMessage}
                 </SystemComponent>
             )}
         </SystemComponent>

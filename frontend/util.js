@@ -130,6 +130,31 @@ export const scrollToFirstError = (formSections, formErrors) => {
     }
 };
 
+export const getDefaultErrorText = (type, errorText) => {
+    switch (type) {
+        case 'email':
+            errorText = 'Please enter a valid email.';
+            break;
+        case 'phone':
+            errorText = 'Please enter a valid 10 digit phone number.';
+            break;
+        case 'text':
+            errorText = 'Please provide a response to this question.';
+            break;
+        case 'numbers':
+            errorText = 'Please provide a valid numerical input';
+            break;
+        case 'menu_single':
+        case 'menu_multi':
+        case 'checkbox':
+        case 'radio':
+        case 'boolean':
+            errorText = 'Please select an option above.';
+            break;
+    }
+    return errorText;
+};
+
 const validateNotEmpty = (value) => {
     if (Array.isArray(value)) {
         return value && value.length > 0;
