@@ -24,9 +24,17 @@ const ExportRespButton = styled(Button)`
     border-radius: 5px;
 `;
 
+const DeleteFormButton = styled.div`
+    margin-left: auto;
+`;
+
 const CheckmarkRow = styled.div`
     display: flex;
-    align-items: flex-start;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: flex-end;
+	align-items: stretch;
+	align-content: stretch;
 `;
 
 const Text = styled.div`
@@ -84,12 +92,12 @@ const FormInfoCard = styled(Card)`
     margin-left: auto;
     margin-right: auto;
 
-    padding: 90px 30px 30px 30px;
+    padding: 30px 30px 30px 30px;
     ${(props) => props.theme.mediaQueries.mobile} {
-        padding: 90px 20px 20px 20px;
+        padding: 20px 20px 20px 20px;
     }
     @media screen and (min-width: 1400px) {
-        padding: 90px 30px 30px 30px;
+        padding: 30px 30px 30px 30px;
     }
 `;
 
@@ -121,7 +129,7 @@ const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
 const EXPORT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
-const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
+const FormMetadataSection = ({ src, title, bulletPoints, formName = '', onDelete}) => {
     const router = useRouter();
     const {
         renderSuccessBanner,
@@ -135,6 +143,22 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
             {renderSuccessBanner()}
             {renderErrorBanner()}
             <FormInfoCard>
+                <DeleteFormButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fetch('/api/form/' + formName + '/delete', {
+                            method: 'DELETE',
+                        })
+                        .then((res) => {
+                            onDelete(formName);
+                        })
+                        .catch((e) => {
+                            console.error(e);
+                        });
+                    }}
+                >
+                    <Svg src='/static/trash-solid.svg'/>
+                </DeleteFormButton>
                 <SystemComponent>
                     <BigIconWrapper>
                         <Svg src={src}></Svg>
@@ -189,6 +213,10 @@ const DashboardPanel = () => {
     const dispatch = useDispatch();
     const router = useRouter();
 
+    const handleDelete = (formName) => {
+        setFormData(formData.filter((form) => form.name !== formName));
+    };
+
     useEffect(() => {
         showLoader();
         useForms(dispatch, router)
@@ -221,6 +249,7 @@ const DashboardPanel = () => {
                         title={data.title}
                         bulletPoints={data.bulletPoints}
                         formName={data.name}
+                        onDelete={handleDelete}
                     />
                 ))}
             </SystemComponent>
