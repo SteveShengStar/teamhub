@@ -9,6 +9,7 @@ import { useForms } from '../../../frontend/hooks/forms';
 import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
 import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
+import { v4 as uuidv4 } from 'uuid';
 
 const EditFormButton = styled(Button)`
     width: 100%;
@@ -21,6 +22,14 @@ const EditFormButton = styled(Button)`
 const ExportRespButton = styled(Button)`
     width: 100%;
     height: 48px;
+    border-radius: 5px;
+`;
+
+const CreateFormButton = styled(Button)`
+    width: 20%;
+    height: 48px;
+    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
+    margin-top: 16px;
     border-radius: 5px;
 `;
 
@@ -202,28 +211,39 @@ const DashboardPanel = () => {
 
     return (
         <PageTemplate title='Waterloop Forms'>
-            <SystemComponent
-                display='grid'
-                gridTemplateColumns={[
-                    '1fr',
-                    'repeat(2, 1fr);',
-                    'repeat(2, 1fr);',
-                    'repeat(3, 1fr);',
-                ]}
-                gridAutoRows={'minmax(500px, 500px)'}
-                gridColumnGap={5}
-                gridRowGap={6}
-            >
-                {loader}
-                {formData?.map((data) => (
-                    <FormMetadataSection
-                        src={data.imageSrc}
-                        title={data.title}
-                        bulletPoints={data.bulletPoints}
-                        formName={data.name}
-                    />
-                ))}
-            </SystemComponent>
+            <React.Fragment>
+        
+                <CreateFormButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        router.push('/form/edit/' + uuidv4());
+                    }}
+                >
+                    Create a new Form
+                </CreateFormButton>
+                <SystemComponent
+                    display='grid'
+                    gridTemplateColumns={[
+                        '1fr',
+                        'repeat(2, 1fr);',
+                        'repeat(2, 1fr);',
+                        'repeat(3, 1fr);',
+                    ]}
+                    gridAutoRows={'minmax(500px, 500px)'}
+                    gridColumnGap={5}
+                    gridRowGap={6}
+                >
+                    {loader}
+                    {formData?.map((data) => (
+                        <FormMetadataSection
+                            src={data.imageSrc}
+                            title={data.title}
+                            bulletPoints={data.bulletPoints}
+                            formName={data.name}
+                        />
+                    ))}
+                </SystemComponent>
+            </React.Fragment>
         </PageTemplate>
     );
 };
