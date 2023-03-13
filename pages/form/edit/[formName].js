@@ -188,20 +188,23 @@ const FormEditor = () => {
         useFormDetails(router.query.formName, dispatch, router)
             .then((res) => {
                 if (res.success) {
-                    setFormTitle(res.body.title);
-                    setFormDescription(res.body.description);
-                    setFormSections(
-                        res.body.sections
-                            .map((obj) => {
-                                const sectionDetails = obj.section;
-                                return {
-                                    ...obj,
-                                    section: undefined,
-                                    ...sectionDetails,
-                                };
-                            })
-                            .sort((a, b) => a.position - b.position)
-                    );
+                    if (res.body) {
+                        setFormTitle(res.body.title);
+                        setFormDescription(res.body.description);
+                        setFormSections(
+                            res.body.sections
+                                .map((obj) => {
+                                    const sectionDetails = obj.section;
+                                    return {
+                                        ...obj,
+                                        section: undefined,
+                                        ...sectionDetails,
+                                    };
+                                })
+                                .sort((a, b) => a.position - b.position)
+                        );
+                    }
+                    
                 } else {
                     alert('An error occurred when loading form sections!');
                     console.error(res);
