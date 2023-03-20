@@ -285,9 +285,10 @@ forms.deleteForm = async(formName, res) => {
             curr.sections.map( (section) => section.section.toString())
         );
     }, []);
-
+    
     //set of all existing formSections in all forms except formToDelete
     const otherFormSectionSet = new Set(otherFormSections);
+    
 
     return util.handleWrapper(async () => {
  
@@ -296,6 +297,28 @@ forms.deleteForm = async(formName, res) => {
             !otherFormSectionSet.has(value.section.toString()
         )).map( formSection => formSection.section);
 
+        if (formSectionsToDelete.length) {
+            const findQuery = formSectionsToDelete.map( (section) => {
+                return { _id: section };
+            });
+    
+            //collect names of the form sections that needs to be deleted in userDetails
+            const formSectionsNamesToDelete = await FormSection.find( {$or: findQuery} ).select ( {name: 1, _id : 0} );
+            
+            const unsetQuery = {};
+            formSectionsNamesToDelete.map( (value) => unsetQuery[value.name] = 1 );
+            console.log(unsetQuery);
+            //Delete all form section names exisiting in userDetail collection
+            UserDetails.updateMany({}, { $unset: unsetQuery}, (err) => {
+                if (err) {
+                    console.error(err);
+                    res.statusCode = 500;
+                    throw err;
+                } 
+            });
+        }
+        
+    
         FormSection.deleteMany({_id : {$in: formSectionsToDelete} }, (err) => {
             if (err) {
                 console.error(err);
