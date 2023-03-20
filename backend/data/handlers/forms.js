@@ -307,7 +307,7 @@ forms.deleteForm = async(formName, res) => {
             
             const unsetQuery = {};
             formSectionsNamesToDelete.map( (value) => unsetQuery[value.name] = 1 );
-            console.log(unsetQuery);
+
             //Delete all form section names exisiting in userDetail collection
             UserDetails.updateMany({}, { $unset: unsetQuery}, (err) => {
                 if (err) {
