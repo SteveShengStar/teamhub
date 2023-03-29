@@ -203,6 +203,16 @@ const FormEditor = () => {
                                 })
                                 .sort((a, b) => a.position - b.position)
                         );
+                    } else {
+                        const newSection = {
+                            name: uuidv4(),
+                            description: '',
+                            display: '',
+                            type: 'text',
+                            customizable: 'delete',
+                            options: [],
+                        };
+                        setFormSections([...formSections, newSection]);
                     }
                     
                 } else {
