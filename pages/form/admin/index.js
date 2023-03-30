@@ -219,7 +219,7 @@ const DashboardPanel = () => {
                         router.push('/form/edit/' + uuidv4());
                     }}
                 >
-                    Create a new Form
+                    Create New Form
                 </CreateFormButton>
                 <SystemComponent
                     display='grid'
