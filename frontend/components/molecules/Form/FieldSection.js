@@ -7,6 +7,7 @@ import RadioSection from '../../molecules/Form/RadioSection';
 import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
 import MenuSection from '../../molecules/Form/MenuSection';
+import { getDefaultErrorText } from '../../../util';
 
 const TitleSection = ({ text, required }) => {
     return (
@@ -27,21 +28,22 @@ const DescriptionSection = ({ text }) => {
 const FieldSection = ({
     title,
     description = '',
-    type = 'text',
+    type,
     required,
     onChange,
     name,
     value,
     hasError = false,
-    errorText = 'Incorrect answer provided. Please double-check your answer.',
+    errorText,
     options = [],
 }) => {
+    const errorMessage = errorText ?? getDefaultErrorText(type, errorText);
     const theme = useContext(ThemeContext);
     const renderInputField = (type) => {
         switch (type) {
             case 'text':
             case 'longtext':
-            case 'phone': // TODO: have separate inputs for phone and dropdowns
+            case 'phone':
             case 'email':
             case 'numbers':
                 return (
@@ -122,7 +124,7 @@ const FieldSection = ({
             fontSize={theme.fontSizes.header3}
             id={name} // Component needs `id` value set since in frontend/util.js#scrollToFirstError, we rely on this id to select the DOM element to scroll up to.
             textAlign='left'
-            width={['98%', '100%', '100%', '600px']}
+            width={['98%', '100%', '100%', '100%']}
         >
             <SystemComponent textAlign='left' mb={['10px', '15px']}>
                 <TitleSection text={title} required={required} />
@@ -132,7 +134,7 @@ const FieldSection = ({
             <SystemComponent>{renderInputField(type)}</SystemComponent>
             {hasError && (
                 <SystemComponent textAlign='left' color='red'>
-                    {errorText}
+                    {errorMessage}
                 </SystemComponent>
             )}
         </SystemComponent>

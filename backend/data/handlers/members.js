@@ -248,47 +248,43 @@ members.updateTaskStatus = async (filter, payload) => {
 
 members.replacePayloadWithIds = async (payload) => {
     if (payload.interests) {
-        if (Array.isArray(payload.interests)) {
-            payload.interests = await util.replaceNamesWithIdsArray(
-                payload.interests,
-                interests
-            );
-        } else {
-            throw Error('interests field must be an array or empty.');
+        if (!Array.isArray(payload.interests)) {
+            payload.interests = [payload.interests];
         }
+        payload.interests = await util.replaceNamesWithIdsArray(
+            payload.interests,
+            interests
+        );
     }
 
     if (payload.skills) {
-        if (Array.isArray(payload.skills)) {
-            payload.skills = await util.replaceNamesWithIdsArray(
-                payload.skills,
-                skills
-            );
-        } else {
-            throw Error('skills field must be an array or empty.');
+        if (!Array.isArray(payload.skills)) {
+            payload.skills = [payload.skills];
         }
+        payload.skills = await util.replaceNamesWithIdsArray(
+            payload.skills,
+            skills
+        );
     }
 
     if (payload.subteams) {
-        if (Array.isArray(payload.subteams)) {
-            payload.subteams = await util.replaceNamesWithIdsArray(
-                payload.subteams,
-                subteams
-            );
-        } else {
-            throw Error('subteams field must be an array or empty.');
+        if (!Array.isArray(payload.subteams)) {
+            payload.subteams = [payload.subteams];
         }
+        payload.subteams = await util.replaceNamesWithIdsArray(
+            payload.subteams,
+            subteams
+        );
     }
 
     if (payload.projects) {
-        if (Array.isArray(payload.projects)) {
-            payload.projects = await util.replaceNamesWithIdsArray(
-                payload.projects,
-                projects
-            );
-        } else {
-            throw Error('projects field must be an array or empty.');
+        if (!Array.isArray(payload.projects)) {
+            payload.projects = [payload.projects];
         }
+        payload.projects = await util.replaceNamesWithIdsArray(
+            payload.projects,
+            projects
+        );
     }
 
     payload.memberType

@@ -168,7 +168,7 @@ Deletes a member with the specified ID.
             },
             "currentSchoolTerm": "1B"
         },
-        "phone": "0000000000",
+        "phoneNumber": "0000000000",
         "studentId": "77"
     }
 }

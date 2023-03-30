@@ -9,10 +9,7 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
 
 import PageTemplate from '../../frontend/components/templates/PageTemplate';
-import {
-    SystemComponent,
-    SystemSpan,
-} from '../../frontend/components/atoms/SystemComponents';
+import { SystemComponent } from '../../frontend/components/atoms/SystemComponents';
 import Card from '../../frontend/components/atoms/Card';
 import FieldSection from '../../frontend/components/molecules/Form/FieldSection';
 import FormHeader from '../../frontend/components/molecules/Form/FormHeader';
@@ -22,14 +19,14 @@ import LoadingModal from '../../frontend/components/atoms/LoadingModal';
 
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
 import {
-    validateField,
-    clearErrorMessages,
+    validateFields,
     isInvalidPhoneNumber,
     isInvalidStudentId,
-    getCustomFields,
-    getCustomFieldDefaults,
     clearErrorMessageIfExists,
     scrollToFirstError,
+    initHasErrorsToFalse,
+    getFieldDefaultValues,
+    formatFormValues,
 } from '../../frontend/util';
 import _ from 'lodash';
 
@@ -40,40 +37,16 @@ const RegistrationForm = () => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const [loader, showLoader, hideLoader] = useLoadingScreen(true);
     const { user, hydrated } = useSelector((state) => state.userState);
+    const [formTitle, setFormTitle] = useState('');
+    const [formDescription, setFormDescription] = useState('');
+    const [formValues, setFormValues] = useState({});
+    const [hasError, setHasError] = useState({});
+    const [formSections, setFormSections] = useState([]);
+
+    const [loader, showLoader, hideLoader] = useLoadingScreen(true);
     const loginTransition = useLoginTransition();
     useLoginController(loginTransition, dispatch, router.pathname);
-
-    const [formValues, setFormValues] = useState({
-        fullName: '',
-        phoneNumber: '',
-        program: '',
-        studentId: '',
-        termStatus: '',
-        memberType: '',
-        subteams: '',
-        previousTerms: [],
-        futureTerms: [],
-        designCentreSafety: false,
-        whmis: false,
-        machineShop: false,
-    });
-
-    const [hasError, setHasError] = useState({
-        fullName: false,
-        phoneNumber: false,
-        program: false,
-        studentId: false,
-        termStatus: false,
-        memberType: false,
-        subteams: false,
-        designCentreSafety: false,
-        whmis: false,
-        machineShop: false,
-    });
-
-    const [formSections, setFormSections] = useState([]); // TODO: should not be state, this should be read-only
 
     useEffect(() => {
         if (hydrated) {
@@ -92,11 +65,11 @@ const RegistrationForm = () => {
                             })
                             .sort((a, b) => a.position - b.position);
 
+                        setFormTitle(res.body.form.title);
+                        setFormDescription(res.body.form.description);
                         setFormSections(sections);
-                        setFormValues({
-                            ...formValues,
-                            ...getCustomFieldDefaults(sections),
-                        });
+                        setFormValues(getFieldDefaultValues(sections));
+                        setHasError(initHasErrorsToFalse(sections));
                     }
                     // TODO: handle error case
                 })
@@ -110,73 +83,35 @@ const RegistrationForm = () => {
         }
     }, [hydrated]);
 
-    const setErrorMessages = (formErrors) => {
-        clearErrorMessages(formErrors);
-
-        validateField(formValues, formErrors, 'fullName');
-        validateField(formValues, formErrors, 'phoneNumber');
-        validateField(formValues, formErrors, 'program');
-        validateField(formValues, formErrors, 'studentId');
-        validateField(formValues, formErrors, 'termStatus');
-        validateField(formValues, formErrors, 'memberType');
-        validateField(formValues, formErrors, 'subteams');
-        validateField(formValues, formErrors, 'designCentreSafety');
-        validateField(formValues, formErrors, 'whmis');
-        validateField(formValues, formErrors, 'machineShop');
-
-        setHasError(formErrors);
+    const setErrorMessages = () => {
+        const sectionMetadataByName = {};
+        formSections.map((section) => {
+            sectionMetadataByName[section.name] = {
+                type: section.type,
+                required: section.required,
+            };
+        });
+        const hasValidationPassed = validateFields(
+            formValues,
+            sectionMetadataByName
+        );
+        const formErrorsList = {};
+        Object.keys(hasValidationPassed).map((key) => {
+            formErrorsList[key] = !hasValidationPassed[key];
+        });
+        setHasError(formErrorsList);
+        return formErrorsList;
     };
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-
-        const formErrors = { ...hasError };
-        setErrorMessages(formErrors);
-        const formHasErrors = Object.values(formErrors).some((err) => err);
+        const formErrorsList = setErrorMessages();
+        const formHasErrors = Object.values(formErrorsList).some((err) => err);
 
         if (!formHasErrors) {
             showLoader();
             loginTransition.setVisible(false);
-
-            const {
-                fullName,
-                phoneNumber,
-                program,
-                studentId,
-                termStatus,
-                memberType,
-                subteams,
-                designCentreSafety,
-                whmis,
-                machineShop,
-                previousTerms,
-                futureTerms,
-            } = formValues;
-            const customFields = getCustomFields(formValues);
-
-            const fullNameParts = fullName.split(/\s+/);
-            updateUser(
-                dispatch,
-                {
-                    ...customFields,
-                    name: {
-                        first: fullNameParts[0].trim(),
-                        last: fullNameParts[fullNameParts.length - 1].trim(),
-                    },
-                    phone: phoneNumber.trim(),
-                    program: program.trim(),
-                    studentId: studentId.trim(),
-                    activeSchoolTerms: [...previousTerms, ...futureTerms],
-                    termStatus,
-                    memberType,
-                    subteams: [subteams], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
-                    designCentreSafety,
-                    whmis,
-                    machineShop,
-                },
-                user._id,
-                router
-            )
+            updateUser(dispatch, formatFormValues(formValues), user._id, router)
                 .then(() => {
                     router.push('/');
                 })
@@ -188,7 +123,7 @@ const RegistrationForm = () => {
                     hideLoader();
                 });
         } else {
-            scrollToFirstError(formSections, formErrors);
+            scrollToFirstError(formSections, formErrorsList);
         }
     };
 

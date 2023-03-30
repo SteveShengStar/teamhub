@@ -127,7 +127,7 @@ describe('Testing Add Member', () => {
             email: 'terry.chow@waterloop-domain.ca',
         };
         const miscDetails = {
-            phone: '4169834591',
+            phoneNumber: '4169834591',
             personalEmail: 'terry.chow@gmail.com',
             studentId: '98074685',
             termStatus: 'Co-op term, working on Waterloop remotely',
@@ -163,7 +163,9 @@ describe('Testing Add Member', () => {
         let memberDetails = await UserDetails.findOne({
             _id: memberSummary.miscDetails,
         }).exec();
-        expect(memberDetails.phone).toBe(parseInt(miscDetails.phone));
+        expect(memberDetails.phoneNumber).toBe(
+            parseInt(miscDetails.phoneNumber)
+        );
         expect(memberDetails.personalEmail).toBe(miscDetails.personalEmail);
         expect(memberDetails.studentId).toBe(parseInt(miscDetails.studentId));
         expect(memberDetails.termStatus).toBe(miscDetails.termStatus);

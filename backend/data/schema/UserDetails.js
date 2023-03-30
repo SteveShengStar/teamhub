@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const UserDetailsSchema = new Schema(
     {
-        phone: {
+        phoneNumber: {
             type: Number,
         },
         personalEmail: {

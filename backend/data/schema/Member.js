@@ -83,7 +83,12 @@ const MemberSchema = new Schema({
         required: true,
         unique: true,
     },
-    activeSchoolTerms: [
+    previousTerms: [
+        {
+            type: String,
+        },
+    ],
+    futureTerms: [
         {
             type: String,
         },

@@ -1,45 +1,55 @@
 import { isEmail } from 'validator';
-import { validate as isUuid } from 'uuid';
 
 export const removeDuplicates = (array) => {
     const uniqueSet = new Set(array.map((i) => i.trim().toLowerCase()));
     return [...uniqueSet].filter((i) => i);
 };
 
+export const formatFormValues = (formValues) => {
+    const fullNameParts = formValues.fullName
+        ? formValues.fullName.split(/(\s+)/).filter((e) => e.trim().length > 0)
+        : ['', ''];
+    return {
+        ...formValues,
+        name: {
+            first: fullNameParts[0].trim(),
+            last: fullNameParts[fullNameParts.length - 1].trim(),
+        },
+        fullName: undefined,
+    };
+};
+
 // form validation utility methods
-export const validateField = (formData, formErrors, field) => {
-    switch (field) {
-        case 'fullName':
-            validateName(formData, formErrors, field);
-            break;
-        case 'email':
-        case 'personalEmail':
-            validateEmail(formData, formErrors, field);
-            break;
-        case 'studentId':
-            validateNumber(formData, formErrors, field, 8);
-            break;
-        case 'phoneNumber':
-            validateNumber(formData, formErrors, field, 10);
-            break;
-        case 'designCentreSafety':
-        case 'whmis':
-        case 'machineShop':
-            validateBoolean(formData, formErrors, field);
-            break;
-        case 'termDescription':
-        case 'subteams':
-        case 'nextTermRole':
-        case 'nextTermActivity':
-        case 'program':
-        case 'termStatus':
-        case 'memberType':
-        case 'nextSchoolTerm':
-        case 'nextTermRole':
-        case 'nextTermActivity':
-            validateNotEmpty(formData, formErrors, field);
-            break;
-    }
+export const validateFields = (formValues, sectionMetadataByName) => {
+    const validationResult = {};
+    Object.keys(sectionMetadataByName).map((sectionName) => {
+        const { type: dataType, required } = sectionMetadataByName[sectionName];
+        const value = formValues[sectionName];
+
+        if (required) {
+            const isValid = validateNotEmpty(value);
+            if (!isValid) {
+                validationResult[sectionName] = false;
+                return;
+            }
+        }
+
+        switch (dataType) {
+            case 'email':
+                validationResult[sectionName] = validateEmail(value);
+                break;
+            case 'numbers':
+                validationResult[sectionName] = validateNumber(value);
+                break;
+            case 'phone':
+                validationResult[sectionName] = validateNumber(value, 10);
+                break;
+            case 'boolean':
+                validationResult[sectionName] = validateBoolean(value);
+                break;
+        }
+    });
+    return validationResult;
 };
 
 export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
@@ -51,12 +61,6 @@ export const clearErrorMessageIfExists = (fieldName, hasError, setHasError) => {
     }
 };
 
-export const clearErrorMessages = (formErrors) => {
-    for (const field of Object.keys(formErrors)) {
-        formErrors[field] = false;
-    }
-};
-
 export const isInvalidPhoneNumber = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 10;
 };
@@ -65,34 +69,22 @@ export const isInvalidStudentId = (number) => {
     return !number.match(/^[0-9]*$/) || number.length > 8;
 };
 
-// Custom Form Field names are V4 UUIDs
-export const getCustomFields = (formValues) => {
-    const customFieldMap = {};
-    for (const [field, value] of Object.entries(formValues)) {
-        if (isUuid(field)) {
-            customFieldMap[field] = value;
-        }
-    }
-    return customFieldMap;
-};
-
 // Get Default Values for Form Fields based on Field Type
-export const getCustomFieldDefaults = (formSections) => {
+export const getFieldDefaultValues = (formSections) => {
     const defaultVals = {};
-    const customFieldSections = formSections.filter((section) =>
-        isUuid(section.name)
-    );
-    customFieldSections.forEach((section) => {
+    formSections.forEach((section) => {
         switch (section.type) {
             case 'text':
             case 'longtext':
             case 'numbers':
             case 'phone':
             case 'menu_single':
-            case 'menu_multi':
-            case 'checkbox':
             case 'radio':
                 defaultVals[section.name] = '';
+                break;
+            case 'menu_multi':
+            case 'checkbox':
+                defaultVals[section.name] = [];
                 break;
             case 'boolean':
                 defaultVals[section.name] = false;
@@ -100,6 +92,14 @@ export const getCustomFieldDefaults = (formSections) => {
         }
     });
     return defaultVals;
+};
+
+export const initHasErrorsToFalse = (formSections) => {
+    const hasError = {};
+    formSections.forEach((section) => {
+        hasError[section.name] = false;
+    });
+    return hasError;
 };
 
 export const scrollToFirstError = (formSections, formErrors) => {
@@ -130,45 +130,80 @@ export const scrollToFirstError = (formSections, formErrors) => {
     }
 };
 
-const validateNotEmpty = (formData, formErrors, field) => {
-    if (!formData[field]?.trim()) {
-        formErrors[field] = true;
+export const getDefaultErrorText = (type, errorText) => {
+    switch (type) {
+        case 'email':
+            errorText = 'Please enter a valid email.';
+            break;
+        case 'phone':
+            errorText = 'Please enter a valid 10 digit phone number.';
+            break;
+        case 'text':
+            errorText = 'Please provide a response to this question.';
+            break;
+        case 'numbers':
+            errorText = 'Please provide a valid numerical input';
+            break;
+        case 'menu_single':
+        case 'menu_multi':
+        case 'checkbox':
+        case 'radio':
+        case 'boolean':
+            errorText = 'Please select an option above.';
+            break;
     }
+    return errorText;
 };
 
-const validateNumber = (formData, formErrors, field, digitsRequired) => {
+const validateNotEmpty = (value) => {
+    if (Array.isArray(value)) {
+        return value && value.length > 0;
+    }
+
+    if (value === undefined || value === null) {
+        return false;
+    }
+
+    if (typeof value === 'string') {
+        return value.trim();
+    }
+
+    return true;
+};
+
+const validateNumber = (value, digitsRequired) => {
+    if (!value) {
+        return true;
+    }
+
     if (
-        !formData[field] ||
-        typeof formData[field] !== 'string' ||
-        !formData[field].match(/^[0-9]*$/) ||
-        formData[field].length !== digitsRequired
+        typeof value !== 'string' ||
+        !value.match(/^[0-9]*$/) ||
+        (digitsRequired && value.length !== digitsRequired)
     ) {
-        formErrors[field] = true;
+        return false;
     }
+    return true;
 };
 
-const validateBoolean = (formData, formErrors, field) => {
-    if (typeof formData[field] !== 'boolean') {
-        formErrors[field] = true;
-    }
+const validateBoolean = (value) => {
+    return typeof value === 'boolean';
 };
 
-const validateName = (formData, formErrors, field) => {
+const validateName = (value) => {
     if (
-        typeof formData[field] !== 'string' ||
-        !formData[field]?.trim() ||
-        formData[field].trim().split(/\s+/).length < 2
+        typeof value !== 'string' ||
+        !value?.trim() ||
+        value.trim().split(/\s+/).length < 2
     ) {
-        formErrors[field] = true;
+        return false;
     }
+    return true;
 };
 
-const validateEmail = (formData, formErrors, field) => {
-    if (
-        typeof formData[field] !== 'string' ||
-        !formData[field]?.trim() ||
-        !isEmail(formData[field].trim())
-    ) {
-        formErrors[field] = true;
+const validateEmail = (value) => {
+    if (!value) {
+        return true;
     }
+    return isEmail(value.trim());
 };

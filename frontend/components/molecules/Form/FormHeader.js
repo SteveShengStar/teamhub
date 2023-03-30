@@ -1,19 +1,18 @@
 import React, { useContext } from 'react';
 import { ThemeContext } from 'styled-components';
-import { SystemComponent, SystemSpan } from '../../atoms/SystemComponents';
+import { SystemComponent } from '../../atoms/SystemComponents';
 import Subtitle from '../../atoms/Subtitle';
 
-const FormHeader = ({ title, marginBottom }) => {
+const FormHeader = ({ title, description, marginBottom }) => {
     const theme = useContext(ThemeContext);
     return (
-        <SystemComponent
-            fontSize={theme.fontSizes.header3}
-            textAlign='center'
-            mb={marginBottom}
-        >
-            <SystemSpan>
+        <SystemComponent mb={marginBottom}>
+            <SystemComponent textAlign='center'>
                 <Subtitle>{title}</Subtitle>
-            </SystemSpan>
+            </SystemComponent>
+            <SystemComponent fontSize={theme.fontSizes.smallTitle}>
+                {description}
+            </SystemComponent>
         </SystemComponent>
     );
 };

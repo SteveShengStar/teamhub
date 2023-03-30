@@ -45,7 +45,7 @@ describe('Forms Unit Tests', () => {
                 last: 'Davidson1235',
             },
             email: 'sarah.davidson@waterloop-domain.ca',
-            phone: '9074957323',
+            phoneNumber: '9074957323',
             personalEmail: 'sarah.davidson@gmail.com',
             studentId: '84563053',
             termStatus: 'Not active on Waterloop this term',

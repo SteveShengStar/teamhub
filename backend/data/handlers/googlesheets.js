@@ -1,19 +1,15 @@
 const { OAuth2Client } = require('google-auth-library');
+const Member = require('../schema/Member');
 const authConfig = require('./auth.config.json');
 const { google } = require('googleapis');
-const { getAll } = require('./members');
-
-const {
-    RETURNING_MEMBERS_FIELDS,
-    TEAM_ROSTER_FIELDS,
-    START_TERM_FIELDS,
-    RETURNING_MEMBERS_SPREADSHEET_HEADERS,
-    TEAM_ROSTER_SPREADSHEET_HEADERS,
-    START_TERM_SPREADSHEET_HEADERS,
-} = require('./constants');
+const { getAll: getAllMembersData } = require('./members');
+const { fetchFormAndMemberData } = require('./forms');
 
 const googlesheets = {};
 
+/**
+ * Note: This function is currently not in use. It is here just for tesing purposes.
+ */
 googlesheets.readfile = async (token) => {
     const client = new OAuth2Client(authConfig['client_id']);
     client.setCredentials({
@@ -28,97 +24,100 @@ googlesheets.readfile = async (token) => {
     return metadata;
 };
 
-googlesheets.writefile = async (token, formName) => {
-    switch (formName) {
-        case 'register':
-        case 'startofterm':
-            return exportRegister(token);
-        case 'returning':
-            return exportReturning(token);
-    }
+googlesheets.writefile = async (userId, token, formName) => {
+    return exportDataToGoogleSheets(userId, token, formName);
 };
 
-const exportRegister = async (token) => {
-    const fields = getFields(TEAM_ROSTER_FIELDS);
-    const userData = (await getAll(fields)).map((row) => {
-        return {
-            fullName: row.name.first + ' ' + row.name.last,
-            email: row.email ?? '',
-            phoneNumber: row.miscDetails?.phone ?? '',
-            memberType: row.memberType?.name ?? '',
-            program: row.program ?? '',
-            skills: row.skills?.map((skill) => skill.name).join() ?? '',
-            subteam:
-                row.subteams && row.subteams.length > 0
-                    ? row.subteams[0].name
-                    : '',
-            termStatus: row.miscDetails?.termStatus ?? '',
-            activeSchoolTerms: row.activeSchoolTerms?.join() ?? '',
-            ssdc: row.miscDetails?.designCentreSafety ? 'yes' : 'no',
-            whmis: row.miscDetails?.whmis ? 'yes' : 'no',
-            machineShop: row.miscDetails?.machineShop ? 'yes' : 'no',
-        };
-    });
+const exportDataToGoogleSheets = async (userId, token, formName) => {
+    const formAndMemberData = await fetchFormAndMemberData(userId, formName);
+    const headerText = formAndMemberData.form.sections.map(
+        (section) => section.section.display
+    );
+    const memberData = await getFormsAndMembersData(formAndMemberData);
+    const spreadsheetData = [headerText, ...memberData];
 
-    const spreadsheetData = [TEAM_ROSTER_SPREADSHEET_HEADERS];
-    spreadsheetData.push(...userData.map((data) => Object.values(data)));
-
-    //create new file with Drive api
-    const currentDate = new Date();
-    const fileName = `Waterloop Roster - ${currentDate.toLocaleString('en-CA', {
-        timeZone: 'EST',
-    })}`;
-    const fileMetadata = {
-        name: fileName,
-        parents: [],
-        mimeType: 'application/vnd.google-apps.spreadsheet',
-    };
-    const driveRequest = {
-        resource: fileMetadata,
-        fields: 'id',
-    };
-    const googleDrive = getGoogleDriveClient(token);
-    const driveResponse = await googleDrive.files.create(driveRequest);
-
-    // update spreadsheet
-    const request = {
-        spreadsheetId: driveResponse.data.id,
-        range: 'Sheet1',
-        valueInputOption: 'USER_ENTERED',
-        resource: {
-            values: spreadsheetData,
-        },
-    };
-    const googleSheets = getGoogleSheetsClient(token);
-    const response = await googleSheets.spreadsheets.values.update(request);
-    return response.config.url;
+    return await createGoogleSheetsFile(
+        formAndMemberData.form.title,
+        spreadsheetData,
+        token
+    );
 };
 
-const exportReturning = async (token) => {
-    const fields = getFields(RETURNING_MEMBERS_FIELDS);
-    const userData = (await getAll(fields)).map((row) => {
-        return {
-            email: row.email ?? '',
-            upcomingTerm: row.miscDetails?.nextSchoolTerm ?? '',
-            activeSchoolTerms: row.activeSchoolTerms?.join() ?? '',
-            subteam:
-                row.subteams && row.subteams.length > 0
-                    ? row.subteams[0].name
-                    : '',
-            nextTermActivity: row.miscDetails?.nextTermActivity ?? '',
-            nextTermRole: row.miscDetails?.nextTermRole ?? '',
-            personalEmail: row.miscDetails?.personalEmail ?? '',
-            termComments: row.miscDetails?.termComments ?? '',
-            desiredWork: row.miscDetails?.desiredWork ?? '',
-        };
+const getFormsAndMembersData = async (formAndMemberData) => {
+    const fieldNamesToDataTypes = {};
+    formAndMemberData.form.sections.map((section) => {
+        fieldNamesToDataTypes[section.section.name] = section.section.type;
     });
 
-    const spreadsheetData = [RETURNING_MEMBERS_SPREADSHEET_HEADERS];
-    spreadsheetData.push(...userData.map((data) => Object.values(data)));
+    const memberFieldNames = new Set(
+        Object.keys(Member.schema.paths).filter(
+            (fieldName) => fieldName !== '_id' && fieldName !== '__v'
+        )
+    );
+    let fieldsSelectList = new Set();
+    const actualFieldNames = [];
+    Object.keys(fieldNamesToDataTypes).map((fieldName) => {
+        if (fieldName === 'fullName') {
+            fieldsSelectList.add('name');
+            actualFieldNames.push('fullName');
+        } else if (memberFieldNames.has(fieldName)) {
+            fieldsSelectList.add(fieldName);
+            actualFieldNames.push(fieldName);
+        } else {
+            fieldsSelectList.add('miscDetails');
+            actualFieldNames.push(fieldName);
+        }
+    });
+    fieldsSelectList = getFields(fieldsSelectList);
 
-    //create new file with Drive api
+    const formattedUserData = (await getAllMembersData(fieldsSelectList)).map(
+        (member) => {
+            const formattedValues = actualFieldNames.map((field) => {
+                if (field === 'fullName') {
+                    return member.name.first + ' ' + member.name.last;
+                } else if (field === 'subteams') {
+                    return member.subteams && member.subteams.length > 0
+                        ? member.subteams
+                              .map((subteam) => subteam.name)
+                              .join(', ')
+                        : '';
+                } else if (field === 'skills') {
+                    return member.skills && member.skills.length > 0
+                        ? member.skills.map((skill) => skill.name).join(', ')
+                        : '';
+                } else if (field === 'memberType') {
+                    return member.memberType?.name;
+                }
+
+                let rawValue;
+                if (member[field] !== undefined) {
+                    rawValue = member[field];
+                } else if (
+                    member.miscDetails &&
+                    member.miscDetails[field] !== undefined
+                ) {
+                    rawValue = member.miscDetails[field];
+                }
+                if (rawValue === undefined || rawValue === null) {
+                    return '';
+                } else if (Array.isArray(rawValue)) {
+                    return rawValue.join(', ');
+                } else if (typeof rawValue === 'boolean') {
+                    return rawValue ? 'Yes' : 'No';
+                } else {
+                    return rawValue;
+                }
+            });
+            return formattedValues;
+        }
+    );
+    return formattedUserData;
+};
+
+const createGoogleSheetsFile = async (formTitle, spreadsheetData, token) => {
+    // Create new file using Google Drive API
     const currentDate = new Date();
-    const fileName = `Returning Members Form Responses - ${currentDate.toLocaleString(
+    const fileName = `${formTitle} Responses - ${currentDate.toLocaleString(
         'en-CA',
         { timeZone: 'EST' }
     )}`;

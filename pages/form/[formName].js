@@ -12,51 +12,35 @@ import useLoadingScreen from '../../frontend/hooks/useLoadingScreen';
 import usePopupBanner from '../../frontend/hooks/usePopupBanner';
 import { useFormAndUserDetails } from '../../frontend/hooks/forms';
 import {
-    validateField,
-    clearErrorMessages,
+    validateFields,
+    initHasErrorsToFalse,
     isInvalidPhoneNumber,
     isInvalidStudentId,
-    getCustomFields,
-    getCustomFieldDefaults,
+    getFieldDefaultValues,
     clearErrorMessageIfExists,
     scrollToFirstError,
+    formatFormValues,
 } from '../../frontend/util';
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import _ from 'lodash';
 
-const FORM_NAME_KEY = 'returning';
 const SUBMIT_SUCCESS_MSG =
     'Form successfully submitted. Taking you back to Home Page in 5 seconds.';
 const SUBMIT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
-const ReturningMembersForm = () => {
+const Form = () => {
     const theme = useContext(ThemeContext);
-
     const dispatch = useDispatch();
     const router = useRouter();
     const { user, hydrated } = useSelector((state) => state.userState);
     const [loader, showLoader, hideLoader] = useLoadingScreen(true);
-
-    const [formValues, setFormValues] = useState({
-        nextSchoolTerm: '',
-        previousTerms: [],
-        futureTerms: [],
-        subteams: '',
-        nextTermActivity: '',
-        nextTermRole: '',
-        termComments: '',
-        desiredWork: '',
-    });
-
-    const [hasError, setHasError] = useState({
-        nextSchoolTerm: false,
-        nextTermActivity: false,
-        subteams: false,
-        nextTermRole: false,
-    });
-
+    const [formTitle, setFormTitle] = useState('');
+    const [formDescription, setFormDescription] = useState('');
+    const [formValues, setFormValues] = useState({});
+    const [hasError, setHasError] = useState({});
     const [formSections, setFormSections] = useState([]);
+
     const {
         renderSuccessBanner,
         renderErrorBanner,
@@ -67,7 +51,12 @@ const ReturningMembersForm = () => {
     useEffect(() => {
         if (hydrated) {
             showLoader();
-            useFormAndUserDetails(FORM_NAME_KEY, dispatch, router, user._id)
+            useFormAndUserDetails(
+                router.query.formName,
+                dispatch,
+                router,
+                user._id
+            )
                 .then((res) => {
                     if (res.success) {
                         const sections = res.body.form.sections
@@ -82,12 +71,11 @@ const ReturningMembersForm = () => {
                             })
                             .sort((a, b) => a.position - b.position);
 
-                        const memberData = res.body.user;
+                        setFormTitle(res.body.form.title);
+                        setFormDescription(res.body.form.description);
                         setFormSections(sections);
-                        setFormValues({
-                            ...getCustomFieldDefaults(sections),
-                            ...formValues,
-                        });
+                        setFormValues(getFieldDefaultValues(sections));
+                        setHasError(initHasErrorsToFalse(sections));
                     }
                 })
                 .catch((e) => {
@@ -100,53 +88,34 @@ const ReturningMembersForm = () => {
         }
     }, [hydrated]);
 
-    const setErrorMessages = (formErrors) => {
-        clearErrorMessages(formErrors);
-
-        validateField(formValues, formErrors, 'nextSchoolTerm');
-        validateField(formValues, formErrors, 'subteams');
-        validateField(formValues, formErrors, 'nextTermRole');
-        validateField(formValues, formErrors, 'nextTermActivity');
-
-        setHasError(formErrors);
+    const setErrorMessages = () => {
+        const sectionMetadataByName = {};
+        formSections.map((section) => {
+            sectionMetadataByName[section.name] = {
+                type: section.type,
+                required: section.required,
+            };
+        });
+        const hasValidationPassed = validateFields(
+            formValues,
+            sectionMetadataByName
+        );
+        const formErrorsList = {};
+        Object.keys(hasValidationPassed).map((key) => {
+            formErrorsList[key] = !hasValidationPassed[key];
+        });
+        setHasError(formErrorsList);
+        return formErrorsList;
     };
 
     const handleSubmit = (evt) => {
         evt.preventDefault();
-        const formErrors = { ...hasError };
+        const formErrorsList = setErrorMessages();
+        const formHasErrors = Object.values(formErrorsList).some((err) => err);
 
-        setErrorMessages(formErrors);
-
-        const formHasErrors = Object.values(formErrors).some((err) => err);
         if (!formHasErrors) {
             showLoader();
-            const {
-                nextSchoolTerm,
-                previousTerms,
-                futureTerms,
-                subteams,
-                nextTermActivity,
-                nextTermRole,
-                termComments,
-                desiredWork,
-            } = formValues;
-            const customFields = getCustomFields(formValues);
-
-            updateUser(
-                dispatch,
-                {
-                    ...customFields,
-                    subteams: [subteams], // NOTE: As of March 2022, members can only select one option for subteam. Before this, members can select multiple subteams. We will keep subteams as an array for now for backwards-compatability and to prevent conflicts with Database data.
-                    activeSchoolTerms: [...previousTerms, ...futureTerms],
-                    nextSchoolTerm,
-                    nextTermActivity,
-                    nextTermRole,
-                    termComments: termComments?.trim(),
-                    desiredWork: desiredWork?.trim(),
-                },
-                user._id,
-                router
-            )
+            updateUser(dispatch, formatFormValues(formValues), user._id, router)
                 .then(() => {
                     showSuccessBanner(() => router.push('/')); // Redirect to home page.
                     // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
@@ -159,7 +128,7 @@ const ReturningMembersForm = () => {
                     hideLoader();
                 });
         } else {
-            scrollToFirstError(formSections, formErrors);
+            scrollToFirstError(formSections, formErrorsList);
         }
     };
 
@@ -198,7 +167,8 @@ const ReturningMembersForm = () => {
                     ]}
                 >
                     <FormHeader
-                        title='Tell us more About You'
+                        title={formTitle}
+                        description={formDescription}
                         marginBottom={theme.space.titleBottomMargin}
                     />
                     <SystemComponent
@@ -246,4 +216,4 @@ const ReturningMembersForm = () => {
     );
 };
 
-export default ReturningMembersForm;
+export default Form;
