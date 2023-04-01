@@ -35,6 +35,7 @@ export const validateFields = (formValues, sectionMetadataByName) => {
         }
         if (sectionMetadataByName[sectionName].name == 'fullName') {
             validationResult[sectionName] = validateName(value);
+            return;
         }
 
         switch (dataType) {
