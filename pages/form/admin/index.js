@@ -130,7 +130,7 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                     <TitleText>{title}</TitleText>
                 </SystemComponent>
                 <BulletsSection>
-                    {bulletPoints.map((bullet, i) => (
+                    {bulletPoints?.map((bullet, i) => (
                         <BulletOverride margin='10px' key={i} text={bullet} />
                     ))}
                 </BulletsSection>
