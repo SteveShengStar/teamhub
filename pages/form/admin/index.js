@@ -13,24 +13,35 @@ import { v4 as uuidv4 } from 'uuid';
 
 const EditFormButton = styled(Button)`
     width: 100%;
-    height: 48px;
-    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
-    margin-top: 16px;
+    height: 60px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     border-radius: 5px;
 `;
 
-const ExportRespButton = styled(Button)`
+const ExportButton = styled(Button)`
     width: 100%;
-    height: 48px;
+    height: 60px;
     border-radius: 5px;
 `;
 
 const CreateFormButton = styled(Button)`
     width: 20%;
-    height: 48px;
+    height: 40px;
     margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
     margin-top: 16px;
     border-radius: 5px;
+`;
+
+const DeleteFormButton = styled.div`
+    margin-left: auto;
+    cursor: pointer;
+`;
+
+const DeleteIcon = styled.img`
+    justify-content: center;
+    height: 30px;
+    width: 30px;
 `;
 
 const CheckmarkRow = styled.div`
@@ -48,7 +59,7 @@ const Text = styled.div`
     color: #000000;
 `;
 
-const BigIconWrapper = styled.div`
+const IconWrapper = styled.div`
     height: 57px;
     width: 57px;
     display: flex;
@@ -59,7 +70,8 @@ const BigIconWrapper = styled.div`
     justify-content: center;
     box-sizing: border-box;
 `;
-const Svg = styled.img`
+
+const Icon = styled.img`
     justify-content: center;
     height: 30px;
     width: 30px;
@@ -93,12 +105,12 @@ const FormInfoCard = styled(Card)`
     margin-left: auto;
     margin-right: auto;
 
-    padding: 90px 30px 30px 30px;
+    padding: 30px 30px 30px 30px;
     ${(props) => props.theme.mediaQueries.mobile} {
-        padding: 90px 20px 20px 20px;
+        padding: 20px 20px 20px 20px;
     }
     @media screen and (min-width: 1400px) {
-        padding: 90px 30px 30px 30px;
+        padding: 30px 30px 30px 30px;
     }
 `;
 
@@ -130,7 +142,13 @@ const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
 const EXPORT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
-const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
+const FormMetadataSection = ({
+    src,
+    title,
+    bulletPoints,
+    formName = '',
+    onDelete,
+}) => {
     const router = useRouter();
     const {
         renderSuccessBanner,
@@ -144,10 +162,26 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
             {renderSuccessBanner()}
             {renderErrorBanner()}
             <FormInfoCard>
-                <SystemComponent>
-                    <BigIconWrapper>
-                        <Svg src={src}></Svg>
-                    </BigIconWrapper>
+                <DeleteFormButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fetch('/api/form/' + formName + '/delete', {
+                            method: 'DELETE',
+                        })
+                            .then((res) => {
+                                onDelete(formName);
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                            });
+                    }}
+                >
+                    <DeleteIcon src='/static/trash-solid.svg' />
+                </DeleteFormButton>
+                <SystemComponent marginTop='60px'>
+                    <IconWrapper>
+                        <Icon src={src}></Icon>
+                    </IconWrapper>
                 </SystemComponent>
                 <SystemComponent>
                     <TitleText>{title}</TitleText>
@@ -165,7 +199,7 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                 >
                     Edit Form
                 </EditFormButton>
-                <ExportRespButton
+                <ExportButton
                     onClick={(e) => {
                         e.preventDefault();
                         fetch('/api/google/export/' + formName, {
@@ -186,7 +220,7 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                     variant='white'
                 >
                     Export Responses
-                </ExportRespButton>
+                </ExportButton>
             </FormInfoCard>
         </>
     );
@@ -197,6 +231,10 @@ const DashboardPanel = () => {
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
     const dispatch = useDispatch();
     const router = useRouter();
+
+    const handleDelete = (formName) => {
+        setFormData(formData.filter((form) => form.name !== formName));
+    };
 
     useEffect(() => {
         showLoader();
@@ -211,16 +249,19 @@ const DashboardPanel = () => {
 
     return (
         <PageTemplate title='Waterloop Forms'>
-            <React.Fragment>
-        
-                <CreateFormButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        router.push('/form/edit/' + uuidv4());
-                    }}
-                >
-                    Create New Form
-                </CreateFormButton>
+            <SystemComponent>
+                {loader}
+                <SystemComponent>
+                    <CreateFormButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            router.push('/form/edit/' + uuidv4());
+                        }}
+                    >
+                        <i class='fa fa-plus' aria-hidden='true' /> Create New
+                        Form
+                    </CreateFormButton>
+                </SystemComponent>
                 <SystemComponent
                     display='grid'
                     gridTemplateColumns={[
@@ -233,17 +274,17 @@ const DashboardPanel = () => {
                     gridColumnGap={5}
                     gridRowGap={6}
                 >
-                    {loader}
                     {formData?.map((data) => (
                         <FormMetadataSection
                             src={data.imageSrc}
                             title={data.title}
                             bulletPoints={data.bulletPoints}
                             formName={data.name}
+                            onDelete={handleDelete}
                         />
                     ))}
                 </SystemComponent>
-            </React.Fragment>
+            </SystemComponent>
         </PageTemplate>
     );
 };

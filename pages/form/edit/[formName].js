@@ -16,7 +16,7 @@ import {
 import Section from '../../../frontend/components/organisms/formsection/Section';
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
-import Card from '../../../frontend/components/atoms/Card'
+import Card from '../../../frontend/components/atoms/Card';
 import TextField from '@mui/material/TextField';
 
 const SaveButton = styled(ActionButton)`
@@ -172,6 +172,7 @@ const SAVE_ERROR_MSG =
 const FormEditor = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const theme = useContext(ThemeContext);
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
     const [fromTitle, setFormTitle] = useState('');
     const [fromDescription, setFormDescription] = useState('');
@@ -204,7 +205,7 @@ const FormEditor = () => {
                                 .sort((a, b) => a.position - b.position)
                         );
                     } else {
-                        const newSection = {
+                        const newBlankSection = {
                             name: uuidv4(),
                             description: '',
                             display: '',
@@ -212,13 +213,11 @@ const FormEditor = () => {
                             customizable: 'delete',
                             options: [],
                         };
-                        setFormSections([...formSections, newSection]);
+                        setFormSections([...formSections, newBlankSection]);
                     }
-                    
                 } else {
                     alert('An error occurred when loading form sections!');
                     console.error(res);
-                    // TODO: handle error more appropriately
                 }
             })
             .catch((e) => {
@@ -428,8 +427,6 @@ const FormEditor = () => {
         return true;
     };
 
-    const theme = useContext(ThemeContext);
-
     const handleSave = (e, exitEditorView = false) => {
         e.preventDefault();
         if (!validateFormSections()) {
@@ -501,7 +498,7 @@ const FormEditor = () => {
                     ]}
                 />
 
-                <Card 
+                <Card
                     display='grid'
                     gridTemplateColumns='1fr'
                     gridColumnGap={theme.space[5]}
@@ -529,7 +526,6 @@ const FormEditor = () => {
                             setFormDescription(e.target.value);
                         }}
                     />
-
                 </Card>
 
                 {formSections.map((section) => (
