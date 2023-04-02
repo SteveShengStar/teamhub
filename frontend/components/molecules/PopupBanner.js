@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { capitalize } from 'lodash';
+import React, { useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
+import { SystemComponent } from '../atoms/SystemComponents';
 
 const Banner = styled.div`
     width: 350px;
@@ -21,67 +21,56 @@ const Banner = styled.div`
     margin-top: 30px;
 `;
 
-const Text = styled.div`
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
-`;
-
 const BannerText = styled.h4`
-    font-family: 'Nunito Sans';
-    margin: 0;
-    font-size: 14px;
-`;
-
-const BannerSubtitle = styled.h5`
     font-family: 'Nunito Sans';
     margin: 0;
     font-size: 16px;
 `;
 
-const BannerHeadingSection = styled.div`
+const BannerIcon = styled.div`
     display: flex;
     align-items: center;
 `;
 
-const PopupBanner = ({ visible, faClassName, status, message }) => {
+const PopupBanner = ({ visible, faClassName, iconColor, message }) => {
     return (
         <Banner style={{ display: visible ? 'flex' : 'none' }}>
-            <BannerHeadingSection>
+            <BannerIcon>
                 <i
                     class={faClassName}
                     style={{
-                        color: 'purple',
-                        padding: '0 15px',
-                        fontSize: '20px',
+                        color: iconColor,
+                        paddingRight: '15px',
+                        fontSize: '30px',
                     }}
                 ></i>
-            </BannerHeadingSection>
-            <Text>
-                <BannerSubtitle>{capitalize(status)}</BannerSubtitle>
+            </BannerIcon>
+            <SystemComponent>
                 <BannerText>{message}</BannerText>
-            </Text>
+            </SystemComponent>
         </Banner>
     );
 };
 
 export const SuccessBanner = ({ visible, message }) => {
+    const theme = useContext(ThemeContext);
     return (
         <PopupBanner
             visible={visible}
             faClassName={'fa-solid fa-circle-check'}
-            status='success'
+            iconColor={theme.colors.success}
             message={message}
         />
     );
 };
 
 export const ErrorBanner = ({ visible, message }) => {
+    const theme = useContext(ThemeContext);
     return (
         <PopupBanner
             visible={visible}
             faClassName={'fa fa-exclamation-circle'}
-            status='error'
+            iconColor={theme.colors.error}
             message={message}
         />
     );

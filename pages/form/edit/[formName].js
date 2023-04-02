@@ -16,7 +16,7 @@ import {
 import Section from '../../../frontend/components/organisms/formsection/Section';
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
-import Card from '../../../frontend/components/atoms/Card'
+import Card from '../../../frontend/components/atoms/Card';
 import TextField from '@mui/material/TextField';
 
 const SaveButton = styled(ActionButton)`
@@ -38,7 +38,11 @@ const validateCorrectNumberOfOptions = (sections) => {
             case 'radio':
             case 'menu_single':
             case 'menu_multi':
-                return s.options && s.options.length > 1;
+                return (
+                    s.options &&
+                    s.options.length > 1 &&
+                    s.options.filter((opt) => opt || opt === false).length > 1
+                );
         }
         return true;
     });
@@ -205,7 +209,6 @@ const FormEditor = () => {
                 } else {
                     alert('An error occurred when loading form sections!');
                     console.error(res);
-                    // TODO: handle error more appropriately
                 }
             })
             .catch((e) => {
@@ -488,7 +491,7 @@ const FormEditor = () => {
                     ]}
                 />
 
-                <Card 
+                <Card
                     display='grid'
                     gridTemplateColumns='1fr'
                     gridRowGap={theme.space[5]}
@@ -515,7 +518,6 @@ const FormEditor = () => {
                             setFormDescription(e.target.value);
                         }}
                     />
-
                 </Card>
 
                 {formSections.map((section) => (
