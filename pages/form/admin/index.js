@@ -26,15 +26,18 @@ const ExportRespButton = styled(Button)`
 
 const DeleteFormButton = styled.div`
     margin-left: auto;
+    cursor: pointer;
+`;
+
+const DeleteIcon = styled.img`
+    justify-content: center;
+    height: 30px;
+    width: 30px;
 `;
 
 const CheckmarkRow = styled.div`
     display: flex;
-	flex-direction: row;
-	flex-wrap: nowrap;
-	justify-content: flex-end;
-	align-items: stretch;
-	align-content: stretch;
+    align-items: flex-start;
 `;
 
 const Text = styled.div`
@@ -47,7 +50,7 @@ const Text = styled.div`
     color: #000000;
 `;
 
-const BigIconWrapper = styled.div`
+const IconWrapper = styled.div`
     height: 57px;
     width: 57px;
     display: flex;
@@ -58,7 +61,8 @@ const BigIconWrapper = styled.div`
     justify-content: center;
     box-sizing: border-box;
 `;
-const Svg = styled.img`
+
+const Icon = styled.img`
     justify-content: center;
     height: 30px;
     width: 30px;
@@ -129,7 +133,13 @@ const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
 const EXPORT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
-const FormMetadataSection = ({ src, title, bulletPoints, formName = '', onDelete}) => {
+const FormMetadataSection = ({
+    src,
+    title,
+    bulletPoints,
+    formName = '',
+    onDelete,
+}) => {
     const router = useRouter();
     const {
         renderSuccessBanner,
@@ -149,20 +159,20 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '', onDelete
                         fetch('/api/form/' + formName + '/delete', {
                             method: 'DELETE',
                         })
-                        .then((res) => {
-                            onDelete(formName);
-                        })
-                        .catch((e) => {
-                            console.error(e);
-                        });
+                            .then((res) => {
+                                onDelete(formName);
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                            });
                     }}
                 >
-                    <Svg src='/static/trash-solid.svg'/>
+                    <DeleteIcon src='/static/trash-solid.svg' />
                 </DeleteFormButton>
-                <SystemComponent>
-                    <BigIconWrapper>
-                        <Svg src={src}></Svg>
-                    </BigIconWrapper>
+                <SystemComponent marginTop='60px'>
+                    <IconWrapper>
+                        <Icon src={src}></Icon>
+                    </IconWrapper>
                 </SystemComponent>
                 <SystemComponent>
                     <TitleText>{title}</TitleText>

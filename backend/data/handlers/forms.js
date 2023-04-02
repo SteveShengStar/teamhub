@@ -269,76 +269,75 @@ const getFormSectionNamesToIdsMap = async () => {
     return formSectionNamesToIds;
 };
 
-
 /**
  * Delete a form.
  *
  * @param {Object} formName: Unique name key of the form to update
  * @param {Object} formData: new metadata for the form.
  */
-forms.deleteForm = async(formName, res) => {
-
-    const formSections = await Form.findOne({name: formName}, {sections: 1, _id: 0 } ).exec();
-    const otherForms = (await Form.find( {name: { $ne: formName} }, {sections: 1, _id: 0 } ).exec());
-    const otherFormSections = otherForms.reduce((acc, curr) => {
-        return acc.concat(
-            curr.sections.map( (section) => section.section.toString())
-        );
-    }, []);
-    
-    //set of all existing formSections in all forms except formToDelete
-    const otherFormSectionSet = new Set(otherFormSections);
-    
+forms.deleteForm = async (formName, res) => {
+    const sectionsOnDeletedForm = await Form.findOne(
+        { name: formName },
+        { sections: 1, _id: 0 }
+    ).exec();
+    const otherForms = await Form.find(
+        { name: { $ne: formName } },
+        { sections: 1, _id: 0 }
+    ).exec();
+    const otherFormSections = new Set(
+        otherForms.reduce((acc, curr) => {
+            return acc.concat(
+                curr.sections.map((section) => section.section.toString())
+            );
+        }, [])
+    );
 
     return util.handleWrapper(async () => {
- 
-        //formSections that are not in any other forms, must be deleted 
-        const formSectionsToDelete = formSections.sections.filter((value) => 
-            !otherFormSectionSet.has(value.section.toString()
-        )).map( formSection => formSection.section);
+        // formSections that are not in any other forms, must be deleted
+        const sectionsToDelete = sectionsOnDeletedForm.sections
+            .filter((value) => !otherFormSections.has(value.section.toString()))
+            .map((formSection) => formSection.section);
 
-        if (formSectionsToDelete.length) {
-            const findQuery = formSectionsToDelete.map( (section) => {
+        if (sectionsToDelete.length > 0) {
+            const findQuery = sectionsToDelete.map((section) => {
                 return { _id: section };
             });
-    
-            //collect names of the form sections that needs to be deleted in userDetails
-            const formSectionsNamesToDelete = await FormSection.find( {$or: findQuery} ).select ( {name: 1, _id : 0} );
-            
-            const unsetQuery = {};
-            formSectionsNamesToDelete.map( (value) => unsetQuery[value.name] = 1 );
+            const sectionNamesToDelete = await FormSection.find({
+                $or: findQuery,
+            }).select({ name: 1, _id: 0 });
 
-            //Delete all form section names exisiting in userDetail collection
-            UserDetails.updateMany({}, { $unset: unsetQuery}, (err) => {
+            const unsetQuery = {};
+            sectionNamesToDelete.map((value) => (unsetQuery[value.name] = 1));
+
+            // remove references to the deleted form sections in all UserDetails documents
+            UserDetails.updateMany({}, { $unset: unsetQuery }, (err) => {
                 if (err) {
                     console.error(err);
                     res.statusCode = 500;
                     throw err;
-                } 
+                }
             });
-        }
-        
-    
-        FormSection.deleteMany({_id : {$in: formSectionsToDelete} }, (err) => {
-            if (err) {
-                console.error(err);
-                res.statusCode = 500;
-                throw err;
 
-            } 
-        });
-        
-        Form.deleteOne( {name: formName} , (err) => {
+            FormSection.deleteMany(
+                { _id: { $in: sectionsToDelete } },
+                (err) => {
+                    if (err) {
+                        console.error(err);
+                        res.statusCode = 500;
+                        throw err;
+                    }
+                }
+            );
+        }
+
+        Form.deleteOne({ name: formName }, (err) => {
             if (err) {
                 console.error(err);
                 res.statusCode = 500;
                 throw err;
             }
-        })
-
+        });
     });
-
-
 };
 
 module.exports = forms;
