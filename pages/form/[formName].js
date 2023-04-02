@@ -25,7 +25,7 @@ import { updateUser } from '../../frontend/store/reducers/userReducer';
 import _ from 'lodash';
 
 const SUBMIT_SUCCESS_MSG =
-    'Form successfully submitted. Taking you back to Home Page in 5 seconds.';
+    'Form successfully submitted. Taking you back to Home Page in 4 seconds.';
 const SUBMIT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
