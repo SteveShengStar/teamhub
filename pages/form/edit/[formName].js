@@ -16,6 +16,8 @@ import {
 import Section from '../../../frontend/components/organisms/formsection/Section';
 import Button from '../../../frontend/components/atoms/Button';
 import ActionButton from '../../../frontend/components/atoms/Form/ActionButton';
+import Card from '../../../frontend/components/atoms/Card'
+import TextField from '@mui/material/TextField';
 
 const SaveButton = styled(ActionButton)`
     background-color: ${(props) => props.theme.colors.primary};
@@ -413,6 +415,8 @@ const FormEditor = () => {
         return true;
     };
 
+    const theme = useContext(ThemeContext);
+
     const handleSave = (e, exitEditorView = false) => {
         e.preventDefault();
         if (!validateFormSections()) {
@@ -483,6 +487,37 @@ const FormEditor = () => {
                         },
                     ]}
                 />
+
+                <Card 
+                    display='grid'
+                    gridTemplateColumns='1fr'
+                    gridRowGap={theme.space[5]}
+                    width={['500px', '700px', '800px']}
+                    marginBottom={`${theme.space[7]}px`}
+                    marginRight='auto'
+                    marginLeft='auto'
+                >
+                    <TextField
+                        label='Title'
+                        variant='filled'
+                        size='normal'
+                        value={fromTitle}
+                        onChange={(e) => {
+                            setFormTitle(e.target.value);
+                        }}
+                    />
+                    <TextField
+                        label='Description'
+                        variant='filled'
+                        size='normal'
+                        value={fromDescription}
+                        onChange={(e) => {
+                            setFormDescription(e.target.value);
+                        }}
+                    />
+
+                </Card>
+
                 {formSections.map((section) => (
                     <Section
                         key={section.name}

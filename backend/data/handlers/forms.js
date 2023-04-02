@@ -26,7 +26,9 @@ const validateCorrectNumberOfOptions = (sections) => {
  */
 forms.getAllForms = async () => {
     return util.handleWrapper(async () => {
-        return await Form.find({}).select({ _id: 1, name: 1 }).exec();
+        return await Form.find({})
+            .select({ _id: 1, name: 1, title: 1, imageSrc: 1, bulletPoints: 1 })
+            .exec();
     });
 };
 

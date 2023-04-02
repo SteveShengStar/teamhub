@@ -10,20 +10,6 @@ import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
 import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
 
-const EditFormButton = styled(Button)`
-    width: 100%;
-    height: 48px;
-    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
-    margin-top: 16px;
-    border-radius: 5px;
-`;
-
-const ExportRespButton = styled(Button)`
-    width: 100%;
-    height: 48px;
-    border-radius: 5px;
-`;
-
 const CheckmarkRow = styled.div`
     display: flex;
     align-items: flex-start;
@@ -114,12 +100,12 @@ const BulletOverride = styled(Bullet)`
 
 const BulletsSection = styled(SystemComponent)`
     align-self: start; /* this section's text should be left-aligned */
-    height: 200px;
+    height: 150px;
 `;
 
-const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
+const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
 const EXPORT_ERROR_MSG =
-    'Error occurred. Please contact Waterloop Web Team for assistance.';
+    'Form could not be exported. Please contact Waterloop Web Team for assistance.';
 
 const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
     const router = useRouter();
@@ -148,36 +134,64 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                         <BulletOverride margin='10px' key={i} text={bullet} />
                     ))}
                 </BulletsSection>
-                <EditFormButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        router.push('/form/edit/' + formName);
-                    }}
-                >
-                    Edit Form
-                </EditFormButton>
-                <ExportRespButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        fetch('/api/google/export/' + formName, {
-                            method: 'POST',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                            .then((res) => {
-                                showSuccessBanner();
-                            })
-                            .catch((e) => {
-                                console.error(e);
-                                showErrorBanner();
-                            });
-                    }}
-                    variant='white'
-                >
-                    Export Responses
-                </ExportRespButton>
+                <SystemComponent width='100%' height='40px'>
+                    <Button
+                        height='100%'
+                        width='100%'
+                        onClick={(e) => {
+                            e.preventDefault();
+                            router.push('/form/edit/' + formName);
+                        }}
+                    >
+                        <i className='fa-solid fa-pen-to-square' />
+                        {'  '}Edit Form
+                    </Button>
+                </SystemComponent>
+                <SystemComponent display='flex' height='40px' width='100%'>
+                    <SystemComponent width='60%'>
+                        <Button
+                            height='100%'
+                            width='100%'
+                            variant='white'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                fetch('/api/google/export/' + formName, {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                })
+                                    .then(() => {
+                                        showSuccessBanner();
+                                    })
+                                    .catch((e) => {
+                                        console.error(e);
+                                        showErrorBanner();
+                                    });
+                            }}
+                        >
+                            <i className='fa-solid fa-file-export' />
+                            {'  '}Export Responses
+                        </Button>
+                    </SystemComponent>
+                    <SystemComponent width='40%'>
+                        <Button
+                            height='100%'
+                            width='100%'
+                            variant='white'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigator.clipboard.writeText(
+                                    'localhost:3000/form/' + formName
+                                );
+                            }}
+                        >
+                            <i className='fa-solid fa-link' />
+                            {'  '}Copy Link
+                        </Button>
+                    </SystemComponent>
+                </SystemComponent>
             </FormInfoCard>
         </>
     );
@@ -215,34 +229,14 @@ const DashboardPanel = () => {
                 gridRowGap={6}
             >
                 {loader}
-                <FormMetadataSection
-                    src='/static/returning-members-icon.jpg'
-                    title='Returning Member'
-                    bulletPoints={[
-                        'Filled in End of Term',
-                        'Members state their goals and intentions for next school term.',
-                    ]}
-                    formName={
-                        formData.find((f) => f.name === 'returning')?.name
-                    }
-                />
-                <FormMetadataSection
-                    src='/static/beginning-of-term-icon.jpg'
-                    title='Start of Term'
-                    bulletPoints={[
-                        'Filled in Start of Term',
-                        'Members state their availability and goals for this term.',
-                    ]}
-                    formName={
-                        formData.find((f) => f.name === 'startofterm')?.name
-                    }
-                />
-                <FormMetadataSection
-                    src='/static/sign-up-icon.svg'
-                    title='Sign-Up'
-                    bulletPoints={['Filled in during Initial Team Sign-up']}
-                    formName={formData.find((f) => f.name === 'register')?.name}
-                />
+                {formData?.map((data) => (
+                    <FormMetadataSection
+                        src={data.imageSrc}
+                        title={data.title}
+                        bulletPoints={data.bulletPoints}
+                        formName={data.name}
+                    />
+                ))}
             </SystemComponent>
         </PageTemplate>
     );

@@ -93,6 +93,7 @@ const Form = () => {
             sectionMetadataByName[section.name] = {
                 type: section.type,
                 required: section.required,
+                name: section.name,
             };
         });
         const hasValidationPassed = validateFields(
