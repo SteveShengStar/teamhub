@@ -12,7 +12,7 @@ import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
 import { v4 as uuidv4 } from 'uuid';
 
 const CreateFormButton = styled(Button)`
-    width: 20%;
+    width: 200px;
     height: 35px;
     margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
     margin-top: 16px;
