@@ -7,6 +7,7 @@ import RadioSection from '../../molecules/Form/RadioSection';
 import BooleanRadioSection from '../../molecules/Form/BooleanRadioSection';
 import CheckboxSection from '../../molecules/Form/CheckboxSection';
 import MenuSection from '../../molecules/Form/MenuSection';
+import { getDefaultErrorText } from '../../../util';
 
 const TitleSection = ({ text, required }) => {
     return (
@@ -27,15 +28,16 @@ const DescriptionSection = ({ text }) => {
 const FieldSection = ({
     title,
     description = '',
-    type = 'text',
+    type,
     required,
     onChange,
     name,
     value,
     hasError = false,
-    errorText = 'Incorrect answer provided. Please double-check your answer.',
+    errorText,
     options = [],
 }) => {
+    const errorMessage = errorText ?? getDefaultErrorText(type, errorText);
     const theme = useContext(ThemeContext);
     const renderInputField = (type) => {
         switch (type) {
@@ -132,7 +134,7 @@ const FieldSection = ({
             <SystemComponent>{renderInputField(type)}</SystemComponent>
             {hasError && (
                 <SystemComponent textAlign='left' color='red'>
-                    {errorText}
+                    {errorMessage}
                 </SystemComponent>
             )}
         </SystemComponent>

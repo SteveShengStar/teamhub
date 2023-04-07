@@ -10,20 +10,6 @@ import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
 import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
 
-const EditFormButton = styled(Button)`
-    width: 100%;
-    height: 48px;
-    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
-    margin-top: 16px;
-    border-radius: 5px;
-`;
-
-const ExportRespButton = styled(Button)`
-    width: 100%;
-    height: 48px;
-    border-radius: 5px;
-`;
-
 const DeleteFormButton = styled.div`
     margin-left: auto;
     cursor: pointer;
@@ -126,12 +112,12 @@ const BulletOverride = styled(Bullet)`
 
 const BulletsSection = styled(SystemComponent)`
     align-self: start; /* this section's text should be left-aligned */
-    height: 200px;
+    height: 150px;
 `;
 
-const EXPORT_SUCCESS_MSG = 'Form Responses Exported to Google Drive.';
+const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
 const EXPORT_ERROR_MSG =
-    'Error occurred. Please contact Waterloop Web Team for assistance.';
+    'Form could not be exported. Please contact Waterloop Web Team for assistance.';
 
 const FormMetadataSection = ({
     src,
@@ -182,36 +168,64 @@ const FormMetadataSection = ({
                         <BulletOverride margin='10px' key={i} text={bullet} />
                     ))}
                 </BulletsSection>
-                <EditFormButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        router.push('/form/edit/' + formName);
-                    }}
-                >
-                    Edit Form
-                </EditFormButton>
-                <ExportRespButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        fetch('/api/google/export/' + formName, {
-                            method: 'POST',
-                            headers: {
-                                Accept: 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                            .then((res) => {
-                                showSuccessBanner();
-                            })
-                            .catch((e) => {
-                                console.error(e);
-                                showErrorBanner();
-                            });
-                    }}
-                    variant='white'
-                >
-                    Export Responses
-                </ExportRespButton>
+                <SystemComponent width='100%' height='40px'>
+                    <Button
+                        height='100%'
+                        width='100%'
+                        onClick={(e) => {
+                            e.preventDefault();
+                            router.push('/form/edit/' + formName);
+                        }}
+                    >
+                        <i className='fa-solid fa-pen-to-square' />
+                        {'  '}Edit Form
+                    </Button>
+                </SystemComponent>
+                <SystemComponent display='flex' height='40px' width='100%'>
+                    <SystemComponent width='60%'>
+                        <Button
+                            height='100%'
+                            width='100%'
+                            variant='white'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                fetch('/api/google/export/' + formName, {
+                                    method: 'POST',
+                                    headers: {
+                                        Accept: 'application/json',
+                                        'Content-Type': 'application/json',
+                                    },
+                                })
+                                    .then(() => {
+                                        showSuccessBanner();
+                                    })
+                                    .catch((e) => {
+                                        console.error(e);
+                                        showErrorBanner();
+                                    });
+                            }}
+                        >
+                            <i className='fa-solid fa-file-export' />
+                            {'  '}Export Responses
+                        </Button>
+                    </SystemComponent>
+                    <SystemComponent width='40%'>
+                        <Button
+                            height='100%'
+                            width='100%'
+                            variant='white'
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigator.clipboard.writeText(
+                                    'localhost:3000/form/' + formName
+                                );
+                            }}
+                        >
+                            <i className='fa-solid fa-link' />
+                            {'  '}Copy Link
+                        </Button>
+                    </SystemComponent>
+                </SystemComponent>
             </FormInfoCard>
         </>
     );
