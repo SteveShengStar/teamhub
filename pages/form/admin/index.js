@@ -112,7 +112,7 @@ const BulletOverride = styled(Bullet)`
 
 const BulletsSection = styled(SystemComponent)`
     align-self: start; /* this section's text should be left-aligned */
-    height: 150px;
+    height: 120px;
 `;
 
 const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
@@ -168,7 +168,12 @@ const FormMetadataSection = ({
                         <BulletOverride margin='10px' key={i} text={bullet} />
                     ))}
                 </BulletsSection>
-                <SystemComponent width='100%' height='40px'>
+                <SystemComponent
+                    width='100%'
+                    height='35px'
+                    marginBottom='5px'
+                    boxSizing='border-box'
+                >
                     <Button
                         height='100%'
                         width='100%'
@@ -181,7 +186,7 @@ const FormMetadataSection = ({
                         {'  '}Edit Form
                     </Button>
                 </SystemComponent>
-                <SystemComponent display='flex' height='40px' width='100%'>
+                <SystemComponent display='flex' height='35px' width='100%'>
                     <SystemComponent width='60%'>
                         <Button
                             height='100%'
