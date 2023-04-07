@@ -176,9 +176,10 @@ const SAVE_ERROR_MSG =
 const FormEditor = () => {
     const dispatch = useDispatch();
     const router = useRouter();
+    const theme = useContext(ThemeContext);
     const [loader, showLoader, hideLoader] = useLoadingScreen(false);
-    const [fromTitle, setFormTitle] = useState('');
-    const [fromDescription, setFormDescription] = useState('');
+    const [formTitle, setFormTitle] = useState('');
+    const [formDescription, setFormDescription] = useState('');
     const [formSections, setFormSections] = useState([]);
     const {
         renderSuccessBanner,
@@ -192,20 +193,32 @@ const FormEditor = () => {
         useFormDetails(router.query.formName, dispatch, router)
             .then((res) => {
                 if (res.success) {
-                    setFormTitle(res.body.title);
-                    setFormDescription(res.body.description);
-                    setFormSections(
-                        res.body.sections
-                            .map((obj) => {
-                                const sectionDetails = obj.section;
-                                return {
-                                    ...obj,
-                                    section: undefined,
-                                    ...sectionDetails,
-                                };
-                            })
-                            .sort((a, b) => a.position - b.position)
-                    );
+                    if (res.body) {
+                        setFormTitle(res.body.title);
+                        setFormDescription(res.body.description);
+                        setFormSections(
+                            res.body.sections
+                                .map((obj) => {
+                                    const sectionDetails = obj.section;
+                                    return {
+                                        ...obj,
+                                        section: undefined,
+                                        ...sectionDetails,
+                                    };
+                                })
+                                .sort((a, b) => a.position - b.position)
+                        );
+                    } else {
+                        const newBlankSection = {
+                            name: uuidv4(),
+                            description: '',
+                            display: '',
+                            type: 'text',
+                            customizable: 'delete',
+                            options: [],
+                        };
+                        setFormSections([...formSections, newBlankSection]);
+                    }
                 } else {
                     alert('An error occurred when loading form sections!');
                     console.error(res);
@@ -418,17 +431,20 @@ const FormEditor = () => {
         return true;
     };
 
-    const theme = useContext(ThemeContext);
-
     const handleSave = (e, exitEditorView = false) => {
         e.preventDefault();
+
+        if (!formTitle || !formDescription) {
+            alert('You must fill in the form title and description.');
+            return;
+        }
         if (!validateFormSections()) {
             return;
         }
 
         const reqBody = {
-            title: fromTitle,
-            description: fromDescription,
+            title: formTitle,
+            description: formDescription,
             sections: formSections.map((s, i) => {
                 return {
                     ...s,
@@ -504,7 +520,7 @@ const FormEditor = () => {
                         label='Title'
                         variant='filled'
                         size='normal'
-                        value={fromTitle}
+                        value={formTitle}
                         onChange={(e) => {
                             setFormTitle(e.target.value);
                         }}
@@ -513,7 +529,7 @@ const FormEditor = () => {
                         label='Description'
                         variant='filled'
                         size='normal'
-                        value={fromDescription}
+                        value={formDescription}
                         onChange={(e) => {
                             setFormDescription(e.target.value);
                         }}

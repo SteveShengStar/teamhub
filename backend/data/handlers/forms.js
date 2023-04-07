@@ -27,7 +27,7 @@ const validateCorrectNumberOfOptions = (sections) => {
 forms.getAllForms = async () => {
     return util.handleWrapper(async () => {
         return await Form.find({})
-            .select({ _id: 1, name: 1, title: 1, imageSrc: 1, bulletPoints: 1 })
+            .select({ _id: 1, name: 1, title: 1, imageSrc: 1, description: 1 })
             .exec();
     });
 };
@@ -191,35 +191,39 @@ forms.createForm = async (formData, res) => {
  * @param {Object} formData: new metadata for the form.
  */
 forms.updateFormMetadata = async (formName, formData, res) => {
-    const currentFormSectionIds = (
-        await Form.findOne({ name: formName })
-    ).sections.map((section) => section.section);
-    const currentFormSectionNames = (
-        await FormSection.find({
-            _id: { $in: currentFormSectionIds },
-        }).select(['name'])
-    ).map((section) => section.name);
-    const newFormSectionNames = formData.sections.map(
-        (section) => section.name
-    );
+    const existingForm = await Form.findOne({ name: formName });
 
-    const sectionsToDelete = _.difference(
-        currentFormSectionNames,
-        newFormSectionNames
-    );
-    const toDelete = {};
-    sectionsToDelete.forEach((section) => {
-        toDelete[section] = '';
-    });
-    await UserDetails.update(
-        {},
-        {
-            $unset: toDelete,
-        },
-        {
-            multi: true,
-        }
-    ).exec();
+    if (existingForm) {
+        const existingFormSectionIds = existingForm.sections.map(
+            (section) => section.section
+        );
+        const existingFormSectionNames = (
+            await FormSection.find({
+                _id: { $in: existingFormSectionIds },
+            }).select(['name'])
+        ).map((section) => section.name);
+        const newFormSectionNames = formData.sections.map(
+            (section) => section.name
+        );
+
+        const sectionsToDelete = _.difference(
+            existingFormSectionNames,
+            newFormSectionNames
+        );
+        const toDelete = {};
+        sectionsToDelete.forEach((section) => {
+            toDelete[section] = '';
+        });
+        await UserDetails.update(
+            {},
+            {
+                $unset: toDelete,
+            },
+            {
+                multi: true,
+            }
+        ).exec();
+    }
 
     return util.handleWrapper(async () => {
         await forms.updateFormSections(formData.sections, res); // TODO: this should be in a transaction.
@@ -241,6 +245,7 @@ forms.updateFormMetadata = async (formName, formData, res) => {
         try {
             await Form.updateOne({ name: formName }, _.omit(formData, '_id'), {
                 runValidators: true,
+                upsert: true,
             });
         } catch (err) {
             console.error(err);
@@ -267,6 +272,77 @@ const getFormSectionNamesToIdsMap = async () => {
         formSectionNamesToIds[s.name] = s._id;
     });
     return formSectionNamesToIds;
+};
+
+/**
+ * Delete a form.
+ *
+ * @param {Object} formName: Unique name key of the form to update
+ * @param {Object} formData: new metadata for the form.
+ */
+forms.deleteForm = async (formName, res) => {
+    const sectionsOnDeletedForm = await Form.findOne(
+        { name: formName },
+        { sections: 1, _id: 0 }
+    ).exec();
+    const otherForms = await Form.find(
+        { name: { $ne: formName } },
+        { sections: 1, _id: 0 }
+    ).exec();
+    const otherFormSections = new Set(
+        otherForms.reduce((acc, curr) => {
+            return acc.concat(
+                curr.sections.map((section) => section.section.toString())
+            );
+        }, [])
+    );
+
+    return util.handleWrapper(async () => {
+        // formSections that are not in any other forms, must be deleted
+        const sectionsToDelete = sectionsOnDeletedForm.sections
+            .filter((value) => !otherFormSections.has(value.section.toString()))
+            .map((formSection) => formSection.section);
+
+        if (sectionsToDelete.length > 0) {
+            const findQuery = sectionsToDelete.map((section) => {
+                return { _id: section };
+            });
+            const sectionNamesToDelete = await FormSection.find({
+                $or: findQuery,
+            }).select({ name: 1, _id: 0 });
+
+            const unsetQuery = {};
+            sectionNamesToDelete.map((value) => (unsetQuery[value.name] = 1));
+
+            // remove references to the deleted form sections in all UserDetails documents
+            UserDetails.updateMany({}, { $unset: unsetQuery }, (err) => {
+                if (err) {
+                    console.error(err);
+                    res.statusCode = 500;
+                    throw err;
+                }
+            });
+
+            FormSection.deleteMany(
+                { _id: { $in: sectionsToDelete } },
+                (err) => {
+                    if (err) {
+                        console.error(err);
+                        res.statusCode = 500;
+                        throw err;
+                    }
+                }
+            );
+        }
+
+        Form.deleteOne({ name: formName }, (err) => {
+            if (err) {
+                console.error(err);
+                res.statusCode = 500;
+                throw err;
+            }
+        });
+    });
 };
 
 module.exports = forms;

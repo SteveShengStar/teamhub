@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import PageTemplate from '../../../frontend/components/templates/PageTemplate';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -9,23 +9,28 @@ import { useForms } from '../../../frontend/hooks/forms';
 import Card from '../../../frontend/components/atoms/Card';
 import Button from '../../../frontend/components/atoms/Button';
 import usePopupBanner from '../../../frontend/hooks/usePopupBanner';
+import { v4 as uuidv4 } from 'uuid';
 
-const CheckmarkRow = styled.div`
-    display: flex;
-    align-items: flex-start;
+const CreateFormButton = styled(Button)`
+    width: 200px;
+    height: 35px;
+    margin-bottom: ${(props) => props.theme.space.headerBottomMargin}px;
+    margin-top: 16px;
+    border-radius: 5px;
 `;
 
-const Text = styled.div`
-    font-family: 'SF Pro';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 24px;
-
-    color: #000000;
+const DeleteFormButton = styled.div`
+    margin-left: auto;
+    cursor: pointer;
 `;
 
-const BigIconWrapper = styled.div`
+const DeleteIcon = styled.img`
+    justify-content: center;
+    height: 27px;
+    width: 27px;
+`;
+
+const IconWrapper = styled.div`
     height: 57px;
     width: 57px;
     display: flex;
@@ -36,7 +41,8 @@ const BigIconWrapper = styled.div`
     justify-content: center;
     box-sizing: border-box;
 `;
-const Svg = styled.img`
+
+const Icon = styled.img`
     justify-content: center;
     height: 30px;
     width: 30px;
@@ -70,45 +76,28 @@ const FormInfoCard = styled(Card)`
     margin-left: auto;
     margin-right: auto;
 
-    padding: 90px 30px 30px 30px;
+    padding: 30px 30px 30px 30px;
     ${(props) => props.theme.mediaQueries.mobile} {
-        padding: 90px 20px 20px 20px;
+        padding: 20px 20px 20px 20px;
     }
     @media screen and (min-width: 1400px) {
-        padding: 90px 30px 30px 30px;
+        padding: 30px 30px 30px 30px;
     }
-`;
-
-const Bullet = ({ text, className }) => {
-    return (
-        <CheckmarkRow className={className}>
-            <i
-                className='fa fa-solid fa-square-check fa-2x'
-                style={{ marginRight: '15px' }}
-            />
-            <Text>{text}</Text>
-        </CheckmarkRow>
-    );
-};
-
-const BulletOverride = styled(Bullet)`
-    margin-bottom: 10px;
-    &:last-child {
-        margin-bottom: 0;
-    }
-`;
-
-const BulletsSection = styled(SystemComponent)`
-    align-self: start; /* this section's text should be left-aligned */
-    height: 150px;
 `;
 
 const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
 const EXPORT_ERROR_MSG =
     'Form could not be exported. Please contact Waterloop Web Team for assistance.';
 
-const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
+const FormMetadataSection = ({
+    src,
+    title,
+    description,
+    formName = '',
+    onDelete,
+}) => {
     const router = useRouter();
+    const theme = useContext(ThemeContext);
     const {
         renderSuccessBanner,
         renderErrorBanner,
@@ -121,20 +110,44 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
             {renderSuccessBanner()}
             {renderErrorBanner()}
             <FormInfoCard>
-                <SystemComponent>
-                    <BigIconWrapper>
-                        <Svg src={src}></Svg>
-                    </BigIconWrapper>
+                <DeleteFormButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        fetch('/api/form/' + formName + '/delete', {
+                            method: 'DELETE',
+                        })
+                            .then((res) => {
+                                onDelete(formName);
+                            })
+                            .catch((e) => {
+                                console.error(e);
+                            });
+                    }}
+                >
+                    <DeleteIcon src='/static/trash-solid.svg' />
+                </DeleteFormButton>
+                <SystemComponent marginTop='60px'>
+                    <IconWrapper>
+                        <Icon src={src}></Icon>
+                    </IconWrapper>
                 </SystemComponent>
-                <SystemComponent>
+                <SystemComponent height='80px'>
                     <TitleText>{title}</TitleText>
                 </SystemComponent>
-                <BulletsSection>
-                    {bulletPoints?.map((bullet, i) => (
-                        <BulletOverride margin='10px' key={i} text={bullet} />
-                    ))}
-                </BulletsSection>
-                <SystemComponent width='100%' height='40px'>
+                <SystemComponent
+                    height='140px'
+                    fontSize={theme.fontSizes.body2}
+                    alignSelf='start' /* this section's text should be left-aligned */
+                    textAlign='justify'
+                >
+                    {description}
+                </SystemComponent>
+                <SystemComponent
+                    width='100%'
+                    height='35px'
+                    marginBottom='5px'
+                    boxSizing='border-box'
+                >
                     <Button
                         height='100%'
                         width='100%'
@@ -147,7 +160,7 @@ const FormMetadataSection = ({ src, title, bulletPoints, formName = '' }) => {
                         {'  '}Edit Form
                     </Button>
                 </SystemComponent>
-                <SystemComponent display='flex' height='40px' width='100%'>
+                <SystemComponent display='flex' height='35px' width='100%'>
                     <SystemComponent width='60%'>
                         <Button
                             height='100%'
@@ -203,6 +216,10 @@ const DashboardPanel = () => {
     const dispatch = useDispatch();
     const router = useRouter();
 
+    const handleDelete = (formName) => {
+        setFormData(formData.filter((form) => form.name !== formName));
+    };
+
     useEffect(() => {
         showLoader();
         useForms(dispatch, router)
@@ -216,27 +233,41 @@ const DashboardPanel = () => {
 
     return (
         <PageTemplate title='Waterloop Forms'>
-            <SystemComponent
-                display='grid'
-                gridTemplateColumns={[
-                    '1fr',
-                    'repeat(2, 1fr);',
-                    'repeat(2, 1fr);',
-                    'repeat(3, 1fr);',
-                ]}
-                gridAutoRows={'minmax(500px, 500px)'}
-                gridColumnGap={5}
-                gridRowGap={6}
-            >
+            <SystemComponent>
                 {loader}
-                {formData?.map((data) => (
-                    <FormMetadataSection
-                        src={data.imageSrc}
-                        title={data.title}
-                        bulletPoints={data.bulletPoints}
-                        formName={data.name}
-                    />
-                ))}
+                <SystemComponent>
+                    <CreateFormButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            router.push('/form/edit/' + uuidv4());
+                        }}
+                    >
+                        <i class='fa fa-plus' aria-hidden='true' /> Create New
+                        Form
+                    </CreateFormButton>
+                </SystemComponent>
+                <SystemComponent
+                    display='grid'
+                    gridTemplateColumns={[
+                        '1fr',
+                        'repeat(2, 1fr);',
+                        'repeat(2, 1fr);',
+                        'repeat(3, 1fr);',
+                    ]}
+                    gridAutoRows={'minmax(500px, 500px)'}
+                    gridColumnGap={5}
+                    gridRowGap={6}
+                >
+                    {formData?.map((data) => (
+                        <FormMetadataSection
+                            src={data.imageSrc}
+                            title={data.title}
+                            description={data.description}
+                            formName={data.name}
+                            onDelete={handleDelete}
+                        />
+                    ))}
+                </SystemComponent>
             </SystemComponent>
         </PageTemplate>
     );
