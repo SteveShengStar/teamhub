@@ -38,7 +38,11 @@ const validateCorrectNumberOfOptions = (sections) => {
             case 'radio':
             case 'menu_single':
             case 'menu_multi':
-                return s.options && s.options.length > 1;
+                return (
+                    s.options &&
+                    s.options.length > 1 &&
+                    s.options.filter((opt) => opt || opt === false).length > 1
+                );
         }
         return true;
     });
@@ -501,7 +505,6 @@ const FormEditor = () => {
                 <Card
                     display='grid'
                     gridTemplateColumns='1fr'
-                    gridColumnGap={theme.space[5]}
                     gridRowGap={theme.space[5]}
                     width={['500px', '700px', '800px']}
                     marginBottom={`${theme.space[7]}px`}

@@ -28,7 +28,7 @@ const usePopupBanner = (successMessage, errorMessage) => {
         setTimeout(() => {
             setSuccessBannerVisible(false);
             successCallback();
-        }, 5000);
+        }, 3500);
     };
 
     const showErrorBanner = () => {
