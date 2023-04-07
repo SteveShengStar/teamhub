@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import PageTemplate from '../../../frontend/components/templates/PageTemplate';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
@@ -26,23 +26,8 @@ const DeleteFormButton = styled.div`
 
 const DeleteIcon = styled.img`
     justify-content: center;
-    height: 30px;
-    width: 30px;
-`;
-
-const CheckmarkRow = styled.div`
-    display: flex;
-    align-items: flex-start;
-`;
-
-const Text = styled.div`
-    font-family: 'SF Pro';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 20px;
-    line-height: 24px;
-
-    color: #000000;
+    height: 27px;
+    width: 27px;
 `;
 
 const IconWrapper = styled.div`
@@ -100,30 +85,6 @@ const FormInfoCard = styled(Card)`
     }
 `;
 
-const Bullet = ({ text, className }) => {
-    return (
-        <CheckmarkRow className={className}>
-            <i
-                className='fa fa-solid fa-square-check fa-2x'
-                style={{ marginRight: '15px' }}
-            />
-            <Text>{text}</Text>
-        </CheckmarkRow>
-    );
-};
-
-const BulletOverride = styled(Bullet)`
-    margin-bottom: 10px;
-    &:last-child {
-        margin-bottom: 0;
-    }
-`;
-
-const BulletsSection = styled(SystemComponent)`
-    align-self: start; /* this section's text should be left-aligned */
-    height: 120px;
-`;
-
 const EXPORT_SUCCESS_MSG = 'Form was successfully exported.';
 const EXPORT_ERROR_MSG =
     'Form could not be exported. Please contact Waterloop Web Team for assistance.';
@@ -131,11 +92,12 @@ const EXPORT_ERROR_MSG =
 const FormMetadataSection = ({
     src,
     title,
-    bulletPoints,
+    description,
     formName = '',
     onDelete,
 }) => {
     const router = useRouter();
+    const theme = useContext(ThemeContext);
     const {
         renderSuccessBanner,
         renderErrorBanner,
@@ -169,14 +131,17 @@ const FormMetadataSection = ({
                         <Icon src={src}></Icon>
                     </IconWrapper>
                 </SystemComponent>
-                <SystemComponent>
+                <SystemComponent height='80px'>
                     <TitleText>{title}</TitleText>
                 </SystemComponent>
-                <BulletsSection>
-                    {bulletPoints?.map((bullet, i) => (
-                        <BulletOverride margin='10px' key={i} text={bullet} />
-                    ))}
-                </BulletsSection>
+                <SystemComponent
+                    height='140px'
+                    fontSize={theme.fontSizes.body2}
+                    alignSelf='start' /* this section's text should be left-aligned */
+                    textAlign='justify'
+                >
+                    {description}
+                </SystemComponent>
                 <SystemComponent
                     width='100%'
                     height='35px'
@@ -297,7 +262,7 @@ const DashboardPanel = () => {
                         <FormMetadataSection
                             src={data.imageSrc}
                             title={data.title}
-                            bulletPoints={data.bulletPoints}
+                            description={data.description}
                             formName={data.name}
                             onDelete={handleDelete}
                         />
