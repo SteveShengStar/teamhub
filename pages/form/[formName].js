@@ -24,8 +24,7 @@ import {
 import { updateUser } from '../../frontend/store/reducers/userReducer';
 import _ from 'lodash';
 
-const SUBMIT_SUCCESS_MSG =
-    'Form successfully submitted. Taking you back to Home Page in 4 seconds.';
+const SUBMIT_SUCCESS_MSG = 'Form successfully completed.';
 const SUBMIT_ERROR_MSG =
     'Error occurred. Please contact Waterloop Web Team for assistance.';
 
@@ -118,7 +117,7 @@ const Form = () => {
             showLoader();
             updateUser(dispatch, formatFormValues(formValues), user._id, router)
                 .then(() => {
-                    showSuccessBanner(() => router.push('/')); // Redirect to home page.
+                    showSuccessBanner(() => router.push('/form/admin/')); // Redirect to form page.
                     // TODO: redirect somewhere here, maybe also issue a get request to "refresh"
                 })
                 .catch((e) => {
