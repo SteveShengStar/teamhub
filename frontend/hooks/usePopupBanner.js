@@ -25,10 +25,8 @@ const usePopupBanner = (successMessage, errorMessage) => {
 
     const showSuccessBanner = (successCallback = () => {}) => {
         setSuccessBannerVisible(true);
-        setTimeout(() => {
-            setSuccessBannerVisible(false);
-            successCallback();
-        }, 3500);
+        setSuccessBannerVisible(false);
+        successCallback();
     };
 
     const showErrorBanner = () => {
